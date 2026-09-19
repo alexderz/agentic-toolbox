@@ -1,0 +1,85 @@
+# First-cut fmt/lint on PR. Plan: docs/CI-HOOKS-PLAN.md.
+# ruff / gofmt / shellcheck only when matching files appear. No prettier,
+# SkillSpector, secret scan, or vendor SHA checks. Empty skill dirs / .gitkeep
+# are not a fail.
+name: fmt-lint
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  fmt-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Detect Python / Go / shell
+        id: detect
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+        run: |
+          set -euo pipefail
+          changed="$(git diff --name-only --diff-filter=ACMR "${BASE_SHA}...HEAD" || true)"
+
+          present_or_changed() {
+            local re="$1"
+            shift
+            if printf '%s\n' "${changed}" | grep -Eq "${re}"; then
+              return 0
+            fi
+            if git ls-files -- "$@" | grep -q .; then
+              return 0
+            fi
+            return 1
+          }
+
+          python=false
+          go=false
+          shell=false
+          if present_or_changed '\.py$' '*.py'; then python=true; fi
+          if present_or_changed '\.go$' '*.go'; then go=true; fi
+          if present_or_changed '\.(sh|bash)$' '*.sh' '*.bash'; then shell=true; fi
+
+          {
+            echo "python=${python}"
+            echo "go=${go}"
+            echo "shell=${shell}"
+          } >> "${GITHUB_OUTPUT}"
+          echo "python=${python} go=${go} shell=${shell}"
+
+      - name: ruff check
+        if: steps.detect.outputs.python == 'true'
+        uses: astral-sh/ruff-action@v3
+
+      - name: ruff format --check
+        if: steps.detect.outputs.python == 'true'
+        run: ruff format --check
+
+      - name: gofmt
+        if: steps.detect.outputs.go == 'true'
+        run: |
+          set -euo pipefail
+          mapfile -t gofiles < <(git ls-files -- '*.go')
+          if [ "${#gofiles[@]}" -eq 0 ]; then
+            echo "no tracked .go files"
+            exit 0
+          fi
+          dirty="$(gofmt -l "${gofiles[@]}")"
+          if [ -n "${dirty}" ]; then
+            echo "gofmt dirty:"
+            echo "${dirty}"
+            exit 1
+          fi
+
+      - name: shellcheck
+        if: steps.detect.outputs.shell == 'true'
+        run: |
+          set -euo pipefail
+          git ls-files -z -- '*.sh' '*.bash' | xargs -0 -r shellcheck
