@@ -105,7 +105,7 @@ Research (not SDLC). **researcher** loads when relevant:
 
 Workers (operator opt-in). Load only when the operator picks that worker:
 
-- `grok-acp` (Grok Build over ACP as a builder; ships `scripts/grok_acp.py`)
+- `grok-acp` (Grok Build over ACP as a builder; client is the package `packages/grok-acp/`)
 
 Language pack. Do not remint the Go / Python / Shell ids above.
 
@@ -199,8 +199,7 @@ Before any third-party content:
 1. Pin the cherry-pick SHA in [SOURCES.md](SOURCES.md).
 2. Complete **security** intake ([docs/INTAKE.md](docs/INTAKE.md)).
 3. No marketplace install, no auto-update, no scripts, no secrets in this
-   repo. One exception to "no scripts": operator-approved first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
-   Third-party scripts never.
+   repo.
 
 Empty SHA cells mean the body must not exist yet.
 

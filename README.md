@@ -42,7 +42,7 @@ There is no plugin manifest yet. Natural install groups:
 | --- | --- | --- |
 | **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
-| **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Ships a first-party script |
+| **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 | **optional / empty** | `tracker-sdlc`, `cursor-cloud-agents-when` | Placeholders. No `SKILL.md` yet |
 
@@ -65,8 +65,6 @@ and a compress, not a vendor paste.
   Empty SHA cells mean the body is not here yet.
 - **security** intake before any third-party content lands in this repo.
 - **No auto-update.** No marketplace install. No scripts. No secrets.
-  One exception to "no scripts": operator-approved first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
-  Third-party scripts never.
 - First-party skills (`tracker-sdlc`, `cursor-cloud-agents-when`,
   language guides) are written here; they are not vendor copies.
 
@@ -103,7 +101,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 
 | Id | Ownership |
 | --- | --- |
-| `grok-acp` | First-party. Grok Build over ACP as a builder. Ships `scripts/grok_acp.py`; operator opt-in |
+| `grok-acp` | First-party. Grok Build over ACP as a builder. Prose only; the client is [packages/grok-acp](packages/grok-acp/). Operator opt-in |
 
 ### languages
 
@@ -128,6 +126,7 @@ Not skills. Optional stdlib utilities that live next to the skills home.
 
 | Package | What |
 | --- | --- |
+| [grok-acp](packages/grok-acp/) | ACP client for the local Grok Build CLI: mint or resume a session, one prompt turn per call. Used by the `grok-acp` skill. MIT, stdlib only |
 | [a2a-webhook-adapter](packages/a2a-webhook-adapter/) | A2A JSON-RPC peer → HTTPS plain POST webhook (Cursor Grok Bot allowlist). MIT, stdlib-first |
 
 ## Knowledge

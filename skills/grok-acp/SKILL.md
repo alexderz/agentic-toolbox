@@ -8,8 +8,10 @@ description: use this when the operator chooses to offload work to Grok Build â€
 Run Grok Build on this machine as a **worker** in the SDLC sense: a
 separate agent with its own transcript that you mint clean, resume by id,
 and never trust without verification. Transport is ACP (JSON-RPC over
-`grok agent stdio`), driven by `scripts/grok_acp.py` in this skill
-directory. Stdlib Python, Linux only.
+`grok agent stdio`), driven by the `grok-acp` command from
+[packages/grok-acp](../../packages/grok-acp/) in this repo. Stdlib Python,
+Linux only. No `grok-acp` on `PATH`: run that package's `grok_acp.py`
+directly, or install it as its README says.
 
 ## Iron law
 
@@ -32,7 +34,7 @@ Scope is set by your prompt, so write the scope down.
 ## Run it
 
 ```bash
-GROK=<this skill dir>/scripts/grok_acp.py
+GROK=grok-acp
 
 # mint a clean worker for a work item
 $GROK run --cwd <item worktree> --label <item-id>:builder --prompt-file <handoff.md>

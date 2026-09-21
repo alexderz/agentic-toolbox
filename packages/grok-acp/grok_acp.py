@@ -95,7 +95,9 @@ class Registry:
             self.data = json.loads(self.before)
         except json.JSONDecodeError as e:
             self.lock.close()
-            raise AgentError(f"registry is corrupt, fix or remove {REGISTRY}: {e}")
+            raise AgentError(
+                f"registry is corrupt, fix or remove {REGISTRY}: {e}"
+            ) from e
         return self
 
     def __exit__(self, exc_type, *exc):
@@ -118,7 +120,9 @@ def hold(kind, name, held):
         fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
     except BlockingIOError:
         fh.close()
-        raise UsageError("busy", f"another grok_acp run holds {kind} {name!r}")
+        raise UsageError(
+            "busy", f"another grok_acp run holds {kind} {name!r}"
+        ) from None
     held.append(fh)
 
 
@@ -177,7 +181,8 @@ def resolve(args, cwd, held):
 # --- ACP client ---
 
 CANCEL = object()  # inbox sentinel: a signal or the deadline asked us to stop
-CANCEL_GRACE = 20  # seconds grok gets to answer session/cancel
+# Seconds grok gets to answer session/cancel. The env override is for the tests.
+CANCEL_GRACE = float(os.environ.get("GROK_ACP_CANCEL_GRACE", "20"))
 
 
 class Acp:
@@ -228,7 +233,7 @@ class Acp:
             self.proc.stdin.write(json.dumps(obj) + "\n")
             self.proc.stdin.flush()
         except (OSError, ValueError) as e:
-            raise AgentError(f"grok stdin is closed ({e}); see grok.stderr")
+            raise AgentError(f"grok stdin is closed ({e}); see grok.stderr") from e
 
     def notify(self, method, params):
         self.send({"jsonrpc": "2.0", "method": method, "params": params})
@@ -280,7 +285,7 @@ class Acp:
                 msg = self.inbox.get(timeout=max(0.0, deadline - time.monotonic()))
             except queue.Empty:
                 if not in_prompt or self.cancelling:
-                    raise TimeoutError(method)
+                    raise TimeoutError(method) from None
                 self.request_cancel("timeout")
                 continue
             if msg is CANCEL:
@@ -291,8 +296,9 @@ class Acp:
                     self.notify("session/cancel", {"sessionId": params["sessionId"]})
                     deadline = time.monotonic() + CANCEL_GRACE
             elif msg is None:
+                rc = self.proc.poll()
                 raise AgentError(
-                    f"grok exited during {method} (rc={self.proc.poll()}); see grok.stderr"
+                    f"grok exited during {method} (rc={rc}); see grok.stderr"
                 )
             elif "method" in msg and "id" in msg:
                 self._answer(msg)
@@ -305,8 +311,11 @@ class Acp:
                 return msg.get("result") or {}
 
     def close(self):
-        """Stop grok, then reap what it left behind. Grok runs shell commands in their
-        own sessions, so they outlive it (and any process-group kill) unless signalled."""
+        """Stop grok, then reap what it left behind.
+
+        Grok runs shell commands in their own sessions, so they outlive it (and
+        any process-group kill) unless each one is signalled.
+        """
         orphans = descendants(self.proc.pid)
         try:
             self.proc.stdin.close()
@@ -329,7 +338,7 @@ def descendants(root):
     parent = {}
     for stat in Path("/proc").glob("[0-9]*/stat"):
         try:
-            # comm may contain spaces and parens; ppid is the 2nd field after the last ')'.
+            # comm may hold spaces and parens; ppid is field 2 after the last ')'.
             parent[int(stat.parent.name)] = int(
                 stat.read_text().rsplit(")", 1)[1].split()[1]
             )
@@ -400,7 +409,7 @@ def read_input(path, what):
     try:
         return Path(path).read_text()
     except OSError as e:
-        raise UsageError("unreadable_file", f"{what}: {e}")
+        raise UsageError("unreadable_file", f"{what}: {e}") from e
 
 
 def cmd_run(args):
@@ -430,7 +439,7 @@ def cmd_run(args):
         run_dir.chmod(0o700)
         (run_dir / "prompt.md").write_text(prompt)
     except OSError as e:
-        raise UsageError("bad_out", f"cannot write run directory {run_dir}: {e}")
+        raise UsageError("bad_out", f"cannot write run directory {run_dir}: {e}") from e
 
     argv = [grok, "agent", "--always-approve", "--no-leader"]
     if args.model:
@@ -464,7 +473,8 @@ def cmd_run(args):
         caps = init.get("agentCapabilities", {})
         session_params = {"cwd": str(cwd), "mcpServers": [], "_meta": meta}
         if session_id:
-            # session/resume restores context without replaying history; session/load replays it.
+            # session/resume restores context without replaying history;
+            # session/load replays it, and those updates are ignored here.
             method = (
                 "session/resume"
                 if "resume" in caps.get("sessionCapabilities", {})
@@ -475,7 +485,7 @@ def cmd_run(args):
                     method, dict(session_params, sessionId=session_id), deadline
                 )
             except AgentError as e:
-                raise ResumeError(str(e))
+                raise ResumeError(str(e)) from e
         else:
             session_id = acp.request("session/new", session_params, deadline)[
                 "sessionId"
@@ -514,7 +524,7 @@ def cmd_run(args):
         code, err = EXIT_TIMEOUT, f"cancelled by signal during {e}; no prompt was sent"
     except TimeoutError as e:
         if acp.cancelling:
-            err = f"{acp.cancel_reason} cancel not acknowledged in {CANCEL_GRACE}s"
+            err = f"{acp.cancel_reason} cancel not acknowledged in {CANCEL_GRACE:g}s"
         else:
             err = f"timed out in {e} (--timeout {args.timeout}s)"
         code = EXIT_TIMEOUT
@@ -523,7 +533,8 @@ def cmd_run(args):
     finally:
         acp.close()
 
-    # Grok reports per-turn usage under the prompt result's _meta; the full object is in events.ndjson.
+    # Grok reports per-turn usage under the prompt result's _meta.
+    # The full object is in events.ndjson.
     turn_usage = (result_meta or {}).get("usage") or {}
     usage = {
         "modelId": (result_meta or {}).get("modelId"),
