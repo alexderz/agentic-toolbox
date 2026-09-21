@@ -10,8 +10,9 @@ separate agent with its own transcript that you mint clean, resume by id,
 and never trust without verification. Transport is ACP (JSON-RPC over
 `grok agent stdio`), driven by the `grok-acp` command from
 [packages/grok-acp](../../packages/grok-acp/) in this repo. Stdlib Python,
-Linux only. No `grok-acp` on `PATH`: run that package's `grok_acp.py`
-directly, or install it as its README says.
+Linux only. No `grok-acp` on `PATH`: resolve this skill directory's real
+path (it is usually a symlink), run `packages/grok-acp/grok_acp.py` from
+that checkout, or install it as the package README says.
 
 ## Iron law
 
@@ -64,8 +65,8 @@ gets `busy` (exit 2).
 | `--out` | Run directory. Default `~/.local/state/grok-acp/runs/<stamp>-<pid>` |
 
 `$GROK sessions` prints the label registry
-(`~/.local/state/grok-acp/sessions.json`; the state directory and every
-run directory are forced to `0700`, and the state directory moves with
+(`~/.local/state/grok-acp/sessions.json`; the state directory and the run
+directories it creates are `0700`, and the state directory moves with
 `GROK_ACP_STATE`). `$GROK forget <label>` drops a label;
 Grok keeps the session.
 

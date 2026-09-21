@@ -75,9 +75,12 @@ UUID_RE = re.compile(r"^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$", re.IGNORECA
 
 
 def state_dir():
-    # Transcripts can hold anything Grok read; chmod covers a pre-existing dir.
-    STATE_DIR.mkdir(parents=True, exist_ok=True)
-    STATE_DIR.chmod(0o700)
+    # Transcripts can hold anything Grok read, so the state tree is private.
+    try:
+        STATE_DIR.mkdir(parents=True, exist_ok=True)
+        STATE_DIR.chmod(0o700)
+    except OSError as e:
+        raise UsageError("bad_state_dir", f"{STATE_DIR}: {e}") from e
     return STATE_DIR
 
 
@@ -182,7 +185,10 @@ def resolve(args, cwd, held):
 
 CANCEL = object()  # inbox sentinel: a signal or the deadline asked us to stop
 # Seconds grok gets to answer session/cancel. The env override is for the tests.
-CANCEL_GRACE = float(os.environ.get("GROK_ACP_CANCEL_GRACE", "20"))
+try:
+    CANCEL_GRACE = min(max(float(os.environ["GROK_ACP_CANCEL_GRACE"]), 0.1), 300.0)
+except (KeyError, ValueError):
+    CANCEL_GRACE = 20.0
 
 
 class Acp:
@@ -435,8 +441,10 @@ def cmd_run(args):
     stamp = f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}"
     run_dir = Path(args.out) if args.out else state_dir() / "runs" / stamp
     try:
+        created = not run_dir.exists()
         run_dir.mkdir(parents=True, exist_ok=True)
-        run_dir.chmod(0o700)
+        if created:  # a caller-supplied existing --out keeps its own mode
+            run_dir.chmod(0o700)
         (run_dir / "prompt.md").write_text(prompt)
     except OSError as e:
         raise UsageError("bad_out", f"cannot write run directory {run_dir}: {e}") from e

@@ -81,8 +81,9 @@ and `grok.stderr`.
   outlive it. At exit the client sends SIGTERM to every process Grok
   started that is still alive.
 - **State.** `~/.local/state/grok-acp` (`GROK_ACP_STATE` moves it), forced
-  to mode `0700`, as is every run directory. Transcripts can contain
-  anything Grok read.
+  to mode `0700`. Run directories the client creates are `0700` too; an
+  existing directory passed as `--out` keeps its mode. Transcripts can
+  contain anything Grok read.
 
 ## Test
 

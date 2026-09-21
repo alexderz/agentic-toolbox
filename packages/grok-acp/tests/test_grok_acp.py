@@ -2,6 +2,7 @@
 
 import json
 import os
+import shlex
 import signal
 import subprocess
 import sys
@@ -20,7 +21,8 @@ def box(tmp_path):
     bindir = tmp_path / "bin"
     bindir.mkdir()
     fake = bindir / "grok"
-    fake.write_text(f"#!/bin/sh\nexec {sys.executable} {HERE / 'fake_grok.py'}\n")
+    agent = shlex.quote(str(HERE / "fake_grok.py"))
+    fake.write_text(f"#!/bin/sh\nexec {shlex.quote(sys.executable)} {agent}\n")
     fake.chmod(0o755)
     for name in ("wt1", "wt2"):
         (tmp_path / name).mkdir()
@@ -86,6 +88,10 @@ def test_state_and_run_dirs_are_private(box):
     run(box, "--cwd", str(box[0] / "wt1"), "--out", str(out_dir))
     assert (box[0] / "state").stat().st_mode & 0o777 == 0o700
     assert out_dir.stat().st_mode & 0o777 == 0o700
+    shared = box[0] / "shared"
+    shared.mkdir(mode=0o755)
+    run(box, "--cwd", str(box[0] / "wt1"), "--out", str(shared))
+    assert shared.stat().st_mode & 0o777 == 0o755
     assert {p.name for p in out_dir.iterdir()} >= {
         "prompt.md",
         "response.md",
@@ -151,16 +157,12 @@ def test_failed_resume_is_exit_3(box):
 
 def test_missing_grok_is_exit_4(box):
     tmp, env = box
-    lonely = dict(env, PATH="/usr/bin:/bin", HOME=str(tmp / "nohome"))
-    cmd = [
-        sys.executable,
-        str(CLIENT),
-        "run",
-        "--cwd",
-        str(tmp / "wt1"),
-        "--prompt",
-        "x",
-    ]
+    empty = tmp / "empty-path"
+    empty.mkdir()
+    # An empty PATH and HOME: no real grok can be reached from this test.
+    lonely = dict(env, PATH=str(empty), HOME=str(tmp / "nohome"))
+    wt = str(tmp / "wt1")
+    cmd = [sys.executable, str(CLIENT), "run", "--cwd", wt, "--prompt", "x"]
     proc = subprocess.run(cmd, env=lonely, capture_output=True, text=True, timeout=60)
     assert proc.returncode == 4
     assert json.loads(proc.stdout)["error"] == "agent_error"
@@ -173,7 +175,7 @@ def test_permission_requests_get_the_widest_allow(box):
 
 
 def test_timeout_sends_cancel_and_exits_5(box):
-    rc, res = run(box, "--cwd", str(box[0] / "wt1"), "--timeout", "1", FAKE_HANG="1")
+    rc, res = run(box, "--cwd", str(box[0] / "wt1"), "--timeout", "3", FAKE_HANG="1")
     assert (rc, res["stopReason"]) == (5, "cancelled")
     assert res["error"] == "cancelled by timeout"
     assert fake_log(box).count("session/cancel") == 1
