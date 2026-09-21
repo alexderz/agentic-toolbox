@@ -11,7 +11,8 @@ only maintainer.
 3. Follow [docs/SDLC.md](docs/SDLC.md) for anything larger than a typo.
    Skill bodies: [docs/INTAKE.md](docs/INTAKE.md) and
    [SOURCES.md](SOURCES.md). No marketplace install, no `scripts/` in
-   skill dirs, no secrets.
+   skill dirs (maintainer-approved first-party exceptions are named in
+   SOURCES.md), no secrets.
 4. Open a pull request against `main`. Keep the diff one idea.
 5. Wait for maintainer review. Do not expect merge without it.
 

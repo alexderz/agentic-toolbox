@@ -6,7 +6,10 @@ do not bypass it.
 
 First-party files written in this repo (this checklist,
 `skills/security-hardening/SKILL.md`, language guides) are not vendor
-intake. They still must not ship secrets or `scripts/`.
+intake. They still must not ship secrets or `scripts/`. The only exception is a
+first-party executable the operator approved and [SOURCES.md](../SOURCES.md)
+names in its row (today: `grok-acp`). That exception never covers
+third-party code.
 
 ## Checklist
 
