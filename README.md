@@ -113,6 +113,14 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | `tracker-sdlc` | First-party placeholder |
 | `cursor-cloud-agents-when` | First-party placeholder (Cursor-specific) |
 
+## Packages
+
+Not skills. Optional stdlib utilities that live next to the skills home.
+
+| Package | What |
+| --- | --- |
+| [a2a-webhook-adapter](packages/a2a-webhook-adapter/) | A2A JSON-RPC peer → HTTPS plain POST webhook (Cursor Grok Bot allowlist). MIT, stdlib-first |
+
 ## Knowledge
 
 Compressed facts (not skills): [knowledge/README.md](knowledge/README.md).
