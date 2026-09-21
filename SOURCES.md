@@ -14,6 +14,7 @@ Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 | sdlc-artifacts | first-party (this repo) | first-party | MIT | Templates for HLD/LLD/tickets/track/changelog/UX. Load the skill; do not paste the SDLC into artifacts. Chunk brief stays discover-the-idea. Incoming item: bug.md / task.md. |
 | ux-design | first-party (this repo); variants from mattpocock/skills prototype UI; anti-default UI from addyosmani/agent-skills frontend-ui-engineering; composition from hueyexe/frontend-agent-skills | first-party body; pocock 74ca5fe077456a0b3b2f5310cf9430999fd0b5fd (intent) | MIT (body); MIT upstream intent | Designer. Medium-agnostic mockups. Agent review vs requirements, then human. Not those packs. |
 | buying-researcher | first-party (this repo) | first-party | MIT | Research skill for the **researcher** persona when the ask is a buy or market study. Not an SDLC step. Recommend; do not spend. |
+| grok-acp | first-party (this repo) | first-party | MIT | Worker skill: run the local Grok Build CLI as an SDLC builder over ACP, with label registry and resume. Prose only; the client is the package `packages/grok-acp/`. Runs Grok with maximum permissions by operator order (2026-09-21). Operator opt-in per ask. |
 | cursor-cloud-agents-when | first-party (this repo) | | | When to use Cursor Cloud Agents. No vendor body. |
 | tdd | obra/superpowers (test-driven-development) | intent b36e0829c6d0140e93cfef2ca599b1b07d4a7797; merge afb2b6f4b8a6f9c62633b32a9166ca50de72c1c6 (PR #9); blob 57e74392c0d10f3ae35c9e0a735016a2b731d1e9 for skills/tdd/SKILL.md | MIT upstream / rewrite | Compress not paste |
 | pr-review | obra/superpowers (requesting-code-review + receiving-code-review) + mattpocock/skills (engineering/code-review) | superpowers b36e0829c6d0140e93cfef2ca599b1b07d4a7797; pocock 3cca18b368ae95cdbdebbff572ccafa662551015 (intent pins; body rewrite) | MIT upstream / rewrite | Id `pr-review`; reviewer ≠ builder; receive-review on the builder; Standards/Spec; review skills do not write |
@@ -60,6 +61,7 @@ Not skills. First-party utilities. Empty SHA still means no body may land for
 
 | Package | Upstream | SHA | License | Notes |
 | --- | --- | --- | --- | --- |
+| `packages/grok-acp/` | first-party (this repo) | first-party | MIT | Stdlib ACP client for the local Grok Build CLI (`grok agent stdio`): mint or resume a session by label, one prompt turn per call, JSON result. Runs Grok with every permission granted; that posture is an operator order recorded in `skills/grok-acp/SKILL.md`. Not a skill. |
 | `packages/a2a-webhook-adapter/` | first-party sanitized extract; protocol inspired by private court adapter in `alexderz/grok-bot-perm` PRs #6 and #7 | first-party | MIT | A2A JSON-RPC → plain HTTPS POST. No house secrets, mesh endpoints, or required house names. Not a skill. DER-209. |
 
 ## Knowledge distillations

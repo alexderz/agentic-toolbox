@@ -933,7 +933,7 @@ on this pass, pack that slice or name it — not the whole set again.
 | Worker | When |
 | --- | --- |
 | Remote agent | Remote repo / PR work |
-| Local CLI | Box-local gated builds |
+| Local CLI | Box-local gated builds. Grok Build: load `grok-acp` when the operator picks it |
 | Local mirror | Inbound copy of git. Not the design source of truth |
 
 **architect** adversarial-reviews other agents’ tools when the work needs
@@ -973,6 +973,7 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 | `security-hardening` | security | Always / Ask first / Never |
 | `shell-safety` | security / tester | Classify before a command runs |
 | `verify-before-done` | builder / tester | Build / notify landed+verified; resume verifier |
+| `grok-acp` | manager / builder | Operator opt-in worker: Grok Build over ACP as the item's builder. Label = `builder_id`; mint packs, resume is delta-only. Never the verifier or reviewer of its own item |
 | `yagni` | architect / builder | Smallest change that meets this Task; Brief Refine (chunk) and removal alternative (item) |
 | `modern-python` | builder | uv / ruff / ty / pytest |
 | `golang-testing` | builder / tester | Go test shape |

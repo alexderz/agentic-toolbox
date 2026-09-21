@@ -103,6 +103,10 @@ Research (not SDLC). **researcher** loads when relevant:
 
 - `buying-researcher`
 
+Workers (operator opt-in). Load only when the operator picks that worker:
+
+- `grok-acp` (Grok Build over ACP as a builder; client is the package `packages/grok-acp/`)
+
 Language pack. Do not remint the Go / Python / Shell ids above.
 
 - `language-router`
