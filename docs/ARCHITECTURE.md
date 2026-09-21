@@ -59,7 +59,7 @@ flowchart LR
 
 | Layer | What | Where |
 | --- | --- | --- |
-| Skills home | First-party `SKILL.md` + pins; distillations under `knowledge/` | this repo |
+| Skills home | First-party `SKILL.md` + pins; distillations under `knowledge/`; optional MIT packages under `packages/` | this repo |
 | Project contract | Commands + skill ids | Root `AGENTS.md` per product repo |
 | Workers | Implement via remote agent or local CLI | PR / local box |
 | Board | Projects / Epics / Tasks | Issue tracker |

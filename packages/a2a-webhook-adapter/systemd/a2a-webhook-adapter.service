@@ -1,0 +1,21 @@
+[Unit]
+Description=A2A JSON-RPC to plain POST webhook adapter
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+# Replace User / paths with local values. Do not bind 0.0.0.0.
+User=a2a-adapter
+UMask=0077
+Environment=A2A_ADAPTER_ENV=/etc/a2a-webhook-adapter/adapter.env
+WorkingDirectory=/opt/a2a-webhook-adapter
+ExecStart=/opt/a2a-webhook-adapter/start.sh
+Restart=on-failure
+NoNewPrivileges=true
+ProtectSystem=strict
+ProtectHome=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target
