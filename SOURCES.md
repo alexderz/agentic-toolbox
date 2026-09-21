@@ -54,6 +54,15 @@ Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 | lang-powershell | first-party (this repo) | first-party | MIT | No iex. Stop on error. |
 | lang-protobuf | first-party (this repo) | first-party | MIT | Fields forever. Do not edit generated stubs. |
 
+## Packages
+
+Not skills. First-party utilities. Empty SHA still means no body may land for
+**skill** ids; package rows use `first-party` when the tree is in this repo.
+
+| Package | Upstream | SHA | License | Notes |
+| --- | --- | --- | --- | --- |
+| `packages/a2a-webhook-adapter/` | first-party sanitized extract; protocol inspired by private court adapter in `alexderz/grok-bot-perm` PRs #6 and #7 | first-party | MIT | A2A JSON-RPC → plain HTTPS POST. No house secrets, mesh endpoints, or required house names. Not a skill. DER-209. |
+
 ## Knowledge distillations
 
 Not skills. Layout: [knowledge/README.md](knowledge/README.md). Compress;
