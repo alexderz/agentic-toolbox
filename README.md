@@ -65,7 +65,7 @@ and a compress, not a vendor paste.
   Empty SHA cells mean the body is not here yet.
 - **security** intake before any third-party content lands in this repo.
 - **No auto-update.** No marketplace install. No scripts. No secrets.
-  One exception to "no scripts": first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
+  One exception to "no scripts": operator-approved first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
   Third-party scripts never.
 - First-party skills (`tracker-sdlc`, `cursor-cloud-agents-when`,
   language guides) are written here; they are not vendor copies.

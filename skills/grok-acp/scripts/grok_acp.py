@@ -9,15 +9,19 @@ Permissions are deliberately wide open (operator order): --always-approve,
 _meta.yoloMode, sandbox off, and any session/request_permission that still
 arrives is answered with the most permissive allow option.
 
+State lives under ~/.local/state/grok-acp (override: GROK_ACP_STATE).
+
 Exit codes: 0 end_turn, 2 usage, 3 resume failed, 4 agent/protocol error,
 5 timeout or cancelled, 6 turn stopped for another reason (see stopReason).
 """
 
 import argparse
 import fcntl
+import hashlib
 import json
 import os
 import queue
+import re
 import shutil
 import signal
 import subprocess
@@ -44,6 +48,16 @@ class ResumeError(Exception):
     pass
 
 
+class UsageError(Exception):
+    def __init__(self, error, detail):
+        super().__init__(detail)
+        self.error, self.detail = error, detail
+
+
+class Cancelled(Exception):
+    pass
+
+
 def find_grok():
     for cand in (
         shutil.which("grok"),
@@ -57,35 +71,111 @@ def find_grok():
 
 # --- label registry: label -> session, so SDLC role ids survive context loss ---
 
+UUID_RE = re.compile(r"^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$", re.IGNORECASE)
+
+
+def state_dir():
+    STATE_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    return STATE_DIR
+
 
 class Registry:
+    """sessions.json under an exclusive lock. Written back only when changed."""
+
     def __enter__(self):
-        STATE_DIR.mkdir(parents=True, exist_ok=True)
-        self.lock = open(STATE_DIR / "sessions.lock", "w")
+        self.lock = open(state_dir() / "sessions.lock", "w")
         fcntl.flock(self.lock, fcntl.LOCK_EX)
         try:
-            self.data = json.loads(REGISTRY.read_text())
-        except (FileNotFoundError, json.JSONDecodeError):
-            self.data = {}
+            self.before = REGISTRY.read_text()
+        except FileNotFoundError:
+            self.before = "{}"
+        try:
+            self.data = json.loads(self.before)
+        except json.JSONDecodeError as e:
+            self.lock.close()
+            raise AgentError(f"registry is corrupt, fix or remove {REGISTRY}: {e}")
         return self
 
-    def __exit__(self, *exc):
-        tmp = REGISTRY.with_suffix(".tmp")
-        tmp.write_text(json.dumps(self.data, indent=1, sort_keys=True))
-        tmp.replace(REGISTRY)
+    def __exit__(self, exc_type, *exc):
+        after = json.dumps(self.data, indent=1, sort_keys=True)
+        if exc_type is None and after != self.before:
+            tmp = REGISTRY.with_suffix(".tmp")
+            tmp.write_text(after)
+            tmp.replace(REGISTRY)
         self.lock.close()
 
 
-def resolve_session(ref):
-    """A --resume value is a registry label or a raw Grok session id."""
+def hold(kind, name, held):
+    """Exclusive, non-blocking lock for the life of this process: one turn per
+    session and per label at a time. The handle is parked in `held`."""
+    digest = hashlib.sha256(name.encode()).hexdigest()[:24]
+    lock_dir = state_dir() / "locks"
+    lock_dir.mkdir(exist_ok=True)
+    fh = open(lock_dir / f"{kind}-{digest}.lock", "w")  # noqa: SIM115
+    try:
+        fcntl.flock(fh, fcntl.LOCK_EX | fcntl.LOCK_NB)
+    except BlockingIOError:
+        fh.close()
+        raise UsageError("busy", f"another grok_acp run holds {kind} {name!r}")
+    held.append(fh)
+
+
+def resolve(args, cwd, held):
+    """Settle label and session id before anything is spawned.
+
+    Returns (label, session_id); session_id is None for a new session.
+    """
+    if args.replace and (args.resume or not args.label):
+        raise UsageError("bad_args", "--replace needs --label and excludes --resume")
+    if args.resume and args.rules_file:
+        raise UsageError("bad_args", "--rules-file only applies to a new session")
+    if args.label:
+        hold("label", args.label, held)
     with Registry() as reg:
-        entry = reg.data.get(ref)
+        data = reg.data
+    if not args.resume:
+        if args.label in data and not args.replace:
+            raise UsageError(
+                "label_exists",
+                f"label {args.label!r} already has a session; "
+                f"use --resume {args.label} or --replace",
+            )
+        return args.label, None
+
+    entry = data.get(args.resume)
     if entry:
-        return ref, entry["sessionId"], entry.get("cwd")
-    return None, ref, None
+        label, session_id = args.resume, entry["sessionId"]
+        if Path(entry["cwd"]) != cwd:
+            raise UsageError(
+                "cwd_mismatch", f"session was created in {entry['cwd']}, not {cwd}"
+            )
+    elif UUID_RE.match(args.resume):
+        label, session_id = None, args.resume
+    else:
+        raise UsageError(
+            "unknown_label",
+            f"{args.resume!r} is neither a registry label nor a session id; "
+            "see `grok_acp.py sessions`",
+        )
+    if args.label and args.label != label:
+        # Adopting a session under a new name must not clobber another item's id.
+        other = data.get(args.label)
+        if other and other["sessionId"] != session_id:
+            raise UsageError(
+                "label_exists",
+                f"label {args.label!r} points at another session; forget it first",
+            )
+        label = args.label
+    if label and label != args.label:
+        hold("label", label, held)
+    hold("session", session_id, held)
+    return label, session_id
 
 
 # --- ACP client ---
+
+CANCEL = object()  # inbox sentinel: a signal or the deadline asked us to stop
+CANCEL_GRACE = 20  # seconds grok gets to answer session/cancel
 
 
 class Acp:
@@ -102,10 +192,15 @@ class Acp:
             text=True,
             bufsize=1,
         )
-        self.inbox = queue.Queue()
+        # SimpleQueue.put is reentrant, so the signal handler may call it.
+        self.inbox = queue.SimpleQueue()
         self.next_id = 0
         self.permission_requests = 0
-        threading.Thread(target=self._reader, daemon=True).start()
+        self.reaped = 0
+        self.cancel_reason = None
+        self.cancelling = False
+        self.reader = threading.Thread(target=self._reader, daemon=True)
+        self.reader.start()
 
     def _reader(self):
         for line in self.proc.stdout:
@@ -120,9 +215,18 @@ class Acp:
                 pass
         self.inbox.put(None)
 
+    def request_cancel(self, reason):
+        """Signal-handler safe: no I/O here, the request loop sends the cancel."""
+        if self.cancel_reason is None:
+            self.cancel_reason = reason
+        self.inbox.put(CANCEL)
+
     def send(self, obj):
-        self.proc.stdin.write(json.dumps(obj) + "\n")
-        self.proc.stdin.flush()
+        try:
+            self.proc.stdin.write(json.dumps(obj) + "\n")
+            self.proc.stdin.flush()
+        except (OSError, ValueError) as e:
+            raise AgentError(f"grok stdin is closed ({e}); see grok.stderr")
 
     def notify(self, method, params):
         self.send({"jsonrpc": "2.0", "method": method, "params": params})
@@ -156,26 +260,39 @@ class Acp:
             }
         )
 
-    def request(self, method, params, deadline=None, on_update=None, on_timeout=None):
-        """on_timeout runs once at the deadline, then the reply gets a 20s grace period."""
+    def request(self, method, params, deadline, on_update=None):
+        """Send one request and pump the inbox until its reply.
+
+        A cancel (signal or deadline) during session/prompt sends ACP
+        session/cancel once and allows CANCEL_GRACE for the reply. A cancel at
+        any other point raises Cancelled: no prompt is ever sent after it.
+        """
+        in_prompt = method == "session/prompt"
+        if self.cancel_reason and not self.cancelling:
+            raise Cancelled(method)
         self.next_id += 1
         rid = self.next_id
         self.send({"jsonrpc": "2.0", "id": rid, "method": method, "params": params})
         while True:
-            wait = None if deadline is None else max(0.0, deadline - time.monotonic())
             try:
-                msg = self.inbox.get(timeout=wait)
+                msg = self.inbox.get(timeout=max(0.0, deadline - time.monotonic()))
             except queue.Empty:
-                if on_timeout:
-                    on_timeout()
-                    on_timeout, deadline = None, time.monotonic() + 20
-                    continue
-                raise TimeoutError(method)
-            if msg is None:
+                if not in_prompt or self.cancelling:
+                    raise TimeoutError(method)
+                self.request_cancel("timeout")
+                continue
+            if msg is CANCEL:
+                if not in_prompt:
+                    raise Cancelled(method)
+                if not self.cancelling:
+                    self.cancelling = True
+                    self.notify("session/cancel", {"sessionId": params["sessionId"]})
+                    deadline = time.monotonic() + CANCEL_GRACE
+            elif msg is None:
                 raise AgentError(
                     f"grok exited during {method} (rc={self.proc.poll()}); see grok.stderr"
                 )
-            if "method" in msg and "id" in msg:
+            elif "method" in msg and "id" in msg:
                 self._answer(msg)
             elif "method" in msg:
                 if on_update and msg["method"] == "session/update":
@@ -194,14 +311,16 @@ class Acp:
             self.proc.wait(timeout=10)
         except (OSError, subprocess.TimeoutExpired):
             self.proc.kill()
-        self.stderr_log.close()
-        self.reaped = 0
         for pid in orphans:
             try:
                 os.kill(pid, signal.SIGTERM)
                 self.reaped += 1
-            except ProcessLookupError:
+            except OSError:  # already gone, or not ours to signal (e.g. a sudo child)
                 pass
+        self.reader.join(timeout=5)
+        self.stderr_log.close()
+        if not self.reader.is_alive():
+            self.events.close()
 
 
 def descendants(root):
@@ -275,49 +394,39 @@ class Turn:
         }, "\n\n".join(texts)
 
 
+def read_input(path, what):
+    try:
+        return Path(path).read_text()
+    except OSError as e:
+        raise UsageError("unreadable_file", f"{what}: {e}")
+
+
 def cmd_run(args):
     cwd = Path(args.cwd).resolve()
     if not cwd.is_dir():
-        return fail(EXIT_USAGE, "bad_cwd", f"--cwd is not a directory: {cwd}")
+        raise UsageError("bad_cwd", f"--cwd is not a directory: {cwd}")
     if args.prompt_file:
-        prompt = Path(args.prompt_file).read_text()
-    elif args.prompt:
+        prompt = read_input(args.prompt_file, "--prompt-file")
+    elif args.prompt is not None:
         prompt = args.prompt
     else:
         prompt = sys.stdin.read()
     if not prompt.strip():
-        return fail(
-            EXIT_USAGE, "empty_prompt", "give --prompt, --prompt-file, or stdin"
-        )
+        raise UsageError("empty_prompt", "give --prompt, --prompt-file, or stdin")
+    meta = {"yoloMode": True}
+    if args.rules_file:
+        meta["rules"] = read_input(args.rules_file, "--rules-file")
 
-    label, session_id = args.label, None
-    if args.resume:
-        reg_label, session_id, reg_cwd = resolve_session(args.resume)
-        label = label or reg_label
-        if reg_cwd and Path(reg_cwd) != cwd:
-            return fail(
-                EXIT_USAGE,
-                "cwd_mismatch",
-                f"session was created in {reg_cwd}, not {cwd}",
-            )
-    elif label:
-        with Registry() as reg:
-            if label in reg.data and not args.replace:
-                return fail(
-                    EXIT_USAGE,
-                    "label_exists",
-                    f"label {label!r} already has a session; use --resume {label} or --replace",
-                )
+    held = []  # lock handles; released when the process exits
+    label, session_id = resolve(args, cwd, held)
+    grok = find_grok()
 
-    run_dir = (
-        Path(args.out)
-        if args.out
-        else STATE_DIR / "runs" / f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}"
-    )
+    stamp = f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}"
+    run_dir = Path(args.out) if args.out else state_dir() / "runs" / stamp
     run_dir.mkdir(parents=True, exist_ok=True)
     (run_dir / "prompt.md").write_text(prompt)
 
-    argv = [find_grok(), "agent", "--always-approve", "--no-leader"]
+    argv = [grok, "agent", "--always-approve", "--no-leader"]
     if args.model:
         argv += ["--model", args.model]
     if args.effort:
@@ -326,20 +435,11 @@ def cmd_run(args):
     env = dict(os.environ, GROK_SANDBOX="off")
 
     acp = Acp(argv, env, run_dir / "events.ndjson")
-    turn, started, sent_cancel = Turn(), time.monotonic(), []
+    for sig in (signal.SIGTERM, signal.SIGINT):
+        signal.signal(sig, lambda *_: acp.request_cancel("signal"))
+    turn, started = Turn(), time.monotonic()
     deadline = started + args.timeout
 
-    def cancel(*_):
-        if session_id and not sent_cancel:
-            sent_cancel.append(True)
-            acp.notify("session/cancel", {"sessionId": session_id})
-
-    signal.signal(signal.SIGTERM, cancel)
-    signal.signal(signal.SIGINT, cancel)
-
-    meta = {"yoloMode": True}
-    if args.rules_file:
-        meta["rules"] = Path(args.rules_file).read_text()
     code, err = EXIT_OK, None
     stop_reason, result_meta = None, None
     try:
@@ -386,7 +486,8 @@ def cmd_run(args):
                 entry.setdefault("created", entry["lastUsed"])
                 reg.data[label] = entry
         print(
-            f"[grok] session {session_id} ({'resumed' if args.resume else 'new'}); events: {run_dir}/events.ndjson",
+            f"[grok] session {session_id} ({'resumed' if args.resume else 'new'}); "
+            f"events: {run_dir}/events.ndjson",
             file=sys.stderr,
             flush=True,
         )
@@ -395,17 +496,22 @@ def cmd_run(args):
             {"sessionId": session_id, "prompt": [{"type": "text", "text": prompt}]},
             deadline,
             turn.on_update,
-            on_timeout=cancel,
         )
         stop_reason, result_meta = res.get("stopReason"), res.get("_meta")
         if stop_reason == "cancelled":
-            code, err = EXIT_TIMEOUT, f"cancelled (timeout {args.timeout}s or signal)"
+            code, err = EXIT_TIMEOUT, f"cancelled by {acp.cancel_reason or 'agent'}"
         elif stop_reason != "end_turn":
             code, err = EXIT_STOPPED, f"turn stopped: {stop_reason}"
     except ResumeError as e:
         code, err = EXIT_RESUME, f"resume failed: {e}"
+    except Cancelled as e:
+        code, err = EXIT_TIMEOUT, f"cancelled by signal during {e}; no prompt was sent"
     except TimeoutError as e:
-        code, err = EXIT_TIMEOUT, f"timed out in {e}"
+        if acp.cancelling:
+            err = f"{acp.cancel_reason} cancel not acknowledged in {CANCEL_GRACE}s"
+        else:
+            err = f"timed out in {e} (--timeout {args.timeout}s)"
+        code = EXIT_TIMEOUT
     except AgentError as e:
         code, err = EXIT_AGENT, str(e)
     finally:
@@ -455,7 +561,7 @@ def cmd_sessions(args):
 def cmd_forget(args):
     with Registry() as reg:
         if reg.data.pop(args.label, None) is None:
-            return fail(EXIT_USAGE, "unknown_label", args.label)
+            raise UsageError("unknown_label", args.label)
     print(json.dumps({"ok": True, "forgot": args.label}))
     return EXIT_OK
 
@@ -508,7 +614,12 @@ def main():
     fg.set_defaults(fn=cmd_forget)
 
     args = ap.parse_args()
-    sys.exit(args.fn(args))
+    try:
+        sys.exit(args.fn(args))
+    except UsageError as e:
+        sys.exit(fail(EXIT_USAGE, e.error, e.detail))
+    except AgentError as e:
+        sys.exit(fail(EXIT_AGENT, "agent_error", str(e)))
 
 
 if __name__ == "__main__":

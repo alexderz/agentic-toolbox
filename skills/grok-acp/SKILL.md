@@ -23,9 +23,11 @@ Grok runs with maximum permissions, on purpose: `--always-approve`,
 arrives is auto-approved. It runs as the same user, so it can read, write,
 run, push, and reach the network exactly as the operator can.
 
-What still binds it: `deny` rules and hooks in `~/.grok/config.toml`, in
-`~/.claude/settings.json` (Grok reads it), and in the project. Nothing
-else. Scope is set by your prompt, so write the scope down.
+What still binds it: `deny` rules and hooks in `~/.grok/config.toml` and
+`~/.claude/settings.json` (Grok reads it). Project-level rules, hooks, and
+auto-loaded instructions apply only in a folder Grok already trusts; a
+fresh item worktree usually is not, so do not count on them. Nothing else.
+Scope is set by your prompt, so write the scope down.
 
 ## Run it
 
@@ -42,43 +44,48 @@ $GROK run --cwd <item worktree> --resume <item-id>:builder --prompt-file <delta.
 One invocation is one prompt turn. Stdout is one JSON object; progress
 lines go to stderr. Builds outlast a foreground shell call: start `run`
 **in the background** and read the result when notified. `--timeout`
-defaults to 3600 seconds; on timeout or SIGTERM the client sends ACP
-`session/cancel`, and the session stays resumable.
+defaults to 3600 seconds. On timeout or SIGTERM the client sends ACP
+`session/cancel`, waits up to 20 seconds, and exits 5; the session stays
+resumable. A SIGTERM before the prompt is sent stops the run with no turn
+spent. A label and a session each take one turn at a time: a second run
+gets `busy` (exit 2).
 
 | Flag | Use |
 | --- | --- |
 | `--cwd` | Item branch worktree. Required. A resumed label must use the cwd it was minted in |
 | `--label` | Registry name, `<item-id>:<role>`. This is the `builder_id` you store on the item |
-| `--resume` | A label, or a raw Grok session id (`grok sessions list` finds ones started elsewhere; add `--label` to adopt it) |
-| `--replace` | Mint a new session under a label that already exists (fallback / overflow) |
+| `--resume` | A label, or a raw Grok session id (`grok sessions list` finds ones started elsewhere; add an unused `--label` to adopt it) |
+| `--replace` | With `--label` only: mint a new session under a label that already exists (fallback / overflow) |
 | `--prompt` / `--prompt-file` / stdin | The handoff. Prefer a file |
 | `--model`, `--effort` | `low` `medium` `high` `xhigh`. Omit for Grok's defaults |
-| `--rules-file` | Extra system-prompt rules for a **new** session |
-| `--out` | Run directory. Default `~/.local/state/grok-acp/runs/<stamp>` |
+| `--rules-file` | Extra system-prompt rules. New sessions only; refused with `--resume` |
+| `--out` | Run directory. Default `~/.local/state/grok-acp/runs/<stamp>-<pid>` |
 
 `$GROK sessions` prints the label registry
-(`~/.local/state/grok-acp/sessions.json`). `$GROK forget <label>` drops a
-label; Grok keeps the session.
+(`~/.local/state/grok-acp/sessions.json`; the state directory is `0700`
+and moves with `GROK_ACP_STATE`). `$GROK forget <label>` drops a label;
+Grok keeps the session.
 
 ### Result
 
 | Field | Meaning |
 | --- | --- |
-| `ok`, `error`, `stopReason` | `ok` only when the turn ended with `end_turn` |
+| `ok`, `error`, `stopReason` | `ok` only when the turn ended with `end_turn`. Usage failures carry `error` + `detail` only |
 | `sessionId`, `label`, `resumed` | Store these on the item |
 | `text` | Grok's **final** message only. Full text: `response.md` in `runDir` |
 | `filesEdited`, `toolCalls`, `failedToolCalls` | From ACP tool-call updates. A hint, not a diff |
-| `leftoverProcessesKilled` | Shell children Grok left running; the client kills them at exit |
+| `leftoverProcessesKilled` | Grok's child processes still alive at exit and sent SIGTERM (its shell commands outlive it otherwise) |
+| `permissionRequestsAutoApproved`, `plan`, `durationSec` | Permission prompts answered for Grok; its last plan, if any; wall time |
 | `usage` | Model, tokens, calls for this turn |
 | `runDir` | `prompt.md`, `response.md`, `result.json`, `events.ndjson` (every ACP message), `grok.stderr` |
 
 | Exit | Meaning | Do |
 | --- | --- | --- |
 | 0 | `end_turn` | Verify |
-| 2 | Usage: bad cwd, empty prompt, label clash, cwd mismatch | Fix the call |
+| 2 | Usage: `bad_cwd`, `empty_prompt`, `unreadable_file`, `bad_args`, `label_exists`, `unknown_label`, `cwd_mismatch`, `busy` | Fix the call. `unknown_label` is a typo, not a reason to `--replace` |
 | 3 | Resume failed | Mint `--replace` with a short handoff (SDLC fallback) |
 | 4 | Agent or protocol error | Read `grok.stderr`. Auth: operator runs `grok login` |
-| 5 | Timeout or cancelled | Resume with what is left, or raise `--timeout` |
+| 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout` |
 | 6 | Stopped for another reason (`max_tokens`, `refusal`, …) | Read `stopReason`; usually overflow → `--replace` |
 
 ## SDLC fit
@@ -97,8 +104,11 @@ label; Grok keeps the session.
   re-send the spec.
 - **Branching is yours.** Create the item branch and worktree from
   project-main (or trunk) yourself and pass it as `--cwd`. Tell Grok to
-  commit on that branch and **not** to push, merge, or touch other
-  branches. Lands stay serialized and stay with the orchestrator.
+  commit on that branch, **never** to push, and never to merge the item
+  branch into anything. De-conflicting is still the builder's job: when
+  project-main moves, resume the label with a delta that tells it to
+  merge or rebase project-main **into** the item branch. Lands stay
+  serialized and stay with the orchestrator.
 - **Blockers and gates.** Check the item's blockers before minting.
   Offloading the build skips no gate: Review and security still run.
 - **Fallback and overflow.** Exit 3, or a session too long to be useful:
@@ -115,20 +125,24 @@ Design:      <LLD slice or path>
 Scope:       <paths>. Do not touch <paths>.
 Standards:   <language / test rules, packed or by path>
 Prove it:    <exact commands that must pass>
-Git:         commit on <branch>; do not push, merge, or switch branches.
+Git:         commit on <branch>. Never push. Never merge <branch> into another
+             branch or switch branches. Merge <base> into <branch> only when asked.
 
 Finish with: files changed, commands run and their results, open risks.
 ```
 
 ## After it returns
 
-Load `verify-before-done`. Then, yourself:
+Load `verify-before-done`. You are the orchestrator, not the verifier:
 
-1. `git status` and `git diff <base>...` in the worktree. `filesEdited`
-   misses shell-made changes.
-2. Run the proving commands. Do not take "tests pass" from `text`.
-3. Failures go back to the **same** label as a delta.
-4. Hand a clean verifier the ticket and the commands, not Grok's output.
+1. Smoke-check yourself: `git status` and `git diff <base>...` in the
+   worktree (`filesEdited` misses shell-made changes), and that the branch
+   and git rule were kept. This is not the gate.
+2. The item's **verifier** runs the proving commands. First pass: mint it
+   clean with the ticket and the commands. Later passes: resume that
+   `verifier_id` with the delta. Never give it Grok's output.
+3. Verifier failures go back to the **same** Grok label as a delta.
+4. Do not take "tests pass" from `text` at any step.
 
 ## Always
 

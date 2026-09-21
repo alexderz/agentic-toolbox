@@ -199,7 +199,7 @@ Before any third-party content:
 1. Pin the cherry-pick SHA in [SOURCES.md](SOURCES.md).
 2. Complete **security** intake ([docs/INTAKE.md](docs/INTAKE.md)).
 3. No marketplace install, no auto-update, no scripts, no secrets in this
-   repo. One exception to "no scripts": first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
+   repo. One exception to "no scripts": operator-approved first-party executables named in [SOURCES.md](SOURCES.md) (today: `grok-acp`).
    Third-party scripts never.
 
 Empty SHA cells mean the body must not exist yet.
