@@ -75,7 +75,9 @@ UUID_RE = re.compile(r"^[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}$", re.IGNORECA
 
 
 def state_dir():
-    STATE_DIR.mkdir(parents=True, exist_ok=True, mode=0o700)
+    # Transcripts can hold anything Grok read; chmod covers a pre-existing dir.
+    STATE_DIR.mkdir(parents=True, exist_ok=True)
+    STATE_DIR.chmod(0o700)
     return STATE_DIR
 
 
@@ -150,7 +152,7 @@ def resolve(args, cwd, held):
                 "cwd_mismatch", f"session was created in {entry['cwd']}, not {cwd}"
             )
     elif UUID_RE.match(args.resume):
-        label, session_id = None, args.resume
+        label, session_id = None, args.resume.lower()
     else:
         raise UsageError(
             "unknown_label",
@@ -423,8 +425,12 @@ def cmd_run(args):
 
     stamp = f"{time.strftime('%Y%m%dT%H%M%S')}-{os.getpid()}"
     run_dir = Path(args.out) if args.out else state_dir() / "runs" / stamp
-    run_dir.mkdir(parents=True, exist_ok=True)
-    (run_dir / "prompt.md").write_text(prompt)
+    try:
+        run_dir.mkdir(parents=True, exist_ok=True)
+        run_dir.chmod(0o700)
+        (run_dir / "prompt.md").write_text(prompt)
+    except OSError as e:
+        raise UsageError("bad_out", f"cannot write run directory {run_dir}: {e}")
 
     argv = [grok, "agent", "--always-approve", "--no-leader"]
     if args.model:

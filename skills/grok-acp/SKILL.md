@@ -62,8 +62,9 @@ gets `busy` (exit 2).
 | `--out` | Run directory. Default `~/.local/state/grok-acp/runs/<stamp>-<pid>` |
 
 `$GROK sessions` prints the label registry
-(`~/.local/state/grok-acp/sessions.json`; the state directory is `0700`
-and moves with `GROK_ACP_STATE`). `$GROK forget <label>` drops a label;
+(`~/.local/state/grok-acp/sessions.json`; the state directory and every
+run directory are forced to `0700`, and the state directory moves with
+`GROK_ACP_STATE`). `$GROK forget <label>` drops a label;
 Grok keeps the session.
 
 ### Result
@@ -82,10 +83,10 @@ Grok keeps the session.
 | Exit | Meaning | Do |
 | --- | --- | --- |
 | 0 | `end_turn` | Verify |
-| 2 | Usage: `bad_cwd`, `empty_prompt`, `unreadable_file`, `bad_args`, `label_exists`, `unknown_label`, `cwd_mismatch`, `busy` | Fix the call. `unknown_label` is a typo, not a reason to `--replace` |
+| 2 | Usage: `bad_cwd`, `empty_prompt`, `unreadable_file`, `bad_args`, `label_exists`, `unknown_label`, `cwd_mismatch`, `busy`, `bad_out` | Fix the call. `unknown_label` is a typo, not a reason to `--replace` |
 | 3 | Resume failed | Mint `--replace` with a short handoff (SDLC fallback) |
 | 4 | Agent or protocol error | Read `grok.stderr`. Auth: operator runs `grok login` |
-| 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout` |
+| 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout`. `sessionId: null` means it stopped before a session existed: mint again |
 | 6 | Stopped for another reason (`max_tokens`, `refusal`, …) | Read `stopReason`; usually overflow → `--replace` |
 
 ## SDLC fit
