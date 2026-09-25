@@ -548,8 +548,10 @@ arrived as a tracker ticket, use that ticket as the Epic (ask the
 operator to relabel it if its type differs; never duplicate it);
 otherwise **manager** files it with `tracker-sdlc` `create`. If
 onboarding ran, commit it as `[<epic-id>] Onboard tracker: <Tracker>`
-on an item branch cut from project-main; it rides the chunk's
-first reviewed land or lands as its own item (never a bare commit).
+on an item branch cut from project-main and land it on project-main
+as its own item through Review **before Plan**: a short item with its
+own **verifier**, **reviewer**, and **security** read of the repo skill
+(never a bare commit).
 **manager** posts the Entry classification on the Epic with
 `tracker-sdlc` `comment`.
 

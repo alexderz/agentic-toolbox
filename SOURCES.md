@@ -9,7 +9,7 @@ Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 
 | Skill | Upstream | SHA | License | Notes |
 | --- | --- | --- | --- | --- |
-| tracker-sdlc | first-party (this repo) | first-party | MIT | Contract + 5 adapters, prose only. Every tracker read/write goes through it and the product repo's `.agents/tracker/SKILL.md`. No vendor body. No scripts/. |
+| tracker-sdlc | first-party (this repo) | first-party | MIT | Contract + 5 adapters, prose only; a repo tracker skill has no `scripts/` files but may copy the fenced shell recipe from `adapters/local.md` (same **security** read). Every tracker read/write goes through it and the product repo's `.agents/tracker/SKILL.md`. No vendor body. No scripts/. |
 | sdlc-onboarding | first-party (this repo) | first-party | MIT | Onboarding, prose only. Discovers the repo's tracker, proposes to the operator, writes `## Tracker` + `.agents/tracker/SKILL.md` on confirm. No vendor body. No scripts/. |
 | discover-the-idea | first-party (this repo) | first-party | MIT | Architect gatherer. Chunk Brief Gather (interview). Do not load on an incoming item. Load the skill; do not paste it into the SDLC. Inspired by public grilling method. |
 | sdlc-artifacts | first-party (this repo) | first-party | MIT | Templates for HLD/LLD/tickets/track/changelog/UX. Load the skill; do not paste the SDLC into artifacts. Chunk brief stays discover-the-idea. Incoming item: bug.md / task.md. |

@@ -28,6 +28,10 @@ Tracker-agnostic SDLC (`DER-252`, PR #2).
 
 ### Changed
 
+- A chunk's onboarding commit lands as its own reviewed item before
+  Plan; agents use the product repo's own `## Tracker`; a repo tracker
+  skill may copy the local adapter's fenced shell recipe but has no
+  `scripts/` files (`DER-252`, `DER-270`, PR #2)
 - Only the orchestrator writes to the tracker; Plan and Groom post to
   tickets with `comment`; land commits carry `Reviewed-by:`; the
   onboarding commit lands through Review (`DER-252`, `DER-262`,
