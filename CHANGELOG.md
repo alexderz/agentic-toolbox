@@ -6,8 +6,8 @@ Newest first. Skip empty sections.
 
 ### Added
 
-- `tracker-sdlc` contract + Linear adapter, `sdlc-onboarding`, and the
-  `tracker-skill.md` template (`DER-252`, `DER-254`, unreleased)
+- `tracker-sdlc` contract + Linear and Asana adapters, `sdlc-onboarding`, and
+  the `tracker-skill.md` template (`DER-252`, `DER-254`, `DER-257`, unreleased)
 - `grok-acp` worker skill and `packages/grok-acp/` ACP client: offload a build
   to the local Grok Build CLI as an SDLC builder, mint or resume by label
   (no ticket, unreleased)
