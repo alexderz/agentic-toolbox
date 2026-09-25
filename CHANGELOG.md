@@ -21,6 +21,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `tracker-sdlc` contract v2: claim posts a `Claimed by` comment and
+  re-checks for an earlier claim; Linear blockers stay listed when
+  resolved; repo-skill budget ≤180; SDLC lands are local, serialized
+  merges with no PRs (`DER-252`, `DER-260`, unreleased)
 - SDLC Entry is read-only; branches are cut at Brief; every tracker
   read/write goes through `tracker-sdlc` (`DER-252`, `DER-254`,
   unreleased)

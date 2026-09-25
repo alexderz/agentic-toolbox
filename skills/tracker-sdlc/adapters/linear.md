@@ -17,7 +17,10 @@ vendor source yet; prove them live before relying on them.
   grouped; a type group may not hold every type label, so onboarding
   checks where each one lives.
 - Issues belong to a team; creating one needs the team (unverified).
-- Sub-items stay off unless the workspace already uses sub-issues.
+- Sub-items (sub-issues under a work item) stay off unless the
+  workspace already uses them. The one parent field links item → Epic
+  and sub-issue → item: tell the levels apart by the parent's type
+  label.
 
 ## Blockers
 
@@ -26,11 +29,12 @@ vendor source yet; prove them live before relying on them.
   `related`.
 - Direction: the blocker lists the other issue under **Blocking**; the
   blocked issue lists it under **Blocked by**. That one relation shows
-  on both issues (unverified). The repo skill records it one way:
-  blocked id ← blocker id.
-- A resolved blocker moves under **Related**. It no longer shows as
-  "Blocked by", so a blocker in `done` or `canceled` reads as related,
-  not open.
+  on both issues (observed on a live workspace 2026-09-24). The repo
+  skill records it one way: blocked id ← blocker id.
+- A resolved blocker **stays** listed as "blocked by": observed on a
+  live workspace 2026-09-24 (an issue still listed its blocker while
+  that blocker was Done). Recipes check each blocker's state; the list
+  alone never proves an open blocker.
 - Marking a duplicate moves the issue into the reserved **Duplicate**
   status. Map it to `canceled`.
 - A community report says adding a relation can convert an existing one
@@ -66,8 +70,16 @@ vendor source yet; prove them live before relying on them.
 - Done on merge may mark an item `done` before verification (see
   States and transitions).
 - A Duplicate issue is not `done`; it is `canceled`.
-- The resolved-blocker move means "no Blocked by shown" is not proof of
-  no blocker history; read Related too when auditing.
+- "Blocked by" lists done and canceled blockers too (see Blockers):
+  resolve every blocker's state before list-ready or claim.
+- Claim: agents that act through the operator's account share one
+  assignee (observed on a live workspace 2026-09-24), so the default
+  claim comment applies. Comments carry a creation timestamp; order by
+  it, oldest first (unverified).
+- Native agent field: assigning an issue to an agent application sets
+  its **delegate**, not the assignee, and keeps the human owner. Only an
+  agent installed as its own Linear application has one; an agent on
+  the operator's account cannot use it.
 - Keys are `ABC-123` (team key + number). Suggested branch names put
   the key in lowercase (for example `abc-123-short-title`). The SDLC branch `item/<ticket-id>-<slug>` also carries
   the key; the integration links branches that contain it.
@@ -93,6 +105,7 @@ vendor source yet; prove them live before relying on them.
 - https://linear.app/docs/issue-relations
 - https://linear.app/docs/github
 - https://linear.app/developers/graphql
+- https://linear.app/developers/agents
 - https://www.speakeasy.com/product/mcp-gateway/catalog/linear/
 - https://github.com/schpet/linear-cli
 - https://github.com/PelvicSorcerer/moviecal/issues/342
