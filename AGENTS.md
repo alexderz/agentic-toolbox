@@ -14,7 +14,8 @@ This is a public, open-source repo.
 - **Deliverables** (skills, human-facing docs, code, collateral): write
   for outside readers in a professional voice, per the project's style
   guide (default `docs-google-style`). No people's names beyond
-  maintainer credits and git authorship, no who said what, and no private tracker workspace URLs or names, internal hostnames or
+  maintainer credits and git authorship, no who said what, and no
+  private tracker workspace URLs or names, internal hostnames or
   IPs, credentials (see [Never](skills/security-hardening/SKILL.md#never)),
   or agent-session leftovers such as interview question labels. Bare
   ticket ids (`DER-123`) are fine.
