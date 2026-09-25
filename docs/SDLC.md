@@ -3,7 +3,8 @@
 Shared process for work that uses this skills home. Software is the
 common case; the same steps apply to docs, process changes, and other
 tickets. Git holds durable artifacts. The issue tracker is the board.
-Pull requests cite a ticket ID when the project uses tickets.
+Branches and land commits cite a ticket ID when the project uses
+tickets.
 
 ## Roles
 
@@ -16,8 +17,8 @@ Do not remint a skill that already has an id here.
 | **designer** | User stories, high-level UX, Spec mockups when there is a screen |
 | **builder** | Implement and ship |
 | **tester** | Mechanical CI, hooks, cleanup, verification evidence |
-| **security** | Gates at Spec (trust boundaries) and PR, plus skill intake — not only a monthly vuln pass |
-| **manager** | Process, board after-act, and land path (PR vs merge-and-delete). Does not bless ships |
+| **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). Does not bless ships |
 | **operator** | Human in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
 Workers (agents, CI bots) act as **builder** or **tester**. They do not
@@ -393,8 +394,7 @@ scheme.
 | Role | the names in this SDLC | `builder`, `designer` |
 | Step | the names in [Steps](#steps) | `Build`, `Plan` |
 
-Cite the ticket ID on the item branch, PR title, merge commit, and
-changelog line when the project uses tickets. If it does not, omit the
+Cite the ticket ID on the item branch, merge commit, and changelog line when the project uses tickets. If it does not, omit the
 ID and keep the rest.
 
 Commits: imperative subject, one idea. `[ticket-id] subject` when
@@ -434,8 +434,8 @@ The board, git, and changelog must agree:
 
 | Artifact | Points at |
 | --- | --- |
-| Ticket | LLD path; land SHA or PR when landed+verified |
-| Changelog line | ticket ID + land SHA or PR |
+| Ticket | LLD path; land SHA when landed+verified |
+| Changelog line | ticket ID + land SHA |
 | HLD / LLD | chunk and ticket IDs they cover |
 
 - **Build** land: one line under `## Unreleased`.
@@ -463,7 +463,7 @@ agents, not which steps exist. Headings and tickets use the **name**.
 | [Spec](#spec) | Write or **align** LLD. Shape change → escalate. |
 | [Groom](#groom) | Tickets, blockers, land path. Incoming item: this ticket. |
 | [Build](#build) | Implement ↔ test until DoD. |
-| [Review](#review) | Reviewer ≠ builder. Required even for merge-and-delete. |
+| [Review](#review) | Reviewer ≠ builder. Required for every land (no PRs). |
 | [Trunk](#trunk) | Land project-main on the official copy (when a chunk used one). |
 | [Changelog](#changelog) | Promote Unreleased. |
 | [Monthly](#monthly) | Cadence, not a ship gate. |
@@ -486,7 +486,7 @@ step.
 | Stage 2 | **Spec** | |
 | Stage 3 | **Groom** | Start Build with a hidden blocker |
 | Stage 4 | **Build** | Treat “4” as Plan |
-| Stage 5 | **Review** | Skip because merge-and-delete |
+| Stage 5 | **Review** | Skip because there is no PR |
 | Stage 6 | **Trunk** | Mark shipped before this |
 | Stage 7 | **Changelog** | |
 | Stage 8 | **Monthly** | Use this as a substitute for Spec/Review security |
@@ -682,8 +682,8 @@ integrating**, project-main already exists (cut at the end of chunk
 Brief; see [Project-main](#project-main-intermediate-integration) and
 [Conventions](#conventions-optional-recommended)). Groom moves the items
 to `ready` and the Epic to `in_progress` through `tracker-sdlc`.
-**manager** sets the land path: PR into project-main, or
-merge-and-delete the item branch.
+**manager** sets the land order: lands are local merges, one at a time
+([Land path](#land-path-manager)).
 
 **Blockers.** For every dependency, set a blocker with the
 `tracker-sdlc` set-blocker verb: the tracker's native relation, else a
@@ -695,7 +695,7 @@ issue. Do not start Build with a hidden prereq.
 to a chunk. Its branch was already cut at item Brief: from project-main
 if one **already exists** (this chunk is still integrating), and it
 lands there; else from trunk (no chunk in flight, or the parent chunk
-already Trunked), with Review versus trunk and merge-and-delete. Do not
+already Trunked), with Review versus trunk and a local merge. Do not
 create a project-main for an incoming item.
 
 ### Build
@@ -750,15 +750,15 @@ chosen fix was the wrong *kind* of change (then escalate).
 **Skill-home DoD (this repo):** any skill-body diff must match the pinned
 SHA in [SOURCES.md](../SOURCES.md) for that id. Empty SHA means no body
 may land. Remote agent PRs into this repo still pass **security intake**.
-Workers **do not bypass** intake, SHA pins, or security Spec/PR gates.
+Workers **do not bypass** intake, SHA pins, or security Spec/Review gates.
 
 ### Review
 
 Review **before** the item lands on project-main (or trunk). When
 Review starts, `tracker-sdlc` transition `in_review`. The
 reviewer is **not** the builder who wrote the diff. Same-session
-self-review does not count. Merge-and-delete does **not** skip this
-gate.
+self-review does not count. Review is an explicit gate, not a PR; a
+local merge does **not** skip it.
 
 First review of this item: mint a **clean reviewer**. Later review rounds
 on the same item (after fixes): **resume that reviewer**. Do not mint a
@@ -797,7 +797,7 @@ note only until **manager** / **operator** cut a Task. No watcher, no
 cron required.
 
 Monthly is **not** the security gate. **security** already gated trust
-boundaries at Spec and the PR. Monthly is cadence review of
+boundaries at Spec and Review. Monthly is cadence review of
 vulns/updates/new solutions, not a substitute for those gates.
 
 ## Project-main (intermediate integration)
@@ -827,24 +827,22 @@ verifier). Do not race two merges onto project-main.
 
 ### Land path (manager)
 
-**manager** chooses, and may change when parallelism changes:
+No PRs. **manager** sets the land order; builders follow it.
 
-| Situation | Default |
+| Step | Rule |
 | --- | --- |
-| Two or more items in flight on this project-main | **PR** into project-main (queue is visible; conflicts show on the PR) |
-| One item at a time (including a lone incoming item) | **Merge and delete** the item branch after Review |
+| Review | An explicit SDLC gate ([Review](#review)), not a PR |
+| Durability | Push the item branch while it is built and reviewed; push project-main after each land |
+| Land | After Review, merge the item branch locally into project-main (or trunk), one land at a time; push; delete the item branch |
 
-PRs are allowed and useful. They are not mandatory when manager has
-chosen merge-and-delete. Builders follow the current manager call; they
-do not pick a path that contradicts it. Ticket ID goes on the PR or the
-merge commit.
+The ticket ID goes on the merge commit.
 
 **Never**
 
 - Branch an item off trunk or off another item branch while project-main
   exists.
 - Leave merge-ready items unmerged so they can “integrate together later.”
-- Skip Review because the land path is merge-and-delete.
+- Skip Review because there is no PR.
 - Force-push project-main to win a race (shared branch; **shell-safety**
   Ask first).
 - Treat a green item branch as landed+verified. Landed means **on
@@ -966,7 +964,7 @@ on this pass, pack that slice or name it — not the whole set again.
 
 **architect** adversarial-reviews other agents’ tools when the work needs
 it. **tester** owns mechanical CI/hooks. **security** owns gates (Spec
-trust boundaries + PR) and skill intake. **manager** after-acts the
+trust boundaries + Review) and skill intake. **manager** after-acts the
 board; does not bless before ship.
 
 **Workers do not bypass security.** A remote or local agent PR into this

@@ -50,7 +50,7 @@ process pack beside these ids (see [docs/INTAKE.md](docs/INTAKE.md)).
 | builder | Implement and ship |
 | tester | Mechanical CI, hooks, cleanup |
 | security | Security gates and skill intake |
-| manager | Process, SDLC after-act, land path (PR vs merge-and-delete) |
+| manager | Process, SDLC after-act, land order (local, serialized merges; no PRs) |
 | operator | HITL, exceptions, vuln severity |
 | researcher | Market / buy research when that ask is in play. Not an SDLC step |
 
@@ -67,11 +67,11 @@ delta-only — do not re-pack.
 Branch items off **project-main** (`integrate/<slug>`) when that branch
 exists; land each merge-ready item there (serialized), then land
 project-main on trunk. Incoming item with no live project-main: branch from trunk,
-Review versus trunk, merge-and-delete. Do not invent a project-main for
+Review versus trunk, local merge. Do not invent a project-main for
 a lone incoming item.
 
-**manager** picks PR vs merge-and-delete from how many items are in
-flight. Groom sets tracker **blockers** through `tracker-sdlc`.
+No PRs: Review is an explicit gate; push item branches and project-main
+for durability; **manager** orders the local, serialized lands. Groom sets tracker **blockers** through `tracker-sdlc`.
 Do not start or land an item with an open blocker unless the operator
 said so. Full rules: [docs/SDLC.md](docs/SDLC.md) (Groom, Build,
 Project-main, Subagents per work item, Spawn prompts).
