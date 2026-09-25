@@ -1,7 +1,7 @@
 # LLD — Tracker-agnostic SDLC
 
 - Slug: `tracker-sdlc`
-- HLD: [docs/tracker-sdlc/hld.md](hld.md) (accepted 2026-09-24);
+- HLD: [maintainers/design/tracker-sdlc/hld.md](hld.md) (accepted 2026-09-24);
   UX: [ux.md](ux.md); comparables: [comparables.md](comparables.md)
 - Tickets this LLD covers: DER-252 (chunk, track P-DER-11); Groom items
   G1–G6 = DER-254…DER-259 (G1 DER-254, G2 DER-255, G3 DER-256, G4 DER-257,
@@ -189,7 +189,7 @@ Structure: Iron law (propose before write; never change schema) ·
 When · Branch · one `## <Area>` section per onboarding area · Spec gate
 check · Never (change tracker schema; write tokens or config values;
 marketplace or `npx` install of an MCP/CLI/skill; add a vendor skill —
-that is [INTAKE](../INTAKE.md)). Each area section has the same four subsections:
+that is [INTAKE](../../../docs/INTAKE.md)). Each area section has the same four subsections:
 **Discover · Propose · Write · Check**. Only `## Tracker` has content
 now; a later area (e.g. `## Testing`) adds a sibling section with the
 same subsections and one line in When — no other change.

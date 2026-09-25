@@ -429,7 +429,8 @@ Copy shapes from [`sdlc-artifacts`](../skills/sdlc-artifacts/SKILL.md)
 (`skills/sdlc-artifacts/templates/`). Do not invent a second outline.
 
 This skills home stays `skills/<id>/SKILL.md`, [SOURCES.md](../SOURCES.md),
-and this file. Tests follow the language skill, not a second layout.
+and this file; its own build notes and design records live under
+`maintainers/`. Tests follow the language skill, not a second layout.
 
 ### Changelog and connection
 

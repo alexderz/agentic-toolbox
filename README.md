@@ -141,9 +141,11 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 - SDLC: [docs/SDLC.md](docs/SDLC.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Intake: [docs/INTAKE.md](docs/INTAKE.md)
-- First cherry-pick candidates: [docs/CHERRY-PICK-CANDIDATES.md](docs/CHERRY-PICK-CANDIDATES.md)
-- CI hooks (fmt/lint): [docs/CI-HOOKS-PLAN.md](docs/CI-HOOKS-PLAN.md)
+- First cherry-pick candidates: [maintainers/CHERRY-PICK-CANDIDATES.md](maintainers/CHERRY-PICK-CANDIDATES.md)
+- CI hooks (fmt/lint): [maintainers/CI-HOOKS-PLAN.md](maintainers/CI-HOOKS-PLAN.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
 
 Agents landing in this repo: start at [AGENTS.md](AGENTS.md). Claude
-Code reads [CLAUDE.md](CLAUDE.md), which only points at AGENTS.md.
+Code reads [CLAUDE.md](CLAUDE.md), which points at AGENTS.md. Work on
+this repository itself starts at
+[maintainers/AGENTS.md](maintainers/AGENTS.md).

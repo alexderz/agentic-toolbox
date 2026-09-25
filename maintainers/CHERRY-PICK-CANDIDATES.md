@@ -9,7 +9,7 @@ Owner: **architect** (this list + SHA pin after clear) + **security**
 
 ## Gates before any body lands
 
-1. **security** intake per [INTAKE.md](INTAKE.md). Workers do not bypass.
+1. **security** intake per [INTAKE.md](../docs/INTAKE.md). Workers do not bypass.
 2. **SkillSpector** (and/or cisco skill-scanner / verified obielin
    skillguard — verify the GitHub org) **before a body lands**.
    Layout-only `.gitkeep` dirs do not need a scan.

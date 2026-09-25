@@ -7,6 +7,10 @@ on this file, then load what it names.
 Git is the source of truth. Do not write skill bodies only on a local or
 vendor mirror.
 
+`maintainers/` holds build notes for this repository. Skip it unless you
+are working on this repository or want the reasoning behind a decision.
+Routing tables never point into it.
+
 ## Public repo
 
 This is a public, open-source repo.
@@ -19,8 +23,8 @@ This is a public, open-source repo.
   IPs, credentials (see [Never](skills/security-hardening/SKILL.md#never)),
   or agent-session leftovers such as interview question labels. Bare
   ticket ids (`DER-123`) are fine.
-- **Agent context** (`docs/<chunk>/` design records, `.agents/`, scratch
-  notes) can be informal: civil and credential-free, not tone-reviewed.
+- **Agent context** (`maintainers/design/<chunk>/` design records,
+  `maintainers/.agents/`, other `maintainers/` notes, scratch notes) can be informal: civil and credential-free, not tone-reviewed.
 - **Commit messages, PR descriptions, and tags** are public and
   effectively permanent: write them for outside readers.
 
@@ -40,7 +44,7 @@ in the SDLC).
 | **UX** | User stories, high-level UX, or screen mockups | **designer:** **read `skills/ux-design/SKILL.md`**. Agent review vs requirements (no reviewer taste), then human unless they waive. |
 | **Artifacts** | Writing HLD, LLD, tickets, epics, track/roadmap, PoC, decision, changelog, PR, monthly, human how-to, AGENTS stub, or repo tracker skill (`tracker-skill.md`) | **Read `skills/sdlc-artifacts/SKILL.md`** and copy the matching `templates/` file. Chunk brief stays `discover-the-idea`. Incoming item: `bug.md` / `task.md` (problem + fix vs removal). |
 | **Debug** | Failure while implementing a chosen fix, or unexpected behavior in Build | If this is a **new** ticket (not already in Build), follow **Incoming item** (Entry + Brief). In Build, or after a chosen fix: **read `skills/debug/SKILL.md`** (default). Alternatives: `debug-pocock`, `debug-anthropic`. Load **one**. Then `tdd` + `verify-before-done`. At item Brief, the troubleshooter may load `debug` for root cause and must **not** implement. |
-| **Tracker** | Any tracker read or write (file, claim, move, block, comment, list ready work) | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`; the `## Tracker` section at the end of this file applies only to work on this repository. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. |
+| **Tracker** | Any tracker read or write (file, claim, move, block, comment, list ready work) | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. |
 | **Docs** | Human how-to or agent-facing comments after Spec | **Read `skills/docs-google-style/SKILL.md`**. Human: what it is, how it works, how to use it. Agent: locatable contracts. |
 | **A skill** | The id applies to this turn | **Read `skills/<id>/SKILL.md`**. Ids are listed below. |
 | **Language** | Writing or reviewing code | At most **one** language-family skill (table below, or load `language-router` first if ambiguous). Pointers `lang-go` / `lang-python` / `lang-shell` do not count as a load. |
@@ -223,10 +227,6 @@ Before any third-party content:
    repo.
 
 Empty SHA cells mean the body must not exist yet.
-
-## Tracker
-
-Linear — load .agents/tracker/SKILL.md (tracker-sdlc v2).
 
 ## Related
 

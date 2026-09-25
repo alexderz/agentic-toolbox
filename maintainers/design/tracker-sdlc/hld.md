@@ -29,7 +29,7 @@
   it files, claims, and transitions; builders report).
   Operator confirms onboarding and owns tracker credentials.
 
-- **UX / stories** — `docs/tracker-sdlc/ux.md` — agent review agreed;
+- **UX / stories** — `maintainers/design/tracker-sdlc/ux.md` — agent review agreed;
   operator acceptance pending.
 
 - **Comparables** — [comparables.md](comparables.md)

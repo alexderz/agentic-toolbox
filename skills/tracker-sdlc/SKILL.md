@@ -114,9 +114,11 @@ orchestrators collide, the operator decides.
 
 Mirrors `language-router`: check, load one file, stop.
 
-1. Read the product repo's `AGENTS.md`. Find `## Tracker`; the next
-   non-empty line must name `.agents/tracker/SKILL.md`.
-2. Read `.agents/tracker/SKILL.md`. It must contain the line
+1. Read the `AGENTS.md` that governs your work: the product repo's
+   root `AGENTS.md`, or a subdirectory `AGENTS.md` the repo designates
+   for maintainer work. Find `## Tracker`; the next non-empty line must
+   name `.agents/tracker/SKILL.md`, relative to that file's directory.
+2. Read that `.agents/tracker/SKILL.md`. It must contain the line
    `Contract: tracker-sdlc v<N>`, where `N` is this file's contract
    version.
 3. Both hold → use its recipes. Stamp `v1` → upgrade like

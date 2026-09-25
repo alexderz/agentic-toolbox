@@ -104,17 +104,18 @@ Send one message in the `ask-human.md` shape
   on `tickets` then carry no authorship proof).
 
 Shape and a worked example:
-[ux.md — Example onboarding proposal](../../docs/tracker-sdlc/ux.md#example-onboarding-proposal-linear-this-repo).
+[ux.md — Example onboarding proposal](../../maintainers/design/tracker-sdlc/ux.md#example-onboarding-proposal-linear-this-repo).
 No answer → nothing is written.
 
 ### Write
 
 On confirm:
 
-1. Add `## Tracker` to the product repo's `AGENTS.md`, exactly two
+1. Add `## Tracker` to the `AGENTS.md` that governs your work (see
+   [Check](#check); default: the product repo's root one), exactly two
    lines: the heading, then
    `<Tracker> — load .agents/tracker/SKILL.md (tracker-sdlc v<N>).`
-2. Write `.agents/tracker/SKILL.md` from
+2. Write `.agents/tracker/SKILL.md`, in that file's directory, from
    [`templates/tracker-skill.md`](../sdlc-artifacts/templates/tracker-skill.md).
    Fill every field or write `n/a` and why. Bake the adapter gotchas
    into the recipes. Keep the two fixed template lines unchanged. Keep
@@ -140,9 +141,11 @@ On confirm:
 
 Same as the `tracker-sdlc` Map steps 1–2. Offline: file reads only.
 
-1. `AGENTS.md` has `## Tracker`, and its next non-empty line names
-   `.agents/tracker/SKILL.md`.
-2. `.agents/tracker/SKILL.md` has the line `Contract: tracker-sdlc v<N>`
+1. The `AGENTS.md` that governs your work (the product repo's root
+   one, or a subdirectory one the repo designates for maintainer work)
+   has `## Tracker`, and its next non-empty line names
+   `.agents/tracker/SKILL.md`, relative to that file's directory.
+2. That `.agents/tracker/SKILL.md` has the line `Contract: tracker-sdlc v<N>`
    with `N` equal to the contract version. A `v1` stamp is upgraded by
    a Repair-style diff (claim row, claim recipe, restamp) on operator
    OK, not a full onboarding.

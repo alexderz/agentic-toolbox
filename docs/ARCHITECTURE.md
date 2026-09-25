@@ -91,5 +91,5 @@ flowchart LR
 - [INTAKE.md](INTAKE.md)
 - [SOURCES.md](../SOURCES.md)
 - [LICENSE](../LICENSE) / [NOTICE](../NOTICE)
-- [CHERRY-PICK-CANDIDATES.md](CHERRY-PICK-CANDIDATES.md)
+- [CHERRY-PICK-CANDIDATES.md](../maintainers/CHERRY-PICK-CANDIDATES.md)
 - [knowledge/README.md](../knowledge/README.md)
