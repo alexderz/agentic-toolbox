@@ -17,7 +17,7 @@ vendor source yet; prove them live before relying on them.
   project (and has a section there) only if added to it.
 - Type (Task or Bug) = enum custom field or tag. Convention of this
   contract (unverified).
-- Custom fields are a paid feature (Starter and up). On a free
+- Custom fields are a paid (Premium) feature. On a free
   workspace, use tags for type and sections for state.
 
 ## Blockers
@@ -81,14 +81,15 @@ vendor source yet; prove them live before relying on them.
   60 per minute; at most 50 concurrent reads and 15 concurrent writes;
   a cost-based quota also applies. Over the limit: 429 with
   `Retry-After`. Rejected requests still count.
-- Ids are GIDs: long numeric strings, no human key. The SDLC branch
-  `item/<ticket-id>-<slug>` carries the task GID.
+- Ids are long numeric GIDs, no human key; `item/<ticket-id>-<slug>`
+  carries the task GID. Parse either URL shape for the task GID.
 
 ## Discovery hints
 
 - MCP config naming the host `mcp.asana.com`, or a server named
   `asana` (host name only; read no other config value).
-- MCP config naming the community package `@roychri/mcp-server-asana`.
+- MCP config naming the community package `@roychri/mcp-server-asana`
+  (presence only).
 - Env var **names** `ASANA_ACCESS_TOKEN`, `ASANA_CLIENT_ID`,
   `ASANA_CLIENT_SECRET` (names only, never values).
 - Task URLs on host `app.asana.com`:
