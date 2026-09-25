@@ -51,9 +51,9 @@ vendor source yet; prove them live before relying on them.
   cards vanish, and an archived blocker read by list alone looks open.
 - "Mark complete" (`dueComplete`) is a flag separate from list and
   archive, no due date needed; the official MCP "mark done" sets it
-  (unverified). Onboarding records how archived cards and lists and
-  this flag are read and mapped, or a Gap.
-- Archive, not delete (official MCP cannot). PR links: attachment or comment.
+  (unverified). Onboarding records how archives and this flag map, or a Gap.
+- Archive, not delete (official MCP cannot). PR and commit links: a URL
+  attachment or a comment on the card.
 
 ## Gotchas
 

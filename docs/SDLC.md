@@ -875,8 +875,8 @@ neither is the builder, verifier, or Reviewer of that item.
 
 A **work item** is one Task, Bug, or outside/remote PR — one
 implementable unit. The orchestrator (manager session, parent agent, or
-workflow) keeps two ids per item: `builder_id` and `verifier_id`. Review adds `reviewer_id`.
-Those three must not be the same agent.
+workflow) keeps two ids per item: `builder_id` and `verifier_id`. Review
+adds `reviewer_id`. Those three must not be the same agent.
 
 | Role | First pass on this item | Later passes on this item |
 | --- | --- | --- |

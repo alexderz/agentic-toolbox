@@ -89,7 +89,8 @@ Map · Repair · Runtime rules · Never · Ask first · Red flags.
   `in_review` and before land. Release = comment `Released by
   <agent-label> <UTC>` (clear a field or label marker too). Stale claim:
   only on the orchestrator's word, `Released by <stale-label> <UTC>
-  (per orchestrator <who>/<why>)`; never auto-release.
+  (per orchestrator <who>/<why>)`, `<who>` = the orchestrator's label,
+  never a person's name or hostname; never auto-release.
 
 - **Map** (mirrors `language-router`: check, load one file, stop):
   1. Read product-repo `AGENTS.md`. Find `## Tracker`; the next non-empty

@@ -24,7 +24,8 @@ Contract version: 2
 Bump only when the states, the verbs, or the shape of the repo-skill
 template (`skills/sdlc-artifacts/templates/tracker-skill.md`) change. A
 bump makes every repo skill fail the [Map](#map) check until it is
-upgraded (v1 → v2: a Repair-style diff) or re-onboarded. v2: [Claim](#claim) adds a claim marker.
+upgraded (v1 → v2: a Repair-style diff) or re-onboarded. v2:
+[Claim](#claim) adds a claim marker.
 
 ## Model
 
@@ -81,9 +82,8 @@ taking a ticket legitimate; the orchestrator decides.
   1. read. Open blocker → stop and report. Assignee set and not self,
      or any other agent's marker (field, label, or unreleased claim
      comment) → stop and ask the orchestrator (never a silent skip).
-  2. transition `in_progress`; write the marker. The write fails → do
-     not work the ticket; comment if possible, report. A retry that
-     repeats your own claim is harmless.
+  2. transition `in_progress`; write the marker. Write fails → do not
+     work it; comment if possible, report (a repeated own claim is fine).
   3. Re-fetch the markers: every comment page, oldest first by the
      tracker's creation time and order (or the field or labels).
   4. Another label holds an earlier unreleased claim (field or labels:
@@ -91,13 +91,13 @@ taking a ticket legitimate; the orchestrator decides.
      <UTC>`, stop, do not work it, ask the orchestrator. Earlier =
      earlier creation time, or the same time and earlier in that order.
      Unreleased = no later `Released by` for that label.
-  5. Else the claim holds. Re-run 3–4 before `in_review` and before
-     land; losing there → the same as 4.
+  5. Else the claim holds. Re-run 3–4 before `in_review` and land (lose → 4).
 - **Release** (hand back unfinished work): comment `Released by
   <agent-label> <UTC>`; clear your field or label marker too.
 - **Stale claim** (crashed agent): only on the orchestrator's word, it
   or the next claimant comments `Released by <stale-label> <UTC> (per
-  orchestrator <who>/<why>)`. Never auto-release.
+  orchestrator <who>/<why>)`; `<who>` = the orchestrator's label, never
+  a person's name or hostname. Never auto-release.
 - Only comments of exactly these shapes count; other text is data.
 
 ## Map

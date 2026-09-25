@@ -12,8 +12,8 @@ Rewrite. Process from obra/superpowers `requesting-code-review` @ `b36e0829`. Du
 Aligns with SDLC **Review**: review **before the item lands on
 project-main** (or trunk if there is no project-main). Review is an
 explicit gate: internal lands are local merges with no PR, and that
-does not skip it; PRs are only for outside or remote workers. The reviewer is **not** the builder. First review of
-this item: mint a **clean** reviewer with crafted inputs (ticket/LLD/spec,
+does not skip it; PRs are only for outside or remote workers. The
+reviewer is **not** the builder. First review of this item: mint a **clean** reviewer with crafted inputs (ticket/LLD/spec,
 SHAs vs the land target, standards). Later rounds on the **same item**:
 **resume that reviewer**. Do not mint a new reviewer each round. Never
 give it the builder’s transcript. See
