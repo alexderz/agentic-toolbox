@@ -4,7 +4,8 @@
 - HLD: [docs/tracker-sdlc/hld.md](hld.md) (accepted 2026-09-24);
   UX: [ux.md](ux.md); comparables: [comparables.md](comparables.md)
 - Tickets this LLD covers: DER-252 (chunk, track P-DER-11); Groom items
-  G1–G6 below (ids assigned at Groom)
+  G1–G6 = DER-254…DER-259 (G1 DER-254, G2 DER-255, G3 DER-256, G4 DER-257,
+  G5 DER-258, G6 DER-259)
 - Date: `2026-09-24`
 
 ## Required
@@ -451,7 +452,10 @@ grep -rnE '(token|api[_-]?key|secret)[[:space:]]*[:=]|lin_api_|ATATT|Bearer |://
 Rollback = revert the DER-252 merge on trunk; product repos keep their
 `.agents/tracker/` files harmlessly (no loader without the contract).
 
-## Open for operator
+## Decided (operator, 2026-09-24)
+
+LLD accepted by the operator with security CLEAR. Items 1–3 accepted as
+proposed; signing default is (a) with (b) opt-in at onboarding.
 
 1. **New artifact type** `tracker-skill.md` in the `sdlc-artifacts` map
    (an Ask-first row). Accepting this LLD accepts it, or say where else.
