@@ -21,7 +21,7 @@ and why.** Do not invent a parallel outline.
 | Brief (chunk) | Brief | `discover-the-idea` (not here) | Chat unless asked to file |
 | Incoming item | Brief | `templates/bug.md` / `task.md` | Same files as Groom; fill Proposed fix / Removal / Pick **at Brief**, not later |
 | Track / roadmap | Plan | `templates/track.md` | Board project; git copy optional |
-| Chunk / epic | Plan–Groom | `templates/chunk.md` | Board parent issue |
+| Chunk / epic | Brief–Groom | `templates/chunk.md` | Board parent issue |
 | HLD | Plan | `templates/hld.md` | `docs/hld.md` or `docs/<slug>/hld.md` |
 | Comparables | Plan | `templates/comparables.md` | `docs/comparables.md` or `docs/<slug>/comparables.md` |
 | UX / journeys | Plan | `templates/ux.md` | `docs/ux.md` or `docs/<slug>/ux.md` |
@@ -38,14 +38,15 @@ and why.** Do not invent a parallel outline.
 | Human doc | Spec+ | `templates/human-doc.md` | `docs/` how-to (Google style) |
 | Ask the human | any gate | `templates/ask-human.md` | The message to the person — not a git file |
 | AGENTS stub | Repo | `templates/agents-stub.md` | product-repo `AGENTS.md` |
+| Repo tracker skill | Brief (onboarding) | `templates/tracker-skill.md` | product-repo `.agents/tracker/SKILL.md` |
 
 ## Always
 
 - Copy the file. Delete unused *optional* sections. Keep required ones.
 - Link the layer above and below (track → chunk → item; HLD → LLD →
   ticket). Changelog line cites ticket + land SHA or PR.
-- Linear: paste the ticket/chunk/track body into the issue or project
-  description. Set `blockedBy` / `blocks` as fields, not only as text.
+- Tracker: paste the body into the item/project via `tracker-sdlc`; set
+  blockers with set-blocker, not only as text.
 - Dates ISO-8601. Slugs lowercase hyphen.
 
 ## Ask first

@@ -58,7 +58,7 @@ remint an id that already exists.
 - C++ wins over C when any `.cpp`/`.hpp` is in the change. Never both.
 - Go: default `golang-safety`. Tests → `golang-testing`. Input/auth/SQL/files/exec/crypto → `golang-security`. Never all three.
 - Frameworks (React, Spring, Rails, FastAPI, Flutter) are not language skills. Do not invent one mid-session.
-- Process skills (`tdd`, `verify-before-done`, `pr-review`, `security-hardening`, `yagni`, `sdlc-artifacts`, `debug`, `docs-google-style`) may load with the one language skill. Load **one** of `debug` / `debug-pocock` / `debug-anthropic`.
+- Process skills (`tdd`, `verify-before-done`, `pr-review`, `security-hardening`, `yagni`, `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`) may load with the one language skill. Load **one** of `debug` / `debug-pocock` / `debug-anthropic`.
 - `discover-the-idea` is gather-only. `buying-researcher` is research-only. `ux-design` is UX-only. No language skill on those turns.
 
 ## Stubs (no body)

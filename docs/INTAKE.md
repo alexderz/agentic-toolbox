@@ -38,6 +38,9 @@ Remote-agent PRs into this repo **still need a security clear**. Remote
 authoring is not an exemption. Build DoD still requires the diff to
 match the pinned SHA (or `first-party` for first-party prose).
 
+Product-repo `.agents/tracker/SKILL.md`: no SOURCES row; **security**
+reads the change that adds or edits it (no tokens, no scripts).
+
 ## Layout-only exception
 
 Empty skill directories that only hold `.gitkeep` (layout, no `SKILL.md`,
