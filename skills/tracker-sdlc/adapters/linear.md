@@ -13,8 +13,9 @@ vendor source yet; prove them live before relying on them.
 - Epic = parent issue labeled with the Epic type label (for example a
   `Type` label group holding Epic and Task). Structural choice; the
   parent and sub-issue fields over the API are (unverified).
-- Work item = issue under its Epic, labeled Task or Bug. A Bug label
-  may sit outside the Type group; onboarding records where it lives.
+- Work item = issue under its Epic, labeled Task or Bug. Labels can be
+  grouped; a type group may not hold every type label, so onboarding
+  checks where each one lives.
 - Issues belong to a team; creating one needs the team (unverified).
 - Sub-items stay off unless the workspace already uses sub-issues.
 
@@ -42,13 +43,12 @@ vendor source yet; prove them live before relying on them.
 
 ## States and transitions
 
-- Statuses are per team (unverified; typical set: Backlog, Todo, In Progress, In
-  Review, Done, Canceled, Duplicate). Read the team's list at
-  onboarding; names go only into the repo skill's Mapping cells.
+- Statuses are per team (unverified). Onboarding reads the team's list
+  and maps each status to a canonical state; names go only into the
+  repo skill's Mapping cells.
+- Duplicate is a reserved status (see Blockers).
 - Status is set directly on the issue. There is no separate transition
   step (unverified).
-- Todo → `ready`; Backlog stays `backlog` (operator decision for this
-  contract).
 - Auto-transitions from the Git integration: closing words in a PR
   (closes, fixes, resolve, complete, implement) apply the team's
   "on merge" status. Non-closing words (ref, references, part of,
