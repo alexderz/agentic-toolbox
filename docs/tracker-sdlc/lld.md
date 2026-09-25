@@ -63,7 +63,7 @@ Repair · Runtime rules · Never · Ask first · Red flags.
 | transition | id, canonical state | tracker moved to the mapped state; returns new canonical state |
 | set-blocker | blocked id, blocker id | relation added; append-only, never removed by agents |
 | comment | id, text, links? (PR, SHA) | comment id; native link too if the tracker has one |
-| claim | id | read → refuse if open blocker or other assignee → transition `in_progress` + assign self |
+| claim | id | read → open blocker: stop and report · other assignee: stop and ask the orchestrator (never a silent skip) → else transition `in_progress` + assign self |
 
 - **Map** (mirrors `language-router`: check, load one file, stop):
   1. Read product-repo `AGENTS.md`. Find `## Tracker`; the next non-empty
@@ -279,8 +279,11 @@ Must-cover facts (source: Brief research):
   the operator chose "signing off" at onboarding (recorded under Gaps)
   add `-c commit.gpgsign=false` to `commit` and `rebase`.
 - **Cleanup.** `trap` on EXIT removes temp message files, and removes a
-  worktree only when `git -C "${W:?}" rev-list --count origin/tickets..HEAD`
-  is `0` (never one holding an unpushed commit).
+  worktree (`W` or `B`) only when
+  `git -C "<dir>" rev-list --count origin/tickets..HEAD` succeeds **and**
+  prints `0`. A failing command (e.g. `origin/tickets` absent during
+  bootstrap) means keep the worktree — never remove one that may hold an
+  unpushed commit.
 - **Rejections.** Only a non-fast-forward rejection (push output
   `[rejected]` with `fetch first` or `non-fast-forward`) goes to retry.
   Any other rejection (ruleset, signing, permission, hook) stops and is
@@ -292,10 +295,13 @@ Must-cover facts (source: Brief research):
      remote branch). `B=$(mktemp -d) || stop`; `R` = 6 random
      `[a-z0-9]`;
      `git "${H[@]}" worktree add --orphan -b "tickets-init-$R" "${B:?}"`
-     (git ≥2.42); create `"${B:?}"/tickets/.keep` and
-     `"${B:?}"/comments/.keep`; `git -C "${B:?}" add tickets comments`;
-     `git -C "${B:?}" "${H[@]}" commit -F "$M"` (message
-     `Bootstrap tickets`); `git -C "${B:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
+     (git ≥2.42); check `git -C "${B:?}" rev-parse --show-toplevel`
+     equals `B` (resolved with `pwd -P`), else stop; create
+     `"${B:?}"/tickets/.keep` and `"${B:?}"/comments/.keep`;
+     `git -C "${B:?}" add tickets comments`; `M=$(mktemp) || stop` and
+     write `Bootstrap tickets` into it;
+     `git -C "${B:?}" "${H[@]}" commit -F "$M"`;
+     `git -C "${B:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
      Non-fast-forward / already exists → someone else bootstrapped:
      `git worktree remove "${B:?}"`, `git branch -D "tickets-init-$R"`,
      continue at 1. Other rejection → stop, report. Success → same
