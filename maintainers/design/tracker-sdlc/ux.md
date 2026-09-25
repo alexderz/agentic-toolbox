@@ -5,7 +5,7 @@ Human gate: operator accepts, or writes `UX verification not required`.
 
 - Slug: `tracker-sdlc`
 - Brief: DER-252 brief, confirmed 2026-09-24 (Refine: ready for Plan)
-- HLD: `docs/tracker-sdlc/hld.md` (Plan, same step)
+- HLD: `maintainers/design/tracker-sdlc/hld.md` (Plan, same step)
 - Date: `2026-09-24`
 - Agent review (requirements only): round 1 fixes applied 2026-09-24
 - Operator: accepted 2026-09-24 (with the decisions below folded in)
@@ -149,7 +149,7 @@ gap asks and failure reports (J4–J6). Agents see a 1–2 line `## Tracker`
 pointer and one repo skill.
 **Mockups:** `n/a` — no screen; chat messages and repo files only. The
 example message stands in for the one human touchpoint.
-**Comparables:** same page as the HLD, `docs/tracker-sdlc/comparables.md`.
+**Comparables:** same page as the HLD, `maintainers/design/tracker-sdlc/comparables.md`.
 **Not this:** per-tracker MCP/CLI manuals; creating tracker types,
 states, or labels; live Jira/Asana/Trello tests from this repo;
 non-tracker onboarding; the small-work lane (DER-253).

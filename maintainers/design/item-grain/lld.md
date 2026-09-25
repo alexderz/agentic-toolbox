@@ -1,7 +1,7 @@
 # LLD — Item grain, named steps, language pass
 
 - Slug: `item-grain`
-- HLD: `docs/item-grain/hld.md`
+- HLD: `maintainers/design/item-grain/hld.md`
 - Tickets this LLD covers: this chunk (no board ticket)
 - Date: `2026-09-18`
 
@@ -9,9 +9,9 @@
 
 - **Paths / modules**
   - `docs/SDLC.md` — grain, named steps, in-flight map, lay extension
-  - `docs/item-grain/` — this Plan / Spec / comparables
+  - `maintainers/design/item-grain/` — this Plan / Spec / comparables
   - `docs/ARCHITECTURE.md`, `docs/INTAKE.md`,
-    `docs/CHERRY-PICK-CANDIDATES.md` (historical heading only)
+    `maintainers/CHERRY-PICK-CANDIDATES.md` (historical heading only)
   - `AGENTS.md`, `README.md`, `SOURCES.md`
   - `skills/sdlc-artifacts/SKILL.md` and templates `bug.md`, `task.md`,
     `hld.md`, `lld.md`, `chunk.md`, `changelog.md`, `track.md`

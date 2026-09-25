@@ -12,6 +12,15 @@ Newest first. Skip empty sections.
 - Sanitized A2A JSON-RPC → HTTPS plain POST webhook adapter at
   `packages/a2a-webhook-adapter/` (`DER-209`, unreleased)
 
+### Changed
+
+- Maintainer notes move under `maintainers/` (design records, planning
+  notes, this repo's `## Tracker` and tracker skill) with their own
+  entry point, `maintainers/AGENTS.md`; the root `AGENTS.md` routing
+  skips them. The `tracker-sdlc` setup check reads the `AGENTS.md` that
+  governs your work, with the repo skill path relative to it; contract
+  stays v2 (`DER-272`)
+
 ## tracker-sdlc — 2026-09-25
 
 Tracker-agnostic SDLC (`DER-252`, PR #2).

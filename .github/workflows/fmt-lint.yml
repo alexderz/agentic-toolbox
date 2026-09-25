@@ -1,4 +1,4 @@
-# First-cut fmt/lint on PR. Plan: docs/CI-HOOKS-PLAN.md.
+# First-cut fmt/lint on PR. Plan: maintainers/CI-HOOKS-PLAN.md.
 # ruff / gofmt / shellcheck only when matching files appear. No prettier,
 # SkillSpector, secret scan, or vendor SHA checks. Empty skill dirs / .gitkeep
 # are not a fail.
