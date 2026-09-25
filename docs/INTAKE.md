@@ -38,8 +38,10 @@ Remote-agent PRs into this repo **still need a security clear**. Remote
 authoring is not an exemption. Build DoD still requires the diff to
 match the pinned SHA (or `first-party` for first-party prose).
 
-Product-repo `.agents/tracker/SKILL.md`: no SOURCES row; **security**
-reads the change that adds or edits it. It holds no tokens, no
+Product-repo `.agents/tracker/SKILL.md` (every one that a governing
+`## Tracker` names: at the root, or in a subdirectory whose
+`AGENTS.md` the root `AGENTS.md` or `CLAUDE.md` names): no SOURCES
+row; **security** reads the change that adds or edits it. It holds no tokens, no
 `scripts/` files, and no executable blocks except the fenced shell
 recipe from `skills/tracker-sdlc/adapters/local.md`. **security**
 compares that recipe with the adapter's current text; only placeholder

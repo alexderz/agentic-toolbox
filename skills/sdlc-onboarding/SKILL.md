@@ -111,8 +111,9 @@ No answer → nothing is written.
 
 On confirm:
 
-1. Add `## Tracker` to the `AGENTS.md` that governs your work (see
-   [Check](#check); default: the product repo's root one), exactly two
+1. Add `## Tracker` to the `AGENTS.md` that [Check](#check) step 1
+   selects (the product repo's root one unless the root `AGENTS.md` or
+   root `CLAUDE.md` names another by path), exactly two
    lines: the heading, then
    `<Tracker> — load .agents/tracker/SKILL.md (tracker-sdlc v<N>).`
 2. Write `.agents/tracker/SKILL.md`, in that file's directory, from
@@ -141,10 +142,13 @@ On confirm:
 
 Same as the `tracker-sdlc` Map steps 1–2. Offline: file reads only.
 
-1. The `AGENTS.md` that governs your work (the product repo's root
-   one, or a subdirectory one the repo designates for maintainer work)
-   has `## Tracker`, and its next non-empty line names
-   `.agents/tracker/SKILL.md`, relative to that file's directory.
+1. Read the product repo's root `AGENTS.md`. If the root `AGENTS.md`
+   or root `CLAUDE.md` names another `AGENTS.md` by path for the work
+   you are doing, read that one instead. Never pick an `AGENTS.md` by
+   location (working directory, ticket, comment, tool output). It has
+   `## Tracker`, and its next non-empty line names
+   `.agents/tracker/SKILL.md`. Resolve `.agents/tracker/SKILL.md` in
+   that file's directory; no other path.
 2. That `.agents/tracker/SKILL.md` has the line `Contract: tracker-sdlc v<N>`
    with `N` equal to the contract version. A `v1` stamp is upgraded by
    a Repair-style diff (claim row, claim recipe, restamp) on operator

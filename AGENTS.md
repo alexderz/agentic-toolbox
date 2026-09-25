@@ -7,9 +7,11 @@ on this file, then load what it names.
 Git is the source of truth. Do not write skill bodies only on a local or
 vendor mirror.
 
-`maintainers/` holds build notes for this repository. Skip it unless you
-are working on this repository or want the reasoning behind a decision.
-Routing tables never point into it.
+`maintainers/` holds build notes for this repository. If you are using
+the toolbox, skip it; routing tables never point into it. If you are
+working on this repository, read
+[maintainers/AGENTS.md](maintainers/AGENTS.md) next; its `## Tracker`
+governs.
 
 ## Public repo
 
@@ -24,7 +26,8 @@ This is a public, open-source repo.
   or agent-session leftovers such as interview question labels. Bare
   ticket ids (`DER-123`) are fine.
 - **Agent context** (`maintainers/design/<chunk>/` design records,
-  `maintainers/.agents/`, other `maintainers/` notes, scratch notes) can be informal: civil and credential-free, not tone-reviewed.
+  `maintainers/.agents/`, other `maintainers/` notes, scratch notes)
+  can be informal: civil and credential-free, not tone-reviewed.
 - **Commit messages, PR descriptions, and tags** are public and
   effectively permanent: write them for outside readers.
 
