@@ -9,16 +9,19 @@ vendor mirror.
 
 ## Public repo
 
-This is a public, open-source repo. Write everything public-facing
-(files, commit messages, PR descriptions, and tags) for outside readers.
-Never publish credentials or tokens, internal hostnames, or IPs (see
-[Never](skills/security-hardening/SKILL.md#never) in
-`security-hardening`). Leave out private tracker workspace URLs and
-names, internal agent nicknames, leftovers from agent sessions (such as
-interview question labels like `Q45` or quotes from chat), and personal
-details beyond git authorship. Bare ticket ids (`DER-123`) are fine.
-Review public-facing text before you push: pushed commit messages and
-tags are effectively permanent.
+This is a public, open-source repo.
+
+- **Deliverables** (skills, human-facing docs, code, collateral): write
+  for outside readers in a professional voice, per the project's style
+  guide (default `docs-google-style`). No people's names or who said
+  what, private tracker workspace URLs or names, internal hostnames or
+  IPs, credentials (see [Never](skills/security-hardening/SKILL.md#never)),
+  or agent-session leftovers such as interview question labels. Bare
+  ticket ids (`DER-123`) are fine.
+- **Agent context** (`docs/<chunk>/` design records, `.agents/`, scratch
+  notes) can be informal: civil and credential-free, not tone-reviewed.
+- **Commit messages, PR descriptions, and tags** are public and
+  effectively permanent: write them for outside readers.
 
 ## How to load
 
