@@ -57,9 +57,10 @@ failing → `sdlc-onboarding`, not guessing.
 transition to `in_progress` + a `Claimed by <agent-label> <UTC>` comment
 *so that* two agents do not work one ticket, even on one shared tracker
 account. **Done when:** claim sets state and the marker, then re-reads
-the comments; an earlier unreleased claim by another label, or a ticket
-assigned to someone else, is neither skipped nor started — the agent
-checks with the orchestrator first.
+the comments; on an earlier unreleased claim by another label it posts
+`Released by <agent-label> <UTC>`. That ticket, or one assigned to
+someone else, is neither skipped nor started — the agent checks with
+the orchestrator, the source of truth.
 
 **TS-7 Concurrent local writes.** *As* local-ticket agent *I want*
 rejected pushes retried safely *so that* all agents' edits land. **Done

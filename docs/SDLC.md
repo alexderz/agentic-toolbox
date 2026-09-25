@@ -394,8 +394,9 @@ scheme.
 | Role | the names in this SDLC | `builder`, `designer` |
 | Step | the names in [Steps](#steps) | `Build`, `Plan` |
 
-Cite the ticket ID on the item branch, merge commit, and changelog line when the project uses tickets. If it does not, omit the
-ID and keep the rest.
+Cite the ticket ID on the item branch, merge commit, and changelog line
+when the project uses tickets. If it does not, omit the ID and keep the
+rest.
 
 Commits: imperative subject, one idea. `[ticket-id] subject` when
 tickets exist.
@@ -835,7 +836,9 @@ No PRs. **manager** sets the land order; builders follow it.
 | Durability | Push the item branch while it is built and reviewed; push project-main after each land |
 | Land | After Review, merge the item branch locally into project-main (or trunk), one land at a time; push; delete the item branch |
 
-The ticket ID goes on the merge commit.
+The ticket ID goes on the merge commit, with a `Reviewed-by:
+<reviewer-label> (<verdict>)` trailer so the review stays auditable
+without a PR. PRs remain only for outside or remote workers.
 
 **Never**
 
@@ -870,9 +873,9 @@ not personal taste. Human sees it after those two agree.
 troubleshooter may be the parent. Those two must not be the same, and
 neither is the builder, verifier, or Reviewer of that item.
 
-A **work item** is one Task, Bug, or PR — one implementable unit. The
-orchestrator (manager session, parent agent, or workflow) keeps two ids
-per item: `builder_id` and `verifier_id`. Review adds `reviewer_id`.
+A **work item** is one Task, Bug, or outside/remote PR — one
+implementable unit. The orchestrator (manager session, parent agent, or
+workflow) keeps two ids per item: `builder_id` and `verifier_id`. Review adds `reviewer_id`.
 Those three must not be the same agent.
 
 | Role | First pass on this item | Later passes on this item |

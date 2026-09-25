@@ -89,8 +89,9 @@ flowchart TD
     - Verbs: create, read, list-ready, transition, set-blocker, comment
       (PR/SHA links fold in unless native). Claim = `in_progress` +
       claim comment `Claimed by <agent-label> <UTC>`, then re-fetch;
-      an earlier unreleased claim by another label → ask the
-      orchestrator (agents share one tracker identity; contract v2).
+      an earlier unreleased claim by another label → post `Released
+      by`, ask the orchestrator (the source of truth; agents share one
+      tracker identity; contract v2).
     - Blockers: native relation, else `Blocked-by:` line + `blocked`
       label. Store one direction.
   - **Where onboarding sits** — **Entry is read-only**: it classifies
@@ -218,7 +219,8 @@ flowchart TD
    (committed only on operator OK).
 6. **Claim marker, contract v2** (DER-260). Assignee cannot tell agents
    apart on a shared identity: claim adds a `Claimed by` comment and a
-   re-fetch; release is a `Released by` comment. Native agent field or
+   re-fetch; the loser of a conflict posts `Released by` and asks the
+   orchestrator, which is the source of truth. Native agent field or
    per-agent labels only on operator yes; `local` keeps `assignee`.
    Details: [LLD Decided](lld.md#decided-operator-2026-09-24).
 7. **Land path** (DER-260). No PRs; Review is an explicit gate; item

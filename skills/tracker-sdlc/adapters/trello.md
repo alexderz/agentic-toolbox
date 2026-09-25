@@ -53,8 +53,7 @@ vendor source yet; prove them live before relying on them.
   archive, no due date needed; the official MCP "mark done" sets it
   (unverified). Onboarding records how archived cards and lists and
   this flag are read and mapped, or a Gap.
-- Archive, not delete (the official MCP server cannot delete). PR and
-  commit links: a URL attachment or a comment on the card.
+- Archive, not delete (official MCP cannot). PR links: attachment or comment.
 
 ## Gotchas
 
@@ -84,9 +83,10 @@ vendor source yet; prove them live before relying on them.
   page, newest first (unverified): page, then reverse. No native agent
   field; members share the operator's account. The official MCP lacks
   comments: REST, a community server, or operator-made agent labels.
-- Official server: OAuth, one workspace per connection; admins can
+- Official server: OAuth, one workspace per connection, admins can
   restrict it. The Atlassian remote MCP server skips Trello. No official
-  CLI (unverified). Its repo's skill installer is never run: INTAKE.
+  CLI (unverified). Never run its repo's skill installer; connect the
+  MCP server directly (vendor skills go through INTAKE).
 
 ## Discovery hints
 

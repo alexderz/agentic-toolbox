@@ -87,9 +87,11 @@ Send one message in the `ask-human.md` shape
   test write.
 - Claim: propose the default claim comment `Claimed by <agent-label>
   <UTC>` ([`tracker-sdlc` Claim](../tracker-sdlc/SKILL.md#claim)).
-  Offer a native agent field only where the tracker has one, or
-  per-agent labels only if the operator creates them; either only on the
-  operator's yes. `local` keeps `assignee: <agent-label>`.
+  Offer a native agent field only where the tracker has one (say it is
+  last-write-wins, not race-safe alone: it relies on the orchestrator's
+  assignment), or per-agent labels only if the operator creates them;
+  either only on the operator's yes. `local` keeps `assignee:
+  <agent-label>`.
 - `local` only: the first `tickets` bootstrap is its own proposal line,
   because it creates a shared remote branch. Add the signing choice:
   default honours the operator's git signing config; off only if chosen
@@ -133,7 +135,9 @@ Same as the `tracker-sdlc` Map steps 1–2. Offline: file reads only.
 1. `AGENTS.md` has `## Tracker`, and its next non-empty line names
    `.agents/tracker/SKILL.md`.
 2. `.agents/tracker/SKILL.md` has the line `Contract: tracker-sdlc v<N>`
-   with `N` equal to the contract version.
+   with `N` equal to the contract version. A `v1` stamp is upgraded by
+   a Repair-style diff (claim row, claim recipe, restamp) on operator
+   OK, not a full onboarding.
 
 ## Spec gate check
 
