@@ -2,7 +2,7 @@
 
 Verified: no — vendor docs as of 2026-09-24
 
-Facts and recipes for onboarding and repair; onboarding copies recipes into `.agents/tracker/SKILL.md`.
+Not loaded at runtime. Facts and recipes for onboarding and repair; onboarding copies the recipes into `.agents/tracker/SKILL.md`.
 
 ## Hierarchy
 

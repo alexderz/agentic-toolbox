@@ -80,14 +80,17 @@ flowchart TD
 
   - **Canonical model**
     - Hierarchy: track → epic → work item (Task | Bug). Sub-items
-      off unless the workplace already uses them.
+      (child tickets under a work item) off unless the workplace
+      already uses them.
     - States: `backlog`, `ready`, `in_progress`, `in_review`, `done`
       (= landed+verified), `canceled`. Many may map to one tracker state
       (`ready` = Backlog, no open blockers; Linear Todo → `ready`).
       Blocked = open blockers, not a state.
     - Verbs: create, read, list-ready, transition, set-blocker, comment
       (PR/SHA links fold in unless native). Claim = `in_progress` +
-      assignee.
+      claim comment `Claimed by <agent-label> <UTC>`, then re-fetch;
+      an earlier unreleased claim by another label → ask the
+      orchestrator (agents share one tracker identity; contract v2).
     - Blockers: native relation, else `Blocked-by:` line + `blocked`
       label. Store one direction.
   - **Where onboarding sits** — **Entry is read-only**: it classifies
@@ -213,3 +216,10 @@ flowchart TD
    else → do not skip, do not start, check with orchestrator; recipe
    still failing after adapter read → stop, report, propose repair
    (committed only on operator OK).
+6. **Claim marker, contract v2** (DER-260). Assignee cannot tell agents
+   apart on a shared identity: claim adds a `Claimed by` comment and a
+   re-fetch; release is a `Released by` comment. Native agent field or
+   per-agent labels only on operator yes; `local` keeps `assignee`.
+   Details: [LLD Decided](lld.md#decided-operator-2026-09-24).
+7. **Land path** (DER-260). No PRs; Review is an explicit gate; item
+   branches and project-main are pushed; lands are local and serialized.

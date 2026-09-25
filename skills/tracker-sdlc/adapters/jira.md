@@ -17,12 +17,10 @@ Jira Cloud unless marked **Data Center**.
 - **Data Center**: Epic Link is a custom field whose id
   (`customfield_NNNNN`) differs per instance; read it, never hard-code
   it. There `parent` is for sub-tasks only (unverified).
-- Required fields vary by project and issue type: read the create
-  metadata for both before the first create.
-- Team-managed projects own their workflows, statuses, and fields; a
-  field in one cannot be reused by another, so read custom-field ids per
-  project. Company-managed projects share schemes.
-- Sub-tasks stay off unless the project already uses them.
+- Required fields vary by project and type: read create metadata first.
+- Team-managed projects own workflows, statuses, and fields (not
+  shared): read custom-field ids per project. Company-managed share schemes.
+- Sub-items = sub-tasks (`parent` = their item); off unless used.
 
 ## Blockers
 
@@ -32,16 +30,15 @@ Jira Cloud unless marked **Data Center**.
 - Reading issue X: `inwardIssue` Y = X is blocked by Y; `outwardIssue` Y
   = X blocks Y. Atlassian warns not to infer meaning from the field
   names alone. The repo skill records blocked id ← blocker id.
-- Creating: `inwardIssue` = blocker (third-party quote, unverified).
-  Prove it live; read the link back from the blocked issue.
+- Creating: `inwardIssue` = blocker (third-party quote, unverified):
+  prove it live; read the link back.
 - JQL cannot isolate direction (type name = outward text) or check
   blocker resolution: filter links client-side. Link entries carry the
   linked issue's status (unverified), so no extra read per blocker.
 
 ## Text format
 
-- REST v3 descriptions and comments are ADF JSON, not markdown:
-  `{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"..."}]}]}`
+- REST v3 descriptions and comments are ADF JSON, not markdown: `{"version":1,"type":"doc","content":[{"type":"paragraph","content":[{"type":"text","text":"..."}]}]}`
 - REST v2 wiki markup and MCP markdown-to-ADF conversion: (unverified).
 
 ## States and transitions
@@ -56,8 +53,8 @@ Jira Cloud unless marked **Data Center**.
   by a separate status; map `canceled` to status + resolution, or record
   a Gap. The API can close an issue with no resolution unless a
   validator blocks it. Team-managed resolution handling: (unverified).
-- `statusCategory != Done` as the open filter is (unverified).
-- The development panel fills when the uppercase key is in a branch
+- `statusCategory != Done` as the open filter: (unverified). The
+  development panel fills when the uppercase key is in a branch
   name, commit message, or PR title.
 - PR or commit links: remote links need `url` and `title`; `globalId` upserts.
 
@@ -66,19 +63,20 @@ Jira Cloud unless marked **Data Center**.
 - Done before verified: Jira Automation's "Pull request merged" trigger
   and workflow triggers on development events can move an issue to Done
   on merge. Onboarding reports any such rule as a gap.
-- Smart Commits (enabled by an admin) run `#comment`, `#time`, and
-  `#<transition>` commands that follow an issue key in a commit message.
-  Recipes must not write `#word` after a key in commit messages.
-- Assign by `accountId` on Cloud (usernames left the API); by username
-  (`name`) on **Data Center**. Claim depends on it.
+- Smart Commits (admin-enabled) run `#comment`, `#time`, `#<transition>`
+  after an issue key in a commit message: never write `#word` after a key.
+- Claim: assign by `accountId` on Cloud, username (`name`) on **Data
+  Center**. Comments carry `created` and list oldest first (`orderBy`
+  `-created` reverses). Rovo agents can be assignees (Standard and up),
+  but an agent on the operator's account shares its assignee: comment.
 - Rate limits: burst and per-issue quotas; over one, 429 + `Retry-After`.
-- JQL search pages with `nextPageToken` (no `startAt`, no total). The
-  official MCP search tool reportedly omits it: paging stops at page one.
+- JQL search pages with `nextPageToken` (no `startAt`, no total); the
+  official MCP search tool reportedly omits it (stops at page one).
 - Calls obey the user's project roles; writes also need the OAuth scope.
 - Keys are uppercase `ABC-123`. The pattern `[A-Z][A-Z0-9]+-[0-9]+`
   also matches Linear keys; use other hints to tell Jira from Linear.
-- **Data Center**: the official MCP server is Cloud only; the community
-  `mcp-atlassian` server supports Cloud and Data Center 8.14+.
+- **Data Center**: the official MCP server is Cloud only; community
+  `mcp-atlassian` covers Cloud and Data Center 8.14+.
 
 ## Discovery hints
 
@@ -97,6 +95,8 @@ Jira Cloud unless marked **Data Center**.
 - https://github.com/sooperset/mcp-atlassian
 - https://confluence.atlassian.com/jirakb/run-jql-search-query-using-jira-cloud-rest-api-1289424308.html
 - https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issues/
+- https://developer.atlassian.com/cloud/jira/platform/rest/v3/api-group-issue-comments/
+- https://support.atlassian.com/jira-software-cloud/docs/collaborate-on-work-items-with-ai-agents/
 - https://support.atlassian.com/jira-software-cloud/docs/what-are-team-managed-and-company-managed-projects/
 - https://support.atlassian.com/jira-software-cloud/docs/customize-an-issues-fields-in-team-managed-projects/
 - https://community.developer.atlassian.com/t/deprecation-of-the-epic-link-parent-link-and-other-related-fields-in-rest-apis-and-webhooks/54048

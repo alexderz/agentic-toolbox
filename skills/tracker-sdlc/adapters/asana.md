@@ -11,14 +11,13 @@ vendor source yet; prove them live before relying on them.
 
 - Track = Asana **portfolio** or **project**. A portfolio holds
   projects, so list-ready on a portfolio track iterates its projects.
-- Epic = parent task. Work item = subtask of that parent. Subtasks are
-  the item level, so extra sub-items below them stay off.
+- Epic = parent task. Work item = its subtask. Sub-items (subtasks of
+  an item: the same parent field, one level down) stay off.
 - Subtasks do not inherit the parent's projects. A subtask is in a
   project (and has a section there) only if added to it.
 - Type (Task or Bug) = enum custom field or tag. Convention of this
   contract (unverified).
-- Custom fields are a paid (Premium) feature. On a free
-  workspace, use tags for type and sections for state.
+- Custom fields are paid (Premium); free: tags for type, sections for state.
 
 ## Blockers
 
@@ -27,12 +26,9 @@ vendor source yet; prove them live before relying on them.
 - Direction: adding dependencies to task X records the listed tasks as
   X's dependencies, so X waits on them. The repo skill records it one
   way: blocked id ← blocker id.
-- The reverse view (dependents) and the remove operations exist in the
-  API but were not checked (unverified).
-- Plan tier: dependencies need Starter and up, not free Personal
-  (unverified).
-- Completing a blocker ends the "waiting" on its dependents
-  (unverified).
+- Dependents view and remove operations exist, not checked (unverified).
+- Plan tier: dependencies need Starter and up (unverified). Completing a
+  blocker ends the "waiting" on its dependents (unverified).
 
 ## Text format
 
@@ -70,10 +66,8 @@ vendor source yet; prove them live before relying on them.
 - Merge automation that completes a task (GitHub Actions, rules) can
   mark it done before landed+verified; report it as a gap
   (unverified).
-- Custom fields are paid. The error a free workspace returns is not
-  documented; the vendor says to program defensively.
-- Task search is paid too. On a free workspace, list tasks by
-  project, section, or parent instead.
+- Custom fields and task search are paid. The free-workspace error is
+  undocumented (program defensively); list by project, section, parent.
 - Pagination: `limit` 1–100 (default 20); the next `offset` is in
   `next_page` (null on the last page). Offsets expire: page promptly.
   Unpaginated results truncate at about 1,000 objects.
@@ -81,6 +75,10 @@ vendor source yet; prove them live before relying on them.
   60 per minute; at most 50 concurrent reads and 15 concurrent writes;
   a cost-based quota also applies. Over the limit: 429 with
   `Retry-After`. Rejected requests still count.
+- Claim: comments are stories with `resource_subtype` `comment_added`
+  and `created_at`; a task's stories list oldest first by default. AI
+  Teammates take assignments, but they are Asana's agents; an agent on
+  the operator's account shares its assignee: use the claim comment.
 - Ids are long numeric GIDs, no human key; `item/<ticket-id>-<slug>`
   carries the task GID. Parse either URL shape for the task GID.
 
@@ -107,6 +105,8 @@ vendor source yet; prove them live before relying on them.
 - https://developers.asana.com/docs/personal-access-token
 - https://developers.asana.com/docs/object-hierarchy
 - https://developers.asana.com/reference/tasks
+- https://developers.asana.com/reference/getstoriesfortask
+- https://help.asana.com/s/article/ai-teammates?language=en_US
 - https://developers.asana.com/reference/sections
 - https://developers.asana.com/docs/custom-fields-guide
 - https://developers.asana.com/reference/adddependenciesfortask

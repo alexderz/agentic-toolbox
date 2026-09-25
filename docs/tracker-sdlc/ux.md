@@ -54,10 +54,12 @@ recipe (committed only on operator OK); `## Tracker` missing or check
 failing → `sdlc-onboarding`, not guessing.
 
 **TS-6 Claim without collision.** *As* runtime agent *I want* claim =
-transition to `in_progress` + assignee *so that* two agents do not work
-one ticket. **Done when:** claim sets state and assignee; a ticket
-already assigned to someone else is neither skipped nor started — the
-agent checks with the orchestrator first.
+transition to `in_progress` + a `Claimed by <agent-label> <UTC>` comment
+*so that* two agents do not work one ticket, even on one shared tracker
+account. **Done when:** claim sets state and the marker, then re-reads
+the comments; an earlier unreleased claim by another label, or a ticket
+assigned to someone else, is neither skipped nor started — the agent
+checks with the orchestrator first.
 
 **TS-7 Concurrent local writes.** *As* local-ticket agent *I want*
 rejected pushes retried safely *so that* all agents' edits land. **Done
@@ -117,7 +119,7 @@ What I saw in Linear (nothing written). [found] = read it; [guess] = my pick:
 - [found] Ticket ids look like DER-123. [guess] PR links: added as a
   comment unless Linear links them itself.
 - [found] Branches: Linear suggests alexderz/der-123-…; our process
-  uses item/DER-123-<slug>. Both contain the ticket id.
+  uses item/der-123-<slug>. Both contain the ticket id.
 
 Why it matters
 Every agent after me follows this. A wrong state mapping means tickets

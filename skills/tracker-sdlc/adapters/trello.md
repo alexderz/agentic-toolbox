@@ -37,15 +37,14 @@ vendor source yet; prove them live before relying on them.
 ## Text format
 
 - Descriptions (≤16384 chars) and comments: the editor accepts most
-  Markdown; API storage as Markdown is (unverified).
+  Markdown; API storage as Markdown: (unverified).
 
 ## States and transitions
 
 - State = the list a card sits in. Onboarding maps each list to a
   canonical state; list names go only into the repo skill's Mapping
   cells. Map `done` and `canceled` to lists only, never to archiving.
-- A transition is a move to another list, set directly; there is no
-  workflow or transition step (unverified).
+- A transition is a direct move to another list; no workflow (unverified).
 - Archive (`closed: true`) is separate from the list: an archived card
   keeps its list, and archiving a list or board does not archive its
   cards. Board card reads return open cards only by default: archived
@@ -55,7 +54,7 @@ vendor source yet; prove them live before relying on them.
   (unverified). Onboarding records how archived cards and lists and
   this flag are read and mapped, or a Gap.
 - Archive, not delete (the official MCP server cannot delete). PR and
-  commit links go on the card as a URL attachment or in a comment.
+  commit links: a URL attachment or a comment on the card.
 
 ## Gotchas
 
@@ -63,31 +62,31 @@ vendor source yet; prove them live before relying on them.
   card moves to another board. Never use it as the ticket id or in
   branch names; use the card's 8-character `shortLink`. Card and board
   ids are 24-hex; both carry `shortLink`, `shortUrl` and `url`.
-- Rate limits apply per API key and per user token. 300 requests
-  per 10 s per key, 100 per 10 s per token; the members resource
-  allows 100 per 900 s. Over the limit returns 429 with a
-  limit-exceeded error name. More than 200 429s on one key block it
-  for the rest of the window. Read cards and their actions separately.
-- Done before verified: automation rules (formerly Butler) can archive
-  or mark complete a card moved into "Done"; the GitHub Power-Up
-  attaches PRs (moving cards: unverified). Onboarding: report as Gap.
+- Rate limits: 300 requests per 10 s per API key, 100 per 10 s per
+  user token; members 100 per 900 s. Over: 429 with a limit-exceeded
+  error name; over 200 429s blocks the key for the rest of the window.
+  Read cards and their actions separately.
+- Done before verified: automation (formerly Butler) can archive or mark
+  complete a card moved into "Done"; the GitHub Power-Up attaches PRs
+  (moving cards: unverified). Report as Gap.
 - REST auth is an API key plus a user token that grants the user's
   whole account. As query parameters both sit in the request URL, so
   an echoed URL or error leaks them. Prefer the Authorization header;
   never paste request URLs into tickets, comments or reports.
-- Official MCP server capabilities: boards (view, create), lists
-  (view, move), cards (view, create, update, move, archive, mark
-  done), checklists, attaching and detaching existing labels, search.
-  It cannot read or write comments or custom fields, add attachments,
-  or create or edit labels (planned). Fallback for PR links and
+- Official MCP server: boards (view, create), lists (view, move), cards
+  (view, create, update, move, archive, mark done), checklists, attach
+  and detach existing labels, search. Not comments, custom fields,
+  attachments, or label create or edit (planned). Fallback for PR links and
   comments: REST or an already-configured community server, else a PR
-  link line in the description and a Gap.
+  link line in the description (read, append, write back; the 16384
+  limit caps appended lines) and a Gap.
+- Claim: comments are `commentCard` card actions with a `date`, 50 per
+  page, newest first (unverified): page, then reverse. No native agent
+  field; members share the operator's account. The official MCP lacks
+  comments: REST, a community server, or operator-made agent labels.
 - Official server: OAuth, one workspace per connection; admins can
-  restrict its permissions and allowed domains. The Atlassian remote
-  MCP server does not cover Trello. No official CLI found (unverified).
-- The official server's repo offers a skill-installer command.
-  Never `npx skills install` it; connect the MCP server directly, and
-  add any vendor skill only through INTAKE.
+  restrict it. The Atlassian remote MCP server skips Trello. No official
+  CLI (unverified). Its repo's skill installer is never run: INTAKE.
 
 ## Discovery hints
 
@@ -108,6 +107,7 @@ vendor source yet; prove them live before relying on them.
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/getting-started-with-custom-fields/
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/object-definitions/
 - https://developer.atlassian.com/cloud/trello/rest/api-group-cards/
+- https://developer.atlassian.com/cloud/trello/guides/rest-api/nested-resources/
 - https://developer.atlassian.com/cloud/trello/rest/api-group-boards/
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/rate-limits/
 - https://support.atlassian.com/trello/docs/using-custom-fields/
