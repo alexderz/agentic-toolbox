@@ -49,8 +49,9 @@ in Review, never by auto-merge.
 1. **Find the tracker.** In order: the operator's statement; an
    existing `## Tracker` in `AGENTS.md`; MCP or CLI config (read **host
    names only**; never echo or store any other config value); env var
-   **names** (list them with `compgen -e`; never bare `env` or
-   `printenv`, which print values); key patterns in branches and commits (see the adapter's
+   **names** (list them with `compgen -e` in bash; elsewhere
+   `env | cut -d= -f1`, accepting multi-line noise; never bare `env`
+   or `printenv`, which print values); key patterns in branches and commits (see the adapter's
    Discovery hints). None found → ask the operator. "No hosted tracker"
    → `local`.
 2. **Read the adapter** `skills/tracker-sdlc/adapters/<tracker>.md`.
@@ -106,9 +107,11 @@ On confirm:
 3. Commit both in one commit `[<ticket-id>] Onboard tracker: <Tracker>`
    on the branch from [Branch](#branch). **security** reads that change
    (no tokens, no scripts). Item: the item's ticket id. Chunk: first
-   file the Epic with the new repo skill's `create` recipe (or relabel
-   the ticket the chunk arrived as to the Epic type; do not duplicate
-   it), then commit as `[<epic-id>]` on the just-cut project-main.
+   get the Epic. If the chunk arrived as a tracker ticket, use that
+   ticket as the Epic (ask the operator to relabel it if its type
+   differs; never duplicate it); otherwise `create` the Epic with the
+   new repo skill's recipe. Then commit as `[<epic-id>]` on the
+   just-cut project-main.
 4. Test write only on choice 3: create one ticket titled
    `tracker-sdlc test — delete me`, read it back, transition it to
    `canceled`, and report its id.

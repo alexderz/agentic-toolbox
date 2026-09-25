@@ -537,9 +537,10 @@ Plan is written from the confirmed brief, not from a raw dump.
 **End of chunk Brief.** Cut project-main `integrate/<chunk-slug>` from
 trunk. Run the `tracker-sdlc` setup check (fail → load
 [`sdlc-onboarding`](../skills/sdlc-onboarding/SKILL.md), which writes
-the tracker files first). File the Epic (`backlog`) with `create`, or
-relabel the ticket the chunk arrived as to the Epic type; do not
-duplicate it. If onboarding ran, commit it as `[<epic-id>] Onboard
+the tracker files first). Get the Epic (`backlog`): if the chunk
+arrived as a tracker ticket, use that ticket as the Epic (ask the
+operator to relabel it if its type differs; never duplicate it);
+otherwise `create` the Epic. If onboarding ran, commit it as `[<epic-id>] Onboard
 tracker: <Tracker>` on the just-cut project-main. Comment the Entry
 classification on the Epic.
 
