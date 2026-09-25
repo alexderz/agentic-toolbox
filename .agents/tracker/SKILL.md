@@ -131,8 +131,8 @@ Gotchas: redact tokens and credential-bearing URLs in `body` and
 Inputs: id, agent label (from the orchestrator; must match
 `^[a-z0-9][a-z0-9-]{0,31}$`, else stop and report).
 1. read id. Open blocker → stop and report. Assignee set and not self
-   → stop, ask the orchestrator. Fetch markers (step 3); any other
-   label's unreleased claim → stop, ask the orchestrator.
+   → stop, ask the operator. Fetch markers (step 3); any other
+   label's unreleased claim → stop, ask the operator.
 2. transition `in_progress`, then `mcp__linear__save_issue` with `id`,
    `assignee: "me"`, then comment `Claimed by <agent-label> <UTC>`
    (`<UTC>` = `YYYY-MM-DDTHH:MM:SSZ`). A write fails → do not work it;
@@ -148,7 +148,7 @@ Inputs: id, agent label (from the orchestrator; must match
    label's unreleased claim earlier than your earliest unreleased
    claim (earlier `createdAt`, or equal and earlier in the reversed
    order) → comment `Released by
-   <agent-label> <UTC>`, stop, do not work it, ask the orchestrator.
+   <agent-label> <UTC>`, stop, do not work it, ask the operator.
 5. Else the claim holds. Re-run 3–4 before transition `in_review` and
    before land; lose → step 4.
 Release: comment `Released by <agent-label> <UTC>`. Stale claim: only

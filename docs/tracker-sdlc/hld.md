@@ -25,7 +25,8 @@
   helper packages or `scripts/`; live Jira/Asana/Trello tests (operator's
   work agents); non-tracker onboarding; small-work lane (DER-253).
 
-- **Users / operators** — SDLC agents (manager files, builders claim).
+- **Users / operators** — SDLC agents (only the orchestrator writes:
+  it files, claims, and transitions; builders report).
   Operator confirms onboarding and owns tracker credentials.
 
 - **UX / stories** — `docs/tracker-sdlc/ux.md` — agent review agreed;

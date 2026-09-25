@@ -148,7 +148,9 @@ Load by id from this repo.
 Load **at most one** language-family skill per turn. A second is allowed
 only for a truly mixed-language diff. Never load the catalog.
 `tdd` / `verify-before-done` / `pr-review` / `security-hardening` /
-`yagni` / `debug` / `docs-google-style` may load alongside.
+`yagni` / `debug` / `docs-google-style` / `tracker-sdlc` may load
+alongside.
+`sdlc-onboarding` does not: an onboarding turn loads no language skill.
 `discover-the-idea` does not: gather- and refine-only turns load no
 language skill. Incoming-item Brief (problem + fix vs removal) loads
 no language skill. `ux-design` does not: UX-only turns load no language

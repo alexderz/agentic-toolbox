@@ -21,6 +21,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Only the orchestrator writes to the tracker; Plan and Groom post to
+  tickets with `comment`; land commits carry `Reviewed-by:`; the
+  onboarding commit lands through Review (`DER-252`, `DER-262`,
+  unreleased)
 - `tracker-sdlc` contract v2: claim posts a `Claimed by` comment and
   re-checks for an earlier claim; Linear blockers stay listed when
   resolved; repo-skill budget ≤180; SDLC lands are local, serialized
