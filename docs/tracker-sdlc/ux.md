@@ -7,8 +7,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - Brief: DER-252 brief, confirmed 2026-09-24 (Refine: ready for Plan)
 - HLD: `docs/tracker-sdlc/hld.md` (Plan, same step)
 - Date: `2026-09-24`
-- Agent review (requirements only): pending
-- Operator: pending
+- Agent review (requirements only): round 1 fixes applied 2026-09-24
+- Operator: accepted 2026-09-24 (with the decisions below folded in)
 
 ## People
 
@@ -41,24 +41,29 @@ then canceled (link reported: design choice); no answer, nothing written.
 **TS-4 Setup lands in the repo.** *As* runtime agent *I want* the
 confirmed setup in git *so that* later sessions skip discovery. **Done
 when:** `AGENTS.md` `## Tracker` (1–2 lines) and `.agents/tracker/SKILL.md`
-(recipe per verb, gotchas baked in) ride project-main or the item branch,
-uncommitted until one exists; never trunk; no tokens in either file.
+(recipe per verb, gotchas baked in) are committed at once on the branch
+onboarding cuts (chunk: project-main at end of Brief; item: its branch
+at item Brief); never trunk; no tokens in either file.
 
 **TS-5 Small runtime load, self-repair.** *As* runtime agent *I want* to
 load just the contract and the repo skill *so that* context stays small.
 **Done when:** a normal verb reads no adapter; failing recipe → read the
-adapter, retry with the fix (still failing: Open #5); `## Tracker`
-missing or check failing → `sdlc-onboarding`, not guessing.
+adapter, retry with the fix; still failing → stop that tracker action,
+comment on the ticket + report to the orchestrator, propose a repaired
+recipe (committed only on operator OK); `## Tracker` missing or check
+failing → `sdlc-onboarding`, not guessing.
 
 **TS-6 Claim without collision.** *As* runtime agent *I want* claim =
 transition to `in_progress` + assignee *so that* two agents do not work
-one ticket. **Done when:** claim sets state and assignee in one step.
-(Skip-if-assigned check: pending operator, Open #4.)
+one ticket. **Done when:** claim sets state and assignee; a ticket
+already assigned to someone else is neither skipped nor started — the
+agent checks with the orchestrator first.
 
 **TS-7 Concurrent local writes.** *As* local-ticket agent *I want*
 rejected pushes retried safely *so that* all agents' edits land. **Done
 when:** rejected → fetch, rebase own unpushed commit only, push; jittered
-retry ~10 then report (to whom: Open #3); linear history, no merge or
+retry ~10 then comment on the ticket + report to the orchestrator;
+linear history, no merge or
 force-push; ids checked unique before push.
 
 **TS-8 Verify an adapter live.** *As* work agent *I want* to run the
@@ -71,18 +76,20 @@ what was observed (design choice).
 
 - **J1 Chunk onboarding.** Brief ends → agent files the Epic → first
   tracker touch → `sdlc-onboarding` reads adapter + live reads → proposal
-  (below) → operator replies → optional test write → writes `## Tracker`
-  + repo skill, uncommitted until project-main exists, then committed
-  there (never trunk) → Spec entry gate only checks "present and current".
-- **J2 Item onboarding.** Entry (no writes) → item Brief opens with J1;
-  commit rides the item branch.
+  (below) → operator replies → optional test write → cuts project-main →
+  commits `## Tracker` + repo skill there (never trunk) → Spec entry gate
+  only checks "present and current".
+- **J2 Item onboarding.** Entry (no writes) → item Brief opens with J1,
+  cutting and committing on the item branch instead.
 - **J3 Gap.** Proposal names what is missing + fallback; operator picks.
 - **J4 No access.** Live read fails → stop, tell the operator what access
   is missing; no proposal built on guesses.
-- **J5 Recipe fails.** Read adapter → retry with the fix (still failing:
-  Open #5). `## Tracker` check fails → onboarding.
+- **J5 Recipe fails.** Read adapter → retry with the fix → still failing
+  → stop that action, comment on the ticket + report to the orchestrator,
+  propose a repaired recipe (committed only on operator OK).
+  `## Tracker` check fails → onboarding.
 - **J6 Local push race.** Rejected → rebase own commit → jittered retry →
-  lands; ~10 fails → report, no force-push.
+  lands; ~10 fails → comment + report to the orchestrator; no force-push.
 - **J7 Live verification.** Work agent exercises each Jira adapter fact →
   edits adapter + flips header.
 
@@ -101,7 +108,8 @@ What I saw in Linear (nothing written). [found] = read it; [guess] = my pick:
   label exists outside that group.
 - [found] States: Backlog, Todo, In Progress, In Review, Done,
   Canceled, Duplicate.
-- [guess] Mapping: Backlog → backlog; Todo → ready; In Progress →
+- [guess] Mapping: Backlog → backlog; Todo → ready (picked up
+  next); In Progress →
   in progress; In Review → in review; Done → done; Canceled and
   Duplicate → canceled.
 - [found] "Waits on another ticket" is built in (blocks / blocked by).
@@ -142,13 +150,16 @@ example message stands in for the one human touchpoint.
 states, or labels; live Jira/Asana/Trello tests from this repo;
 non-tracker onboarding; the small-work lane (DER-253).
 
-## Open for operator
+## Decided (operator, 2026-09-24)
 
-1. **Todo.** Brief's example: `ready` = Backlog with no open blockers.
-   Is Linear's Todo `ready`, `backlog`, or both? (Example guesses ready.)
-2. **Bug label and branch names** — Groom step (2) settles; the example
-   shows them, it does not decide.
-3. **Report to whom** (TS-7, J6) — brief says only "report".
-4. **Claim check (TS-6)** — skip if already assigned to someone else?
-5. **Recipe still failing after the adapter read** — report and suggest
-   re-onboarding? Block only that issue while others move?
+1. **Todo** → `ready`; Backlog stays `backlog`.
+2. **Failures, operator away** (TS-7, J5, J6) → ticket comment + report
+   to the orchestrator.
+3. **Assigned to someone else** (TS-6) → check with the orchestrator.
+4. **Recipe still failing** (TS-5, J5) → stop, report as in 2, propose a
+   repaired recipe; commit only on operator OK.
+5. **Branch timing** (TS-4, J1, J2) → onboarding cuts the branch and
+   commits the setup at once.
+
+**Deferred** to "onboard this repo": Bug label outside the Linear Type
+group; branch names (`alexderz/der-…` vs `item/<ticket>-<slug>`).
