@@ -12,8 +12,8 @@ Jira Cloud unless marked **Data Center**.
 
 - Track = Jira **project**. Structural choice of this contract.
 - Epic = issue of the Epic type. Work item = issue of a type the project
-  has (Task, or Story in many Scrum projects; Bug) whose `parent` holds
-  the Epic key. Cloud: Epic Link and Parent Link are deprecated.
+  has (Task, Bug; Story in many Scrum projects, unverified) whose
+  `parent` holds the Epic key. Cloud: Epic Link and Parent Link are deprecated.
 - **Data Center**: Epic Link is a custom field whose id
   (`customfield_NNNNN`) differs per instance; read it, never hard-code
   it. There `parent` is for sub-tasks only (unverified).
@@ -33,6 +33,7 @@ Jira Cloud unless marked **Data Center**.
   = X blocks Y. Atlassian warns not to infer meaning from the field
   names alone. The repo skill records blocked id ← blocker id.
 - Creating: `inwardIssue` = blocker (third-party quote, unverified).
+  Prove it live; read the link back from the blocked issue.
 - JQL cannot isolate direction (type name = outward text) or check
   blocker resolution: filter links client-side. Link entries carry the
   linked issue's status (unverified), so no extra read per blocker.
@@ -52,10 +53,9 @@ Jira Cloud unless marked **Data Center**.
   list expanded with `transitions.fields` shows them.
 - `done` and `canceled` usually both land in Done-category statuses,
   told apart by `resolution` (for example Done, Won't Do, Duplicate) or
-  by a separate status. Onboarding maps `canceled` to status +
-  resolution, or records a Gap. The API can close an issue with no
-  resolution unless a validator blocks it. How team-managed projects set
-  resolution is (unverified).
+  by a separate status; map `canceled` to status + resolution, or record
+  a Gap. The API can close an issue with no resolution unless a
+  validator blocks it. Team-managed resolution handling: (unverified).
 - `statusCategory != Done` as the open filter is (unverified).
 - The development panel fills when the uppercase key is in a branch
   name, commit message, or PR title.
@@ -68,13 +68,12 @@ Jira Cloud unless marked **Data Center**.
   on merge. Onboarding reports any such rule as a gap.
 - Smart Commits (enabled by an admin) run `#comment`, `#time`, and
   `#<transition>` commands that follow an issue key in a commit message.
-  Never write `#word` after a key in a commit message.
+  Recipes must not write `#word` after a key in commit messages.
 - Assign by `accountId` on Cloud (usernames left the API); by username
   (`name`) on **Data Center**. Claim depends on it.
 - Rate limits: burst and per-issue quotas; over one, 429 + `Retry-After`.
 - JQL search pages with `nextPageToken` (no `startAt`, no total). The
-  official MCP search tool is reported not to return the token, so
-  paging stops at page one.
+  official MCP search tool reportedly omits it: paging stops at page one.
 - Calls obey the user's project roles; writes also need the OAuth scope.
 - Keys are uppercase `ABC-123`. The pattern `[A-Z][A-Z0-9]+-[0-9]+`
   also matches Linear keys; use other hints to tell Jira from Linear.
@@ -84,7 +83,7 @@ Jira Cloud unless marked **Data Center**.
 ## Discovery hints
 
 - A site host ending in `atlassian.net` means Cloud. Another host
-  suggests **Data Center** (unverified).
+  suggests **Data Center** (unverified: Cloud allows custom domains).
 - MCP config naming `mcp.atlassian.com` or `mcp-atlassian` (names only).
 - Env var **names** `JIRA_URL`, `JIRA_USERNAME`, `JIRA_API_TOKEN`,
   `JIRA_PERSONAL_TOKEN` (names only, never values).
@@ -118,3 +117,4 @@ Jira Cloud unless marked **Data Center**.
 - https://developer.atlassian.com/cloud/jira/platform/rate-limiting/
 - https://community.developer.atlassian.com/t/issuelinktype-jql-field-works-incorrectly/69736
 - https://support.atlassian.com/jira/kb/update-epic-link-via-rest-api/
+- https://support.atlassian.com/jira/kb/find-your-site-url-to-set-up-the-jira-data-center-and-server-mobile-app/
