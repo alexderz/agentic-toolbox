@@ -24,15 +24,16 @@ runtime: onboarding copies the recipes into `.agents/tracker/SKILL.md`.
 - YAML front matter between `---` lines, then a markdown body. Keys in
   this order: `id`, `type`, `title`, `state` (canonical), `parent`,
   `blocked_by`, `labels`, `assignee`, `created`, `updated` (ISO-8601
-  UTC), `links` (`pr: <n>` / `sha: <sha>` items).
-- Lists: one `  - <item>` line each, or `[]`. Empty scalar: nothing after the colon.
-- Comments: `comments/<id>/<TS>-<agent>.md`, `<TS>` from
-  `date -u +%Y%m%dT%H%M%SZ`; created once, never edited.
+  UTC, microseconds), `links` (`pr: <n>` / `sha: <sha>` items).
+- Lists: one `  - <item>` line each, or `[]`. Empty scalar: nothing after
+  the colon. A malformed `blocked_by` line is rejected, not skipped.
+- Comments: `comments/<id>/<TS>-<agent>.md` (`date -u +%Y%m%dT%H%M%SZ`);
+  created once, never edited. The comment id is that file name.
 
 ## States and transitions
 
-`state` holds the canonical state, set directly; nothing auto-transitions. Every
-write rewrites `updated:`, so concurrent edits of one ticket conflict and re-decide.
+`state` holds the canonical state, set directly; nothing auto-transitions. Each
+ticket edit rewrites `updated:` (microseconds), so concurrent edits conflict and re-decide.
 
 ## Safety rules
 
@@ -40,107 +41,145 @@ write rewrites `updated:`, so concurrent edits of one ticket conflict and re-dec
   a mismatch stops and is reported. Prefix `^[a-z][a-z0-9]{0,5}$` (fixed at
   onboarding); id `^<prefix>-[a-z0-9]{4}$` for `id`, `parent`, each `blocked_by`
   entry, and any requested id; agent `^[a-z0-9][a-z0-9-]{0,31}$` (own label,
-  never ticket text). Paths: only `tickets/$ID.md`, `comments/$ID/$TS-$AGENT.md`.
+  never ticket text); state: the six canonical names.
+- **Paths**: only `tickets/$ID.md`, `comments/$ID/$TS-$AGENT.md`. After every
+  checkout (`worktree add`, `rebase`, `reset`) stop unless each `git ls-tree
+  -r HEAD -- tickets comments` entry is mode `100644` and both are real
+  directories: a planted symlink redirects writes. Temp files live outside `$W`.
 - **Ticket text** goes into a draft file `D` written with the file-write
   tool; recipes copy it, never put it on a command line, never `eval` it.
   Commit messages are `[<id>] <verb>` in a `mktemp` file, passed with `-F`.
-- **Hooks off** (`H`) on every `worktree add`, `commit`, `rebase`, and
-  `push`: no pre-push secret scan runs, so ticket writes must never hold
-  secrets. **Signing** follows the operator's git config; only if Gaps
-  say "signing off", set `S=(-c commit.gpgsign=false)`.
-- **Retry** only when the ref moved: `[rejected]` (`fetch first`,
-  `non-fast-forward`) or, for two pushes racing at the server, `[remote
-  rejected]` (`MOVED`). Any other rejection stops, reported, URLs redacted.
+- **Hooks off for every git command** (`GIT_CONFIG_COUNT` exports
+  `core.hooksPath=/dev/null`; covers `reference-transaction` and husky-style
+  relative paths): no secret scan runs, so ticket writes must never hold
+  secrets. **Signing** follows git config; `SIGN=off` only if Gaps say so.
+- **Retry** only when the ref moved, matched under `LC_ALL=C`: `[rejected]`
+  (`fetch first`, `non-fast-forward`) or, pushes racing at the server,
+  `[remote rejected]` (`incorrect old value provided`, `reference already
+  exists`). Others stop, reported, URLs redacted. `fetch` retries 5 times
+  (runs in one clone share the `origin/tickets` ref lock).
 
 ## Reads
 
-No worktree: `git fetch origin tickets`; `git show "origin/tickets:tickets/$ID.md"`
-(validated `ID`); list-ready walks `git ls-tree --name-only origin/tickets tickets/`,
-skipping names that fail the id pattern.
+`git fetch origin tickets`; `git show "origin/tickets:tickets/$ID.md"`. Use
+only `git ls-tree origin/tickets tickets/` entries of mode `100644` named by
+the id pattern; validate every id read from a file before use.
+
+- **read**: front matter, body, and each `blocked_by` id with its file's
+  `state` (`missing` if absent). URL: n/a; report `tickets/<id>.md`.
+- **list-ready**: `state: ready`, `assignee` empty or `$AGENT`, every
+  `blocked_by` file present in `done` / `canceled`. Scope epic: `parent` is
+  the epic; track: walk `parent` (≤5 hops, stop on a repeat) to the track.
 
 ## Write recipe
 
-One operation = one commit, in a temp worktree: the checkout you run
-from is never touched or pushed. Set `PFX`, `AGENT`, `VERB`, `ID` (empty
-for create), `D`, and `BOOT=approved` only if onboarding approved the
-bootstrap. Define `change` (step 3: read `$W`, decide, write; return 1 to
-stop), then run the write block. transition, comment, and set-blocker
-follow the claim shape.
+One operation = one commit, in a temp worktree: the checkout you run from
+is never touched or pushed. Set `PFX`, `AGENT`, `VERB`, `ID` (empty for
+create), `D` (create, comment), `TO` (transition), `BY` (set-blocker),
+`SIGN`, and `BOOT=approved` only if onboarding approved the bootstrap.
+Define the verb's `change` from the first block (step 3: read `$W`, decide,
+write; return 1 to stop), then run the write block; it prints `ok <id>`.
 
 ```sh
 # change: create
-change() { chk "$D"; while [[ -e $W/tickets/$ID.md ]]; do mint; done   # collision: new id
-  mkdir -p -- "$W/tickets"; sed "1,/^---\$/s/^id:.*/id: $ID/" "$D" >"$W/tickets/$ID.md"; }
-```
-
-```sh
+change() { chk "$D"; while [[ -e $W/tickets/$ID.md ]]; do mint; done; local t; t=$(now) &&   # collision: new id
+  put "$W/tickets/$ID.md" sed "1,/^---\$/{s/^id:.*/id: $ID/;s/^state:.*/state: backlog/;s/^created:.*/created: $t/
+    s/^updated:.*/updated: $t/;}" "$D"; }
 # change: claim
-change() { local f=$W/tickets/$ID.md b; [[ -f $f ]] || { printf 'no ticket\n' >&2; return 1; }
-  chk "$f"; [[ -z $(fm assignee "$f") ]] || { printf 'assigned: ask the orchestrator\n' >&2; return 1; }
-  while IFS= read -r b; do [[ -f $W/tickets/$b.md && $(fm state "$W/tickets/$b.md") =~ ^(done|canceled)$ ]] ||
-    { printf 'open blocker %s\n' "$b" >&2; return 1; }; done < <(bl "$f")
-  sed "1,/^---\$/{s/^state:.*/state: in_progress/;s/^assignee:.*/assignee: $AGENT/;s/^updated:.*/updated: $(
-    date -u +%Y-%m-%dT%H:%M:%SZ)/;}" "$f" >"$f.new"; mv -- "$f.new" "$f"; }
+change() { local f=$W/tickets/$ID.md a; have "$f" && chk "$f" && ! open "$f" || return 1
+  a=$(fm assignee "$f"); [[ -z $a || $a == "$AGENT" ]] ||
+    { printf 'assigned to another agent: ask the orchestrator\n' >&2; return 1; }
+  put "$f" sed "1,/^---\$/{s/^state:.*/state: in_progress/;s/^assignee:.*/assignee: $AGENT/
+    s/^updated:.*/updated: $(now)/;}" "$f"; }
+# change: transition
+change() { local f=$W/tickets/$ID.md; have "$f" && chk "$f" &&
+  put "$f" sed "1,/^---\$/{s/^state:.*/state: $TO/;s/^updated:.*/updated: $(now)/;}" "$f"; }
+# change: set-blocker
+change() { local f=$W/tickets/$ID.md; have "$f" && chk "$f" || return 1
+  [[ $'\n'$(bl "$f")$'\n' != *$'\n'"$BY"$'\n'* ]] || return 0                    # already set
+  put "$f" awk -v b="$BY" -v t="$(now)" 'NR>1&&/^---$/{e=1} !e&&/^blocked_by:/{print "blocked_by:"
+    print "  - " b; next} !e&&/^updated:/{print "updated: " t; next} {print}' "$f"; }
+# change: comment
+# the ticket file is untouched: no `updated` rewrite, no `links` append
+change() { local c; have "$W/tickets/$ID.md" && mkdir -p -- "$W/comments/$ID" || return 1
+  c=$W/comments/$ID/$(date -u +%Y%m%dT%H%M%SZ)-$AGENT.md
+  [[ ! -e $c ]] || { printf 'comment exists: retry\n' >&2; return 1; }
+  put "$c" cat -- "$D" && printf 'comment %s\n' "${c##*/}"; }
 ```
 
 ```sh
 # write
-set -euo pipefail; IFS=$'\n\t'; export LC_ALL=C
-H=(-c core.hooksPath=/dev/null); S=(); W=; B=; M=$(mktemp) || exit 1
-MOVED='incorrect old value provided|reference already exists'    # ref moved mid-push
+set -euo pipefail; IFS=$'\n\t'
+export LC_ALL=C GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath GIT_CONFIG_VALUE_0=/dev/null
+[[ ${SIGN:-} != off ]] || export GIT_CONFIG_COUNT=2 GIT_CONFIG_KEY_1=commit.gpgsign GIT_CONFIG_VALUE_1=false
+RJ='^ ! \[rejected\] +[^ ]+ -> tickets \((fetch first|non-fast-forward)\)$'
+RR='^ ! \[remote rejected\] +[^ ]+ -> tickets \((incorrect old value provided|reference already exists)\)$'
 ok() { [[ $2 =~ $1 ]] || { printf 'rejected: bad %s\n' "$3" >&2; exit 2; }; }
-ok '^[a-z][a-z0-9]{0,5}$' "$PFX" prefix; ok '^[a-z0-9][a-z0-9-]{0,31}$' "$AGENT" agent
-ok '^(create|claim|transition|comment|set-blocker)$' "$VERB" verb; IDRE="^$PFX-[a-z0-9]{4}\$"
-fm() { awk -v k="$1:" 'NR==1{next} /^---$/{exit} $1==k{sub(/^[^:]*:[ ]*/,"");print;exit}' "$2"; }
-bl() { awk 'NR==1{next} /^---$/{exit} /^[a-z_]+:/{k=$1} k=="blocked_by:"&&/^  - /{print substr($0,5)}' "$1"; }
+fm() { awk -v k="$1:" 'NR==1{next} /^---$/{exit} index($0,k)==1{sub(/^[^:]*:[ ]*/,"");print;exit}' "$2"; }
+bl() { awk 'NR==1{next} /^---$/{exit} /^[a-z_]+:/{k=$1;next} k=="blocked_by:"{print (/^  - /?substr($0,5):$0)}' "$1"; }
 chk() { local k v; for k in id parent; do v=$(fm "$k" "$1"); [[ -z $v ]] || ok "$IDRE" "$v" "$k"; done
   v=$(fm blocked_by "$1"); [[ -z $v || $v == '[]' ]] || ok "$IDRE" "$v" blocked_by
   while IFS= read -r v; do ok "$IDRE" "$v" blocked_by; done < <(bl "$1"); }
+have() { [[ -f $1 ]] || { printf 'no such ticket\n' >&2; return 1; }; }
+open() { local b; while IFS= read -r b; do [[ -f $W/tickets/$b.md && $(fm state "$W/tickets/$b.md") =~ \
+  ^(done|canceled)$ ]] || { printf 'open blocker %s\n' "$b" >&2; return 0; }; done < <(bl "$1"); return 1; }
+put() { local f=$1 n; shift; n=$(mktemp) || return 1; "$@" >"$n" && mv -- "$n" "$f" || { rm -f -- "$n"; return 1; }; }
+now() { printf '%s.%sZ' "$(date -u +%Y-%m-%dT%H:%M:%S)" "${EPOCHREALTIME#*.}"; }       # bash >= 5
 rnd() { head -c 512 /dev/urandom | tr -dc a-z0-9 | cut -c "1-$1"; }; mint() { ID=$PFX-$(rnd 4); ok "$IDRE" "$ID" id; }
 root() { [[ $(git -C "$1" rev-parse --show-toplevel) == "$(cd -- "$1" && pwd -P)" ]] ||
   { printf 'not a worktree root\n' >&2; exit 2; }; }
-push() { local out; out=$(git -C "$1" "${H[@]}" push origin HEAD:refs/heads/tickets 2>&1) && return 0
-  grep -qE "^ ! \[(remote )?rejected\] .*\((fetch first|non-fast-forward|$MOVED)\)" <<<"$out" && return 1
-  printf '%s\n' "$out" | sed -E 's#(://)[^/ ]*@#\1REDACTED@#g' >&2; return 2; }
+safe() { local t; t=$(git -C "$1" ls-tree -r HEAD -- tickets comments) || exit 2
+  [[ -d $1/tickets && ! -L $1/tickets && -d $1/comments && ! -L $1/comments && -z $(grep -v '^100644 ' <<<"$t") ]] ||
+    { printf 'refused: symlink or non-file under tickets/ or comments/\n' >&2; exit 2; }; }
+red() { sed -E 's#(://)[^/ ]*@#\1REDACTED@#g' >&2; }
+push() { local out; out=$(git -C "$1" push origin HEAD:refs/heads/tickets 2>&1) && return 0
+  grep -qE "$RJ|$RR" <<<"$out" && return 1; red <<<"$out"; return 2; }
 fetch() { local i; for i in 1 2 3 4 5; do git -C "$1" fetch -q origin tickets 2>/dev/null && return; sleep 1; done
-  printf 'fetch failed\n' >&2; return 1; }        # retries: sibling runs share the tracking-ref lock
+  printf 'fetch failed\n' >&2; return 1; }
 gone() { local n; n=$(git -C "$1" rev-list --count origin/tickets..HEAD 2>/dev/null) && [[ $n == 0 ]]; }
-bye() { local d; rm -f -- "$M"; for d in "$B" "$W"; do [[ -z $d ]] || { gone "$d" && git worktree remove "$d"; } ||
-  printf 'kept worktree %s\n' "$d" >&2; done; git worktree prune; }; trap bye EXIT
+bye() { local d; [[ -z $M ]] || rm -f -- "${M:?}"; for d in "$B" "$W"; do [[ -z $d ]] ||
+  { gone "$d" && git worktree remove "$d"; } || printf 'kept worktree %s\n' "$d" >&2; done; git worktree prune; }
+W=; B=; M=; trap bye EXIT
+ok '^[a-z][a-z0-9]{0,5}$' "$PFX" prefix; ok '^[a-z0-9][a-z0-9-]{0,31}$' "$AGENT" agent
+ok '^(create|claim|transition|comment|set-blocker)$' "$VERB" verb; IDRE="^$PFX-[a-z0-9]{4}\$"
 if [[ $VERB == create ]]; then mint; else ok "$IDRE" "$ID" id; fi
-T=$(git ls-remote --heads origin refs/heads/tickets)                                 # 0. bootstrap
+[[ $VERB != transition ]] || ok '^(backlog|ready|in_progress|in_review|done|canceled)$' "$TO" state
+[[ $VERB != set-blocker ]] || ok "$IDRE" "$BY" blocker
+M=$(mktemp) || exit 1
+T=$(git ls-remote --heads origin refs/heads/tickets 2>"$M") || { red <"$M"; exit 1; }   # 0. bootstrap
 if [[ -z $T ]]; then [[ ${BOOT:-} == approved ]] || { printf 'no tickets branch\n' >&2; exit 3; }
   B=$(mktemp -d) || exit 1; R=$(rnd 6); ok '^[a-z0-9]{6}$' "$R" suffix
-  git "${H[@]}" worktree add -q --orphan -b "tickets-init-$R" "${B:?}"; root "$B"
+  git worktree add -q --orphan -b "tickets-init-$R" "${B:?}"; root "$B"
   mkdir -- "$B/tickets" "$B/comments"; : >"$B/tickets/.keep"; : >"$B/comments/.keep"
   git -C "${B:?}" add tickets comments; printf 'Bootstrap tickets\n' >"$M"
-  git -C "${B:?}" "${H[@]}" "${S[@]}" commit -q -F "$M"
-  push "$B" || [[ $? == 1 ]]                                         # 1: someone else won
+  git -C "${B:?}" commit -q -F "$M"; r=0; push "$B" || r=$?; ((r != 2)) || exit 2   # 1: someone else won
   git worktree remove "${B:?}"; git branch -q -D "tickets-init-$R"; B=; fi
 fetch .; W=$(mktemp -d) || exit 1                                                    # 1., 2.
-git "${H[@]}" worktree add -q --detach "${W:?}" origin/tickets; root "$W"; a=0
+git worktree add -q --detach "${W:?}" origin/tickets; root "$W"; safe "$W"; a=0
 while :; do
   change || exit 3                                                                   # 3.
   git -C "${W:?}" add tickets comments                                               # 4.
-  if git -C "$W" diff --cached --quiet; then exit 0; fi
-  printf '[%s] %s\n' "$ID" "$VERB" >"$M"; git -C "$W" "${H[@]}" "${S[@]}" commit -q -F "$M"
+  if git -C "$W" diff --cached --quiet; then printf 'ok %s\n' "$ID"; exit 0; fi
+  printf '[%s] %s\n' "$ID" "$VERB" >"$M"; git -C "$W" commit -q -F "$M"
   while :; do a=$((a + 1)); r=0; push "$W" || r=$?                                   # 5.
-    if ((r == 0)); then exit 0; elif ((r == 2)); then exit 2; fi                     # 9. via trap
+    if ((r == 0)); then printf 'ok %s\n' "$ID"; exit 0; elif ((r == 2)); then exit 2; fi   # 9. via trap
     ((a < 10)) || { printf 'gave up: %s in %s\n' "$(git -C "$W" rev-parse HEAD)" "$W" >&2; exit 4; }
     fetch "$W"                                                                       # 6.
-    git -C "${W:?}" "${H[@]}" "${S[@]}" rebase -q origin/tickets >/dev/null 2>&1 || break
+    git -C "${W:?}" rebase -q origin/tickets >/dev/null 2>&1 || break; safe "$W"
     sleep $((RANDOM % (2 * a) + 1)); done                                            # 8.
-  git -C "${W:?}" rebase --abort; git -C "${W:?}" reset -q --hard origin/tickets; done   # 7.
+  git -C "${W:?}" rebase --abort; git -C "${W:?}" reset -q --hard origin/tickets; safe "$W"; done   # 7.
 ```
 
-Exit: 0 done; 2 bad value or other rejection; 3 chose not to write; 4 gave
-up (SHA and worktree printed, kept). The trap removes a worktree only when
-`rev-list --count origin/tickets..HEAD` succeeds and prints `0`. Never `-X ours`/`theirs`.
+Exit: 0 done; 1 git, fetch, or `ls-remote` failure; 2 bad value, unsafe tree, or
+other push rejection (bootstrap too); 3 chose not to write; 4 gave up (SHA and
+worktree printed, kept). The trap removes a worktree only when `rev-list --count
+origin/tickets..HEAD` succeeds and prints `0`. Never `-X ours`/`theirs`.
 
 ## Gotchas
 
-- Needs git ≥ 2.42 (`worktree add --orphan`). Writes use detached temp worktrees:
-  beads' long-lived sync worktree in `.git` bred most of its sync bugs.
+- Needs git ≥ 2.42 (`worktree add --orphan`) and bash ≥ 5. Writes use detached temp
+  worktrees: beads' long-lived sync worktree in `.git` bred most of its sync bugs.
+- A planted symlink or non-`100644` file under `tickets/` or `comments/` blocks every write.
 - Rulesets that block direct pushes or require signed commits reject
   writes: onboarding reports them as gaps. Keep CI off `tickets`.
 - Claims are push-wins; contention grows with agents. History grows
@@ -156,5 +195,6 @@ up (SHA and worktree printed, kept). The trap removes a worktree only when
 - https://git-scm.com/docs/git-worktree
 - https://git-scm.com/docs/git-push
 - https://git-scm.com/docs/git-config#Documentation/git-config.txt-receivedenyNonFastForwards
+- https://git-scm.com/docs/githooks#_reference_transaction
 - https://github.com/steveyegge/beads
 - https://github.com/gastownhall/beads/issues/1634
