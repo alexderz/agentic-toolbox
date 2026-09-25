@@ -9,97 +9,95 @@ vendor source yet; prove them live before relying on them.
 
 ## Hierarchy
 
-- Trello has no issue hierarchy: a board holds lists, a list holds
-  cards. Every level above the card is a convention of this contract.
-- Track: one board per track, or a label per track on a shared board
-  (convention, unverified).
-- Epic, pick one per repo: a card carrying an epic label, or a parent
-  card whose checklist lists its work items (convention, unverified).
-  The work item card links back to its Epic in its description.
+- No hierarchy: board → list → card; below the card only checklist
+  items, so sub-items stay off. Levels above the card are this
+  contract's convention (unverified). Track: a board, or a track label.
+- Epic: a card with an epic label. Each work item card carries a
+  `Parent: <shortLink>` line in its description; that line is the
+  record. A checklist on the Epic card may only mirror it.
 - Type (Task, Bug, Epic) = a label, or a dropdown custom field.
-  Custom fields need the Standard plan or higher (not Free); a board
-  holds at most 50 custom fields. A board with the feature disabled
-  returns no fields.
-- Label colors are a fixed set (green, yellow, orange, red, purple,
-  blue, sky, lime, pink, black); the name is free text.
-- Sub-items stay off: there is no level below the card besides
-  checklist items.
+  Custom fields need the Standard plan or higher (not Free); at most
+  50 per board; a board with the feature disabled returns none.
 
 ## Blockers
 
 - No native dependencies. Power-Ups add them (for example Card
-  Dependencies by Screenful), but Power-Up data is read-only over the
-  REST API; only the Power-Up's own client can write it. An agent cannot
-  set such a blocker.
+  Dependencies by Screenful), but their data is read-only over REST.
 - Convention (this contract's design, unverified): the blocked card
-  carries a `Blocked-by:` line in its description naming the blocker
-  card's `shortLink` or URL, plus a `blocked` label. A card-URL
-  attachment to the blocker is an optional extra.
-- Direction: recorded only on the blocked card (blocked id ← blocker
-  id). The blocker card holds nothing; compute "blocks" by reading the
-  `Blocked-by:` lines of other cards.
-- The blocker is resolved when its card sits in a list mapped to `done`
-  or `canceled`. Nothing updates the line or label automatically;
-  agents never remove blockers.
+  carries one `Blocked-by: <shortLink>` line per blocker in its
+  description, plus a `blocked` label as a visual cue.
+- Direction: only on the blocked card (blocked id ← blocker id);
+  "blocks" = other cards' `Blocked-by:` lines. Open-blocker check:
+  parse the lines, then read each blocker's list and archived flag.
+  Never trust the label: nothing clears it, so it goes stale
+  (unverified). A description update replaces the whole text
+  (unverified): set-blocker reads, appends, writes back. Agents never
+  remove blockers.
 
 ## Text format
 
-- Card descriptions and comments are markdown (unverified in vendor
-  docs).
+- Descriptions (≤16384 chars) and comments: the editor accepts most
+  Markdown; API storage as Markdown is (unverified).
 
 ## States and transitions
 
-- State = the list a card sits in. Onboarding reads the board's lists
-  and maps each list to a canonical state; list names go only into the
-  repo skill's Mapping cells.
-- A transition is a move of the card to another list, set directly;
-  there is no workflow or transition step.
-- Cards are archived, not deleted. The official MCP server cannot delete
-  at all.
-- Comments are card comments. PR and commit links go on the card as a
-  URL attachment or in a comment.
+- State = the list a card sits in. Onboarding maps each list to a
+  canonical state; list names go only into the repo skill's Mapping
+  cells. Map `done` and `canceled` to lists only, never to archiving.
+- A transition is a move to another list, set directly; there is no
+  workflow or transition step (unverified).
+- Archive (`closed: true`) is separate from the list: an archived card
+  keeps its list, and archiving a list or board does not archive its
+  cards. Board card reads return open cards only by default: archived
+  cards vanish, and an archived blocker read by list alone looks open.
+- "Mark complete" (`dueComplete`) is a flag separate from list and
+  archive, no due date needed; the official MCP "mark done" sets it
+  (unverified). Onboarding records how archived cards and lists and
+  this flag are read and mapped, or a Gap.
+- Archive, not delete (the official MCP server cannot delete). PR and
+  commit links go on the card as a URL attachment or in a comment.
 
 ## Gotchas
 
-- `idShort` (the card number) is board-scoped and changes when the card
-  moves. Never use it as the ticket id or in branch
-  names; use the card's 8-character `shortLink`.
-- Card and board ids are 24-hex strings; cards and boards both carry a
-  `shortLink`, `shortUrl` and `url`.
+- `idShort` (the card number) is board-scoped and can change when the
+  card moves to another board. Never use it as the ticket id or in
+  branch names; use the card's 8-character `shortLink`. Card and board
+  ids are 24-hex; both carry `shortLink`, `shortUrl` and `url`.
 - Rate limits apply per API key and per user token. 300 requests
   per 10 s per key, 100 per 10 s per token; the members resource
   allows 100 per 900 s. Over the limit returns 429 with a
-  limit-exceeded error name for key or token. More than 200 429s on
-  one key block it for the rest of the window. Requests that ask for
-  too many cards fail: read cards first, then their actions
-  separately. Responses carry rate-limit headers.
-- Official MCP server capabilities: boards (view, create), lists (view,
-  move), cards (view, create, update, move, archive, complete),
-  checklists, attaching and detaching existing labels, search. It
-  cannot read or write comments, read or write custom fields, add
-  attachments, or create or edit labels (vendor says planned). So over
-  it alone an agent cannot record PR links or read comments; that needs
-  the REST API or a community server. Onboarding records this as a gap.
-- The official server connects one workspace per connection, over OAuth.
-  Workspace admins can restrict its permissions (read, write, search)
-  and allowed domains.
+  limit-exceeded error name. More than 200 429s on one key block it
+  for the rest of the window. Read cards and their actions separately.
+- Done before verified: automation rules (formerly Butler) can archive
+  or mark complete a card moved into "Done"; the GitHub Power-Up
+  attaches PRs (moving cards: unverified). Onboarding: report as Gap.
+- REST auth is an API key plus a user token that grants the user's
+  whole account. As query parameters both sit in the request URL, so
+  an echoed URL or error leaks them. Prefer the Authorization header;
+  never paste request URLs into tickets, comments or reports.
+- Official MCP server capabilities: boards (view, create), lists
+  (view, move), cards (view, create, update, move, archive, mark
+  done), checklists, attaching and detaching existing labels, search.
+  It cannot read or write comments or custom fields, add attachments,
+  or create or edit labels (planned). Fallback for PR links and
+  comments: REST or an already-configured community server, else a PR
+  link line in the description and a Gap.
+- Official server: OAuth, one workspace per connection; admins can
+  restrict its permissions and allowed domains. The Atlassian remote
+  MCP server does not cover Trello. No official CLI found (unverified).
 - The official server's repo offers a skill-installer command.
   Never `npx skills install` it; connect the MCP server directly, and
   add any vendor skill only through INTAKE.
-- No official Trello CLI was found (unverified).
-- The Atlassian remote MCP server does not cover Trello.
 
 ## Discovery hints
 
 - MCP config naming the host `mcp.trello.com` (host name only; read no
-  other config value).
-- An MCP config entry for a community Trello server (name only).
+  other config value); or an entry for a community Trello server.
 - Env var **names** `TRELLO_API_KEY`, `TRELLO_TOKEN` (community
   convention; names only, never values).
-- Card links `trello.com/c/<shortLink>/<idShort>-<slug>` and board links
-  `trello.com/b/<shortLink>/...` in PRs, commits or docs (URL shape
-  unverified beyond the documented fields).
-- Branch names or PR titles carrying an 8-character `shortLink`.
+- Card links `trello.com/c/<shortLink>/<idShort>-<slug>`, board links
+  `trello.com/b/<shortLink>/...` (URL shape unverified); branch names
+  or PR titles with an 8-character `shortLink`.
 
 ## Sources
 
@@ -110,8 +108,13 @@ vendor source yet; prove them live before relying on them.
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/getting-started-with-custom-fields/
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/object-definitions/
 - https://developer.atlassian.com/cloud/trello/rest/api-group-cards/
+- https://developer.atlassian.com/cloud/trello/rest/api-group-boards/
 - https://developer.atlassian.com/cloud/trello/guides/rest-api/rate-limits/
 - https://support.atlassian.com/trello/docs/using-custom-fields/
+- https://support.atlassian.com/trello/docs/mark-a-card-as-complete/
+- https://support.atlassian.com/trello/docs/archiving-cards-automatically/
+- https://support.atlassian.com/trello/docs/using-the-github-power-up/
+- https://support.atlassian.com/trello/docs/how-to-format-your-text-in-trello/
 - https://trello.com/power-ups/5cf76de9dd07a8533f281b34/card-dependencies-by-screenful
 - https://community.developer.atlassian.com/t/modifying-plugindata-with-rest/38152
 - https://developer.atlassian.com/cloud/trello/power-ups/client-library/getting-and-setting-data/
