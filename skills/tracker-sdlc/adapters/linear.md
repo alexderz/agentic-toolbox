@@ -80,8 +80,8 @@ vendor source yet; prove them live before relying on them.
   other config value).
 - Env var **names** `LINEAR_API_KEY`, `LINEAR_TEAM_ID` (names only,
   never values).
-- A `linear.toml` or `.linear.toml` file in the repo root, `.config/`,
-  or the user's config directory (community CLI config).
+- A `linear.toml` or `.linear.toml` file in the repo (community CLI
+  config): presence only; read host names only, never keys.
 - Branch names with a lowercase key (`abc-123-...`); PR titles or
   commits with `ABC-123`; a `Linear-issue` commit trailer.
 - PR linking: the key in the branch name or PR title links the PR to

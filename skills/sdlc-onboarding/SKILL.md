@@ -35,6 +35,13 @@ Before anything else, cut the branch if it is absent:
 
 The onboarding commit lands on that branch. Never on trunk.
 
+An item branch holding the onboarding commit is dropped → cherry-pick
+that commit onto the chunk's project-main (item promoted to a chunk), or
+land it alone through Review (item closed). Either path gets a fresh
+**security** read. Do not delete the branch until that commit lands or
+is explicitly discarded. Clashing onboardings are resolved by a person
+in Review, never by auto-merge.
+
 ## Tracker
 
 ### Discover
@@ -42,7 +49,8 @@ The onboarding commit lands on that branch. Never on trunk.
 1. **Find the tracker.** In order: the operator's statement; an
    existing `## Tracker` in `AGENTS.md`; MCP or CLI config (read **host
    names only**; never echo or store any other config value); env var
-   **names**; key patterns in branches and commits (see the adapter's
+   **names** (list them with `compgen -e`; never bare `env` or
+   `printenv`, which print values); key patterns in branches and commits (see the adapter's
    Discovery hints). None found → ask the operator. "No hosted tracker"
    → `local`.
 2. **Read the adapter** `skills/tracker-sdlc/adapters/<tracker>.md`.
@@ -76,7 +84,8 @@ Send one message in the `ask-human.md` shape
   because it creates a shared remote branch. Add the signing choice:
   default honours the operator's git signing config; off only if chosen
   (for example pinentry would hang a headless agent). Record the choice
-  under Gaps.
+  under Gaps; signing off is flagged there as a security note (commits
+  on `tickets` then carry no authorship proof).
 
 Shape and a worked example:
 [ux.md — Example onboarding proposal](../../docs/tracker-sdlc/ux.md#example-onboarding-proposal-linear-this-repo).
@@ -96,7 +105,10 @@ On confirm:
    it ≤150 lines.
 3. Commit both in one commit `[<ticket-id>] Onboard tracker: <Tracker>`
    on the branch from [Branch](#branch). **security** reads that change
-   (no tokens, no scripts).
+   (no tokens, no scripts). Item: the item's ticket id. Chunk: first
+   file the Epic with the new repo skill's `create` recipe (or relabel
+   the ticket the chunk arrived as to the Epic type; do not duplicate
+   it), then commit as `[<epic-id>]` on the just-cut project-main.
 4. Test write only on choice 3: create one ticket titled
    `tracker-sdlc test — delete me`, read it back, transition it to
    `canceled`, and report its id.

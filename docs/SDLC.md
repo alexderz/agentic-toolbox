@@ -443,8 +443,9 @@ The board, git, and changelog must agree:
   (`## <chunk-slug> — YYYY-MM-DD`, or the repo’s version scheme). Link
   the tickets and the Trunk merge.
 
-**manager** after-acts the ticket when the item is on project-main (or
-on trunk, if there was no project-main). Do not mark the chunk shipped
+**manager** after-acts the ticket when the item is landed+verified on
+project-main (or on trunk, if there was no project-main): `tracker-sdlc`
+transition `done`. Do not mark the chunk shipped
 until Trunk.
 
 ## Steps
@@ -535,8 +536,12 @@ Plan is written from the confirmed brief, not from a raw dump.
 
 **End of chunk Brief.** Cut project-main `integrate/<chunk-slug>` from
 trunk. Run the `tracker-sdlc` setup check (fail → load
-[`sdlc-onboarding`](../skills/sdlc-onboarding/SKILL.md)). File the Epic
-(`backlog`).
+[`sdlc-onboarding`](../skills/sdlc-onboarding/SKILL.md), which writes
+the tracker files first). File the Epic (`backlog`) with `create`, or
+relabel the ticket the chunk arrived as to the Epic type; do not
+duplicate it. If onboarding ran, commit it as `[<epic-id>] Onboard
+tracker: <Tracker>` on the just-cut project-main. Comment the Entry
+classification on the Epic.
 
 **Item (arrives as Task or Bug).** Always run this path unless the
 ticket is `n/a — split from accepted Spec` (those start at Build). A
@@ -748,7 +753,8 @@ Workers **do not bypass** intake, SHA pins, or security Spec/PR gates.
 
 ### Review
 
-Review **before** the item lands on project-main (or trunk). The
+Review **before** the item lands on project-main (or trunk). When
+Review starts, `tracker-sdlc` transition `in_review`. The
 reviewer is **not** the builder who wrote the diff. Same-session
 self-review does not count. Merge-and-delete does **not** skip this
 gate.
