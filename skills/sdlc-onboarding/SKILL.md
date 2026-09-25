@@ -125,8 +125,9 @@ On confirm:
    no tokens, no `scripts/` files, and no executable blocks except the
    local adapter's fenced shell recipe, compared with the adapter's
    current text (only placeholder fills and baked-in gotchas may
-   differ). Item: the item's ticket id. Chunk: first get the Epic. If the chunk arrived as a tracker ticket, use that
-   ticket as the Epic (ask the operator to relabel it if its type
+   differ). Item: the item's ticket id. Chunk: first get the Epic. If
+   the chunk arrived as a tracker ticket, use that ticket as the Epic
+   (ask the operator to relabel it if its type
    differs; never duplicate it); otherwise `create` the Epic with the
    new repo skill's recipe. Then commit as `[<epic-id>]` on an item
    branch cut from project-main and land it as its own item through
