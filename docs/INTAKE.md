@@ -39,7 +39,12 @@ authoring is not an exemption. Build DoD still requires the diff to
 match the pinned SHA (or `first-party` for first-party prose).
 
 Product-repo `.agents/tracker/SKILL.md`: no SOURCES row; **security**
-reads the change that adds or edits it (no tokens, no scripts).
+reads the change that adds or edits it. It holds no tokens, no
+`scripts/` files, and no executable blocks except the fenced shell
+recipe from `skills/tracker-sdlc/adapters/local.md`. **security**
+compares that recipe with the adapter's current text; only placeholder
+fills and baked-in adapter gotchas may differ. Any other executable
+content fails the read.
 
 ## Layout-only exception
 
