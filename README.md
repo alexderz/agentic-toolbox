@@ -40,11 +40,11 @@ There is no plugin manifest yet. Natural install groups:
 
 | Bundle | Skills | When |
 | --- | --- | --- |
-| **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
+| **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
-| **optional / empty** | `tracker-sdlc`, `cursor-cloud-agents-when` | Placeholders. No `SKILL.md` yet |
+| **optional / empty** | `cursor-cloud-agents-when` | Placeholder. No `SKILL.md` yet |
 
 `lang-go`, `lang-python`, and `lang-shell` are **pointers**. They do not
 count as a skill load. They route to `golang-*`, `modern-python`, and
@@ -65,8 +65,8 @@ and a compress, not a vendor paste.
   Empty SHA cells mean the body is not here yet.
 - **security** intake before any third-party content lands in this repo.
 - **No auto-update.** No marketplace install. No scripts. No secrets.
-- First-party skills (`tracker-sdlc`, `cursor-cloud-agents-when`,
-  language guides) are written here; they are not vendor copies.
+- First-party skills (`tracker-sdlc`, `sdlc-onboarding`,
+  `cursor-cloud-agents-when`, language guides) are written here; they are not vendor copies.
 
 Directories under `skills/<id>/` are placeholders (`.gitkeep` only) until
 a body lands.
@@ -82,6 +82,8 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | `discover-the-idea` | First-party gatherer (interview → brief). Chunk Brief Gather. Do not load on an incoming item |
 | `ux-design` | Designer. Stories + UX at Plan; mockups at Spec if there is a screen |
 | `sdlc-artifacts` | First-party templates (HLD, LLD, tickets, track, changelog, …) |
+| `tracker-sdlc` | First-party contract for every tracker read/write, plus per-tracker adapters. Loads the product repo's `.agents/tracker/SKILL.md` |
+| `sdlc-onboarding` | First-party. Discovers a repo's tracker, proposes a mapping, writes the repo tracker skill on confirm |
 | `tdd` | Rewrite (MIT). Pin in [SOURCES.md](SOURCES.md) |
 | `debug` | Default systematic debug (MIT). Alternatives: `debug-pocock`, `debug-anthropic` |
 | `docs-google-style` | Distill of Google developer docs style. Human + agent surfaces |
@@ -117,7 +119,6 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 
 | Id | Ownership |
 | --- | --- |
-| `tracker-sdlc` | First-party placeholder |
 | `cursor-cloud-agents-when` | First-party placeholder (Cursor-specific) |
 
 ## Packages

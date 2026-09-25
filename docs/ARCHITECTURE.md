@@ -62,7 +62,7 @@ flowchart LR
 | Skills home | First-party `SKILL.md` + pins; distillations under `knowledge/`; optional MIT packages under `packages/` | this repo |
 | Project contract | Commands + skill ids | Root `AGENTS.md` per product repo |
 | Workers | Implement via remote agent or local CLI | PR / local box |
-| Board | Projects / Epics / Tasks | Issue tracker |
+| Board | Track / Epic / Task·Bug via `tracker-sdlc` + the repo's tracker skill | Any supported tracker (Linear, Jira, Asana, Trello) or a local `tickets` branch |
 
 ## Roles
 

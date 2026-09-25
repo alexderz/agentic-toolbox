@@ -76,9 +76,16 @@ Plan or Spec shape — those stay blocked until a person answers.
 
 | Layer | Typical object | Meaning |
 | --- | --- | --- |
-| Track | Project | One product or process track |
-| Chunk | Parent issue labeled Epic | Discrete, parallel slice |
-| Work item | Issue labeled Task or Bug | Implementable unit; may nest sub-issues |
+| Track | Project (or the tracker's equivalent) | One product or process track |
+| Chunk | Epic | Discrete, parallel slice |
+| Work item | Task or Bug under its Epic | Implementable unit. Sub-items only if the repo's tracker skill enables them |
+
+**Every tracker read and write goes through
+[`tracker-sdlc`](../skills/tracker-sdlc/SKILL.md)** and the product
+repo's `.agents/tracker/SKILL.md`. Canonical states (six): `backlog`,
+`ready`, `in_progress`, `in_review`, `done` (= landed+verified; an Epic
+when on trunk), `canceled`. Blocked is not a state: an item is blocked
+while it has open blockers.
 
 After-act **manager** with the operator's timezone. The board is the
 tracker; git holds the files. Designs live in git from onset — do not
@@ -436,8 +443,9 @@ The board, git, and changelog must agree:
   (`## <chunk-slug> — YYYY-MM-DD`, or the repo’s version scheme). Link
   the tickets and the Trunk merge.
 
-**manager** after-acts the ticket when the item is on project-main (or
-on trunk, if there was no project-main). Do not mark the chunk shipped
+**manager** after-acts the ticket when the item is landed+verified on
+project-main (or on trunk, if there was no project-main): `tracker-sdlc`
+transition `done`. Do not mark the chunk shipped
 until Trunk.
 
 ## Steps
@@ -496,8 +504,9 @@ needs taste.
 Unclear: a short look — can we reproduce it, and does the fix need a
 design choice? If still unclear, **ask**. Do not implement here.
 
-No template, no subagent, no board state. One line on the ticket is
-enough.
+Read-only: classify from what you were handed. No template, no
+subagent, no tracker write. The classification line goes on the ticket
+at Brief.
 
 ### Brief
 
@@ -525,10 +534,23 @@ both. No language skill on a gather- or refine-only turn.
 
 Plan is written from the confirmed brief, not from a raw dump.
 
+**End of chunk Brief.** Cut project-main `integrate/<chunk-slug>` from
+trunk. Run the `tracker-sdlc` setup check (fail → load
+[`sdlc-onboarding`](../skills/sdlc-onboarding/SKILL.md), which writes
+the tracker files first). Get the Epic (`backlog`): if the chunk
+arrived as a tracker ticket, use that ticket as the Epic (ask the
+operator to relabel it if its type differs; never duplicate it);
+otherwise `create` the Epic. If onboarding ran, commit it as `[<epic-id>] Onboard
+tracker: <Tracker>` on the just-cut project-main. Comment the Entry
+classification on the Epic.
+
 **Item (arrives as Task or Bug).** Always run this path unless the
 ticket is `n/a — split from accepted Spec` (those start at Build). A
 confirmed brief on the parent chunk does **not** skip item-Brief.
 
+0. Cut `item/<ticket-id>-<slug>` (from the live project-main, else
+   trunk). Run the `tracker-sdlc` setup check (fail →
+   `sdlc-onboarding`). Comment the Entry classification on the ticket.
 1. **Troubleshooter** (architect hat) writes **problem + proposed fix**
    and out of scope. May load `debug` (one of `debug` / `debug-pocock` /
    `debug-anthropic`) through root cause / hypothesis only — do **not**
@@ -605,6 +627,9 @@ Only if needed. Evidence in git. Template: `poc.md`.
 
 ### Spec
 
+Entry gate: `tracker-sdlc` setup check (offline). Fail →
+`sdlc-onboarding` first.
+
 Document + git copy. Use template `lld.md` (trust-boundary section is
 required; `n/a` + why if none).
 
@@ -653,31 +678,31 @@ not reuse the layperson analogies outside
 
 Break into Tasks/Bugs from templates `task.md` / `bug.md` (acceptance
 criteria, LLD link, blockers). For a **chunk that is still
-integrating**, name the **project-main** branch
-(`integrate/<chunk-slug>` unless the repo already differs; see
-[Project-main](#project-main-intermediate-integration) and
-[Conventions](#conventions-optional-recommended)). **manager** sets the
-land path: PR into project-main, or merge-and-delete the item branch.
+integrating**, project-main already exists (cut at the end of chunk
+Brief; see [Project-main](#project-main-intermediate-integration) and
+[Conventions](#conventions-optional-recommended)). Groom moves the items
+to `ready` and the Epic to `in_progress` through `tracker-sdlc`.
+**manager** sets the land path: PR into project-main, or
+merge-and-delete the item branch.
 
-**Blockers.** For every dependency, set a blocking relation on the
-board. On Linear: `blockedBy` / `blocks` on the issues (append-only;
-`get_issue` with `includeRelations: true` to read them). If the tracker
-has no blocking edges, write the blocker IDs on the ticket and treat
-them as blocking anyway. Waiting on a person is a blocker on **that**
+**Blockers.** For every dependency, set a blocker with the
+`tracker-sdlc` set-blocker verb: the tracker's native relation, else a
+`Blocked-by:` line + `blocked` label. Append-only: agents never remove
+one. Waiting on a person is a blocker on **that**
 issue. Do not start Build with a hidden prereq.
 
 **Incoming item:** fill **this** ticket. Do not split unless promoting
-to a chunk. If a **project-main already exists** (this chunk is still
-integrating), branch from it and land there. If there is **no live
-project-main** (no chunk in flight, or the parent chunk already Trunked),
-branch from trunk; Review versus trunk; merge-and-delete. Do not create
-a project-main for an incoming item.
+to a chunk. Its branch was already cut at item Brief: from project-main
+if one **already exists** (this chunk is still integrating), and it
+lands there; else from trunk (no chunk in flight, or the parent chunk
+already Trunked), with Review versus trunk and merge-and-delete. Do not
+create a project-main for an incoming item.
 
 ### Build
 
-Before minting or resuming a **builder** on an item, read its blockers.
-An **open** blocker is a blocking issue not done, canceled, or
-landed+verified.
+Before minting or resuming a **builder** on an item, claim it with the
+`tracker-sdlc` claim verb (it reads the blockers first). An **open**
+blocker is a blocker not in `done` or `canceled`.
 
 If any blocker is open:
 
@@ -698,7 +723,9 @@ subagent and one verifier subagent per work item** for that loop (see
 [Subagents per work item](#subagents-per-work-item)).
 
 Each item **branches off project-main** (or off trunk if there is no
-project-main), not off a pile of sibling item branches. Independent
+project-main), not off a pile of sibling item branches. Items split from
+an accepted Spec branch here; incoming items already have theirs from
+item Brief. Independent
 items may **build** in parallel. When an item is merge-ready (DoD +
 Review), **land it on project-main** (or trunk) — do not stockpile
 finished-but-unmerged branches for a batch integrate. Lands are one at
@@ -727,7 +754,8 @@ Workers **do not bypass** intake, SHA pins, or security Spec/PR gates.
 
 ### Review
 
-Review **before** the item lands on project-main (or trunk). The
+Review **before** the item lands on project-main (or trunk). When
+Review starts, `tracker-sdlc` transition `in_review`. The
 reviewer is **not** the builder who wrote the diff. Same-session
 self-review does not count. Merge-and-delete does **not** skip this
 gate.
@@ -781,11 +809,11 @@ project branch, then land that branch on trunk as the chunk.
 | Branch | What | Lifetime |
 | --- | --- | --- |
 | **trunk** | Repo default (`main` / protected). Release target. | Permanent |
-| **project-main** | Integration branch for this project or chunk. Tip is the latest landed items. | Groom → Trunk |
-| **item branch** | One work item. Created from current project-main (or from trunk if none). | Until that item lands |
+| **project-main** | Integration branch for this project or chunk. Tip is the latest landed items. | Brief → Trunk |
+| **item branch** | One work item. Created from current project-main (or from trunk if none) at item Brief (incoming) or Build (split from Spec). | Until that item lands |
 
-Create project-main from trunk at Groom **when this chunk is still
-integrating**. Do not create one for an incoming item that has no live
+Create project-main from trunk at the end of chunk Brief **when this
+chunk is still integrating**. Do not create one for an incoming item that has no live
 project-main. Name it and item branches as in
 [Conventions](#conventions-optional-recommended). When project-main
 exists, builders **branch off the current tip.** After an item lands,
@@ -961,7 +989,8 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 
 | Skill | Role | Notes |
 | --- | --- | --- |
-| `tracker-sdlc` | manager / architect | Empty dir until a first-party body |
+| `tracker-sdlc` | manager / architect | Contract for all tracker reads/writes; loads the repo's `.agents/tracker/SKILL.md` |
+| `sdlc-onboarding` | manager / architect | First tracker touch and Spec gate failure; proposes, writes on confirm |
 | `cursor-cloud-agents-when` | architect | Empty dir until a first-party body |
 | `discover-the-idea` | architect | Brief Gather on a **chunk**. Load the skill; do not paste it here. Do not load on an incoming item |
 | `ux-design` | designer | Stories + high-level UX at Plan; mockups at Spec if there is a screen. Human gate |
