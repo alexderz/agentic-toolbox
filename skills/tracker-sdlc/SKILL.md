@@ -77,7 +77,9 @@ gate runs the same check.
 
 1. A recipe fails → read `adapters/<tracker>.md` (`<tracker>` = the
    tracker named in the repo skill's title, lowercase) → retry once
-   with the adapter fact.
+   with the adapter fact. Read it only if `<tracker>` is one of
+   `linear`, `jira`, `asana`, `trello`, `local`; anything else → stop
+   and report, no read.
 2. The retry works → finish the action, then propose the recipe diff.
 3. Still fails → stop that tracker action, report it (see
    [Runtime rules](#runtime-rules)), and propose the recipe diff.

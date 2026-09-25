@@ -49,10 +49,11 @@ in Review, never by auto-merge.
 1. **Find the tracker.** In order: the operator's statement; an
    existing `## Tracker` in `AGENTS.md`; MCP or CLI config (read **host
    names only**; never echo or store any other config value); env var
-   **names** (list them with `compgen -e` in bash; elsewhere
-   `env | cut -d= -f1`, accepting multi-line noise; never bare `env`
-   or `printenv`, which print values); key patterns in branches and commits (see the adapter's
-   Discovery hints). None found → ask the operator. "No hosted tracker"
+   **names** (list them with `compgen -e` in bash; elsewhere the POSIX
+   `awk 'BEGIN{for(k in ENVIRON) print k}'`; if neither is available,
+   ask the operator instead of listing; never bare `env` or `printenv`,
+   which print values); key patterns in branches and commits (see the
+   adapter's Discovery hints). None found → ask the operator. "No hosted tracker"
    → `local`.
 2. **Read the adapter** `skills/tracker-sdlc/adapters/<tracker>.md`.
 3. **Prove access with live reads.** A read fails → stop and tell the
