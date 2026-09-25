@@ -15,7 +15,7 @@
 | Path | Kind | Budget |
 | --- | --- | --- |
 | `skills/tracker-sdlc/SKILL.md` | contract (new body) | ≤150 target, 250 cap |
-| `skills/tracker-sdlc/adapters/{linear,jira,asana,trello,local}.md` | adapter facts | ≤120 each (`local` ≤160) |
+| `skills/tracker-sdlc/adapters/{linear,jira,asana,trello,local}.md` | adapter facts | ≤120 each (`local` ≤200: every verb's recipe spelled out, plus symlink and hook hardening) |
 | `skills/sdlc-onboarding/SKILL.md` | new first-party id | ≤200 |
 | `skills/sdlc-artifacts/templates/tracker-skill.md` | repo-skill template | ≤100 |
 | product repo `AGENTS.md` `## Tracker`, `.agents/tracker/SKILL.md` | written by onboarding | repo skill ≤150 |
@@ -272,55 +272,63 @@ Must-cover facts (source: Brief research):
   collision found at rebase → mint a new id.
 - Reads need no worktree: `git fetch origin tickets`, then
   `git show "origin/tickets:tickets/$ID.md"` / `git ls-tree`.
-- **Hooks and signing.** `H=(-c core.hooksPath=/dev/null)` on every
-  `worktree add`, `commit`, `rebase` and `push` (post-checkout,
-  pre-commit, pre-push). So pre-push secret scans do not run: ticket
+- **Hooks and signing.** Hooks off for **every git command**: export
+  `GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=core.hooksPath
+  GIT_CONFIG_VALUE_0=/dev/null` once (covers `reference-transaction` on
+  fetch/reset/branch and repo-relative hook paths such as husky). So
+  pre-push secret scans do not run: ticket
   writes must never contain secrets. Signing follows the operator's git
   config by default (the only authorship record on `tickets`); only if
   the operator chose "signing off" at onboarding (recorded under Gaps)
-  add `-c commit.gpgsign=false` to `commit` and `rebase`.
+  add `commit.gpgsign=false` the same way (`SIGN=off`).
 - **Cleanup.** `trap` on EXIT removes temp message files, and removes a
   worktree (`W` or `B`) only when
   `git -C "<dir>" rev-list --count origin/tickets..HEAD` succeeds **and**
   prints `0`. A failing command (e.g. `origin/tickets` absent during
   bootstrap) means keep the worktree — never remove one that may hold an
   unpushed commit.
-- **Rejections.** Only a non-fast-forward rejection (push output
-  `[rejected]` with `fetch first` or `non-fast-forward`) goes to retry.
-  Any other rejection (ruleset, signing, permission, hook) stops and is
-  reported as a gap, with credentials and credential-bearing URLs
-  redacted.
-- Write recipe (one operation = one commit):
+- **Rejections.** Only a ref-moved rejection goes to retry: push output
+  `[rejected]` with `fetch first` or `non-fast-forward`, or (two pushes
+  racing at the server) `[remote rejected]` with `incorrect old value
+  provided` or `reference already exists`. Match git messages under
+  `LC_ALL=C`. Any other rejection (ruleset, signing, permission, hook)
+  stops and is reported as a gap, with credentials and
+  credential-bearing URLs redacted.
+- **Fetch.** `git fetch origin tickets` (steps 1 and 6) retries up to 5
+  times, 1 s apart: concurrent runs in one clone share the
+  `origin/tickets` ref lock. Still failing → stop, report.
+- Write recipe (one operation = one commit; every git command runs
+  with the exported `GIT_CONFIG_*` hooks-off rule above):
   0. Bootstrap, only if `git ls-remote --heads origin tickets` is empty
      and the operator approved it at onboarding (it creates a shared
      remote branch). `B=$(mktemp -d) || stop`; `R` = 6 random
      `[a-z0-9]`;
-     `git "${H[@]}" worktree add --orphan -b "tickets-init-$R" "${B:?}"`
+     `git worktree add --orphan -b "tickets-init-$R" "${B:?}"`
      (git ≥2.42); check `git -C "${B:?}" rev-parse --show-toplevel`
      equals `B` (resolved with `pwd -P`), else stop; create
      `"${B:?}"/tickets/.keep` and `"${B:?}"/comments/.keep`;
      `git -C "${B:?}" add tickets comments`; `M=$(mktemp) || stop` and
      write `Bootstrap tickets` into it;
-     `git -C "${B:?}" "${H[@]}" commit -F "$M"`;
-     `git -C "${B:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
+     `git -C "${B:?}" commit -F "$M"`;
+     `git -C "${B:?}" push origin HEAD:refs/heads/tickets`.
      Non-fast-forward / already exists → someone else bootstrapped:
      `git worktree remove "${B:?}"`, `git branch -D "tickets-init-$R"`,
      continue at 1. Other rejection → stop, report. Success → same
      cleanup, continue at 1.
   1. `git fetch origin tickets`.
   2. `W=$(mktemp -d) || stop`;
-     `git "${H[@]}" worktree add --detach "${W:?}" origin/tickets`
+     `git worktree add --detach "${W:?}" origin/tickets`
      (outside the repo). Check `git -C "${W:?}" rev-parse --show-toplevel`
      equals `W` (resolved with `pwd -P`); else stop.
   3. Read the current files in `"${W:?}"`; validate every id in them;
      decide (e.g. claim: assignee empty and no open blocker). Write the
      change.
   4. `git -C "${W:?}" add tickets comments`;
-     `git -C "${W:?}" "${H[@]}" commit -F "$M"`.
-  5. `git -C "${W:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
+     `git -C "${W:?}" commit -F "$M"`.
+  5. `git -C "${W:?}" push origin HEAD:refs/heads/tickets`.
      Success → 9. Non-fast-forward → 6. Other rejection → stop, report.
   6. `git -C "${W:?}" fetch origin tickets`;
-     `git -C "${W:?}" "${H[@]}" rebase origin/tickets`. Clean → 8.
+     `git -C "${W:?}" rebase origin/tickets`. Clean → 8.
   7. Conflict: `git -C "${W:?}" rebase --abort`;
      `git -C "${W:?}" reset --hard origin/tickets`; back to 3 (re-read,
      re-decide: claim taken → give up and report; id collision → new
@@ -371,7 +379,8 @@ Must-cover facts (source: Brief research):
   changes (Never list). Agents never remove blockers.
 - **Secrets** — no tokens, keys, or secret-bearing URLs in any written
   file, report, proposal or comment (redact); security greps each
-  repo-skill change. Hooks are off for ticket commits, so pre-push
+  repo-skill change. Hooks are off for every git command in `local`
+  ticket writes, so pre-push
   secret scans do not run: ticket writes must never contain secrets.
 - **Egress** — only to the tracker the agent already reaches; `local`
   only to the repo's own `origin`.
@@ -379,8 +388,8 @@ Must-cover facts (source: Brief research):
   (any tracker; `tickets` is writable by anyone with push). Recipes treat
   them as data: ids validated against fixed patterns before any path,
   refspec or command; text only via files, never the command line
-  (local.md specifics). Hooks off keeps repo hooks from running on
-  ticket content.
+  (local.md specifics). Hooks off for every git command keeps repo
+  hooks from running on ticket content.
 - **Who writes what** — `.agents/tracker/SKILL.md`: loaded instructions,
   changed only by a reviewed commit (onboarding or repair, operator OK).
   `tickets`: anyone with push; no per-ticket permissions; no
@@ -445,7 +454,7 @@ grep -rnE '(token|api[_-]?key|secret)[[:space:]]*[:=]|lin_api_|ATATT|Bearer |://
 | G3 | `jira.md` | Outline + Jira must-cover facts, header `Verified: no` | G1 | headings in order; each must-cover fact present; tool/CLI-name grep empty; ≤120 |
 | G4 | `asana.md` | Same, Asana facts | G1 | same shape |
 | G5 | `trello.md` | Same, Trello facts | G1 | same shape |
-| G6 | `local.md` | Formats, ID rule, recipe steps 0–9 | G1 | race test in scratchpad: bare origin with `receive.denyNonFastForwards=true`, two clones; bootstrap race (one wins); two concurrent creates both land; two concurrent claims of one ticket → one wins, one gives up; `git log --merges origin/tickets` empty; `git worktree list` clean after success; forced give-up keeps worktree and prints SHA; a ticket whose `blocked_by`/`parent` holds `../x` or `$(id)` is rejected before any path or command; a non-ff-unrelated rejection (pre-receive hook on the bare origin) stops without retry; operator's cwd branch never pushed (run from a dirty checkout, confirm it is untouched); security read of `local.md` |
+| G6 | `local.md` | Formats, ID rule, recipe steps 0–9, every verb spelled out; ≤200 lines (hardening + verbs) | G1 | race test in scratchpad: bare origin with `receive.denyNonFastForwards=true`, two clones; bootstrap race (one wins); two concurrent creates both land; two concurrent claims of one ticket → one wins, one gives up; `git log --merges origin/tickets` empty; `git worktree list` clean after success; forced give-up keeps worktree and prints SHA; a ticket whose `blocked_by`/`parent` holds `../x` or `$(id)` is rejected before any path or command; a non-ff-unrelated rejection (pre-receive hook on the bare origin) stops without retry; operator's cwd branch never pushed (run from a dirty checkout, confirm it is untouched); security read of `local.md` |
 
 ### Rollout / rollback
 
