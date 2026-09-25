@@ -121,9 +121,11 @@ On confirm:
    it ≤180 lines: seven recipes, the claim re-fetch, and baked-in
    gotchas outgrew 150 in the first live onboarding.
 3. Commit both in one commit `[<ticket-id>] Onboard tracker: <Tracker>`
-   on the branch from [Branch](#branch). **security** reads that change
-   (no tokens, no `scripts/` files). Item: the item's ticket id. Chunk: first
-   get the Epic. If the chunk arrived as a tracker ticket, use that
+   on the branch from [Branch](#branch). **security** reads that change:
+   no tokens, no `scripts/` files, and no executable blocks except the
+   local adapter's fenced shell recipe, compared with the adapter's
+   current text (only placeholder fills and baked-in gotchas may
+   differ). Item: the item's ticket id. Chunk: first get the Epic. If the chunk arrived as a tracker ticket, use that
    ticket as the Epic (ask the operator to relabel it if its type
    differs; never duplicate it); otherwise `create` the Epic with the
    new repo skill's recipe. Then commit as `[<epic-id>]` on an item
