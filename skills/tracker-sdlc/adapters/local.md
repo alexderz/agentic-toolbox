@@ -85,7 +85,7 @@ change() { chk "$D"; while [[ -e $W/tickets/$ID.md ]]; do mint; done; local t; t
 # change: claim
 change() { local f=$W/tickets/$ID.md a; have "$f" && chk "$f" && ! open "$f" || return 1
   a=$(fm assignee "$f"); [[ -z $a || $a == "$AGENT" ]] ||
-    { printf 'assigned to another agent: ask the orchestrator\n' >&2; return 1; }
+    { printf 'assigned to another agent: ask the operator\n' >&2; return 1; }
   put "$f" sed "1,/^---\$/{s/^state:.*/state: in_progress/;s/^assignee:.*/assignee: $AGENT/
     s/^updated:.*/updated: $(now)/;}" "$f"; }
 # change: transition

@@ -45,8 +45,10 @@ and why.** Do not invent a parallel outline.
 - Copy the file. Delete unused *optional* sections. Keep required ones.
 - Link the layer above and below (track → chunk → item; HLD → LLD →
   ticket). Changelog line cites ticket + land SHA or PR.
-- Tracker: paste the body into the item/project via `tracker-sdlc`; set
-  blockers with set-blocker, not only as text.
+- Tracker: the orchestrator files a ticket body with `tracker-sdlc`
+  `create`, and posts later fields or a design's git path with
+  `comment` (no edit verb); set blockers with set-blocker, not only as
+  text.
 - Dates ISO-8601. Slugs lowercase hyphen.
 
 ## Ask first

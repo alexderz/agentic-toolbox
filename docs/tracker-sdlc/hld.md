@@ -25,7 +25,8 @@
   helper packages or `scripts/`; live Jira/Asana/Trello tests (operator's
   work agents); non-tracker onboarding; small-work lane (DER-253).
 
-- **Users / operators** — SDLC agents (manager files, builders claim).
+- **Users / operators** — SDLC agents (only the orchestrator writes:
+  it files, claims, and transitions; builders report).
   Operator confirms onboarding and owns tracker credentials.
 
 - **UX / stories** — `docs/tracker-sdlc/ux.md` — agent review agreed;
@@ -59,7 +60,7 @@
     No silent self-rewrite.
   - **Runtime** — Operator away and a tracker action fails → comment on
     the ticket + report to the orchestrator. Ticket assigned to someone
-    else → neither skip nor start; check with the orchestrator.
+    else → neither skip nor start; check with the operator.
 
 ```mermaid
 flowchart TD
@@ -90,7 +91,7 @@ flowchart TD
       (PR/SHA links fold in unless native). Claim = `in_progress` +
       claim comment `Claimed by <agent-label> <UTC>`, then re-fetch;
       an earlier unreleased claim by another label → post `Released
-      by`, ask the orchestrator (the source of truth; agents share one
+      by`, ask the operator (the orchestrator claims; agents share one
       tracker identity; contract v2).
     - Blockers: native relation, else `Blocked-by:` line + `blocked`
       label. Store one direction.
@@ -214,7 +215,7 @@ flowchart TD
    tokens, no scripts). One line in `docs/INTAKE.md`.
 5. **Runtime**: Linear Todo → `ready`; failure while operator away →
    ticket comment + report to orchestrator; ticket assigned to someone
-   else → do not skip, do not start, check with orchestrator; recipe
+   else → do not skip, do not start, check with operator; recipe
    still failing after adapter read → stop, report, propose repair
    (committed only on operator OK).
 6. **Claim marker, contract v2** (DER-260). Assignee cannot tell agents

@@ -65,7 +65,7 @@ Inputs · Steps (numbered, using Tool) · Output · Gotchas (from the adapter)
 ### claim
 
 Inputs (id, agent label) · Steps (numbered, using Tool), per tracker-sdlc
-Claim: read (any other marker → ask) → transition `in_progress` + write
+Claim: read (any other marker → ask the operator) → transition `in_progress` + write
 the Mapping `claim` marker → re-fetch every comment page oldest first
 (or the field or labels) → decide; re-check before `in_review` and land ·
 Release: `Released by` comment, plus clearing the field or label in
