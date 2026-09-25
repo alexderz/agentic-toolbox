@@ -297,37 +297,38 @@ Must-cover facts (source: Brief research):
 - **Fetch.** `git fetch origin tickets` (steps 1 and 6) retries up to 5
   times, 1 s apart: concurrent runs in one clone share the
   `origin/tickets` ref lock. Still failing → stop, report.
-- Write recipe (one operation = one commit):
+- Write recipe (one operation = one commit; every git command runs
+  with the exported `GIT_CONFIG_*` hooks-off rule above):
   0. Bootstrap, only if `git ls-remote --heads origin tickets` is empty
      and the operator approved it at onboarding (it creates a shared
      remote branch). `B=$(mktemp -d) || stop`; `R` = 6 random
      `[a-z0-9]`;
-     `git "${H[@]}" worktree add --orphan -b "tickets-init-$R" "${B:?}"`
+     `git worktree add --orphan -b "tickets-init-$R" "${B:?}"`
      (git ≥2.42); check `git -C "${B:?}" rev-parse --show-toplevel`
      equals `B` (resolved with `pwd -P`), else stop; create
      `"${B:?}"/tickets/.keep` and `"${B:?}"/comments/.keep`;
      `git -C "${B:?}" add tickets comments`; `M=$(mktemp) || stop` and
      write `Bootstrap tickets` into it;
-     `git -C "${B:?}" "${H[@]}" commit -F "$M"`;
-     `git -C "${B:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
+     `git -C "${B:?}" commit -F "$M"`;
+     `git -C "${B:?}" push origin HEAD:refs/heads/tickets`.
      Non-fast-forward / already exists → someone else bootstrapped:
      `git worktree remove "${B:?}"`, `git branch -D "tickets-init-$R"`,
      continue at 1. Other rejection → stop, report. Success → same
      cleanup, continue at 1.
   1. `git fetch origin tickets`.
   2. `W=$(mktemp -d) || stop`;
-     `git "${H[@]}" worktree add --detach "${W:?}" origin/tickets`
+     `git worktree add --detach "${W:?}" origin/tickets`
      (outside the repo). Check `git -C "${W:?}" rev-parse --show-toplevel`
      equals `W` (resolved with `pwd -P`); else stop.
   3. Read the current files in `"${W:?}"`; validate every id in them;
      decide (e.g. claim: assignee empty and no open blocker). Write the
      change.
   4. `git -C "${W:?}" add tickets comments`;
-     `git -C "${W:?}" "${H[@]}" commit -F "$M"`.
-  5. `git -C "${W:?}" "${H[@]}" push origin HEAD:refs/heads/tickets`.
+     `git -C "${W:?}" commit -F "$M"`.
+  5. `git -C "${W:?}" push origin HEAD:refs/heads/tickets`.
      Success → 9. Non-fast-forward → 6. Other rejection → stop, report.
   6. `git -C "${W:?}" fetch origin tickets`;
-     `git -C "${W:?}" "${H[@]}" rebase origin/tickets`. Clean → 8.
+     `git -C "${W:?}" rebase origin/tickets`. Clean → 8.
   7. Conflict: `git -C "${W:?}" rebase --abort`;
      `git -C "${W:?}" reset --hard origin/tickets`; back to 3 (re-read,
      re-decide: claim taken → give up and report; id collision → new
