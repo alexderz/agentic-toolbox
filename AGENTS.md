@@ -7,6 +7,16 @@ on this file, then load what it names.
 Git is the source of truth. Do not write skill bodies only on a local or
 vendor mirror.
 
+## Public repo
+
+This is a public, open-source repo. Write everything public-facing
+(files, commit messages, PR descriptions, and tags) for outside readers.
+Leave out private tracker workspace URLs and names, internal agent
+nicknames, session artifacts (question numbers, chat quotes), and
+personal details beyond git authorship. Bare ticket ids (`DER-123`) are
+fine. Review public-facing text before you push: pushed commit messages
+and tags are effectively permanent.
+
 ## How to load
 
 Do not paste skill or SDLC bodies into this file. **Read** the named

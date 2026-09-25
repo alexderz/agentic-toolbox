@@ -14,7 +14,7 @@ Newest first. Skip empty sections.
 
 ## tracker-sdlc — 2026-09-25
 
-Tracker-agnostic SDLC ([DER-252](https://linear.app/derzhi-grok-bot/issue/DER-252), PR #2).
+Tracker-agnostic SDLC (`DER-252`, PR #2).
 
 ### Added
 

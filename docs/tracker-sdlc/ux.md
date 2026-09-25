@@ -16,8 +16,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **Runtime agent** — any role touching tickets; loads `tracker-sdlc` +
   the repo's `.agents/tracker/SKILL.md` only.
 - **Local-ticket agents** — several agents writing `tickets` at once.
-- **Work agent** — on the operator's work setup; checks an unverified
-  adapter (e.g. Jira) against a live instance.
+- **Live verifier** — checks an unverified adapter (for example, Jira) against
+  a live instance; `Verified:` flips after a live run.
 
 ## Stories (shape: `user-story.md`, one job each)
 
@@ -69,7 +69,7 @@ retry ~10 then comment on the ticket + report to the orchestrator;
 linear history, no merge or
 force-push; ids checked unique before push.
 
-**TS-8 Verify an adapter live.** *As* work agent *I want* to run the
+**TS-8 Verify an adapter live.** *As* live verifier *I want* to run the
 adapter's facts against a real instance *so that* the header can say
 verified. **Done when:** each fact is confirmed or corrected; the
 `Verified: no` header flips only after the live run; corrections cite
@@ -93,7 +93,7 @@ what was observed (design choice).
   `## Tracker` check fails → onboarding.
 - **J6 Local push race.** Rejected → rebase own commit → jittered retry →
   lands; ~10 fails → comment + report to the orchestrator; no force-push.
-- **J7 Live verification.** Work agent exercises each Jira adapter fact →
+- **J7 Live verification.** Live verifier exercises each Jira adapter fact →
   edits adapter + flips header.
 
 ## Example onboarding proposal (Linear, this repo)
@@ -119,7 +119,7 @@ What I saw in Linear (nothing written). [found] = read it; [guess] = my pick:
 - [found] Parent: tasks sit under their Epic. [guess] Sub-tasks: off.
 - [found] Ticket ids look like DER-123. [guess] PR links: added as a
   comment unless Linear links them itself.
-- [found] Branches: Linear suggests alexderz/der-123-…; our process
+- [found] Branches: Linear suggests <user>/der-123-…; our process
   uses item/der-123-<slug>. Both contain the ticket id.
 
 Why it matters
@@ -165,4 +165,4 @@ non-tracker onboarding; the small-work lane (DER-253).
    commits the setup at once.
 
 **Deferred** to "onboard this repo": Bug label outside the Linear Type
-group; branch names (`alexderz/der-…` vs `item/<ticket>-<slug>`).
+group; branch names (`<user>/der-…` vs `item/<ticket>-<slug>`).
