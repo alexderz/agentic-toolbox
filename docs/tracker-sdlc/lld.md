@@ -285,11 +285,16 @@ Must-cover facts (source: Brief research):
   prints `0`. A failing command (e.g. `origin/tickets` absent during
   bootstrap) means keep the worktree — never remove one that may hold an
   unpushed commit.
-- **Rejections.** Only a non-fast-forward rejection (push output
-  `[rejected]` with `fetch first` or `non-fast-forward`) goes to retry.
-  Any other rejection (ruleset, signing, permission, hook) stops and is
-  reported as a gap, with credentials and credential-bearing URLs
-  redacted.
+- **Rejections.** Only a ref-moved rejection goes to retry: push output
+  `[rejected]` with `fetch first` or `non-fast-forward`, or (two pushes
+  racing at the server) `[remote rejected]` with `incorrect old value
+  provided` or `reference already exists`. Match git messages under
+  `LC_ALL=C`. Any other rejection (ruleset, signing, permission, hook)
+  stops and is reported as a gap, with credentials and
+  credential-bearing URLs redacted.
+- **Fetch.** `git fetch origin tickets` (steps 1 and 6) retries up to 5
+  times, 1 s apart: concurrent runs in one clone share the
+  `origin/tickets` ref lock. Still failing → stop, report.
 - Write recipe (one operation = one commit):
   0. Bootstrap, only if `git ls-remote --heads origin tickets` is empty
      and the operator approved it at onboarding (it creates a shared

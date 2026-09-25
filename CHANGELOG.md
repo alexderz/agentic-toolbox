@@ -11,6 +11,8 @@ Newest first. Skip empty sections.
 - Asana adapter for `tracker-sdlc` (`DER-252`, `DER-257`, unreleased)
 - Jira adapter for `tracker-sdlc` (`DER-252`, `DER-256`, unreleased)
 - Trello adapter for `tracker-sdlc` (`DER-252`, `DER-258`, unreleased)
+- Local adapter for `tracker-sdlc`: tickets on a shared `tickets` git
+  branch with a race-tested write recipe (`DER-252`, `DER-259`, unreleased)
 - `grok-acp` worker skill and `packages/grok-acp/` ACP client: offload a build
   to the local Grok Build CLI as an SDLC builder, mint or resume by label
   (no ticket, unreleased)
