@@ -7,6 +7,23 @@ on this file, then load what it names.
 Git is the source of truth. Do not write skill bodies only on a local or
 vendor mirror.
 
+## Public repo
+
+This is a public, open-source repo.
+
+- **Deliverables** (skills, human-facing docs, code, collateral): write
+  for outside readers in a professional voice, per the project's style
+  guide (default `docs-google-style`). No people's names beyond
+  maintainer credits and git authorship, no who said what, and no
+  private tracker workspace URLs or names, internal hostnames or
+  IPs, credentials (see [Never](skills/security-hardening/SKILL.md#never)),
+  or agent-session leftovers such as interview question labels. Bare
+  ticket ids (`DER-123`) are fine.
+- **Agent context** (`docs/<chunk>/` design records, `.agents/`, scratch
+  notes) can be informal: civil and credential-free, not tone-reviewed.
+- **Commit messages, PR descriptions, and tags** are public and
+  effectively permanent: write them for outside readers.
+
 ## How to load
 
 Do not paste skill or SDLC bodies into this file. **Read** the named
@@ -21,8 +38,9 @@ in the SDLC).
 | **Incoming item** | Bug report, red build, unit failure, mechanical ticket | **Read [Entry](docs/SDLC.md#entry) + [Brief](docs/SDLC.md#brief) first.** Do **not** load `discover-the-idea`. Do not implement yet. Problem + fix vs removal, then align Plan/Spec. |
 | **Research** | Purchase, product shortlist, or market research | **researcher** persona: **read `skills/buying-researcher/SKILL.md`** when that ask is in play. Not an SDLC step. |
 | **UX** | User stories, high-level UX, or screen mockups | **designer:** **read `skills/ux-design/SKILL.md`**. Agent review vs requirements (no reviewer taste), then human unless they waive. |
-| **Artifacts** | Writing HLD, LLD, tickets, epics, track/roadmap, PoC, decision, changelog, PR, monthly, human how-to, or AGENTS stub | **Read `skills/sdlc-artifacts/SKILL.md`** and copy the matching `templates/` file. Chunk brief stays `discover-the-idea`. Incoming item: `bug.md` / `task.md` (problem + fix vs removal). |
+| **Artifacts** | Writing HLD, LLD, tickets, epics, track/roadmap, PoC, decision, changelog, PR, monthly, human how-to, AGENTS stub, or repo tracker skill (`tracker-skill.md`) | **Read `skills/sdlc-artifacts/SKILL.md`** and copy the matching `templates/` file. Chunk brief stays `discover-the-idea`. Incoming item: `bug.md` / `task.md` (problem + fix vs removal). |
 | **Debug** | Failure while implementing a chosen fix, or unexpected behavior in Build | If this is a **new** ticket (not already in Build), follow **Incoming item** (Entry + Brief). In Build, or after a chosen fix: **read `skills/debug/SKILL.md`** (default). Alternatives: `debug-pocock`, `debug-anthropic`. Load **one**. Then `tdd` + `verify-before-done`. At item Brief, the troubleshooter may load `debug` for root cause and must **not** implement. |
+| **Tracker** | Any tracker read or write (file, claim, move, block, comment, list ready work) | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`; the `## Tracker` section at the end of this file applies only to work on this repository. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. |
 | **Docs** | Human how-to or agent-facing comments after Spec | **Read `skills/docs-google-style/SKILL.md`**. Human: what it is, how it works, how to use it. Agent: locatable contracts. |
 | **A skill** | The id applies to this turn | **Read `skills/<id>/SKILL.md`**. Ids are listed below. |
 | **Language** | Writing or reviewing code | At most **one** language-family skill (table below, or load `language-router` first if ambiguous). Pointers `lang-go` / `lang-python` / `lang-shell` do not count as a load. |
@@ -31,7 +49,7 @@ in the SDLC).
 
 Process skills that may load with the one language skill: `tdd`,
 `verify-before-done`, `pr-review`, `security-hardening`, `yagni`,
-`sdlc-artifacts`, `debug`, `docs-google-style`.
+`sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`.
 `shell-safety` when the turn includes shell. `discover-the-idea` is
 gather-only — no language skill on that turn. `buying-researcher` is
 research-only — no language skill on that turn.
@@ -49,7 +67,7 @@ process pack beside these ids (see [docs/INTAKE.md](docs/INTAKE.md)).
 | builder | Implement and ship |
 | tester | Mechanical CI, hooks, cleanup |
 | security | Security gates and skill intake |
-| manager | Process, SDLC after-act, land path (PR vs merge-and-delete) |
+| manager | Process, SDLC after-act, land order (local, serialized merges; no PRs) |
 | operator | HITL, exceptions, vuln severity |
 | researcher | Market / buy research when that ask is in play. Not an SDLC step |
 
@@ -66,11 +84,11 @@ delta-only — do not re-pack.
 Branch items off **project-main** (`integrate/<slug>`) when that branch
 exists; land each merge-ready item there (serialized), then land
 project-main on trunk. Incoming item with no live project-main: branch from trunk,
-Review versus trunk, merge-and-delete. Do not invent a project-main for
+Review versus trunk, local merge. Do not invent a project-main for
 a lone incoming item.
 
-**manager** picks PR vs merge-and-delete from how many items are in
-flight. Groom sets board **blockers** (Linear `blockedBy` / `blocks`).
+No PRs: Review is an explicit gate; push item branches and project-main
+for durability; **manager** orders the local, serialized lands. Groom sets tracker **blockers** through `tracker-sdlc`.
 Do not start or land an item with an open blocker unless the operator
 said so. Full rules: [docs/SDLC.md](docs/SDLC.md) (Groom, Build,
 Project-main, Subagents per work item, Spawn prompts).
@@ -98,6 +116,8 @@ Skill ids with `SKILL.md` (do not remint without a new **security** cut):
 - `golang-security`
 - `golang-safety`
 - `yagni`
+- `tracker-sdlc`
+- `sdlc-onboarding`
 
 Research (not SDLC). **researcher** loads when relevant:
 
@@ -136,7 +156,6 @@ Language pack. Do not remint the Go / Python / Shell ids above.
 First-party placeholders / empty dirs (no body claim until SHA +
 `SKILL.md` on `main`):
 
-- `tracker-sdlc`
 - `cursor-cloud-agents-when`
 
 Load by id from this repo.
@@ -146,7 +165,9 @@ Load by id from this repo.
 Load **at most one** language-family skill per turn. A second is allowed
 only for a truly mixed-language diff. Never load the catalog.
 `tdd` / `verify-before-done` / `pr-review` / `security-hardening` /
-`yagni` / `debug` / `docs-google-style` may load alongside.
+`yagni` / `debug` / `docs-google-style` / `tracker-sdlc` may load
+alongside.
+`sdlc-onboarding` does not: an onboarding turn loads no language skill.
 `discover-the-idea` does not: gather- and refine-only turns load no
 language skill. Incoming-item Brief (problem + fix vs removal) loads
 no language skill. `ux-design` does not: UX-only turns load no language
@@ -202,6 +223,10 @@ Before any third-party content:
    repo.
 
 Empty SHA cells mean the body must not exist yet.
+
+## Tracker
+
+Linear — load .agents/tracker/SKILL.md (tracker-sdlc v2).
 
 ## Related
 

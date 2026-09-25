@@ -18,7 +18,7 @@
 
 ## Optional
 
-- Status mapping (board states ↔ after-act)
+- Status mapping (canonical `tracker-sdlc` states ↔ after-act)
 - Interfaces / schemas
 - Rollout / rollback
 - Bot after-act notes

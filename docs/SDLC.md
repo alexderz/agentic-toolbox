@@ -3,7 +3,8 @@
 Shared process for work that uses this skills home. Software is the
 common case; the same steps apply to docs, process changes, and other
 tickets. Git holds durable artifacts. The issue tracker is the board.
-Pull requests cite a ticket ID when the project uses tickets.
+Branches and land commits cite a ticket ID when the project uses
+tickets.
 
 ## Roles
 
@@ -16,8 +17,8 @@ Do not remint a skill that already has an id here.
 | **designer** | User stories, high-level UX, Spec mockups when there is a screen |
 | **builder** | Implement and ship |
 | **tester** | Mechanical CI, hooks, cleanup, verification evidence |
-| **security** | Gates at Spec (trust boundaries) and PR, plus skill intake — not only a monthly vuln pass |
-| **manager** | Process, board after-act, and land path (PR vs merge-and-delete). Does not bless ships |
+| **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). Sole tracker writer. Does not bless ships |
 | **operator** | Human in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
 Workers (agents, CI bots) act as **builder** or **tester**. They do not
@@ -76,9 +77,21 @@ Plan or Spec shape — those stay blocked until a person answers.
 
 | Layer | Typical object | Meaning |
 | --- | --- | --- |
-| Track | Project | One product or process track |
-| Chunk | Parent issue labeled Epic | Discrete, parallel slice |
-| Work item | Issue labeled Task or Bug | Implementable unit; may nest sub-issues |
+| Track | Project (or the tracker's equivalent) | One product or process track |
+| Chunk | Epic | Discrete, parallel slice |
+| Work item | Task or Bug under its Epic | Implementable unit. Sub-items only if the repo's tracker skill enables them |
+
+**Every tracker read and write goes through
+[`tracker-sdlc`](../skills/tracker-sdlc/SKILL.md)** and the product
+repo's `.agents/tracker/SKILL.md`. Canonical states (six): `backlog`,
+`ready`, `in_progress`, `in_review`, `done` (= landed+verified; an Epic
+when on trunk), `canceled`. Blocked is not a state: an item is blocked
+while it has open blockers.
+
+**Only the orchestrator (manager) writes to the tracker:** create,
+claim, release, set-blocker, comment, and every transition. Builders,
+verifiers, and reviewers never write to it; they report, and the
+orchestrator writes.
 
 After-act **manager** with the operator's timezone. The board is the
 tracker; git holds the files. Designs live in git from onset — do not
@@ -386,9 +399,9 @@ scheme.
 | Role | the names in this SDLC | `builder`, `designer` |
 | Step | the names in [Steps](#steps) | `Build`, `Plan` |
 
-Cite the ticket ID on the item branch, PR title, merge commit, and
-changelog line when the project uses tickets. If it does not, omit the
-ID and keep the rest.
+Cite the ticket ID on the item branch, merge commit, and changelog line
+when the project uses tickets. If it does not, omit the ID and keep the
+rest.
 
 Commits: imperative subject, one idea. `[ticket-id] subject` when
 tickets exist.
@@ -427,8 +440,8 @@ The board, git, and changelog must agree:
 
 | Artifact | Points at |
 | --- | --- |
-| Ticket | LLD path; land SHA or PR when landed+verified |
-| Changelog line | ticket ID + land SHA or PR |
+| Ticket | LLD path; land SHA when landed+verified |
+| Changelog line | ticket ID + land SHA |
 | HLD / LLD | chunk and ticket IDs they cover |
 
 - **Build** land: one line under `## Unreleased`.
@@ -436,8 +449,9 @@ The board, git, and changelog must agree:
   (`## <chunk-slug> — YYYY-MM-DD`, or the repo’s version scheme). Link
   the tickets and the Trunk merge.
 
-**manager** after-acts the ticket when the item is on project-main (or
-on trunk, if there was no project-main). Do not mark the chunk shipped
+**manager** after-acts the ticket when the item is landed+verified on
+project-main (or on trunk, if there was no project-main): `tracker-sdlc`
+transition `done`. Do not mark the chunk shipped
 until Trunk.
 
 ## Steps
@@ -455,7 +469,7 @@ agents, not which steps exist. Headings and tickets use the **name**.
 | [Spec](#spec) | Write or **align** LLD. Shape change → escalate. |
 | [Groom](#groom) | Tickets, blockers, land path. Incoming item: this ticket. |
 | [Build](#build) | Implement ↔ test until DoD. |
-| [Review](#review) | Reviewer ≠ builder. Required even for merge-and-delete. |
+| [Review](#review) | Reviewer ≠ builder. Required for every land (no PRs). |
 | [Trunk](#trunk) | Land project-main on the official copy (when a chunk used one). |
 | [Changelog](#changelog) | Promote Unreleased. |
 | [Monthly](#monthly) | Cadence, not a ship gate. |
@@ -478,7 +492,7 @@ step.
 | Stage 2 | **Spec** | |
 | Stage 3 | **Groom** | Start Build with a hidden blocker |
 | Stage 4 | **Build** | Treat “4” as Plan |
-| Stage 5 | **Review** | Skip because merge-and-delete |
+| Stage 5 | **Review** | Skip because there is no PR |
 | Stage 6 | **Trunk** | Mark shipped before this |
 | Stage 7 | **Changelog** | |
 | Stage 8 | **Monthly** | Use this as a substitute for Spec/Review security |
@@ -496,8 +510,9 @@ needs taste.
 Unclear: a short look — can we reproduce it, and does the fix need a
 design choice? If still unclear, **ask**. Do not implement here.
 
-No template, no subagent, no board state. One line on the ticket is
-enough.
+Read-only: classify from what you were handed. No template, no
+subagent, no tracker write. The classification line goes on the ticket
+at Brief.
 
 ### Brief
 
@@ -525,10 +540,29 @@ both. No language skill on a gather- or refine-only turn.
 
 Plan is written from the confirmed brief, not from a raw dump.
 
+**End of chunk Brief.** Cut project-main `integrate/<chunk-slug>` from
+trunk. Run the `tracker-sdlc` setup check (fail → load
+[`sdlc-onboarding`](../skills/sdlc-onboarding/SKILL.md), which writes
+the tracker files first). Get the Epic (`backlog`): if the chunk
+arrived as a tracker ticket, use that ticket as the Epic (ask the
+operator to relabel it if its type differs; never duplicate it);
+otherwise **manager** files it with `tracker-sdlc` `create`. If
+onboarding ran, commit it as `[<epic-id>] Onboard tracker: <Tracker>`
+on an item branch cut from project-main and land it on project-main
+as its own item through Review **before Plan**: a short item with its
+own **verifier**, **reviewer**, and **security** read of the repo skill
+(never a bare commit).
+**manager** posts the Entry classification on the Epic with
+`tracker-sdlc` `comment`.
+
 **Item (arrives as Task or Bug).** Always run this path unless the
 ticket is `n/a — split from accepted Spec` (those start at Build). A
 confirmed brief on the parent chunk does **not** skip item-Brief.
 
+0. Cut `item/<ticket-id>-<slug>` (from the live project-main, else
+   trunk). Run the `tracker-sdlc` setup check (fail →
+   `sdlc-onboarding`). **manager** posts the Entry classification on
+   the ticket with `tracker-sdlc` `comment`.
 1. **Troubleshooter** (architect hat) writes **problem + proposed fix**
    and out of scope. May load `debug` (one of `debug` / `debug-pocock` /
    `debug-anthropic`) through root cause / hypothesis only — do **not**
@@ -569,7 +603,8 @@ Before Plan:
 
 ### Plan
 
-Publish HLD on the tracker project and a git copy. Lock hierarchy,
+**architect** commits the HLD to git; **manager** posts its path on the
+Epic with `tracker-sdlc` `comment`. Lock hierarchy,
 persistence, and worker rules. Use `sdlc-artifacts` templates `hld.md`
 and `track.md` / `chunk.md`.
 
@@ -590,8 +625,9 @@ the **operator** accepts (or writes `UX verification not required`).
 Architect and designer do not self-approve. Skip mockups here — those
 are Spec if there is a screen.
 
-**Item:** do not write a new HLD. Read the existing one. Record
-`honors` / `clarification` (small, in place) / `escalate`. A real shape
+**Item:** do not write a new HLD. Read the existing one. **manager**
+posts `honors` / `clarification` (small, in place) / `escalate` on the
+ticket with `tracker-sdlc` `comment`. A real shape
 change (new parts, new trust boundary, new screen, several tickets) is
 an escalation to a chunk, not a quiet HLD edit. Nothing to align to:
 ask (stub vs promote). This skills home: `docs/ARCHITECTURE.md` + this
@@ -605,7 +641,11 @@ Only if needed. Evidence in git. Template: `poc.md`.
 
 ### Spec
 
-Document + git copy. Use template `lld.md` (trust-boundary section is
+Entry gate: `tracker-sdlc` setup check (offline). Fail →
+`sdlc-onboarding` first.
+
+**architect** commits the LLD to git; **manager** posts its path on the
+Epic with `tracker-sdlc` `comment`. Use template `lld.md` (trust-boundary section is
 required; `n/a` + why if none).
 
 **Mockups (designer).** If people see a screen, produce **2–3
@@ -652,40 +692,44 @@ not reuse the layperson analogies outside
 ### Groom
 
 Break into Tasks/Bugs from templates `task.md` / `bug.md` (acceptance
-criteria, LLD link, blockers). For a **chunk that is still
-integrating**, name the **project-main** branch
-(`integrate/<chunk-slug>` unless the repo already differs; see
-[Project-main](#project-main-intermediate-integration) and
-[Conventions](#conventions-optional-recommended)). **manager** sets the
-land path: PR into project-main, or merge-and-delete the item branch.
+criteria, LLD link, blockers); **manager** files each with
+`tracker-sdlc` `create`. For a **chunk that is still
+integrating**, project-main already exists (cut at the end of chunk
+Brief; see [Project-main](#project-main-intermediate-integration) and
+[Conventions](#conventions-optional-recommended)). **manager** transitions the items
+to `ready` and the Epic to `in_progress` with `tracker-sdlc`.
+**manager** sets the land order: lands are local merges, one at a time
+([Land path](#land-path-manager)).
 
-**Blockers.** For every dependency, set a blocking relation on the
-board. On Linear: `blockedBy` / `blocks` on the issues (append-only;
-`get_issue` with `includeRelations: true` to read them). If the tracker
-has no blocking edges, write the blocker IDs on the ticket and treat
-them as blocking anyway. Waiting on a person is a blocker on **that**
+**Blockers.** For every dependency, **manager** sets a blocker with
+the `tracker-sdlc` set-blocker verb: the tracker's native relation, else a
+`Blocked-by:` line + `blocked` label. Append-only: agents never remove
+one. Waiting on a person is a blocker on **that**
 issue. Do not start Build with a hidden prereq.
 
-**Incoming item:** fill **this** ticket. Do not split unless promoting
-to a chunk. If a **project-main already exists** (this chunk is still
-integrating), branch from it and land there. If there is **no live
-project-main** (no chunk in flight, or the parent chunk already Trunked),
-branch from trunk; Review versus trunk; merge-and-delete. Do not create
-a project-main for an incoming item.
+**Incoming item:** fill **this** ticket: **manager** posts the
+filled-in fields with `tracker-sdlc` `comment` (blockers through
+set-blocker). Do not split unless promoting to a chunk. Its branch was
+already cut at item Brief: from project-main
+if one **already exists** (this chunk is still integrating), and it
+lands there; else from trunk (no chunk in flight, or the parent chunk
+already Trunked), with Review versus trunk and a local merge. Do not
+create a project-main for an incoming item.
 
 ### Build
 
-Before minting or resuming a **builder** on an item, read its blockers.
-An **open** blocker is a blocking issue not done, canceled, or
-landed+verified.
+Before minting or resuming a **builder** on an item, **manager** claims
+it with the `tracker-sdlc` claim verb, under the builder's agent label
+(claim reads the blockers first). An **open**
+blocker is a blocker not in `done` or `canceled`.
 
 If any blocker is open:
 
 1. **Resolve** it first when it is an item in this chunk (work that
    item, honoring *its* blockers, then return).
 2. **Otherwise ask the human** (see [Asking the human](#asking-the-human))
-   whether to wait, drop the wait, or go ahead anyway. Record the call
-   on the ticket.
+   whether to wait, drop the wait, or go ahead anyway. **manager**
+   records the call on the ticket with `comment`.
 3. If the operator is not available and the blocker cannot be resolved
    here: **defer** the item. Pick an unblocked one. Do not start it.
 
@@ -698,7 +742,9 @@ subagent and one verifier subagent per work item** for that loop (see
 [Subagents per work item](#subagents-per-work-item)).
 
 Each item **branches off project-main** (or off trunk if there is no
-project-main), not off a pile of sibling item branches. Independent
+project-main), not off a pile of sibling item branches. Items split from
+an accepted Spec branch here; incoming items already have theirs from
+item Brief. Independent
 items may **build** in parallel. When an item is merge-ready (DoD +
 Review), **land it on project-main** (or trunk) — do not stockpile
 finished-but-unmerged branches for a batch integrate. Lands are one at
@@ -707,7 +753,9 @@ a time.
 DoD includes: acceptance on the ticket, tests/verification evidence,
 land path cites a ticket ID when the project uses tickets, changelog
 line under Unreleased, human + agent docs current for this item, no
-silent scope leftover.
+silent scope leftover. The verifier checks the tone and voice of
+deliverables against the project's style guide (default
+`docs-google-style`); it does not review agent context for tone.
 
 On unexpected failure, load **`debug`** (default). Alternatives
 `debug-pocock` / `debug-anthropic` — load **one**. Then `tdd` for the
@@ -723,14 +771,16 @@ chosen fix was the wrong *kind* of change (then escalate).
 **Skill-home DoD (this repo):** any skill-body diff must match the pinned
 SHA in [SOURCES.md](../SOURCES.md) for that id. Empty SHA means no body
 may land. Remote agent PRs into this repo still pass **security intake**.
-Workers **do not bypass** intake, SHA pins, or security Spec/PR gates.
+Workers **do not bypass** intake, SHA pins, or security Spec/Review gates.
 
 ### Review
 
-Review **before** the item lands on project-main (or trunk). The
+Review **before** the item lands on project-main (or trunk). When
+Review starts, **manager** transitions the item to `in_review` with
+`tracker-sdlc`. The
 reviewer is **not** the builder who wrote the diff. Same-session
-self-review does not count. Merge-and-delete does **not** skip this
-gate.
+self-review does not count. Review is an explicit gate, not a PR; a
+local merge does **not** skip it.
 
 First review of this item: mint a **clean reviewer**. Later review rounds
 on the same item (after fixes): **resume that reviewer**. Do not mint a
@@ -745,7 +795,8 @@ land is a gate, not deferred to Monthly. Diff range is versus
 
 After the chunk’s items are on project-main, merge project-main to the
 repo’s protected default (**trunk**, usually `main`). That is the
-coherent integrate. CHANGELOG may wait for the Changelog step. Delete
+coherent integrate. CHANGELOG may wait for the Changelog step.
+**manager** transitions the Epic to `done` with `tracker-sdlc`. Delete
 project-main after it is on trunk (or if **manager** cancels the chunk).
 
 **Incoming item with no project-main:** already on trunk after Review.
@@ -769,7 +820,7 @@ note only until **manager** / **operator** cut a Task. No watcher, no
 cron required.
 
 Monthly is **not** the security gate. **security** already gated trust
-boundaries at Spec and the PR. Monthly is cadence review of
+boundaries at Spec and Review. Monthly is cadence review of
 vulns/updates/new solutions, not a substitute for those gates.
 
 ## Project-main (intermediate integration)
@@ -781,11 +832,11 @@ project branch, then land that branch on trunk as the chunk.
 | Branch | What | Lifetime |
 | --- | --- | --- |
 | **trunk** | Repo default (`main` / protected). Release target. | Permanent |
-| **project-main** | Integration branch for this project or chunk. Tip is the latest landed items. | Groom → Trunk |
-| **item branch** | One work item. Created from current project-main (or from trunk if none). | Until that item lands |
+| **project-main** | Integration branch for this project or chunk. Tip is the latest landed items. | Brief → Trunk |
+| **item branch** | One work item. Created from current project-main (or from trunk if none) at item Brief (incoming) or Build (split from Spec). | Until that item lands |
 
-Create project-main from trunk at Groom **when this chunk is still
-integrating**. Do not create one for an incoming item that has no live
+Create project-main from trunk at the end of chunk Brief **when this
+chunk is still integrating**. Do not create one for an incoming item that has no live
 project-main. Name it and item branches as in
 [Conventions](#conventions-optional-recommended). When project-main
 exists, builders **branch off the current tip.** After an item lands,
@@ -799,24 +850,26 @@ verifier). Do not race two merges onto project-main.
 
 ### Land path (manager)
 
-**manager** chooses, and may change when parallelism changes:
+No PRs. **manager** sets the land order; builders follow it.
 
-| Situation | Default |
+| Step | Rule |
 | --- | --- |
-| Two or more items in flight on this project-main | **PR** into project-main (queue is visible; conflicts show on the PR) |
-| One item at a time (including a lone incoming item) | **Merge and delete** the item branch after Review |
+| Review | An explicit SDLC gate ([Review](#review)), not a PR |
+| Durability | Push the item branch while it is built and reviewed; push project-main after each land |
+| Land | After Review, merge the item branch locally into project-main (or trunk), one land at a time; push; delete the item branch |
+| Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` and posts a `comment` citing the land SHA, the verifier result, and the reviewer verdict |
 
-PRs are allowed and useful. They are not mandatory when manager has
-chosen merge-and-delete. Builders follow the current manager call; they
-do not pick a path that contradicts it. Ticket ID goes on the PR or the
-merge commit.
+Every land commit carries the ticket ID and a `Reviewed-by:
+<reviewer-label> (<verdict>)` trailer (an operator-confirmed rule), so
+the review stays auditable without a PR. PRs remain only for outside or
+remote workers.
 
 **Never**
 
 - Branch an item off trunk or off another item branch while project-main
   exists.
 - Leave merge-ready items unmerged so they can “integrate together later.”
-- Skip Review because the land path is merge-and-delete.
+- Skip Review because there is no PR.
 - Force-push project-main to win a race (shared branch; **shell-safety**
   Ask first).
 - Treat a green item branch as landed+verified. Landed means **on
@@ -844,10 +897,10 @@ not personal taste. Human sees it after those two agree.
 troubleshooter may be the parent. Those two must not be the same, and
 neither is the builder, verifier, or Reviewer of that item.
 
-A **work item** is one Task, Bug, or PR — one implementable unit. The
-orchestrator (manager session, parent agent, or workflow) keeps two ids
-per item: `builder_id` and `verifier_id`. Review adds `reviewer_id`.
-Those three must not be the same agent.
+A **work item** is one Task, Bug, or outside/remote PR — one
+implementable unit. The orchestrator (manager session, parent agent, or
+workflow) keeps two ids per item: `builder_id` and `verifier_id`. Review
+adds `reviewer_id`. Those three must not be the same agent.
 
 | Role | First pass on this item | Later passes on this item |
 | --- | --- | --- |
@@ -891,6 +944,15 @@ reviewer for a no-screen incoming item. Mint the yagni agent at Brief;
 mint builder, verifier, and Reviewer as usual. Security if a trust
 boundary moves.
 
+**Tracker writes.** Only the orchestrator writes to the tracker (see
+[Hierarchy](#hierarchy-issue-tracker)). Builder, verifier, and reviewer
+prompts carry no tracker-writing instructions; those roles report.
+
+**Writable worktree.** Some hosts pin a subagent's writable worktree to
+the orchestrator's current worktree. Then only one item worktree is
+writable at a time: builders for other items write to scratch for the
+orchestrator to commit, or the items run one after another.
+
 ### Spawn prompts (pack vs point)
 
 On each **mint**, the orchestrator (**manager**) picks the cheaper prompt
@@ -908,8 +970,8 @@ mint with `yagni`; item yagni-agent mint with `yagni`; designer mint
 with `ux-design` + `sdlc-artifacts`; UX reviewer mint with `ux-design`
 (review loop only); architect Plan/Spec mint with `sdlc-artifacts`;
 first builder mint with one language skill + `tdd` / `yagni` / `debug` /
-`docs-google-style`; verifier mint with `verify-before-done` plus the
-proving commands; reviewer mint with `pr-review` plus the range vs
+`docs-google-style` (no `tracker-sdlc`, no tracker writes); verifier
+mint with `verify-before-done` plus the proving commands; reviewer mint with `pr-review` plus the range vs
 project-main.
 
 **Point** when several skills or MCP servers might apply, the parent
@@ -938,7 +1000,7 @@ on this pass, pack that slice or name it — not the whole set again.
 
 **architect** adversarial-reviews other agents’ tools when the work needs
 it. **tester** owns mechanical CI/hooks. **security** owns gates (Spec
-trust boundaries + PR) and skill intake. **manager** after-acts the
+trust boundaries + Review) and skill intake. **manager** after-acts the
 board; does not bless before ship.
 
 **Workers do not bypass security.** A remote or local agent PR into this
@@ -961,7 +1023,8 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 
 | Skill | Role | Notes |
 | --- | --- | --- |
-| `tracker-sdlc` | manager / architect | Empty dir until a first-party body |
+| `tracker-sdlc` | manager (writes) / architect (reads) | Contract for all tracker reads/writes; loads the repo's `.agents/tracker/SKILL.md` |
+| `sdlc-onboarding` | manager / architect | First tracker touch and Spec gate failure; proposes, writes on confirm |
 | `cursor-cloud-agents-when` | architect | Empty dir until a first-party body |
 | `discover-the-idea` | architect | Brief Gather on a **chunk**. Load the skill; do not paste it here. Do not load on an incoming item |
 | `ux-design` | designer | Stories + high-level UX at Plan; mockups at Spec if there is a screen. Human gate |

@@ -11,3 +11,35 @@ Newest first. Skip empty sections.
   (no ticket, unreleased)
 - Sanitized A2A JSON-RPC → HTTPS plain POST webhook adapter at
   `packages/a2a-webhook-adapter/` (`DER-209`, unreleased)
+
+## tracker-sdlc — 2026-09-25
+
+Tracker-agnostic SDLC (`DER-252`, PR #2).
+
+### Added
+
+- `tracker-sdlc` contract + Linear adapter, `sdlc-onboarding`, and the
+  `tracker-skill.md` template (`DER-252`, `DER-254`, PR #2)
+- Asana adapter for `tracker-sdlc` (`DER-252`, `DER-257`, PR #2)
+- Jira adapter for `tracker-sdlc` (`DER-252`, `DER-256`, PR #2)
+- Trello adapter for `tracker-sdlc` (`DER-252`, `DER-258`, PR #2)
+- Local adapter for `tracker-sdlc`: tickets on a shared `tickets` git
+  branch with a race-tested write recipe (`DER-252`, `DER-259`, PR #2)
+
+### Changed
+
+- A chunk's onboarding commit lands as its own reviewed item before
+  Plan; agents use the product repo's own `## Tracker`; a repo tracker
+  skill may copy the local adapter's fenced shell recipe but has no
+  `scripts/` files (`DER-252`, `DER-270`, PR #2)
+- Only the orchestrator writes to the tracker; Plan and Groom post to
+  tickets with `comment`; land commits carry `Reviewed-by:`; the
+  onboarding commit lands through Review (`DER-252`, `DER-262`,
+  PR #2)
+- `tracker-sdlc` contract v2: claim posts a `Claimed by` comment and
+  re-checks for an earlier claim; Linear blockers stay listed when
+  resolved; repo-skill budget ≤180; SDLC lands are local, serialized
+  merges with no PRs (`DER-252`, `DER-260`, PR #2)
+- SDLC Entry is read-only; branches are cut at Brief; every tracker
+  read/write goes through `tracker-sdlc` (`DER-252`, `DER-254`,
+  PR #2)

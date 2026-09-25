@@ -10,9 +10,10 @@ Rewrite. Process from obra/superpowers `requesting-code-review` @ `b36e0829`. Du
 **Review skills should not write.** Read, report, escalate. Fixes are a different pass.
 
 Aligns with SDLC **Review**: review **before the item lands on
-project-main** (or trunk if there is no project-main). Merge-and-delete
-does not skip this. The reviewer is **not** the builder. First review of
-this item: mint a **clean** reviewer with crafted inputs (ticket/LLD/spec,
+project-main** (or trunk if there is no project-main). Review is an
+explicit gate: internal lands are local merges with no PR, and that
+does not skip it; PRs are only for outside or remote workers. The
+reviewer is **not** the builder. First review of this item: mint a **clean** reviewer with crafted inputs (ticket/LLD/spec,
 SHAs vs the land target, standards). Later rounds on the **same item**:
 **resume that reviewer**. Do not mint a new reviewer each round. Never
 give it the builder’s transcript. See
@@ -71,7 +72,7 @@ Do not performatively agree. Do not implement before verifying.
 | Topic | Why |
 | --- | --- |
 | No spec/ticket available | Spec axis may skip — say so explicitly |
-| Skipping a separate reviewer because “tiny diff” or merge-and-delete | Still mint (or resume) the reviewer before land |
+| Skipping a separate reviewer because “tiny diff” or no PR | Still mint (or resume) the reviewer before land |
 | Reviewer wants write/merge tools | Review skill must not grow write privilege; **manager** owns the land |
 
 ## Never
@@ -95,9 +96,9 @@ Mysterious Name · Duplicated Code · Feature Envy · Data Clumps · Primitive O
 | --- | --- | --- |
 | **architect** | Requesting a clean reviewer (then resuming it) | Treating self-LGTM as Review |
 | **builder** | Verify then fix Critical/Important; reasoned pushback | Blind “you’re right” patches; using builder memory as the review |
-| **security** | Security axis at PR (trust boundaries); intake | Rewriting product specs in review |
+| **security** | Security axis at Review (trust boundaries); intake | Rewriting product specs in review |
 | **tester** | CI evidence the reviewer can cite | Product Spec axis |
-| **manager** | Land path (PR vs merge-and-delete); after-act | Blessing land without Review |
+| **manager** | Land order (local, serialized merges; PRs only for outside or remote workers); after-act | Blessing land without Review |
 
 ## Red flags
 

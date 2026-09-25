@@ -6,7 +6,8 @@
 - HLD: `docs/<path>`
 - LLD: `docs/<path>` or n/a until Spec
 - project-main: `integrate/<chunk-slug>`
-- Land path: PR into project-main / merge-and-delete
+- Land path: merge-and-delete after explicit Review (local, serialized);
+  push item branches and project-main; no internal PRs
 
 ## Required
 
