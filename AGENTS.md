@@ -205,6 +205,10 @@ Before any third-party content:
 
 Empty SHA cells mean the body must not exist yet.
 
+## Tracker
+
+Linear — load .agents/tracker/SKILL.md (tracker-sdlc v2).
+
 ## Related
 
 - README: [README.md](README.md)
