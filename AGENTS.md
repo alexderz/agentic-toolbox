@@ -11,11 +11,14 @@ vendor mirror.
 
 This is a public, open-source repo. Write everything public-facing
 (files, commit messages, PR descriptions, and tags) for outside readers.
-Leave out private tracker workspace URLs and names, internal agent
-nicknames, session artifacts (question numbers, chat quotes), and
-personal details beyond git authorship. Bare ticket ids (`DER-123`) are
-fine. Review public-facing text before you push: pushed commit messages
-and tags are effectively permanent.
+Never publish credentials or tokens, internal hostnames, or IPs (see
+[Never](skills/security-hardening/SKILL.md#never) in
+`security-hardening`). Leave out private tracker workspace URLs and
+names, internal agent nicknames, leftovers from agent sessions (such as
+interview question labels like `Q45` or quotes from chat), and personal
+details beyond git authorship. Bare ticket ids (`DER-123`) are fine.
+Review public-facing text before you push: pushed commit messages and
+tags are effectively permanent.
 
 ## How to load
 

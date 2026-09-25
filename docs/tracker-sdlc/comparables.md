@@ -26,7 +26,7 @@ How others gave agents a tracker-neutral or git-resident ticket system.
   ([#1634](https://github.com/gastownhall/beads/issues/1634)); untracked
   JSONL risked landing on main
   ([#797](https://github.com/steveyegge/beads/issues/797)).
-- **Adopt** — Random IDs, never a counter. `list-ready` and claim =
+- **Steal** — Random IDs, never a counter. `list-ready` and claim =
   in-progress + assignee as first-class verbs. Hooks off for ticket
   commits (the #1634 workaround).
 - **Won't copy** — A long-lived worktree hidden inside `.git`; one
@@ -41,7 +41,7 @@ How others gave agents a tracker-neutral or git-resident ticket system.
 - **What they did** — One markdown + YAML front-matter file per ticket
   in `.tickets/`; short random IDs (`nw-5c46`); `dep`, `ready`,
   `blocked` commands; plain git for concurrency.
-- **Adopt** — One file per ticket; front matter for fields, body for
+- **Steal** — One file per ticket; front matter for fields, body for
   prose; short prefixed random IDs. Our choice on top: store blockers
   in one direction only (`blocked_by`).
 - **Won't copy** — Tickets on the code branches (they then ride PRs and
@@ -56,7 +56,7 @@ How others gave agents a tracker-neutral or git-resident ticket system.
   read across branches active in the last 30 days
   ([ADVANCED-CONFIG](https://github.com/MrLesk/Backlog.md/blob/main/ADVANCED-CONFIG.md));
   which copy wins is not documented.
-- **Adopt** — A front-matter shape agents and humans both read;
+- **Steal** — A front-matter shape agents and humans both read;
   shipping agent-facing instructions with the tracker.
 - **Won't copy** — Sequential IDs (`TASK-12`, collide across agents);
   reading ticket state from many branches (no single source of truth).
@@ -70,7 +70,7 @@ How others gave agents a tracker-neutral or git-resident ticket system.
   as append-only operation packs ordered by Lamport clock. Bridges sync
   to GitHub, GitLab, Jira and Launchpad: one local model, adapters per
   remote tracker.
-- **Adopt** — One canonical model with per-tracker adapters, not a
+- **Steal** — One canonical model with per-tracker adapters, not a
   per-tracker process. Append-only records for concurrent writers (our
   `comments/<id>/<UTC>-<agent>.md`).
 - **Won't copy** — Custom refs (default fetch covers only `refs/heads/*`,

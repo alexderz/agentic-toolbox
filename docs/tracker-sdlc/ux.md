@@ -16,8 +16,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **Runtime agent** — any role touching tickets; loads `tracker-sdlc` +
   the repo's `.agents/tracker/SKILL.md` only.
 - **Local-ticket agents** — several agents writing `tickets` at once.
-- **Live verifier** — checks an unverified adapter (for example, Jira) against
-  a live instance; `Verified:` flips after a live run.
+- **Live verifier** — any agent or person with access to a live instance
+  (not the SDLC verifier role); checks an unverified adapter (for
+  example, Jira) against that instance; `Verified:` flips after a live run.
 
 ## Stories (shape: `user-story.md`, one job each)
 
