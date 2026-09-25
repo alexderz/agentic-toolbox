@@ -59,8 +59,8 @@ transition to `in_progress` + a `Claimed by <agent-label> <UTC>` comment
 account. **Done when:** claim sets state and the marker, then re-reads
 the comments; on an earlier unreleased claim by another label it posts
 `Released by <agent-label> <UTC>`. That ticket, or one assigned to
-someone else, is neither skipped nor started — the agent checks with
-the orchestrator, the source of truth.
+someone else, is neither skipped nor started — the orchestrator checks
+with the operator.
 
 **TS-7 Concurrent local writes.** *As* local-ticket agent *I want*
 rejected pushes retried safely *so that* all agents' edits land. **Done
@@ -158,7 +158,7 @@ non-tracker onboarding; the small-work lane (DER-253).
 1. **Todo** → `ready`; Backlog stays `backlog`.
 2. **Failures, operator away** (TS-7, J5, J6) → ticket comment + report
    to the orchestrator.
-3. **Assigned to someone else** (TS-6) → check with the orchestrator.
+3. **Assigned to someone else** (TS-6) → check with the operator.
 4. **Recipe still failing** (TS-5, J5) → stop, report as in 2, propose a
    repaired recipe; commit only on operator OK.
 5. **Branch timing** (TS-4, J1, J2) → onboarding cuts the branch and

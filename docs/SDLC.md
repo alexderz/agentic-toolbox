@@ -18,7 +18,7 @@ Do not remint a skill that already has an id here.
 | **builder** | Implement and ship |
 | **tester** | Mechanical CI, hooks, cleanup, verification evidence |
 | **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
-| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). Does not bless ships |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). Sole tracker writer. Does not bless ships |
 | **operator** | Human in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
 Workers (agents, CI bots) act as **builder** or **tester**. They do not
@@ -546,10 +546,12 @@ trunk. Run the `tracker-sdlc` setup check (fail → load
 the tracker files first). Get the Epic (`backlog`): if the chunk
 arrived as a tracker ticket, use that ticket as the Epic (ask the
 operator to relabel it if its type differs; never duplicate it);
-otherwise `create` the Epic. If onboarding ran, commit it as `[<epic-id>] Onboard
-tracker: <Tracker>` on an item branch: it rides the chunk's first
-reviewed land, or lands as its own item. Never a bare, unreviewed
-commit on project-main. `comment` the Entry classification on the Epic.
+otherwise **manager** files it with `tracker-sdlc` `create`. If
+onboarding ran, commit it as `[<epic-id>] Onboard tracker: <Tracker>`
+on an item branch cut from project-main; it rides the chunk's
+first reviewed land or lands as its own item (never a bare commit).
+**manager** posts the Entry classification on the Epic with
+`tracker-sdlc` `comment`.
 
 **Item (arrives as Task or Bug).** Always run this path unless the
 ticket is `n/a — split from accepted Spec` (those start at Build). A
@@ -557,7 +559,8 @@ confirmed brief on the parent chunk does **not** skip item-Brief.
 
 0. Cut `item/<ticket-id>-<slug>` (from the live project-main, else
    trunk). Run the `tracker-sdlc` setup check (fail →
-   `sdlc-onboarding`). `comment` the Entry classification on the ticket.
+   `sdlc-onboarding`). **manager** posts the Entry classification on
+   the ticket with `tracker-sdlc` `comment`.
 1. **Troubleshooter** (architect hat) writes **problem + proposed fix**
    and out of scope. May load `debug` (one of `debug` / `debug-pocock` /
    `debug-anthropic`) through root cause / hypothesis only — do **not**
@@ -598,8 +601,8 @@ Before Plan:
 
 ### Plan
 
-Commit the HLD to git; post its path on the Epic with `tracker-sdlc`
-`comment`. Lock hierarchy,
+**architect** commits the HLD to git; **manager** posts its path on the
+Epic with `tracker-sdlc` `comment`. Lock hierarchy,
 persistence, and worker rules. Use `sdlc-artifacts` templates `hld.md`
 and `track.md` / `chunk.md`.
 
@@ -620,8 +623,9 @@ the **operator** accepts (or writes `UX verification not required`).
 Architect and designer do not self-approve. Skip mockups here — those
 are Spec if there is a screen.
 
-**Item:** do not write a new HLD. Read the existing one. `comment`
-`honors` / `clarification` (small, in place) / `escalate` on the ticket. A real shape
+**Item:** do not write a new HLD. Read the existing one. **manager**
+posts `honors` / `clarification` (small, in place) / `escalate` on the
+ticket with `tracker-sdlc` `comment`. A real shape
 change (new parts, new trust boundary, new screen, several tickets) is
 an escalation to a chunk, not a quiet HLD edit. Nothing to align to:
 ask (stub vs promote). This skills home: `docs/ARCHITECTURE.md` + this
@@ -638,8 +642,8 @@ Only if needed. Evidence in git. Template: `poc.md`.
 Entry gate: `tracker-sdlc` setup check (offline). Fail →
 `sdlc-onboarding` first.
 
-Commit the LLD to git; post its path on the Epic with `tracker-sdlc`
-`comment`. Use template `lld.md` (trust-boundary section is
+**architect** commits the LLD to git; **manager** posts its path on the
+Epic with `tracker-sdlc` `comment`. Use template `lld.md` (trust-boundary section is
 required; `n/a` + why if none).
 
 **Mockups (designer).** If people see a screen, produce **2–3
@@ -695,8 +699,8 @@ to `ready` and the Epic to `in_progress` with `tracker-sdlc`.
 **manager** sets the land order: lands are local merges, one at a time
 ([Land path](#land-path-manager)).
 
-**Blockers.** For every dependency, set a blocker with the
-`tracker-sdlc` set-blocker verb: the tracker's native relation, else a
+**Blockers.** For every dependency, **manager** sets a blocker with
+the `tracker-sdlc` set-blocker verb: the tracker's native relation, else a
 `Blocked-by:` line + `blocked` label. Append-only: agents never remove
 one. Waiting on a person is a blocker on **that**
 issue. Do not start Build with a hidden prereq.
@@ -849,11 +853,11 @@ No PRs. **manager** sets the land order; builders follow it.
 | Review | An explicit SDLC gate ([Review](#review)), not a PR |
 | Durability | Push the item branch while it is built and reviewed; push project-main after each land |
 | Land | After Review, merge the item branch locally into project-main (or trunk), one land at a time; push; delete the item branch |
-| Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` |
+| Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` and posts a `comment` citing the land SHA, the verifier result, and the reviewer verdict |
 
 Every land commit carries the ticket ID and a `Reviewed-by:
-<reviewer-label> (<verdict>)` trailer (operator-confirmed), so the
-review stays auditable without a PR. PRs remain only for outside or
+<reviewer-label> (<verdict>)` trailer (an operator-confirmed rule), so
+the review stays auditable without a PR. PRs remain only for outside or
 remote workers.
 
 **Never**
@@ -1015,7 +1019,7 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 
 | Skill | Role | Notes |
 | --- | --- | --- |
-| `tracker-sdlc` | manager / architect | Contract for all tracker reads/writes; loads the repo's `.agents/tracker/SKILL.md` |
+| `tracker-sdlc` | manager (writes) / architect (reads) | Contract for all tracker reads/writes; loads the repo's `.agents/tracker/SKILL.md` |
 | `sdlc-onboarding` | manager / architect | First tracker touch and Spec gate failure; proposes, writes on confirm |
 | `cursor-cloud-agents-when` | architect | Empty dir until a first-party body |
 | `discover-the-idea` | architect | Brief Gather on a **chunk**. Load the skill; do not paste it here. Do not load on an incoming item |

@@ -33,7 +33,10 @@ Before anything else, cut the branch if it is absent:
 - Item → `item/<ticket-id>-<slug>` from the live project-main, else from
   trunk.
 
-The onboarding commit lands on that branch. Never on trunk.
+Item: the onboarding commit goes on that branch. Chunk: commit it on
+an item branch cut from project-main; it rides the chunk's first
+reviewed land or lands as its own item (never a bare commit). Never on
+trunk.
 
 An item branch holding the onboarding commit is dropped → cherry-pick
 that commit onto the chunk's project-main (item promoted to a chunk), or
@@ -122,8 +125,9 @@ On confirm:
    get the Epic. If the chunk arrived as a tracker ticket, use that
    ticket as the Epic (ask the operator to relabel it if its type
    differs; never duplicate it); otherwise `create` the Epic with the
-   new repo skill's recipe. Then commit as `[<epic-id>]` on the
-   just-cut project-main.
+   new repo skill's recipe. Then commit as `[<epic-id>]` on an item
+   branch cut from project-main; it rides the chunk's first reviewed
+   land or lands as its own item (never a bare commit).
 4. Test write only on choice 3: create one ticket titled
    `tracker-sdlc test — delete me`, read it back, transition it to
    `canceled`, and report its id.
