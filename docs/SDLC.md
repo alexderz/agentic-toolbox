@@ -751,7 +751,9 @@ a time.
 DoD includes: acceptance on the ticket, tests/verification evidence,
 land path cites a ticket ID when the project uses tickets, changelog
 line under Unreleased, human + agent docs current for this item, no
-silent scope leftover.
+silent scope leftover. The verifier checks the tone and voice of
+deliverables against the project's style guide (default
+`docs-google-style`); it does not review agent context for tone.
 
 On unexpected failure, load **`debug`** (default). Alternatives
 `debug-pocock` / `debug-anthropic` — load **one**. Then `tdd` for the

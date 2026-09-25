@@ -236,7 +236,7 @@ Common outline (headings exact, in order): header line
 `## States and transitions` · `## Gotchas` · `## Discovery hints` ·
 `## Sources` (one list, URLs from the research). No tool names, no CLI
 commands, no endpoints-as-instructions; facts only. Mark unverified
-facts `(unverified)`. A work agent flips the header to
+facts `(unverified)`. A live verifier flips the header to
 `Verified: yes — live <tracker> <YYYY-MM-DD>` after a live run.
 
 Must-cover facts (source: Brief research):
@@ -542,12 +542,12 @@ proposed; signing default is (a) with (b) opt-in at onboarding.
 
 ## Decided (operator, 2026-09-25)
 
-7. **Q45** (DER-262): every land commit carries `Reviewed-by:
+7. DER-262: every land commit carries `Reviewed-by:
    <reviewer-label> (<verdict>)` — confirmed.
-8. **Q46** (DER-262): Plan and Groom write to tickets with `comment`
+8. DER-262: Plan and Groom write to tickets with `comment`
    (design path on the Epic; filled-in fields on the item). No edit
    verb; the contract stays v2.
-9. **Q47** (DER-262): only the orchestrator (manager) writes to the
+9. DER-262: only the orchestrator (manager) writes to the
    tracker — create, claim, release, set-blocker, comment, and every
    transition. Builders, verifiers, and reviewers report. The
    orchestrator claims under the agent's label; a claim conflict goes

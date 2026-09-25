@@ -7,6 +7,23 @@ on this file, then load what it names.
 Git is the source of truth. Do not write skill bodies only on a local or
 vendor mirror.
 
+## Public repo
+
+This is a public, open-source repo.
+
+- **Deliverables** (skills, human-facing docs, code, collateral): write
+  for outside readers in a professional voice, per the project's style
+  guide (default `docs-google-style`). No people's names beyond
+  maintainer credits and git authorship, no who said what, and no
+  private tracker workspace URLs or names, internal hostnames or
+  IPs, credentials (see [Never](skills/security-hardening/SKILL.md#never)),
+  or agent-session leftovers such as interview question labels. Bare
+  ticket ids (`DER-123`) are fine.
+- **Agent context** (`docs/<chunk>/` design records, `.agents/`, scratch
+  notes) can be informal: civil and credential-free, not tone-reviewed.
+- **Commit messages, PR descriptions, and tags** are public and
+  effectively permanent: write them for outside readers.
+
 ## How to load
 
 Do not paste skill or SDLC bodies into this file. **Read** the named

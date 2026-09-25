@@ -22,8 +22,8 @@
   4. No SDLC process file names a specific tracker.
 
 - **Non-goals** — Per-tracker MCP/CLI manuals; tracker schema changes;
-  helper packages or `scripts/`; live Jira/Asana/Trello tests (operator's
-  work agents); non-tracker onboarding; small-work lane (DER-253).
+  helper packages or `scripts/`; live Jira/Asana/Trello tests;
+  non-tracker onboarding; small-work lane (DER-253).
 
 - **Users / operators** — SDLC agents (only the orchestrator writes:
   it files, claims, and transitions; builders report).
@@ -164,7 +164,8 @@ flowchart TD
   Type group; Linear default branch names vs SDLC `item/<ticket>-<slug>`)
   → (3) Jira → (4) Asana → (5) Trello → (6) local.
 
-- **Open** — Adapters stay unverified until work agents run them live.
+- **Open** — The Jira, Asana, and Trello adapters are not yet verified
+  against a live instance; `Verified:` flips after a live run.
   Operator decisions: [Decided](#decided-operator-2026-09-24).
 
 ## Optional
@@ -195,7 +196,7 @@ flowchart TD
     Type/Task; Backlog/Todo/In Progress/In Review/Done/Canceled
     (+Duplicate→`canceled`); native blocks; a working repo skill.
   - Two concurrent `tickets` writers in a scratch repo both land.
-  - Work agents flip adapter headers after live runs.
+  - Adapter `Verified:` headers flip after a live run.
   - No process file names Linear: `grep -rli linear docs/SDLC.md
     AGENTS.md skills/` returns only `skills/tracker-sdlc/adapters/linear.md`.
   - Runtime tracker loads never exceed `tracker-sdlc` + repo skill,
