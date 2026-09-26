@@ -95,7 +95,7 @@ Review versus trunk, local merge. Do not invent a project-main for
 a lone incoming item.
 
 No PRs: Review is an explicit gate; push item branches and project-main
-for durability; **manager** orders the local, serialized lands. Groom sets tracker **blockers** through `tracker-sdlc`.
+for durability; **manager** orders the local, serialized lands. Groom writes a reviewed `groom.md`, then sets tracker **blockers** through `tracker-sdlc`.
 Do not start or land an item with an open blocker unless the operator
 said so. Full rules: [docs/SDLC.md](docs/SDLC.md) (Groom, Build,
 Project-main, Subagents per work item, Spawn prompts).
