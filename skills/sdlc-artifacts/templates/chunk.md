@@ -15,8 +15,8 @@
 - **Why this slice, why now**
 - **Done** — Trunk: project-main on trunk; tickets landed+verified
 - **Children** — Task/Bug ids (may start empty)
-- **Wave view** — not kept here; manager posts one Epic comment only
-  when the graph reshapes
+- **Wave view** — not kept here; manager posts one Epic comment only on
+  reshape (item added or canceled, blocker set)
 - **Blocked by** — issue ids, or `none`
 - **Blocks** — issue ids, or `none`
 

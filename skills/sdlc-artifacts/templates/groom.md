@@ -2,21 +2,24 @@
 
 DRAFT (pre-review)
 
-<!-- At freeze, replace the marker above with: Frozen record of the
-plan as reviewed at Groom on <YYYY-MM-DD>. Not live: the tracker is the
-source of truth for tickets, blockers and state. -->
+<!-- At freeze, replace the draft marker above with this sentence and
+delete this comment: Frozen record of the plan as reviewed at Groom on
+<YYYY-MM-DD>. Not live: the tracker is the source of truth for tickets,
+blockers and state. -->
 
 - Chunk: `<epic id>` · LLD: `<path>` · Date: `YYYY-MM-DD`
-- Review: `<groom reviewer label>` — pass on `<date>` at `<commit SHA>`
+- Review: `<groom reviewer label>` — pass on `<date>` at `<SHA of the
+  reviewed draft commit>`; `pending` while the plan is a draft
 - Tickets: `G1` = `<id>`, … (filled at freeze)
 
 ## Items
 
 ### G1: <title>
 
-<Self-contained body copied into the ticket as-is: task.md / bug.md
-Required fields. `Blocked by`: G ids, each with a one-clause reason, or
-`none`. No secrets or private URLs.>
+<Self-contained body copied into the ticket as-is: the header (Type,
+Parent, LLD link, Branch) and Required fields of task.md / bug.md.
+`Blocked by`: G ids, each with a one-clause reason, or `none`.
+`Blocks`: G ids, or `none`. No secrets or private URLs.>
 
 ## Graph
 
