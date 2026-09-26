@@ -72,3 +72,4 @@ live vendor docs win. Pin the extract source.
 | Note | Upstream | SHA | License | Notes |
 | --- | --- | --- | --- | --- |
 | `knowledge/ai/models/jev.md` | `alexderz/grok-bot-perm` `docs/integrations/typesafe.md`; TypeSafe public docs | grok-bot-perm `8b2cfffca35d938337f3af524187e6c998ee3e89` | MIT | Jev / System One. Not a skill. Do not marketplace-install TypeSafe’s pack here. |
+| model-eval | first-party (this repo) | first-party | MIT | Agentic model bake-off: gate the stack, isolate the workspace, grade by execution in a container. Harness code lives in `packages/model-eval-harness` (no `scripts/` in the skill dir). |
