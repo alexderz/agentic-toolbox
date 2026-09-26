@@ -24,6 +24,10 @@ Newest first. Skip empty sections.
   skips them. The `tracker-sdlc` setup check reads the `AGENTS.md` that
   governs your work, with the repo skill path relative to it; contract
   stays v2 (`DER-272`)
+- SDLC Groom: a clean reviewer passes `groom.md` before any ticket is
+  filed from the reviewed commit, then it freezes; blockers only for real
+  output needs, waves and gates by shape, review items, late insertion;
+  Build dispatches up to the `Parallelism:` ceiling (`DER-275`)
 
 ## tracker-sdlc — 2026-09-25
 
