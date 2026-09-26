@@ -1,11 +1,12 @@
 # Groom — Groom graph (reviewed plan, blockers as the live graph)
 
-DRAFT (pre-review)
+Frozen record of the plan as reviewed at Groom on 2026-09-26. Not live:
+the tracker is the source of truth for tickets, blockers and state.
 
 - Chunk: `DER-275` · LLD: [lld.md](lld.md) · Date: `2026-09-25`
-- Review: `<groom reviewer label>` — pass on `<date>` at `<commit SHA>`
-- Tickets: `G1` = `<id>`, `G2` = `<id>`, `G3` = `<id>`, `G4` = `<id>`,
-  `G5` = `<id>` (filled at freeze)
+- Review: `groom-reviewer` — pass on 2026-09-26 at `04cbf57`
+- Tickets: `G1` = `DER-279`, `G2` = `DER-280`, `G3` = `DER-281`,
+  `G4` = `DER-282`, `G5` = `DER-283`
 
 ## Items
 
