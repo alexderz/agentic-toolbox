@@ -1,6 +1,6 @@
 ---
 name: sdlc-artifacts
-description: use this when writing or updating an HLD, LLD, ticket, epic, track/roadmap, PoC note, decision, changelog, PR, monthly note, human how-to, or AGENTS stub that the SDLC calls for — copy the matching template and fill required fields. do not use to invent a second process or to skip a gate.
+description: use this when writing or updating an HLD, LLD, ticket, epic, groom plan, track/roadmap, PoC note, decision, changelog, PR, monthly note, human how-to, or AGENTS stub that the SDLC calls for — copy the matching template and fill required fields. do not use to invent a second process or to skip a gate.
 ---
 
 # SDLC artifacts
@@ -22,6 +22,7 @@ and why.** Do not invent a parallel outline.
 | Incoming item | Brief | `templates/bug.md` / `task.md` | Same files as Groom; fill Proposed fix / Removal / Pick **at Brief**, not later |
 | Track / roadmap | Plan | `templates/track.md` | Board project; git copy optional |
 | Chunk / epic | Brief–Groom | `templates/chunk.md` | Board parent issue |
+| Groom plan | Groom | `templates/groom.md` | `.agents/design/<chunk>/groom.md` (this skills home: `maintainers/design/<chunk>/groom.md`); frozen after filing |
 | HLD | Plan | `templates/hld.md` | `docs/hld.md` or `docs/<slug>/hld.md` |
 | Comparables | Plan | `templates/comparables.md` | `docs/comparables.md` or `docs/<slug>/comparables.md` |
 | UX / journeys | Plan | `templates/ux.md` | `docs/ux.md` or `docs/<slug>/ux.md` |
