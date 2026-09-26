@@ -31,6 +31,7 @@ Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 | golang-testing | samber/cc-skills-golang (`golang-testing`) | 22c58a55a0a799b901aa251172923180bad9e010 | MIT upstream / rewrite | SKILL only; skip evals/clawhub |
 | golang-security | samber/cc-skills-golang (`golang-security`) | 22c58a55a0a799b901aa251172923180bad9e010 (intent pin; body rewrite) | MIT upstream / rewrite | SKILL only / no evals / no scripts; pairs with golang-testing / golang-safety |
 | golang-safety | samber/cc-skills-golang (`golang-safety`) | 22c58a55a0a799b901aa251172923180bad9e010 | MIT upstream / rewrite | SKILL only / no evals / no scripts/; compress not paste; pair golang-testing + golang-security |
+| pr-lens | coldteadotai/pr-lens (`skills/pr-lens`) | 09f6378c082ff8ddb17e211f36bfc71c2f2b8d86 (intent pin; body rewrite) | MIT upstream / rewrite | Opt-in; operator asks. Local render + PR attach only (no `canvas`, no `analyze`). CLI pinned `@coldtea/pr-lens-cli@0.8`; 0.9+ is a security-cleared bump. SKILL only; references linked at the pin, not vendored. No `scripts/`. Scanner waived with manual security read (DER-273). Compared with upstream at Monthly |
 | language-router | first-party (this repo) | first-party | MIT | Map only. Pointers do not count as a load. Cap 1–2 language skills. |
 | lang-go | first-party pointer (this repo) | first-party | MIT | Routes to golang-safety / golang-testing / golang-security. Does not remint. |
 | lang-python | first-party pointer (this repo) | first-party | MIT | Routes to modern-python. Does not remint. |
