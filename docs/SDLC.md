@@ -731,17 +731,21 @@ acyclic. Parallelism in Build comes from those links.
    `G<n>` → ticket map, commit. Never edit it again.
 
 **Blockers.** B blocks A only when A needs B's output. Touching the
-same files is not a blocker: lands are serialized. set-blocker is
-append-only; agents never remove one. Waiting on a person is a
-blocker on **that** issue. Do not start Build with a hidden prereq.
+same files is not a blocker: lands are serialized. A need that applies
+only at land time (for example, a `SOURCES.md` row another item adds)
+is land order, not a blocker. set-blocker is append-only; agents never
+remove one. Waiting on a person is a blocker on **that** issue. Do not
+start Build with a hidden prereq.
 
 **Waves** are a view computed from blockers, never stored: wave 1 has
 no blocker; an item's wave is one more than its latest blocker's.
 
 **Gates.** A gate is an ordinary item recognized by shape: it waits on
 the whole previous wave, and every item of the next wave waits on it.
-No label. Add one only for a real integration or bottleneck need (a
-review of the integrated whole, one shared resource), never by default.
+An item that is gate-shaped only because the chain is one item wide is
+not a gate. No label. Add one only for a real integration or
+bottleneck need (a review of the integrated whole, one shared
+resource), never by default.
 
 **Review items.** A review item closes with its verdict. Its fixes are
 items blocked by it. A re-check of the whole, if needed, is a new item
@@ -752,7 +756,9 @@ work. **manager** drafts the item (`task.md` / `bug.md`) and its
 blockers, then:
 
 1. Re-layer from the tracker: `read` every open item under the Epic
-   and its blockers; compute the waves with the new links.
+   and its blockers; compute the waves with the new links. A need on
+   an item already `done` is met and gets no link, except a fix's link
+   to its review item.
 2. A new link that closes a cycle is not written (set-blocker is
    append-only). Fix the direction or drop the link.
 3. A new link that blocks an item already `in_progress` or
