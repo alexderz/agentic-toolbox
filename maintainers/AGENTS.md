@@ -14,6 +14,10 @@ The tracker skill path in `## Tracker` is relative to this directory:
 
 Linear — load .agents/tracker/SKILL.md (tracker-sdlc v2).
 
+## Execution
+
+Parallelism: max
+
 ## Where notes go
 
 - Design records: `maintainers/design/<chunk>/` (HLD, LLD, UX,
