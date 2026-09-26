@@ -1,6 +1,6 @@
 ---
 name: sdlc-onboarding
-description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`. do not use once the check passes, or to change tracker schema.
+description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`; also when `## Execution` (the Parallelism ceiling) is absent or its check fails. do not use once the checks pass, or to change tracker schema.
 ---
 
 # SDLC onboarding
@@ -8,10 +8,9 @@ description: use this at the first tracker touch of a chunk (end of Brief) or an
 Sets up a product repo for the [SDLC](../../docs/SDLC.md): discover what
 the repo already uses, propose it to the operator, write it on confirm.
 One section per onboarding area; each area has **Discover · Propose ·
-Write · Check**. Only `## Tracker` exists now. A later area (for
-example `## Testing`) adds a sibling section with the same four
-subsections and one line in [When](#when); nothing else changes. No
-`scripts/`.
+Write · Check**. Areas: `## Tracker`, `## Execution`. A later area
+adds a sibling section with the same four subsections and one line in
+[When](#when); nothing else changes. No `scripts/`.
 
 ## Iron law
 
@@ -24,6 +23,8 @@ lands in the repo or the tracker before the operator answers.
   of an item (start of item Brief); or the
   [`tracker-sdlc`](../tracker-sdlc/SKILL.md) Map check fails; or the
   Spec entry gate check fails.
+- **Execution** — with Tracker at the first tracker touch; or its
+  [Check](#check-1) fails at the Spec gate or Build dispatch.
 
 ## Branch
 
@@ -153,6 +154,38 @@ Same as the `tracker-sdlc` Map steps 1–2. Offline: file reads only.
    with `N` equal to the contract version. A `v1` stamp is upgraded by
    a Repair-style diff (claim row, claim recipe, restamp) on operator
    OK, not a full onboarding.
+
+## Execution
+
+### Discover
+
+Read `## Execution` in the `AGENTS.md` that Tracker [Check](#check)
+step 1 selects. Absent → Propose.
+
+### Propose
+
+One `ask-human.md` message ([Asking the human](../../docs/SDLC.md#asking-the-human)):
+how many work items may be in Build at once? **1** maximum (`max`) ·
+**2** strictly one at a time (`serial`) · **3** a number (`at most <N>`,
+`N` a positive integer). No free text. Recommend `max` unless a shared
+resource limits it. `max` is still bounded by the ready tickets filed
+and the harness's writable-worktree limit. It is a ceiling: blockers
+decide order; lands stay serialized.
+
+### Write
+
+Two lines: `## Execution`, then `Parallelism: max`, `Parallelism:
+serial`, or `Parallelism: at most <N>`. First touch: in the onboarding
+commit. Repo onboarded earlier: `[<ticket-id>] Record execution:
+<value>` on an item branch, landed through Review like onboarding
+([Branch](#branch)). **security** reads any change to `## Execution`.
+
+### Check
+
+Offline: that `AGENTS.md` has `## Execution`, and its next non-empty
+line is exactly one of those three forms (`N` a positive integer).
+Anything else, or no section: the orchestrator asks, and Build runs one
+item at a time until answered.
 
 ## Spec gate check
 

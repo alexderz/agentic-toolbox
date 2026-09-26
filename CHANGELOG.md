@@ -6,6 +6,8 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- `sdlc-onboarding` Execution area: asks for and records the Build
+  Parallelism ceiling (`max`, `serial`, or `at most <N>`) (`DER-275`)
 - `pr-lens` skill, operator opt-in: architecture and data-flow diagrams
   for a pull request, rendered locally with `@coldtea/pr-lens-cli@0.8.1`
   and attached with `gh --attach`. Rewrite of coldteadotai/pr-lens;
