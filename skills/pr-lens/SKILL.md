@@ -17,8 +17,10 @@ out and why, see [Upstream](#upstream).
 
 **The operator asks for a diagram; you do not add one.** It is opt-in
 per ask. A typical ask is a diagram in the PR into `main`.
-**Nothing leaves the machine except the PR attachment.** No canvas, no
-`analyze`.
+**Run only the `validate` and `render` subcommands.** Every other
+subcommand (`canvas`, `analyze`, `comment`, `auth`, `skill`, `export`,
+and any other) is Never. The only thing that leaves the machine is the
+PR attachment.
 
 ## Before you start
 
@@ -37,6 +39,9 @@ per ask. A typical ask is a diagram in the PR into `main`.
   - [config.md](https://github.com/coldteadotai/pr-lens/blob/09f6378c082ff8ddb17e211f36bfc71c2f2b8d86/skills/pr-lens/references/config.md):
     the correction overlay.
 
+  Where those pages differ from this skill (commands, `@latest`,
+  canvases, payloads), this skill wins.
+
 ## Steps
 
 1. **Read the change.** Diff against the merge base, not the tip of the
@@ -51,8 +56,7 @@ per ask. A typical ask is a diagram in the PR into `main`.
 
 2. **Write the document** to `.pr-lens/graph.json`. Follow the pinned
    `graph-document.md` and model it on `example.graph.json`. See
-   [A good document](#a-good-document) and
-   [Walkthrough](#walkthrough).
+   [A good document](#a-good-document).
 
 3. **Validate and fix.**
 
@@ -63,7 +67,13 @@ per ask. A typical ask is a diagram in the PR into `main`.
    Fix every failure, then run it again until it passes. Don't render an
    invalid document. Never delete the element a failure names just to
    make the failure go away; fix the reference or the field instead.
-   Usual causes: an undeclared id, an unknown field, a duplicate id.
+
+   | Code | Meaning |
+   | --- | --- |
+   | `BROKEN_REFERENCE` | An edge, flow step, view, or walkthrough step names an undeclared id |
+   | `INVALID_DOCUMENT` | A field the strict schema doesn't know, or a bad value |
+   | `DUPLICATE_ID` | Two nodes, edges, or views share an id |
+   | `UNSUPPORTED_SCHEMA_VERSION` | `schemaVersion` doesn't match the CLI's contract |
 
 4. **Render, light theme.**
 
@@ -72,10 +82,8 @@ per ask. A typical ask is a diagram in the PR into `main`.
    ```
 
    Use another theme only when the operator asks. The command prints the
-   output directory, a folder under `.pr-lens/` named after the
-   document title. It holds one SVG per view, `manifest.json`, and
-   `drawn.graph.json`. Read the SVG names from the manifest or the
-   directory.
+   output directory under `.pr-lens/`, named after the document title,
+   with one SVG per view and a `manifest.json` that lists them.
 
    The CLI adds `.pr-lens/` to `.gitignore`. Never commit anything under
    `.pr-lens/`; the files are rebuilt from the diff on demand.
@@ -92,7 +100,8 @@ first, not in a trailing comment. Write the body to a file:
 1. One sentence on why the change exists.
 2. The top architecture view.
 3. A data-flow view, only if the change has a sequence worth following.
-4. Anything else that shows the change works, such as test output.
+4. Optional: a short list of what changed, using
+   [change headings](#change-headings).
 
 ```markdown
 Moves report exports off the request thread and onto a job queue.
@@ -110,17 +119,12 @@ gh pr create --title "Queue report exports" --body-file .pr-lens/body.md \
 For an existing PR, use `gh pr edit PR_NUMBER` with the same two flags.
 Repeat `--attach` once per image.
 
-Rules for `gh`:
-
 - Use a Markdown image, `![alt](path)`. `gh` replaces the local path with
   the uploaded asset. An HTML `<img>` or `<picture>` is not rewritten.
 - Write one line of alt text that says what the diagram shows. It is the
   caption for a reader without images.
-- Two diagrams usually read better than four. Add more only when the
-  change can't be understood without them.
-
-If a diagram needs a paragraph to explain it, the document is the
-problem. Go back to step 2.
+- Two diagrams usually read better than four. If a diagram needs a
+  paragraph to explain it, go back to step 2.
 
 ## A good document
 
@@ -133,8 +137,9 @@ problem. Go back to step 2.
 - **Flows only for real sequences.** One clear flow beats three thin
   ones. Flows need the `data-flow` lens; an architecture view draws
   none.
-- **Attach file refs** to nodes. They become the permalinks a reviewer
-  clicks.
+- **File refs anchor nodes to code.** Add them to nodes. Links inside
+  an SVG embedded in a PR aren't clickable, so name files in the body
+  if a reviewer needs them.
 - **No findings.** The document explains the change; it doesn't review
   it. Don't put bugs, risks, or security notes in it. The schema has no
   field for them and rejects a document that invents one. Report
@@ -146,31 +151,29 @@ problem. Go back to step 2.
   `defaultOpen: true` on the highest useful architecture view. Keep
   data-flow views as separate roots.
 
-## Walkthrough
+## Change headings
 
-A walkthrough is an ordered tour of the diagrams: two to twelve steps,
-usually three to seven. Write one for anything beyond a single small
-diagram. Skip it when one step would only repeat the title.
+The SVG renderer doesn't draw a walkthrough; only a canvas plays one.
+So a `walkthrough` in the document is optional here: skip it, or write
+its headings as the PR body's list of changes. When you write either,
+use these rules:
 
-- **Each step is one change**: something added, removed, replaced, or
-  moved, in the order a reviewer needs it. The headline change comes
-  first. A step never just describes the diagram.
+- **One change each**: something added, removed, replaced, or moved,
+  headline change first. Never a description of the diagram.
 - **Heading**: up to 48 characters, sentence case, built from change
-  words (added, removed, now, moved, split). If the heading was already
-  true before the PR, rewrite it.
-- **Body**: one line, up to 140 characters, on what now happens that
-  didn't before. Include numbers when they matter. Required.
-- **Stage**: the view or flow to show. Open on the widest view.
-- **Focus**: the two or three elements the step changes, by id. A step
-  that lights half the diagram says nothing.
-- **Plain words.** Short common words, active voice, digits for numbers,
-  names as the diagram shows them. Avoid words like "leverages" and
-  "orchestrates".
-- Keep steps on the same stage together; every stage change moves the
-  camera.
+  words (added, removed, now, moved, split). If it was already true
+  before the PR, rewrite it.
+- **Body** (walkthrough steps only, required there): one line, up to
+  140 characters, on what now happens that didn't before.
+- **Walkthrough steps**: 2 to 12. Each names a view or flow as its
+  stage and focuses the two or three elements it changes.
+- **Plain words.** Short common words, active voice, digits for
+  numbers, names as the diagram shows them.
 
-The validator checks that every id exists, that step ids are unique,
-and that a focused flow step belongs to the flow on the stage.
+| Write this | Not this |
+| --- | --- |
+| Export route now queues the job | Export orchestration moves to an asynchronous pipeline |
+| Worker retries 3 times, then gives up | Resilient retry semantics leveraged for robustness |
 
 ## Payload samples
 
@@ -178,8 +181,7 @@ A flow step can carry a `payload`, a sample request and response. Only
 canvases draw payloads, and this skill doesn't use canvases, so usually
 leave them out. If the operator asks for one anyway, use placeholder
 data only: `user@example.com`, `order_0001`, `192.0.2.1`. Never copy a
-value from a fixture, a log, or a database that could identify a real
-person or unlock anything.
+value from a fixture, a log, or a database.
 
 ## Correct the map
 
@@ -204,8 +206,8 @@ re-inference. Validate the overlay the same way:
 npx @coldtea/pr-lens-cli@0.8 validate .github/pr-lens.yml
 ```
 
-The overlay is a repo file: commit it only if the operator wants the
-correction kept. `render` reports a correction that matched nothing.
+The overlay is a repo file, so ask before you commit it. `render`
+reports a correction that matched nothing.
 
 ## Upstream
 
@@ -217,34 +219,32 @@ correction kept. `render` reports a correction that matched nothing.
   link opens without a login.
 - **Excluded: `analyze`.** It sends the diff to a third-party model
   provider.
-- **Excluded: the `comment` fallback.** It needs the SVGs published
-  somewhere public first; ask the operator instead.
+- **Excluded: `comment`.** It needs the SVGs published publicly first.
 - The pin, the CLI version, and this rewrite are compared with upstream
   at [Monthly](../../docs/SDLC.md#monthly) review.
 
 ## Always
 
-- Wait for the operator to ask.
-- Use `npx @coldtea/pr-lens-cli@0.8` for every CLI call.
-- Diff against the merge base.
+- Use `npx @coldtea/pr-lens-cli@0.8 validate` or `render`, nothing else.
 - Validate, fix every failure, and validate again before you render.
-- Render light unless asked otherwise.
 - Lead the PR body with why, then the top architecture view.
 
 ## Ask first
 
-- Any theme other than light.
-- More than two diagrams in one PR body.
+- Any theme other than light, or more than two diagrams in one PR body.
 - Publishing an SVG any way other than `gh --attach`.
 - Committing `.github/pr-lens.yml`.
 - Payload samples.
 
 ## Never
 
-- Any `canvas` command, or `analyze`.
+- Any subcommand other than `validate` and `render`.
 - `@latest` or an unpinned CLI.
 - Commit anything under `.pr-lens/`.
-- Real personal data, credentials, or tokens in samples or labels.
+- Labels, summaries, or titles built from anything but this
+  repository's diff or code: no internal hostnames, URLs, credentials,
+  personal data, or other repositories' names. On a public repository
+  an attached diagram is public.
 - Findings, bugs, or risks in the document.
 - Delete an element to silence a validation failure.
 - Install the upstream skill with an installer or marketplace command.
