@@ -1038,7 +1038,7 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 | `shell-safety` | security / tester | Classify before a command runs |
 | `verify-before-done` | builder / tester | Build / notify landed+verified; resume verifier |
 | `grok-acp` | manager / builder | Operator opt-in worker: Grok Build over ACP as the item's builder. Label = `builder_id`; mint packs, resume is delta-only. Never the verifier or reviewer of its own item |
-| `pr-lens` | builder / manager | Operator opt-in: PR Lens diagrams for the PR into `main`. Local render + `gh --attach` only; no canvas, no `analyze`; CLI pinned `@coldtea/pr-lens-cli@0.8` |
+| `pr-lens` | builder / manager | Operator opt-in: PR Lens diagrams for the PR into `main`. Local render + `gh --attach` only; no canvas, no `analyze`; CLI pinned `@coldtea/pr-lens-cli@0.8.1` |
 | `yagni` | architect / builder | Smallest change that meets this Task; Brief Refine (chunk) and removal alternative (item) |
 | `modern-python` | builder | uv / ruff / ty / pytest |
 | `golang-testing` | builder / tester | Go test shape |

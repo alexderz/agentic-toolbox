@@ -27,10 +27,10 @@ PR attachment.
 - Check the GitHub CLI version: `gh --version`. Attaching needs 2.99 or
   later. If it is older, render anyway and ask the operator how to
   publish the SVG.
-- Every CLI call in this skill uses `npx @coldtea/pr-lens-cli@0.8`. The
-  minor pin takes patch releases automatically. Moving to 0.9 or later
-  is a deliberate bump in [SOURCES.md](../../SOURCES.md) with a
-  **security** clear. Never use `@latest`.
+- Every CLI call in this skill uses `npx @coldtea/pr-lens-cli@0.8.1`, an
+  exact pin. Every new release is a one-line bump in
+  [SOURCES.md](../../SOURCES.md) with a **security** read; there are no
+  automatic patch releases. Never use `@latest`.
 - The full document format lives upstream, at the pinned commit:
   - [graph-document.md](https://github.com/coldteadotai/pr-lens/blob/09f6378c082ff8ddb17e211f36bfc71c2f2b8d86/skills/pr-lens/references/graph-document.md):
     every field, enum, and limit.
@@ -61,7 +61,7 @@ PR attachment.
 3. **Validate and fix.**
 
    ```bash
-   npx @coldtea/pr-lens-cli@0.8 validate .pr-lens/graph.json
+   npx @coldtea/pr-lens-cli@0.8.1 validate .pr-lens/graph.json
    ```
 
    Fix every failure, then run it again until it passes. Don't render an
@@ -78,10 +78,10 @@ PR attachment.
 4. **Render, light theme.**
 
    ```bash
-   npx @coldtea/pr-lens-cli@0.8 render .pr-lens/graph.json --theme light
+   npx @coldtea/pr-lens-cli@0.8.1 render .pr-lens/graph.json --theme light
    ```
 
-   Use another theme only when the operator asks. The command prints the
+   Ask first before any theme other than light. The command prints the
    output directory under `.pr-lens/`, named after the document title,
    with one SVG per view and a `manifest.json` that lists them.
 
@@ -203,7 +203,7 @@ Prefer a path glob in `match` over `id:NODE_ID`; paths survive
 re-inference. Validate the overlay the same way:
 
 ```bash
-npx @coldtea/pr-lens-cli@0.8 validate .github/pr-lens.yml
+npx @coldtea/pr-lens-cli@0.8.1 validate .github/pr-lens.yml
 ```
 
 The overlay is a repo file, so ask before you commit it. `render`
@@ -225,7 +225,7 @@ reports a correction that matched nothing.
 
 ## Always
 
-- Use `npx @coldtea/pr-lens-cli@0.8 validate` or `render`, nothing else.
+- Use `npx @coldtea/pr-lens-cli@0.8.1 validate` or `render`, nothing else.
 - Validate, fix every failure, and validate again before you render.
 - Lead the PR body with why, then the top architecture view.
 

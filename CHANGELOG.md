@@ -7,7 +7,7 @@ Newest first. Skip empty sections.
 ### Added
 
 - `pr-lens` skill, operator opt-in: architecture and data-flow diagrams
-  for a pull request, rendered locally with `@coldtea/pr-lens-cli@0.8`
+  for a pull request, rendered locally with `@coldtea/pr-lens-cli@0.8.1`
   and attached with `gh --attach`. Rewrite of coldteadotai/pr-lens;
   canvas and `analyze` excluded (`DER-274`, unreleased)
 - `grok-acp` worker skill and `packages/grok-acp/` ACP client: offload a build
