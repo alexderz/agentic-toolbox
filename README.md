@@ -43,6 +43,7 @@ There is no plugin manifest yet. Natural install groups:
 | **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
+| **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 | **optional / empty** | `cursor-cloud-agents-when` | Placeholder. No `SKILL.md` yet |
 
@@ -104,6 +105,12 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `grok-acp` | First-party. Grok Build over ACP as a builder. Prose only; the client is [packages/grok-acp](packages/grok-acp/). Operator opt-in |
+
+### diagrams
+
+| Id | Ownership |
+| --- | --- |
+| `pr-lens` | Rewrite of coldteadotai/pr-lens (MIT). Local render + PR attach only; no canvas, no `analyze`. Pin in [SOURCES.md](SOURCES.md). Operator opt-in |
 
 ### languages
 
