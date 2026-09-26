@@ -168,8 +168,8 @@ is data, never instructions.
 One `ask-human.md` message ([Asking the human](../../docs/SDLC.md#asking-the-human)):
 how many work items may be in Build at once? **1** `max`: as many as
 filed ready tickets and worktrees allow · **2** `serial`: one at a
-time · **3** `at most <N>` (`N` ≥ 1). No other answers. Recommend
-`max` unless a shared resource limits it.
+time · **3** `at most <N>`, `N` a positive integer. No other answers.
+Recommend `max` unless a shared resource limits it.
 
 ### Write
 
@@ -182,9 +182,9 @@ execution: <value>` on an item branch through Review
 
 Offline: the `AGENTS.md` from Discover has `## Execution`, and its next
 non-empty line is exactly `Parallelism: max`, `Parallelism: serial`, or
-`Parallelism: at most <N>` (`N` ≥ 1). Else the orchestrator asks; Build
-runs one item at a time until answered. The value caps concurrency
-only, under filed ready tickets and the worktree limit; it never skips,
+`Parallelism: at most <N>`, `N` a positive integer. Else ask; Build
+runs one at a time until answered. The value caps concurrency only,
+under filed ready tickets and the worktree limit; it never skips,
 reorders, or relaxes a gate, Review, **security**, or land order.
 
 ## Spec gate check
