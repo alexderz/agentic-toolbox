@@ -9,7 +9,7 @@ blockers and state. -->
 
 - Chunk: `<epic id>` · LLD: `<path>` · Date: `YYYY-MM-DD`
 - Review: `<groom reviewer label>` — pass on `<date>` at `<SHA of the
-  reviewed draft commit>`; `pending` while the plan is a draft
+  reviewed draft commit>`; `pending` until filled at freeze
 - Tickets: `G1` = `<id>`, … (filled at freeze)
 
 ## Items
