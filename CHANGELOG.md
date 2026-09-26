@@ -6,6 +6,10 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
+  before any ticket is filed, then frozen (`DER-275`)
+- `sdlc-onboarding` Execution area: asks for and records the Build
+  Parallelism ceiling (`max`, `serial`, or `at most <N>`) (`DER-275`)
 - `pr-lens` skill, operator opt-in: architecture and data-flow diagrams
   for a pull request, rendered locally with `@coldtea/pr-lens-cli@0.8.1`
   and attached with `gh --attach`. Rewrite of coldteadotai/pr-lens;
@@ -24,6 +28,10 @@ Newest first. Skip empty sections.
   skips them. The `tracker-sdlc` setup check reads the `AGENTS.md` that
   governs your work, with the repo skill path relative to it; contract
   stays v2 (`DER-272`)
+- SDLC Groom: a clean reviewer passes `groom.md` before any ticket is
+  filed from the reviewed commit, then it freezes; blockers only for real
+  output needs, waves and gates by shape, review items, late insertion;
+  Build dispatches up to the `Parallelism:` ceiling (`DER-275`)
 
 ## tracker-sdlc — 2026-09-25
 
