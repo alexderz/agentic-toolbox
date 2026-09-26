@@ -134,6 +134,11 @@ Workers (operator opt-in). Load only when the operator picks that worker:
 
 - `grok-acp` (Grok Build over ACP as a builder; client is the package `packages/grok-acp/`)
 
+Diagrams (operator opt-in). Load only when the operator asks, such as a
+diagram in the PR into `main`:
+
+- `pr-lens` (PR Lens architecture and data-flow diagrams: local render + PR attach only)
+
 Language pack. Do not remint the Go / Python / Shell ids above.
 
 - `language-router`
