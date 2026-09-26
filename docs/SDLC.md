@@ -136,8 +136,8 @@ Think of building software like cooking a meal with several dishes:
 A **helper** (a person or a computer assistant) may do the cooking. A
 **different helper** tastes. A **designer** helper writes who does what
 and, if there are screens, draws them. Before anyone starts cooking, a
-helper who did not write the list checks it and who waits on whom. You, the
-owner, still say when the brief, the look-and-feel, and the plan are
+helper who did not write the list checks it and who waits on whom. You,
+the owner, still say when the brief, the look-and-feel, and the plan are
 good enough — unless you clearly say “do not wait for my OK on the look.”
 
 ### The big picture
@@ -760,8 +760,8 @@ blockers, then:
 4. When a separate **architect** agent exists, it reviews the reshape
    with the Groom Review questions (step 2 above).
 5. `create`, set-blocker, `ready`; post the new wave view (open items)
-   as one Epic `comment`: ticket ids, G ids (if any), titles, and wave numbers
-   only (no links, no body text).
+   as one Epic `comment`: ticket ids, G ids (if any), titles, and wave
+   numbers only (no links, no body text).
 
 Post a wave view only when the graph reshapes after filing: an item
 added or canceled, or a blocker set. The blockers set at filing are
