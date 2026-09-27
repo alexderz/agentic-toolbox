@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `shell-safety` light pass, same Always, Ask first and Never rules: the **security** gate names Review, not PR, and the workers rule routes to the SDLC index (`DER-325`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
