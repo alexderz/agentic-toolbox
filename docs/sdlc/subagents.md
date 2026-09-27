@@ -1,26 +1,23 @@
 # Subagents
 
-## Step agents
-
-**Brief (chunk)** keeps `gatherer_id` and `refiner_id` on the chunk.
-Those two must not be the same agent. Resume them across Gather ↔ Refine
-rounds. See [Brief](entry-brief-repo.md#brief). Plan–Spec keeps `designer_id` and
-`ux_reviewer_id` on the chunk (not each other, not the architect).
-Resume across UX and mockup rounds. Reviewer checks requirements only,
-not personal taste. Human sees it after those two agree. Groom keeps
-`groom_reviewer_id` on the chunk: a clean mint, never the author of
-`groom.md`; resume it across review rounds.
-
-**Brief (incoming item)** keeps `contrarian_id` (yagni agent). The
-troubleshooter may be the parent. Those two must not be the same, and
-neither is the builder, verifier, or Reviewer of that item.
-
 ## Item agents
 
-A **work item** is one Task, Bug, or outside/remote PR — one
-implementable unit. The orchestrator (manager session, parent agent, or
-workflow) keeps two ids per item: `builder_id` and `verifier_id`. Review
-adds `reviewer_id`. Those three must not be the same agent.
+- **Work item**: one Task, Bug, or outside or remote PR; one
+  implementable unit.
+- **Mint**: start a new subagent.
+- **Yagni agent**: the item Brief agent that loads `yagni` only; its id
+  is `contrarian_id`.
+- **Clean**: a subagent whose transcript is empty except the crafted
+  task: ticket, LLD, acceptance, paths, and standards. Never seed it
+  with another role's chat.
+- **Resume**: continue that subagent (`resume_from` that id, or the
+  host's equivalent). It already read the item. Send what changed, what
+  failed, and what to do next. Never re-paste the spec, the tree, or
+  prior logs it produced.
+
+The manager, a session or a workflow, keeps two ids per work item:
+`builder_id` and `verifier_id`. Review adds `reviewer_id`. The builder,
+verifier, and reviewer are three different agents.
 
 | Role | First pass on this item | Later passes on this item |
 | --- | --- | --- |
@@ -28,93 +25,100 @@ adds `reviewer_id`. Those three must not be the same agent.
 | **verifier** | Mint a **clean** subagent. Never the builder. Store `verifier_id`. | **Resume** `verifier_id`. Prompt only the delta. Re-run proving commands. |
 | **reviewer** (Review) | Mint a **clean** subagent. Never the builder. Store `reviewer_id`. | **Resume** `reviewer_id` for re-review of the same item. |
 
-**Clean** means an empty transcript except the crafted task: ticket /
-LLD / acceptance, paths, and standards. Do not seed it with another
-role’s chat, and do not use the orchestrator as the builder or verifier.
+A manager that spawns in parallel still mints one pair per item, not
+one pair per loop. Give independent items independent pairs.
 
-**Resume** means continue that subagent (`resume_from` that id, or the
-host’s equivalent). The agent already read the item. Do not re-paste the
-spec, the tree, or prior logs it produced. Send what changed, what
-failed, and what to do next.
+Never:
 
-**Never**
-
-- Builder verifies (or reviewer-reviews) its own work as the only gate.
-- Verifier or reviewer is given the builder’s transcript as memory.
-- An item’s builder / verifier / reviewer is reused on a **different**
-  item.
-- A new builder or verifier is minted on every Build loop when the
-  previous one for this item is still resumable.
-- Parent is the yagni agent, builder, or verifier of that item.
+- Never let the builder verify or review its own work as the only gate;
+  the verifier and the reviewer are other agents.
+- Never give the verifier or reviewer the builder's transcript as
+  memory; mint them clean.
+- Never reuse an item's builder, verifier, or reviewer on a
+  **different** item; mint clean agents for that item.
+- Never mint a new builder or verifier on each Build loop while this
+  item's previous one is still resumable; resume it.
+- Never make the manager the yagni agent, builder, or verifier of that
+  item; mint a clean subagent for the role.
 
 ## Fallback
 
-**Fallback.** If resume fails (expired, quota, host error), mint a new
-clean agent of the **same role** for this item and replace the stored
-id. Pass a short handoff (paths, decisions, open failures) — still not
-the other role’s transcript.
+| Condition | Action |
+| --- | --- |
+| Resume fails (expired, quota, host error) | 1. Mint a new clean agent of the **same role** for this item. 2. Replace the stored id. 3. Pass a short handoff: paths, decisions, open failures. |
+| A resumed transcript is too large to be useful | Replace that role's agent the same way: clean mint and short handoff. |
 
-**Overflow.** If a resumed transcript is too large to be useful, replace
-that role’s agent the same way (clean mint + short handoff). Do not
-rotate roles to “save” context.
+Never pass the other role's transcript; pass the short handoff. Never
+rotate roles to "save" context; replace the agent of the same role.
 
-Orchestrators that spawn in parallel still mint **one pair per item**,
-not one pair per loop. Independent items get independent pairs.
+## Step agents
 
-**Item grain, fewer agents.** Do not mint gatherer, designer, or UX
-reviewer for a no-screen incoming item. Mint the yagni agent at Brief;
-mint builder, verifier, and Reviewer as usual. Security if a trust
-boundary moves.
+- **Chunk Brief** keeps `gatherer_id` and `refiner_id` on the chunk.
+  Mint a clean gatherer and a clean refiner on the first pass of the
+  chunk. Resume those ids on later Gather ↔ Refine rounds. Never use the
+  same agent for both. Steps: [Brief](entry-brief-repo.md#brief).
+- **Plan–Spec** keeps `designer_id` and `ux_reviewer_id` on the chunk.
+  They are two different agents, and neither is the architect. Resume
+  them across UX and mockup rounds. The review loop and the operator's
+  acceptance: [UX](plan-trial-spec.md#ux).
+- **Groom** keeps `groom_reviewer_id`: [Groom names](groom-step.md#names).
+- **Incoming item Brief** keeps `contrarian_id` on the item. Resume it
+  if the debate has another round. The troubleshooter may be the
+  manager. The troubleshooter and the yagni agent are two
+  different agents. Neither is the builder, verifier, or reviewer of
+  that item.
+
+Item grain, fewer agents: for a no-screen incoming item, do not mint a
+gatherer, designer, or UX reviewer. Mint the yagni agent at Brief. Mint
+the builder, verifier, and reviewer as usual. Add **security** if a
+trust boundary moves.
 
 ## Tracker writes
 
-**Tracker writes.** Only the orchestrator writes to the tracker (see
-[Hierarchy](../SDLC.md#tracker)). Builder, verifier, and reviewer
-prompts carry no tracker-writing instructions; those roles report.
+Only the **manager** writes to the tracker: [Tracker](../SDLC.md#tracker).
+Builder, verifier, and reviewer prompts carry no tracker-writing
+instructions; those roles report.
 
 ## Writable worktree
 
-**Writable worktree.** Some hosts pin a subagent's writable worktree to
-the orchestrator's current worktree. Then only one item worktree is
-writable at a time: builders for other items write to scratch for the
-orchestrator to commit, or the items run one after another.
+Some hosts pin a subagent's writable worktree to the manager's current
+worktree. On such a host, only one item worktree is writable at a time.
+Then either builders for other items write to scratch for the manager
+to commit, or the items run one after another.
 
 ## Spawn prompts
 
-On each **mint**, the orchestrator (**manager**) picks the cheaper prompt
-for that child. There is no default that is always right.
+On each **mint**, the manager picks the prompt mode for that child: the
+manager holds the bodies and the child needs them → **Pack**; else →
+**Point**.
 
 | Mode | Prompt | Child does |
 | --- | --- | --- |
 | **Pack** | Comprehensive: ticket/LLD, the skill bodies it will need, and any MCP tool schemas it will call. Name the ids packed. Tell it **not** to reload those. | Work. Do not `read_file` the packed skills or re-fetch packed MCP schemas. |
-| **Point** | High-level task + which skill ids / MCP servers to load (or the host default: “read the matching `SKILL.md`”). | Load those itself. Still **at most one** language-family skill. |
+| **Point** | High-level task + which skill ids / MCP servers to load (or the host default: "read the matching `SKILL.md`"). | Load those itself. Still **at most one** language-family skill. |
 
-**Pack** when the parent already has the bodies, the child will use most
-of them, and one round-trip to re-read would cost more than inlining.
-Typical: first gatherer mint with `discover-the-idea`; first refiner
-mint with `yagni`; item yagni-agent mint with `yagni`; designer mint
-with `ux-design` + `sdlc-artifacts`; UX reviewer mint with `ux-design`
-(review loop only); architect Plan/Spec mint with `sdlc-artifacts`;
-first builder mint with one language skill + `tdd` / `yagni` / `debug` /
-`docs-google-style` (no `tracker-sdlc`, no tracker writes); verifier
-mint with `verify-before-done` plus the proving commands; reviewer mint with `pr-review` plus the range vs
-project-main.
-
-**Point** when several skills or MCP servers might apply, the parent
-does not already have the bodies, or only a thin slice of a large guide
-matters. Do not load a catalog into the parent just to pack it.
+Typical pack mints: first gatherer with `discover-the-idea`; first
+refiner with `yagni`; item yagni agent with `yagni`; designer with
+`ux-design` + `sdlc-artifacts`; UX reviewer, review loop only, with
+`ux-design`; architect Plan/Spec with `sdlc-artifacts`; first builder
+with one language skill + `tdd` / `yagni` / `debug` /
+`docs-google-style`, no `tracker-sdlc`, no tracker writes; verifier
+with `verify-before-done` plus the proving commands; reviewer with
+`pr-review` plus the range vs project-main.
 
 **Resume** is always delta-only. Do not re-pack skills or MCP guides
-already in that child’s transcript. If a new skill or tool is required
-on this pass, pack that slice or name it — not the whole set again.
+already in that child's transcript. A new skill or tool is required on
+this pass → pack that slice or name it, not the whole set again.
 
-**Never**
+Never:
 
-- Pack the language catalog, every MCP server, or skills for a
-  different role “just in case.”
-- Pack a skill and also tell the child to go read the same file.
-- Point at “load whatever you need” with no ids when the parent already
-  knows the one or two that apply.
+- Never load a catalog into the manager just to pack it; point instead.
+- Never pack the language catalog, every MCP server, or skills for a
+  different role "just in case"; pack only what the child needs.
+- Never pack a skill and also tell the child to go read the same file;
+  tell it not to reload the packed skill.
+- Never point at "load whatever you need" with no ids when the manager
+  already knows the one or two that apply; name those ids.
 
 ## Workers
 
@@ -124,11 +128,9 @@ on this pass, pack that slice or name it — not the whole set again.
 | Local CLI | Box-local gated builds. Grok Build: load `grok-acp` when the operator picks it |
 | Local mirror | Inbound copy of git. Not the design source of truth |
 
-**architect** adversarial-reviews other agents’ tools when the work needs
-it. **tester** owns mechanical CI/hooks. **security** owns gates (Spec
-trust boundaries + Review) and skill intake. **manager** after-acts the
-board; does not bless before ship.
+**architect** adversarial-reviews other agents' tools when the work
+needs it. The other role jobs: [Roles](../SDLC.md#roles).
 
-**Workers do not bypass security.** A remote or local agent PR into this
-skills home still requires intake and SHA-pin match. Worker choice is not
-an exemption.
+Workers do not bypass **security**: [Roles](../SDLC.md#roles). A worker
+PR into this skills home still needs intake and a SHA-pin match:
+[Workers](../INTAKE.md#workers).

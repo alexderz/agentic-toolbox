@@ -32,6 +32,11 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/sdlc/subagents.md` rewritten to the writing standard: the
+  manager packs a child's prompt when it holds the skill bodies and the
+  child needs them, else points; Never rules name the allowed action;
+  the groom reviewer id, role jobs and worker security rules route to
+  their owners (`DER-306`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
