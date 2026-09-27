@@ -44,12 +44,13 @@ roles and step names. Write the Use name, never the banned one:
    "never" names the allowed action beside it.
 8. Write imperative sentences, one instruction each. Hide no condition
    in a parenthesis. No metaphor. No self-deleting or dated conditions.
-9. Caps in lines: `SKILL.md` ≤250; `tracker-sdlc` ≤150; SDLC index ≤200;
-   `docs/sdlc/` files ≤150, except `trunk-changelog-monthly.md` ≤80,
-   `branches-and-lands.md` ≤120, `conventions.md` ≤100; root `AGENTS.md` ≤100;
-   `docs/INTAKE.md` ≤55; this file ≤150. Caps and K1 apply to rewrites, not to the
-   C1 move. Rewrites never grow, except `language-router`, `maintainers/AGENTS.md`
-   and new files. If a cap needs a dropped rule or a new file, ask the operator.
+9. Caps in lines: `SKILL.md` ≤250; SDLC index ≤200; `docs/sdlc/` files ≤150, except
+   `trunk-changelog-monthly.md` ≤80, `branches-and-lands.md` ≤120, `conventions.md`
+   ≤100; root `AGENTS.md` ≤100; `docs/INTAKE.md` ≤55; this file ≤150. `tracker-sdlc`
+   has a 150-line target: a goal, not a blocker; only its `SKILL.md` cap blocks
+   (Q10). Caps and K1 apply to rewrites, not to the C1 move. Rewrites never grow,
+   except `language-router`, `maintainers/AGENTS.md` and new files. If a cap needs a
+   dropped rule or a new file, ask the operator.
 10. Each item carries a rule map for every agent file it edits. The
     reviewer checks the map, not only the prose.
 
@@ -123,8 +124,7 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
 
 ## Checks
 
-- **K1 caps** (`wc -l`): the caps in standard 9 block. `tracker-sdlc` ≤150 is a
-  line target, a goal only; its blocking cap is `SKILL.md` ≤250 (Q10).
+- **K1 caps** (`wc -l`): the caps in standard 9 block; the target there does not.
 - **K2 never grow**: each edited file ≤ `git show 7a11696:<f> | wc -l`;
   exempt `language-router`, `maintainers/AGENTS.md`, new files.
 - **K3 names**: `grep -rniE 'orchestrator|official copy|improvise|parent (agent|session)|parent-pick|the \*{0,2}parent\*{0,2} (may|picks|is)' $AT`
