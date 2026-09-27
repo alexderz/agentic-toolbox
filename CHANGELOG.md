@@ -44,6 +44,9 @@ Newest first. Skip empty sections.
   "orchestrator", each Never rule names the allowed action, and branch
   source and fallback route to their SDLC owners; permission posture,
   labels and own-item limits unchanged (`DER-315`)
+- `security-hardening` rewritten to the writing standard, same rules:
+  Ask first as numbered steps, Never and Ask first rows unchanged, and
+  the workers, intake and Monthly rules routed to their owners (`DER-316`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root

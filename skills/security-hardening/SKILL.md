@@ -5,19 +5,17 @@ description: use this when reviewing security, mapping trust boundaries, or hard
 
 # Security hardening
 
-First-party Always / Ask first / Never for **security** and the SDLC. The table shape is inspired by Addy Osmani’s boundary pattern. This file is **not** a vendor copy.
+First-party Always / Ask first / Never rules for **security** and the SDLC. The table shape is inspired by Addy Osmani’s boundary pattern. This file is **not** a vendor copy.
 
-**security owns this gate** at LLD (trust boundaries) and at PR. Escalate vulns to the operator. **tester** owns CI secret-scan and dependency-audit hooks — do not remint those jobs here.
+**The gate** is the **security** check at LLD (trust boundaries) and at PR. **security** owns it.
 
 ## Prompts are not a boundary
 
-The **system prompt is not a security boundary**. **LLM output is untrusted**.
+Do not treat the **system prompt as a security boundary**. Treat **LLM output as untrusted**.
 
-Enforce authn/z, validation, egress, and data-class rules in code, policy, and infrastructure. Prompt text, “be careful” instructions, and model self-reporting do not count as controls. Treat tool calls, generated SQL/HTML/shell, and agent plans the same as untrusted client input.
+Enforce authn/z, validation, egress, and data-class rules in code, policy, and infrastructure. Do not count prompt text, “be careful” instructions, or model self-reporting as controls. Treat tool calls, generated SQL/HTML/shell, and agent plans the same as untrusted client input.
 
 ## Always
-
-Validate at the boundary. Parameterize queries. Encode output. Use HTTPS. Hash passwords. Set security headers and secure cookies. Audit dependencies before release.
 
 | Rule | Web | API | Agent |
 | --- | --- | --- | --- |
@@ -30,11 +28,9 @@ Validate at the boundary. Parameterize queries. Encode output. Use HTTPS. Hash p
 | Secure cookies | `Secure`, `HttpOnly`, `SameSite` on session cookies | Cookie and token issuance APIs | Do not put session material in prompts or chat logs |
 | Dependency audit before release | Lockfile + known-vuln scan in the release path | Same for API images and libs | Same for skill/tool packages; **tester** owns the hook |
 
-If a change touches a boundary and skips a row, it fails the **security** LLD/PR gate.
+If a change touches a boundary and skips a row, it fails the gate.
 
 ## Ask first
-
-Stop and get a decision (the operator, or **security** on the LLD) before adding or widening any of these.
 
 | Topic | Why it is a stop | Typical surfaces |
 | --- | --- | --- |
@@ -47,7 +43,10 @@ Stop and get a decision (the operator, or **security** on the LLD) before adding
 | Mesh / network binds | Who can reach the process is a trust boundary | Listen address, mesh expose, tunnel |
 | Identity flows | Account linking, impersonation, and reset change who a principal is | SSO, invite, sudo, token exchange |
 
-“Ask first” means do not implement the widening in the same pass as an unrelated ticket. Record the decision on the LLD or ticket.
+1. Stop before you add or widen a topic in the table.
+2. Get a decision. On the LLD, the operator or **security** decides. Elsewhere, the operator decides.
+3. Record the decision on the LLD or the ticket.
+4. Do not implement the widening in the same pass as an unrelated ticket.
 
 ## Never
 
@@ -69,23 +68,23 @@ Host and personal-account locks are **Never**, not Ask first. There is no “sup
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **security** | This gate at **LLD (trust boundaries)** and **PR**; skill intake (repo path `docs/INTAKE.md`) | Monthly vuln cadence (**Monthly** is not this gate) |
+| **security** | The gate; skill intake per [`docs/INTAKE.md`](../../docs/INTAKE.md) | Monthly vuln cadence; [Monthly is not this gate](../../docs/sdlc/trunk-changelog-monthly.md#monthly) |
 | **operator** | Vuln severity calls, extra hosts, personal-account exceptions | Day-to-day intake scans |
 | **tester** | CI secret-scan and dependency-audit **hooks** | Rewriting this skill or skipping **security** because CI is green |
 | **builder** | Building behind the gate | Self-review as the **security** PR gate |
-| **manager** | SDLC after-act | Blessing a ship that skipped **security** |
+| **manager** | SDLC after-act | Approving a ship that skipped **security** |
 
-Escalate vulns to the operator. Do not bury them in a “follow-up” with no ticket ID.
+Leave the CI secret-scan and dependency-audit hooks to **tester**; do not remint those jobs in this skill. A green CI hook is not a **security** clear. Escalate vulns to the operator. Never leave one in a “follow-up” with no ticket ID; name the ticket ID.
 
-Workers (remote agents, local CLIs, mirrors) **do not bypass** this gate. A green CI hook is not a **security** clear.
+Workers (remote agents, local CLIs, mirrors) do not bypass **security**; the rule is in [`docs/SDLC.md` Roles](../../docs/SDLC.md#roles).
 
 ## Review-skill discipline
 
-Least privilege. **Review skills should not write.**
+Apply least privilege. **Keep review skills read-only.**
 
-A skill that reviews, intakes, audits, or hardens must not grow write, deploy, or credential tools “to finish the review.” Read, report, escalate. If the work needs a write, that is a different skill and a different **security** ask.
+Never add write, deploy, or credential tools to a skill that reviews, intakes, audits, or hardens, even “to finish the review.” Read, report, and escalate instead. If the work needs a write, use a different skill and ask **security** separately.
 
-Same rule for this file: it is a gate, not a pentest kit, not a credentials broker, and not a reason to open bank, mail, or password stores.
+Apply the same rule to this skill: use it as a gate only. Never use it as a pentest kit or a credentials broker, or as a reason to open bank, mail, or password stores.
 
 ## Red flags
 
@@ -98,4 +97,4 @@ Same rule for this file: it is a gate, not a pentest kit, not a credentials brok
 - “The extra host is convenient”
 - “I need the password manager / mail / bank to verify”
 
-All of these fail the gate. Stop. Ask or never — do not ship.
+Each of these fails the gate. Stop. Ask per Ask first, or treat it as Never. Do not ship.
