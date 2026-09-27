@@ -41,45 +41,40 @@ line in the new file. Protected rows touched: none (the route to
 | 570–571 | Step 0: cut `item/<ticket-id>-<slug>` (from the live project-main, else trunk) | kept, 0.1; source → route (owner: `branches-and-lands.md#branches`, item branch row) | L84–85 |
 | 571–572 | Setup check; fail → `sdlc-onboarding` | kept, 0.2 | L86–87 |
 | 572–573 | **manager** posts the Entry classification on the ticket | kept, 0.3 | L88–89 |
-| 574–575 | Troubleshooter (architect hat) writes problem + proposed fix and out of scope | kept, 1.2; "architect hat" (metaphor) → "an agent in the architect role" | L94–95 |
-| 575–577 | May load one of `debug` / `debug-pocock` / `debug-anthropic` through root cause / hypothesis only; not the fix phase, `tdd`, or land | kept, 1.3; allowed action named: stop there | L96–98 |
-| 577–579 | The parent session may troubleshoot when already that item and not too dirty to reason; otherwise mint a clean troubleshooter | kept, 1.1 (moved first: who before what); "parent session" → "manager" (Names); "not too dirty to reason" kept verbatim, **MQ1 open** | L91–93 |
-| 580–582 | A different agent loads `yagni` only; competing fix that removes something (examples) | kept, step 2; the agent named **contrarian** (the `contrarian_id` name, rule-owner row); "different" = from the troubleshooter (MQ4); parenthesis → "Examples:" | L99–101 |
-| 582–583 | Honor the existing HLD, or propose removing a part (an escalation) | kept, 2.1 | L102–103 |
-| 583 | Never "delete the product" | kept, 2.2; allowed action named: remove at most a part | L104 |
-| 583–584 | No honest removal path → `none — already smallest` | kept, 2.3, "honest" kept | L105 |
-| 585–586 | The parent (not troubleshooter, not yagni agent) picks and records why | kept, step 3; "parent" → "manager" (Names) | L106–107 |
-| 588–590 | Parent is the troubleshooter or yagni agent → mint a clean parent-pick (or ask); neither of those two chooses | kept, moved into step 3 (it decides who picks; no forward reference, standard 4); "parent-pick" → "a clean agent for the pick" (Names) | L107–108 |
-| 587–588 | Ask the human if the two options look different to a user or either is a plan change | kept, step 4 condition table rows 1 and 3 (first match applies) | L109–115 |
-| 590–594 | That wait blocks this issue unless AFK / headless / autonomous, then the parent may pick between two item fixes that honor the plan; other items proceed | route (owner: index `#asking-the-human`, AFK pick and wait-is-a-blocker), rows 2 and 3 (MQ5) | L114–115 |
-| 596–597 | Store `contrarian_id` on the item; resume it for another round | route (owner: `subagents.md#step-agents`, which holds the whole rule since DER-306); plain route line | L117 |
-| 597 | Do not add a ninth role | kept as "Use only the roles in Roles" (rule-owner replacement phrase), link index `#roles` | L117–118 |
-| 599 | Heading Repo | kept, anchor `#repo` | L120 |
-| 601 | Before Plan: the list below is set up for a chunk | kept as "make sure each exists; set up what is missing"; old L610's "confirm … do not reinvent" stays the item-only contrast | L122 |
-| 603 | Repo or subdir exists (private as needed) | kept verbatim, **MQ2 open** | L124 |
-| 604–606 | README / AGENTS stub so agents who need access are aware; layout: Conventions; stub template `agents-stub.md` | kept; layout link → `conventions.md#product-repo-layout` (old L413, inside the old Conventions section it linked; C1 had `#name-formats`); template path linked | L125–127 |
-| 607 | **tester** watch if applicable | kept verbatim, **MQ2 open** | L128 |
-| 608 | Designs live in git from onset | route (owner: `conventions.md#designs-in-git`) | L129–130 |
-| 610 | Item: confirm the workspace exists; do not reinvent it | kept; allowed action named | L132 |
+| 574–575 | Troubleshooter (architect hat) writes problem + proposed fix and out of scope | kept, 1.2; "architect hat" (metaphor) → "an agent in the architect role" | L95–96 |
+| 575–577 | May load one of `debug` / `debug-pocock` / `debug-anthropic` through root cause / hypothesis only; not the fix phase, `tdd`, or land | kept, 1.3; allowed action named: stop there | L97–99 |
+| 577–579 | The parent session may troubleshoot when already that item and not too dirty to reason; otherwise mint a clean troubleshooter | kept, 1.1 (moved first: who before what); "parent session" → "manager" (Names); "not too dirty to reason" → no other item's work and no builder, verifier or reviewer conversation (MQ1, resolved by operator 2026-09-27 (Q1)) | L91–94 |
+| 580–582 | A different agent loads `yagni` only; competing fix that removes something (examples) | kept, step 2; the agent named **contrarian** (the `contrarian_id` name, rule-owner row); "different" = from the troubleshooter (MQ4); parenthesis → "Examples:" | L100–102 |
+| 582–583 | Honor the existing HLD, or propose removing a part (an escalation) | kept, 2.1 | L103–104 |
+| 583 | Never "delete the product" | kept, 2.2; allowed action named: remove at most a part | L105 |
+| 583–584 | No honest removal path → `none — already smallest` | kept, 2.3, "honest" kept | L106 |
+| 585–586 | The parent (not troubleshooter, not yagni agent) picks and records why | kept, step 3; "parent" → "manager" (Names) | L107–108 |
+| 588–590 | Parent is the troubleshooter or yagni agent → mint a clean parent-pick (or ask); neither of those two chooses | kept, moved into step 3 (it decides who picks; no forward reference, standard 4); "parent-pick" → "a clean agent for the pick" (Names) | L108–109 |
+| 587–588 | Ask the human if the two options look different to a user or either is a plan change | kept, step 4 condition table rows 1 and 3 (first match applies) | L110–116 |
+| 590–594 | That wait blocks this issue unless AFK / headless / autonomous, then the parent may pick between two item fixes that honor the plan; other items proceed | route (owner: index `#asking-the-human`, AFK pick and wait-is-a-blocker), rows 2 and 3 (MQ5) | L115–116 |
+| 596–597 | Store `contrarian_id` on the item; resume it for another round | route (owner: `subagents.md#step-agents`, which holds the whole rule since DER-306); plain route line | L118 |
+| 597 | Do not add a ninth role | kept as "Use only the roles in Roles" (rule-owner replacement phrase), link index `#roles` | L118–119 |
+| 599 | Heading Repo | kept, anchor `#repo` | L121 |
+| 601 | Before Plan: the list below is set up for a chunk | kept as "make sure each exists; set up what is missing"; old L610's "confirm … do not reinvent" stays the item-only contrast | L123 |
+| 603 | Repo or subdir exists (private as needed) | kept; "as needed" → private only when the operator says so (MQ2, resolved by operator 2026-09-27 (Q2)) | L125–126 |
+| 604–606 | README / AGENTS stub so agents who need access are aware; layout: Conventions; stub template `agents-stub.md` | kept; layout link → `conventions.md#product-repo-layout` (old L413, inside the old Conventions section it linked; C1 had `#name-formats`); template path linked | L127–129 |
+| 607 | **tester** watch if applicable | kept; "if applicable" → when the repo has CI or hooks (MQ2, resolved by operator 2026-09-27 (Q2)) | L130 |
+| 608 | Designs live in git from onset | route (owner: `conventions.md#designs-in-git`) | L131–132 |
+| 610 | Item: confirm the workspace exists; do not reinvent it | kept; allowed action named | L134 |
 
 ## Meaning questions
 
-Two open: the item is blocked until the operator answers.
+All resolved.
 
-- **MQ1** (old L577–578), **open**. "Not too dirty to reason" has no
-  checkable form in the text. Readings: (a) the manager's session holds
-  no other item's work and no other role's chat for this item (the
-  "clean" of `subagents.md#item-agents`); (b) the session's context is
-  not near its limit. Recommended: (a), worded "The manager's session
-  holds no other item's work and no builder, verifier or reviewer chat
-  → the manager may be the troubleshooter. Otherwise mint a clean
-  troubleshooter." Old wording kept until answered.
-- **MQ2** (old L603, L607), **open**. "(private as needed)" and "if
-  applicable" are conditions with no checkable source (standard 2, 8).
-  Who decides the repo is private, and when does a **tester** watch
-  apply? Recommended: private when the operator, or someone the
-  operator names in writing, says so; a tester watch when the repo has
-  CI or hooks. Old wording kept until answered.
+- **MQ1** (old L577–578), resolved by operator 2026-09-27 (Q1). "Not
+  too dirty to reason" had no checkable form. Answer: the manager may be
+  the troubleshooter only when it holds no other item's work and no
+  builder, verifier or reviewer conversation. New L91–94 state it.
+- **MQ2** (old L603, L607), resolved by operator 2026-09-27 (Q2).
+  "(private as needed)" and "if applicable" had no checkable source.
+  Answer: make the repo private only when the operator says so; add a
+  **tester** watch when the repo has CI or hooks. New L125–126 and L130
+  state it.
 - **MQ3** (old L542), resolved from the text: "fog" is
   `discover-the-idea`'s word for what is still vague or unknown (its
   L34, L80); "unresolved point" keeps that sense.

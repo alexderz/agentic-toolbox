@@ -88,9 +88,10 @@ Brief.
    3. **manager** posts the Entry classification on the ticket with
       `tracker-sdlc` `comment`.
 1. Problem and fix:
-   1. The manager is already working that item and not too dirty to
-      reason → the manager may be the troubleshooter. Otherwise mint a
-      clean troubleshooter.
+   1. The manager is already working that item, holds no other item's
+      work, and holds no builder, verifier or reviewer conversation →
+      the manager may be the troubleshooter. Otherwise mint a clean
+      troubleshooter.
    2. The **troubleshooter**, an agent in the architect role, writes the
       problem, the proposed fix, and what is out of scope.
    3. It may load one of `debug`, `debug-pocock`, `debug-anthropic` and
@@ -121,11 +122,12 @@ roles in [Roles](../SDLC.md#roles).
 
 Before Plan, make sure each exists; set up what is missing:
 
-1. Repo or subdir exists (private as needed).
+1. The repo or subdir exists. Make it private only when the operator
+   says so.
 2. A README or AGENTS stub, so agents who need access are aware. Layout:
    [Product repo layout](conventions.md#product-repo-layout). Stub
    template: [`agents-stub.md`](../../skills/sdlc-artifacts/templates/agents-stub.md).
-3. **tester** watch if applicable.
+3. The repo has CI or hooks → a **tester** watch on it.
 4. Designs live in git from onset:
    [Designs in git](conventions.md#designs-in-git).
 
