@@ -5,19 +5,17 @@ description: use this when creating, configuring, or migrating a Python project 
 
 # Modern Python
 
-First-party. **MIT.** Id: `modern-python`. **SKILL.md only.** No
-`scripts/`. Not a vendor paste. Tool facts from the public uv, ruff, ty,
-and pytest docs.
+First-party. **MIT.** Id: `modern-python`. **SKILL.md only.** No `scripts/`.
+Not a vendor paste. Tool facts from the public uv, ruff, ty, and pytest docs.
 
-Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. Optional pointer: `lang-python`.
+Load-with list and `lang-python` pointer: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Map](../language-router/SKILL.md#map).
 
 ## Iron law
 
 **`uv add` / `uv remove` change dependencies. `uv run` runs tools. Do
 not activate a venv or hand-edit dependency lists.**
 
-New work: Python 3.12+, uv, ruff (lint **and** format), ty, pytest.
+On new work, use Python 3.12+, uv, ruff (lint **and** format), ty, pytest.
 Keep pip / Poetry / mypy / black only when the operator says so.
 
 ## Always
@@ -46,22 +44,22 @@ Keep pip / Poetry / mypy / black only when the operator says so.
 
 ## Never
 
-| Never | Why |
-| --- | --- |
-| Marketplace `npx skills add` / plugin install | [INTAKE.md](../../docs/INTAKE.md) |
-| `scripts/` in this skill dir | Intake quarantine |
-| Hand-edit `pyproject.toml` to add/remove deps | `uv add` / `uv remove` |
-| Secrets in `pyproject.toml`, scripts, or lockfiles | History is forever |
-| Live network in tests unless marked | Default tests stay offline |
+| Never | Instead | Why |
+| --- | --- | --- |
+| Marketplace `npx skills add` / plugin install | Follow [INTAKE.md](../../docs/INTAKE.md) | Intake owns third-party skills |
+| `scripts/` in this skill dir | Keep this skill `SKILL.md` only | Intake quarantine |
+| Hand-edit `pyproject.toml` to add/remove deps | `uv add` / `uv remove` | `uv.lock` is the install truth |
+| Secrets in `pyproject.toml`, scripts, or lockfiles | Leave them out; see [`security-hardening`](../security-hardening/SKILL.md#never) | History is forever |
+| Live network in tests unless marked | Mark each test that needs the network | Default tests stay offline |
 
 ## Decision
 
 | Doing | Path |
 | --- | --- |
-| One file + deps | PEP 723 (below) |
+| One file + deps | PEP 723 script |
 | App, not published | `uv init` then groups |
 | Importable package | `uv init --package` |
-| Existing tree | Migration — Ask first if it already ships |
+| Existing tree | Migrate; if it already ships, Ask first |
 
 ## Tools
 
@@ -97,8 +95,8 @@ uv sync
 uv build
 ```
 
-`uv add` owns `[project].dependencies` and the dev group. Do not type
-packages into `pyproject.toml` by hand.
+`uv add` owns `[project].dependencies` and the dev group. Never type
+packages into `pyproject.toml` by hand; run `uv add`.
 
 ## PEP 723 scripts
 
@@ -122,10 +120,12 @@ uv add --script myscript.py httpx
 uv run myscript.py
 ```
 
-No lockfile. Multi-file? Use `pyproject.toml`. `uv run --with pkg` is a
-one-off probe, not a project dep.
+No lockfile. If the code spans more than one file, use `pyproject.toml`.
+Use `uv run --with pkg` only as a one-off probe; add project deps with `uv add`.
 
-## Migration (only when asked)
+## Migration
+
+Migrate only when asked.
 
 | From | Do | Then delete |
 | --- | --- | --- |
@@ -134,8 +134,8 @@ one-off probe, not a project dep.
 | flake8 + black + isort | `uv remove` them; drop their config; `uv add --dev ruff` | `.flake8`, `[tool.black]`, `[tool.isort]` |
 | mypy / pyright | `uv remove`; `uv add --dev ty` | `mypy.ini`, `pyrightconfig.json`, `[tool.mypy]` |
 
-Odd markers or VCS deps: stop and do them by hand. Do not import a lock
-you have not read.
+If a requirement has odd markers or is a VCS dep, stop and do it by hand.
+Never import a lock you have not read; read it first.
 
 ## uv (short)
 
