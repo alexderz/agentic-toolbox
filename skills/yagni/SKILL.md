@@ -5,7 +5,7 @@ description: use this when scoping a change, adding a helper, or expanding a ski
 
 # YAGNI
 
-**The ask** is what the current task asks for. **Speculative generality** is anything built for a need the ask does not state. Use restraint. Prefer the smallest change that meets **this** ask. Do not build for a future need the ask does not state. This skill is compatible with `tdd` and `verify-before-done`. This skill has no `scripts/`.
+**The ask** is what the current task asks for. **Speculative generality** is anything built for a need the ask does not have (a future need). Use restraint. Prefer the smallest change that meets **this** ask. Do not build for a need the ask does not have. This skill is compatible with `tdd` and `verify-before-done`. This skill has no `scripts/`.
 
 ## Iron law
 
@@ -21,6 +21,7 @@ description: use this when scoping a change, adding a helper, or expanding a ski
 ## Ask first
 
 Before you do any of these, ask the operator per [Asking the operator](../../docs/SDLC.md#asking-the-human):
+
 - New abstraction “for later reuse” with no second caller yet.
 - New config flag or feature toggle with no current consumer.
 - Expanding a skill past ~250 lines or adding `scripts/` to a skill dir.
@@ -32,9 +33,8 @@ Before you do any of these, ask the operator per [Asking the operator](../../doc
 - Never add marketplace installers or auto-update upstream into skills; take third-party content through [INTAKE.md](../../docs/INTAKE.md).
 - Never add “just in case” helpers for personal finance, mail, password stores, or extra hosts; leave them out.
 
-## Red flags
+**Red flags.** If your plan says one of these, stop. Shrink the change. Ship the ask.
 
-If your plan says one of these, stop. Shrink the change. Ship the ask.
 - “We will need this eventually”
 - “Keep both routers until we migrate”
 - “Add a flag so we can turn it on later”

@@ -17,8 +17,8 @@ of their subjects occur in this file.
 | 1–4 | Front matter: name, description | kept verbatim | L1–4 |
 | 6 | Title "YAGNI" | kept | L6 |
 | 8 | "Restraint." | kept, as the imperative "Use restraint." | L8 |
-| 8 | Prefer the smallest change that meets **this** Task | kept; "Task" → "ask", with "the ask" defined at first use (MQ1); "speculative generality" defined at first body use (standard 3), from Iron law L12 | L8 |
-| 8 | Do not build for imagined tomorrow | kept; metaphor "imagined tomorrow" → "a future need the ask does not state" (standard 8) | L8 |
+| 8 | Prefer the smallest change that meets **this** Task | kept; "Task" → "ask", with "the ask" defined at first use (MQ1); "speculative generality" defined at first body use (standard 3), from Iron law L12: "a need the ask does not have (a future need)", matching "If the ask does not need it" | L8 |
+| 8 | Do not build for imagined tomorrow | kept; metaphor "imagined tomorrow" → "a need the ask does not have" (standard 8) | L8 |
 | 8 | Compatible with `tdd` and `verify-before-done` | kept, as a sentence | L8 |
 | 8 | No `scripts/` | kept, as "This skill has no `scripts/`." (MQ2) | L8 |
 | 10–12 | Iron law: do not ship speculative generality; if the ask does not need it, leave it out | kept verbatim, first (standard 7) | L10–12 |
@@ -29,17 +29,17 @@ of their subjects occur in this file.
 | 19 | Keep AGENTS.md thin (ids + repo rules); put procedures in skills | kept; parenthesis → "thin: ids and repo rules only"; two sentences | L19 |
 | 21 | Heading "Ask first" | kept | L21 |
 | 21 | Ask first: whom and how | route (owner: `docs/SDLC.md#asking-the-human`, "An ask is required for: … anything in an Ask-first row"); lead line names the operator (MQ4) | L23 |
-| 23 | New abstraction "for later reuse" with no second caller yet | kept verbatim | L24 |
-| 24 | New config flag / feature toggle with no current consumer | kept; "/" → "or" | L25 |
-| 25 | Expanding a skill past ~250 lines or adding `scripts/` to a skill dir | kept verbatim (MQ3) | L26 |
-| 26 | Second toolkit that overlaps an installed skill id (dual router risk) | kept; parenthesis → ": a dual-router risk" (a reason, no condition) | L27 |
-| 28 | Heading "Never" | kept | L29 |
-| 30 | Remint a MERGED skill body without a new **security** cut | kept; allowed action "get the cut first" beside it (standard 7) | L31 |
-| 31 | Add marketplace installers or auto-update upstream into skills | kept; allowed action: route to `docs/INTAKE.md` (owner of third-party intake; checklist steps 1 and 6 hold the same ban), no condition added | L32 |
-| 32 | Personal finance, mail, password stores, or extra hosts via "just in case" helpers | kept, as the imperative "Never add “just in case” helpers for …"; allowed action "leave them out" (standard 7) | L33 |
-| 34 | Heading "Red flags" | kept | L35 |
+| 23 | New abstraction "for later reuse" with no second caller yet | kept verbatim | L25 |
+| 24 | New config flag / feature toggle with no current consumer | kept; "/" → "or" | L26 |
+| 25 | Expanding a skill past ~250 lines or adding `scripts/` to a skill dir | kept verbatim (MQ3) | L27 |
+| 26 | Second toolkit that overlaps an installed skill id (dual router risk) | kept; parenthesis → ": a dual-router risk" (a reason, no condition) | L28 |
+| 28 | Heading "Never" | kept | L30 |
+| 30 | Remint a MERGED skill body without a new **security** cut | kept; allowed action "get the cut first" beside it (standard 7) | L32 |
+| 31 | Add marketplace installers or auto-update upstream into skills | kept; allowed action: route to `docs/INTAKE.md` (owner of third-party intake; checklist steps 1 and 6 hold the same ban), no condition added | L33 |
+| 32 | Personal finance, mail, password stores, or extra hosts via "just in case" helpers | kept, as the imperative "Never add “just in case” helpers for …"; allowed action "leave them out" (standard 7) | L34 |
+| 34 | Heading "Red flags" | kept, as the bold label "**Red flags.**" (no link targets `#red-flags`), so the file stays at 41 lines | L36 |
 | 36–39 | Four red-flag phrases | kept verbatim | L38–41 |
-| 41 | Stop. Shrink the change. Ship the ask. | kept verbatim; the unstated trigger → "If your plan says one of these," before the list (standard 2) (MQ5) | L37 |
+| 41 | Stop. Shrink the change. Ship the ask. | kept verbatim; the unstated trigger → "If your plan says one of these," before the list (standard 2) (MQ5) | L36 |
 
 ## Meaning questions
 
