@@ -343,8 +343,8 @@ carries K's report. Rollback: revert the chunk merge.
 
 ### Open
 
-- **Runner choice** (before B1; smoke test decides; single-agent runners
-  do not qualify): OpenCode (lead: subagent task ids, resumable
-  sessions, per-child token export; needs a timeout), Claude Code on a
-  local server's Anthropic Messages API (fallback), Pi with subagents,
-  PR #7's `model-eval`. B1, Trial, K wait; building proceeds.
+- **Runner** (operator, 2026-09-27): OpenCode. No AI-lab harness
+  (Claude Code out); single-agent runners and Hermes Agent (no resume of
+  a finished subagent) do not qualify. Smoke test + **security** read
+  before B1; a failed smoke test goes back to the operator. B1, Trial,
+  K wait; building proceeds.
