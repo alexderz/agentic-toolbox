@@ -163,7 +163,7 @@ role); "no ninth role" → "use only the roles in the table". Empty
 | F | Vendor-derived light pass (naming, dedupe, real defects): `tdd`, `pr-review`, `debug*`, `docs-google-style`, `verify-before-done`, `golang-*`, `pr-lens`, `ux-design`, `shell-safety`; SOURCES note each | A, **security** |
 | G | `lang-*` naming + dedupe, no eval | A |
 | H | `docs/INTAKE.md` | A |
-| I | Tone pass `README.md`, `CONTRIBUTING.md`, `docs/ARCHITECTURE.md` + link fixes | C paths |
+| I | Tone pass `README.md`, `CONTRIBUTING.md`, `docs/ARCHITECTURE.md` + link fixes; role tables in `README.md` / `docs/ARCHITECTURE.md` corrected to the SDLC roles (operator, 2026-09-26) | C paths |
 | J | Stale lines in `maintainers/design/tracker-sdlc/hld.md` | — |
 | K | Before-merge run (rewrite arm), report in the PR into `main` | all, harness |
 
@@ -197,4 +197,5 @@ fails → one slimmed `docs/SDLC.md` (~550 lines), decided before Spec.
   the weak model may fail T2/T3 on both arms → report as is; the person
   may ask for a rerun. Tokens compare within one model.
 - `README.md` / `docs/ARCHITECTURE.md` role tables disagree with the
-  SDLC; a tone pass cannot fix content → follow-up ticket.
+  SDLC → fixed in area I (operator, 2026-09-26), content limited to the
+  role tables.
