@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `lang-shell`, `lang-sql`, `lang-swift`, `lang-terraform` and `lang-web-markup` replace their copies of the `language-router` load-with and one-language-skill rules with one route line each; language advice unchanged (`DER-335`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)

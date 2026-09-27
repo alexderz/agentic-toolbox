@@ -5,8 +5,8 @@ description: use this when writing, reviewing, or testing Swift — *.swift, Pac
 
 # Swift
 
-Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. No `scripts/`.
+No `scripts/`.
+Skills that load with it: [`language-router` load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
