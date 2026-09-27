@@ -57,6 +57,7 @@ Newest first. Skip empty sections.
 - `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby` and `lang-rust` route their load-with lines to `language-router` (`DER-334`)
 - People docs: role tables match the SDLC index, README skill-fit line, links to the new SDLC layout (`DER-337`)
 - `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go`: lines repeating `language-router` rules become one route line per file (`DER-332`)
+- `lang-shell`, `lang-sql`, `lang-swift`, `lang-terraform` and `lang-web-markup` replace their copies of the `language-router` load-with and one-language-skill rules with one route line each; language advice unchanged (`DER-335`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
