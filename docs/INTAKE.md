@@ -41,8 +41,8 @@ A product-repo `.agents/tracker/SKILL.md` needs no SOURCES row. This
 covers every one that a governing `## Tracker` names: at the root, or in
 a subdirectory whose `AGENTS.md` the root `AGENTS.md` or `CLAUDE.md`
 names. **security** reads the change that adds or edits one:
-1. **security** checks it holds no tokens, no `scripts/` files, and no
-   executable blocks except the fenced shell recipe from
+1. **security** fails the read if it holds tokens, `scripts/` files, or
+   executable blocks other than the fenced shell recipe from
    `skills/tracker-sdlc/adapters/local.md`.
 2. **security** compares that recipe with the adapter's current text;
    only placeholder fills and baked-in adapter gotchas may differ.

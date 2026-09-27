@@ -32,7 +32,7 @@ clarifications (2026-09-27): none of their subjects occur in this file.
 | 35 | Heading "Workers" | kept (`#workers`; linked from `poc/rewrite/skills/sdlc-onboarding`) | L34 |
 | 37–39 | Remote-agent PRs still need a security clear; remote authoring no exemption; Build DoD: diff matches the pinned SHA, or `first-party` for first-party prose | kept; singular; the parenthesized condition becomes its own sentence (standard 8) | L36–38 |
 | 41–44 | Product-repo `.agents/tracker/SKILL.md`, each one a governing `## Tracker` names (root, or a subdirectory whose `AGENTS.md` the root `AGENTS.md` or `CLAUDE.md` names): no SOURCES row; **security** reads the change that adds or edits it | kept; the scope moves out of the parenthesis into its own sentence, words unchanged | L40–43 |
-| 44–46 | It holds no tokens, no `scripts/` files, no executable blocks except the fenced shell recipe from `adapters/local.md` | kept; numbered **security** step (standard 1) | L44–46 |
+| 44–46 | It holds no tokens, no `scripts/` files, no executable blocks except the fenced shell recipe from `adapters/local.md` | kept; numbered **security** step (standard 1) stating the outcome: the read fails if any is present | L44–46 |
 | 46–48 | **security** compares the recipe with the adapter's current text; only placeholder fills and baked-in gotchas may differ | kept verbatim, as a **security** step | L47–48 |
 | 48–49 | Any other executable content fails the read | kept; **security** step, active voice | L49 |
 | 51 | Heading "Layout-only exception" | kept (`#layout-only-exception`) | L51 |
