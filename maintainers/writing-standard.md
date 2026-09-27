@@ -6,8 +6,7 @@ Write, rewrite and review agent text to these rules. Source: DER-288
 ## Names
 
 - **Agent text** (`$AT`) — `AGENTS.md`, `docs/SDLC.md`, `docs/sdlc/`,
-  `docs/INTAKE.md`, `skills/`, `maintainers/AGENTS.md`,
-  `maintainers/evals/`.
+  `docs/INTAKE.md`, `skills/`, `maintainers/AGENTS.md`, `maintainers/evals/`.
 - **Old** — `main` at 7a11696; **Old L**, a line in it. **SDLC index** — `docs/SDLC.md`.
 - **Owner** — the one file that holds a rule. **Route** — one line
   elsewhere that names the rule and links the owner by path and anchor.
@@ -47,11 +46,10 @@ roles and step names. Write the Use name, never the banned one:
    in a parenthesis. No metaphor. No self-deleting or dated conditions.
 9. Caps in lines: `SKILL.md` ≤250; `tracker-sdlc` ≤150; SDLC index ≤200;
    `docs/sdlc/` files ≤150, except `trunk-changelog-monthly.md` ≤80,
-   `branches-and-lands.md` ≤120, `conventions.md` ≤100; root `AGENTS.md`
-   ≤100; `docs/INTAKE.md` ≤55; this file ≤150. Caps and K1 apply to
-   rewrites, not to the C1 move. Rewrites never grow, except
-   `language-router`, `maintainers/AGENTS.md` and new files. If a cap
-   needs a dropped rule or a new file, ask the operator.
+   `branches-and-lands.md` ≤120, `conventions.md` ≤100; root `AGENTS.md` ≤100;
+   `docs/INTAKE.md` ≤55; this file ≤150. Caps and K1 apply to rewrites, not to the
+   C1 move. Rewrites never grow, except `language-router`, `maintainers/AGENTS.md`
+   and new files. If a cap needs a dropped rule or a new file, ask the operator.
 10. Each item carries a rule map for every agent file it edits. The
     reviewer checks the map, not only the prose.
 
@@ -117,19 +115,21 @@ If a rewording could change a role, gate, step, tracker verb, state,
 template shape, operator approval or protected rule, or an old rule has
 two readings: stop, open an MQ, block the item, ask with `ask-human.md`.
 
-Operator clarifications (2026-09-27), everywhere: the architect fixes
-groom-review findings and the groom reviewer re-checks; gate reasons in
-parentheses are examples; a review item's verdict says whether a whole
-re-check is needed, and the manager files it; the "Improvise" and
-"a person" replacements in Names.
+Operator clarifications (2026-09-27), everywhere: the architect fixes groom-review
+findings and the groom reviewer re-checks; gate reasons in parentheses are examples;
+a review item's verdict says whether a whole re-check is needed, and the manager
+files it; the "Improvise" and "a person" replacements in Names; frontmatter
+`description` fields are metadata, not copies under standard 5 (Q16).
 
 ## Checks
 
-- **K1 caps** (`wc -l`): the caps in standard 9.
+- **K1 caps** (`wc -l`): the caps in standard 9 block. `tracker-sdlc` ≤150 is a
+  line target, a goal only; its blocking cap is `SKILL.md` ≤250 (Q10).
 - **K2 never grow**: each edited file ≤ `git show 7a11696:<f> | wc -l`;
   exempt `language-router`, `maintainers/AGENTS.md`, new files.
 - **K3 names**: `grep -rniE 'orchestrator|official copy|improvise|parent (agent|session)|parent-pick|the \*{0,2}parent\*{0,2} (may|picks|is)' $AT`
-  → empty; other `-w parent` hits: tracker fields, Go tests.
+  → empty, except the `tracker-sdlc` comment shape `(per orchestrator …)`,
+  which is contract text (Q9); other `-w parent` hits: tracker fields, Go tests.
 - **K4 maps**: every edited file mapped; no open MQ; protected checks.
 - **K5 recipe**: `awk '/^```sh$/{f=1} f{print} f&&/^```$/{f=0}'` on
   `adapters/local.md`, old (`git show 7a11696:…`) vs new → no diff.

@@ -12,7 +12,7 @@ Red flags) and frontmatter `description`: unchanged.
 
 | Old L | Change | Kind | Reason |
 | --- | --- | --- | --- |
-| 8–9 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`." → the route line "Process skills that **may** load with this one: [load-with list](…#load-with-list)." (new L9); "No `scripts/`." kept on new L8 | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
+| 8–9 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`." → the route line "Process skills that **may** load with this one: `[load-with list](…#load-with-list)`." (new L9); "No `scripts/`." kept on new L8 | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
 
 ## Meaning questions
 

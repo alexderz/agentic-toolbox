@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Writing standard records three operator decisions: K1 treats the `tracker-sdlc` 150-line target as a goal and blocks only on a cap; K3 exempts the `tracker-sdlc` `(per orchestrator …)` comment shape as contract text; frontmatter descriptions are metadata. Stale links in the design records are now code spans or fixed paths (`DER-345`)
 - `discover-the-idea` rewritten to the writing standard, same gather loop (`DER-312`)
 - `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
 - `pr-review`: section links fixed, the distinct-reviewer rule routed to

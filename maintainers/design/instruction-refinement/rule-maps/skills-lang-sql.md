@@ -12,7 +12,7 @@ flags): unchanged. Frontmatter `description`: unchanged (see MQ1).
 
 | Old L | Change | Kind | Reason |
 | --- | --- | --- | --- |
-| 8–10 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`, and the host language skill." → one route line (new L9): "Process skills that **may** load with this one: [load-with list](…#load-with-list). SQL beside its host language: [Algorithm](…#algorithm)."; "Parameterize or do not ship." and "No `scripts/`." kept on new L8 | dedupe | The process skills are the load-with list, owned by [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); when SQL and its host language both load is owned by [`language-router#algorithm`](../../../../skills/language-router/SKILL.md#algorithm); the route adds no condition |
+| 8–10 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`, and the host language skill." → one route line (new L9): "Process skills that **may** load with this one: `[load-with list](…#load-with-list)`. SQL beside its host language: `[Algorithm](…#algorithm)`."; "Parameterize or do not ship." and "No `scripts/`." kept on new L8 | dedupe | The process skills are the load-with list, owned by [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); when SQL and its host language both load is owned by [`language-router#algorithm`](../../../../skills/language-router/SKILL.md#algorithm); the route adds no condition |
 
 ## Meaning questions
 
