@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `verify-before-done` light pass: the verifier and landed+verified rules route to their SDLC owners, and "HITL" reads "operator in the loop"; pins unchanged (`DER-326`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
