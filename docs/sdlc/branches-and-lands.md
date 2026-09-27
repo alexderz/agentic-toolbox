@@ -55,5 +55,4 @@ remote workers.
   project-main** (or on trunk if that was the land target).
 - Start or land an item that still has an **open** blocker without an
   operator call.
-
 - Use the item path to avoid talking to a person about a product change.
