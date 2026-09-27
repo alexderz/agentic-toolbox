@@ -8,7 +8,7 @@ Changed lines only. No upstream text added. Pin, SHA, license, tools unchanged.
 | 8 | Dropped the provenance line (pin, "not verbatim", "not a pack install", "no evals/scripts/clawhub", id) | dedupe | — | Pin + MIT: `## Upstream pin` (new L184, unchanged); pack install: `## Never` row (new L59); evals/scripts/clawhub: `## Never` row (new L60); id: frontmatter `name` |
 | 9 | Blank line dropped with L8 | — | — | — |
 | 10 | "Pairs with `tdd` … `verify-before-done` … **builder owns.** Do not install the rest of the samber pack" → one route line to the load-with list | dedupe / route | 8 | Load-with: `skills/language-router/SKILL.md#load-with-list` (owner). `tdd` still named at new L66, `verify-before-done` at new L32. builder ownership: `## Roles` builder row (new L164). Pack install: `## Never` (new L59), `## Roles` (new L164) |
-| 171 | "Workers do not bypass intake." → "Workers do not bypass **security**: [Roles](../../docs/SDLC.md#roles)." | naming / route | 169 | Owner `docs/SDLC.md#roles` (writing-standard Rule owners: "Workers do not bypass security"). Rest of the line unchanged |
+| 171 | "Workers do not bypass intake." → "Workers do not bypass **security**: [Roles](../../../../docs/SDLC.md#roles)." | naming / route | 169 | Owner `docs/SDLC.md#roles` (writing-standard Rule owners: "Workers do not bypass security"). Rest of the line unchanged |
 
 ## SOURCES.md
 

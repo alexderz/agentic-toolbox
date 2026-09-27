@@ -14,7 +14,7 @@ Frontmatter `description`: unchanged (see MQ2).
 
 | Old L | Change | Kind | Reason |
 | --- | --- | --- | --- |
-| 8–10 | "Compatible with `security-hardening`, `tdd`, `verify-before-done`." → the route line "Process skills that **may** load with this one: [load-with list](…#load-with-list)." (new L9); the rest of old L8–10 rewrapped onto new L8, same words | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
+| 8–10 | "Compatible with `security-hardening`, `tdd`, `verify-before-done`." → the route line "Process skills that **may** load with this one: `[load-with list](…#load-with-list)`." (new L9); the rest of old L8–10 rewrapped onto new L8, same words | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
 
 ## Meaning questions
 
