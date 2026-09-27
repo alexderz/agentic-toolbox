@@ -32,6 +32,8 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `tracker-sdlc` rewritten to the writing standard: the writer rule routes to
+  the SDLC index; contract and claim steps unchanged (`DER-309`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
