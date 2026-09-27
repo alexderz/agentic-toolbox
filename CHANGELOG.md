@@ -32,6 +32,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/SDLC.md` moves, text unchanged, into an index, step files under
+  `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
+  index adds How to read and a Read column, and links follow the move
+  (`DER-298`)
 - Maintainer notes move under `maintainers/` (design records, planning
   notes, this repo's `## Tracker` and tracker skill) with their own
   entry point, `maintainers/AGENTS.md`; the root `AGENTS.md` routing
