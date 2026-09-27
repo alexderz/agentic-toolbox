@@ -21,7 +21,7 @@ Stop and ask the operator, or someone the operator names in writing, before skip
 | --- | --- |
 | Renames / mechanical moves | Easy to treat as "no behavior" and skip the proof |
 | Configuration-only changes | Config can still change runtime behavior |
-| Throwaway / prototype | Fine to explore; throw the exploration away and rebuild it with TDD if it ships |
+| Throwaway / prototype | Fine to explore; throw the exploration away and rebuild the change with TDD if it ships |
 | Generated code | Confirm it is generated and not behavior you owe a test |
 
 Thinking "skip TDD just this once"? Stop. That is rationalization. Ask first — do not self-except.

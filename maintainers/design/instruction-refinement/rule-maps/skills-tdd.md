@@ -18,7 +18,7 @@ Protected rows touched: none. Operator clarifications (2026-09-27): the
 | --- | --- | --- | --- |
 | 18 | Ask first: whom to ask before skipping the cycle | kept; "the operator (or the pairing human)" → "the operator, or someone the operator names in writing" (Names; standard 8, no condition in a parenthesis) (MQ1) | L18 |
 | 18 | Ask first: how to ask | route (owner: `docs/SDLC.md#asking-the-human`, "An ask is required for: … anything in an Ask-first row"); adds no condition | L18 |
-| 24 | Throwaway or prototype: explore, discard, redo with TDD if it ships | kept; "remint" → "rebuild it": "mint" names starting a subagent in the SDLC (standard 3, one name per thing) | L24 |
+| 24 | Throwaway or prototype: explore, discard, redo with TDD if it ships | kept; "remint" → "rebuild the change": "mint" names starting a subagent in the SDLC (standard 3, one name per thing); "the change" names what ships, not the exploration | L24 |
 
 ## Meaning questions
 
