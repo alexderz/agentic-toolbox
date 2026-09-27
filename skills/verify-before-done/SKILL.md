@@ -58,9 +58,9 @@ Skip a step = claiming, not verifying.
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **builder** | Running this gate before ship claims | Skipping **security** on skill-home PRs |
+| **builder** | Running this gate before ship claims | Skipping **security** on changes to skill homes, reviewed at Review |
 | **tester** | CI that produces evidence; verifier subagent for the item | Claiming product DoD from fmt-only green |
-| **security** | Intake / PR security clear | Day-to-day verify coaching |
+| **security** | Intake / security clear at Review | Day-to-day verify coaching |
 | **manager** | After-act landed+verified | Blessing without evidence |
 
 ## Red flags

@@ -18,12 +18,15 @@ owner), **dropped** (owner named).
 | 46 | Label "HITL" | kept; expanded to "Operator in the loop" | L43 |
 | 46 | No unsupervised destructive or irreversible actions without the operator | dropped; owner is this file's Ask first column (old L44, unchanged). Also fixes the missing verb | L41 |
 | 46 | Run verification for evidence; do not self-clear flaky/MEDIUM; show the operator and wait | kept, text unchanged | L43 |
+| 64 | builder does not own: skipping **security** on skill-home PRs | kept; "skill-home PRs" → "changes to skill homes, reviewed at Review" (no internal PRs; Review is the gate) | L61 |
 | 65 | tester does not own: minting a new verifier every loop | dropped; owner `docs/sdlc/subagents.md#item-agents` (Never list), routed at L13–14 | L62 (rest of row unchanged) |
+| 66 | security owns: intake / PR security clear | kept; "PR security clear" → "security clear at Review" (no internal PRs) | L63 |
 | 74 | Red flag: builder as verifier; new verifier every loop | dropped; owner `docs/sdlc/subagents.md#item-agents`, routed at L13–14 | — |
 
-`SOURCES.md` L28, `verify-before-done` Notes cell: appends the LLD
-vendor-derived note, `Wording edit DER-288, pins unchanged;
-security-cleared <date>.` Upstream, SHA and License cells unchanged.
+`SOURCES.md` L28, `verify-before-done` Notes cell: "HITL" → "operator
+in the loop", the body's rename; appends the LLD vendor-derived note,
+`Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.`
+Upstream, SHA and License cells unchanged.
 
 ## Meaning questions
 
