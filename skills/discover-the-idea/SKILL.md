@@ -5,8 +5,15 @@ description: use this when the user wants to think through a fuzzy idea, gather 
 
 # Discover the idea
 
-Architect gatherer. Turns a messy thought into a brief another agent can
-attack. No `scripts/`. The subject does not have to be code.
+This skill turns a messy thought into a **brief**: a written summary
+that a different agent, the **critiquer**, critiques. The subject does
+not have to be code. The skill has no `scripts/`.
+
+Role: **architect**. In the SDLC Brief step this agent is the
+**gatherer** and the critiquer is the refiner; ids, mint and resume:
+[Step agents](../../docs/sdlc/subagents.md#step-agents). Load no
+language skill on a gather-only turn:
+[Family rules](../language-router/SKILL.md#family-rules).
 
 ## Iron law
 
@@ -15,102 +22,97 @@ The user owns decisions. You own facts. The session ends in a brief.
 
 ## Loop
 
-### 0. Stream of consciousness (always first)
+### 0. Dump (always first)
 
-Ask for a dump. Wait. Do not start the grill in the same message.
+1. If the thread already holds a **dump**, the user's unsorted text
+   about the idea, use that text as the dump and go to step 1.
+2. Otherwise, send this and nothing else:
 
-Say this, then stop:
+   > Dump whatever is in your head about this. Messy is the point. Goals,
+   > fears, constraints, half-ideas, things you already rejected, what
+   > "done" might look like. I will not interrogate until you send it.
 
-> Dump whatever is in your head about this. Messy is the point. Goals,
-> fears, constraints, half-ideas, things you already rejected, what
-> "done" might look like. I will not interrogate until you send it.
-
-If they already dumped in the invoking message, do not ask again. Use
-that text as the dump.
+3. Wait for the dump. Send no questions in that message.
 
 ### 1. Reflect
 
-One short paragraph in their words, tightened. Confirm or correct
-before any question list. Name what is still fog.
+1. Restate the dump in one short paragraph, in the user's words,
+   tightened, and name what is still vague.
+2. Ask the user to confirm or correct it. Send no question list until
+   they do.
 
 ### 2. Environment (only if it exists)
 
-Look around **after** the dump. This may not be a code repo.
+The environment may not be a code repo. Run this step after the dump.
 
-Inspect only what is actually there: working tree, notes, prior briefs,
-open tickets, linked docs, public pages they named. Skip this step when
-there is no environment worth reading.
-
-Facts you can look up are your job. Do not ask the user what a file,
-ticket, or public page already says.
+1. Skip this step when there is no environment worth reading.
+2. Inspect only what is actually there: working tree, notes, prior
+   briefs, open tickets, linked docs, public pages the user named.
+3. Look up every fact you can. Never ask the user what a file, ticket,
+   or public page already says; read it instead.
 
 ### 3. Options map (when alternatives exist)
 
-If the idea has real options (tools, patterns, prior art), research
-**3–5** of them before the first grill round that depends on that
-choice. Each option: who uses it, the ugly part, how it fits *this*
-dump. Cite a source. No invented "industry standard."
+1. If the dump is a personal decision with no market, skip this step.
+2. If the idea has real options, such as tools, patterns, or prior art,
+   research 3–5 of them before the first question round that depends
+   on that choice.
+3. For each option, write who uses it, the ugly part, how it fits this
+   dump, and a source. Never claim an "industry standard" without a
+   source; cite one or leave the claim out.
 
-Skip the map when the dump is a personal decision with no market.
+### 4. Question the frontier
 
-### 4. Frontier grill
+The idea is a **design tree**: each decision raises more decisions. The
+**frontier** is every question whose prerequisites are already settled.
 
-Treat the idea as a **design tree**. Each decision hangs more decisions
-off it.
+1. Ask the whole frontier in one round. Number the questions and give a
+   recommended answer on each, in this format:
 
-A **frontier** is every question whose prerequisites are already
-settled. Ask the whole frontier in one round. Number the questions.
-Give a recommended answer on each. Wait.
+   ```
+   ❓ **Q1** — **<title>**: <body, choices if any>
+   ➡️ <recommended answer, grounded in the dump or research>
 
-Format:
+   ---
 
-```
-❓ **Q1** — **<title>**: <body, choices if any>
-➡️ <recommended answer, grounded in the dump or research>
+   ❓ **Q2** — **<title>**: …
+   ➡️ …
+   ```
 
----
+2. Wait for the answers.
+3. Recompute the frontier. A question that depends on another question
+   still open this round goes in the next round.
 
-❓ **Q2** — **<title>**: …
-➡️ …
-```
+Push back on vague words ("probably", "later", "something like").
+Propose a strawman they can reject.
 
-After answers, recompute the frontier. A question that depends on
-another still open this round belongs to the *next* round.
+The session is done when the frontier is empty, or when the next
+question cannot be answered by talking, for example because it needs a
+prototype, a screenshot, or a live system. Mark those questions open;
+never invent an answer.
 
-Push back on fog ("probably", "later", "something like"). Propose a
-strawman they can reject. When you feel ready to stop, ask one more
-round on out-of-scope and failure modes, then stop.
-
-The session is done when the frontier is empty, or the next question
-cannot be answered by talking (needs a prototype, a screenshot, a live
-system). Mark those open. Do not invent.
+When you feel ready to stop, ask one more round on out-of-scope and
+failure modes, then stop. Cap the session at four rounds. If round 4
+still widens scope, split the idea and gather one slice.
 
 ### 5. Brief, then stop
 
-Emit the brief. Ask the user to confirm it. Do not implement. Do not
-hand the brief to a critiquer until they say so.
+1. Emit the brief in this outline:
 
-```
-Intent
-Out of scope
-Constraints
-Decisions          — chose A over B because …
-Assumptions        — now explicit
-Options map        — only if step 3 ran
-Open               — ungrillable or deferred
-Verify later       — how we would know a later build matched this
-```
+   ```
+   Intent
+   Out of scope
+   Constraints
+   Decisions          — chose A over B because …
+   Assumptions        — now explicit
+   Options map        — only if step 3 ran
+   Open               — ungrillable or deferred
+   Verify later       — how we would know a later build matched this
+   ```
 
-Default: the brief stays in chat. Do not write a file unless asked.
-
-## Always
-
-- Start at step 0 unless a dump is already in the thread.
-- Recommended answer on every grill question.
-- Look up facts before asking.
-- Cap at four rounds. If round 4 still widens scope, split the idea and
-  gather one slice.
-- Load no language skill on a gather-only turn.
+2. Keep the brief in chat. Write a file only when the user asks.
+3. Ask the user to confirm the brief.
+4. Stop. Hand the brief to a critiquer only when the user says so.
 
 ## Ask first
 
@@ -120,12 +122,10 @@ Default: the brief stays in chat. Do not write a file unless asked.
 
 ## Never
 
-- Implement, scaffold, or "just sketch the API."
-- Critique the brief in the same turn (different agent).
-- Ask the user for something the environment already answers.
-- Recommend a tool you have not looked at this session.
-- Name pantheon personas. Roles here are architect / designer / builder /
-  tester / security / manager / operator.
+- Never implement, scaffold, or "just sketch the API"; emit the brief.
+- Never critique the brief in the same turn; the critiquer does that.
+- Never recommend a tool you have not looked at this session; look first.
+- Never name pantheon personas; use only [Roles](../../docs/SDLC.md#roles).
 
 ## Red flags
 
