@@ -25,7 +25,7 @@ owner), **dropped** (owner named).
 
 `SOURCES.md` L28, `verify-before-done` Notes cell: "HITL" → "operator
 in the loop", the body's rename; appends the LLD vendor-derived note,
-`Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.`
+`Wording edit DER-288, pins unchanged; security-cleared 2026-09-27.`
 Upstream, SHA and License cells unchanged.
 
 ## Meaning questions
