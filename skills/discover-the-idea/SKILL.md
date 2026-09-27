@@ -6,14 +6,14 @@ description: use this when the user wants to think through a fuzzy idea, gather 
 # Discover the idea
 
 This skill turns a messy thought into a **brief**: a written summary
-that a different agent, the **critiquer**, critiques. The subject does
+that a different agent, the **refiner**, critiques. The subject does
 not have to be code. The skill has no `scripts/`.
 
 Role: **architect**. In the SDLC Brief step this agent is the
-**gatherer** and the critiquer is the refiner; ids, mint and resume:
+**gatherer**; gatherer and refiner ids, mint and resume:
 [Step agents](../../docs/sdlc/subagents.md#step-agents). Load no
 language skill on a gather-only turn:
-[Family rules](../language-router/SKILL.md#family-rules).
+[No-language turns](../language-router/SKILL.md#no-language-turns).
 
 ## Iron law
 
@@ -25,7 +25,8 @@ The user owns decisions. You own facts. The session ends in a brief.
 ### 0. Dump (always first)
 
 1. If the thread already holds a **dump**, the user's unsorted text
-   about the idea, use that text as the dump and go to step 1.
+   about the idea, for example in the invoking message, use that text
+   as the dump and go to step 1.
 2. Otherwise, send this and nothing else:
 
    > Dump whatever is in your head about this. Messy is the point. Goals,
@@ -84,15 +85,13 @@ The idea is a **design tree**: each decision raises more decisions. The
    still open this round goes in the next round.
 
 Push back on vague words ("probably", "later", "something like").
-Propose a strawman they can reject.
+Propose a strawman they can reject. When you feel ready to stop, ask one
+more round on out-of-scope and failure modes, then stop.
 
 The session is done when the frontier is empty, or when the next
 question cannot be answered by talking, for example because it needs a
 prototype, a screenshot, or a live system. Mark those questions open;
-never invent an answer.
-
-When you feel ready to stop, ask one more round on out-of-scope and
-failure modes, then stop. Cap the session at four rounds. If round 4
+never invent an answer. Cap the session at four rounds. If round 4
 still widens scope, split the idea and gather one slice.
 
 ### 5. Brief, then stop
@@ -112,18 +111,18 @@ still widens scope, split the idea and gather one slice.
 
 2. Keep the brief in chat. Write a file only when the user asks.
 3. Ask the user to confirm the brief.
-4. Stop. Hand the brief to a critiquer only when the user says so.
+4. Stop. Hand the brief to the refiner only when the user says so.
 
 ## Ask first
 
 - Writing `CONTEXT.md`, an ADR, a ticket, or any file.
 - Expanding "this idea" into "rebuild the product."
-- Calling a critiquer or builder before the user confirms the brief.
+- Calling the refiner or a builder before the user confirms the brief.
 
 ## Never
 
 - Never implement, scaffold, or "just sketch the API"; emit the brief.
-- Never critique the brief in the same turn; the critiquer does that.
+- Never critique the brief in the same turn; the refiner does that.
 - Never recommend a tool you have not looked at this session; look first.
 - Never name pantheon personas; use only [Roles](../../docs/SDLC.md#roles).
 
