@@ -32,7 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
-- DER-338: tracker-sdlc HLD fixes the two stale lines DER-271 names (signing follows git config; onboarding lands as its own reviewed item before Plan).
+- Tracker-sdlc HLD fixes the two stale lines DER-271 names: signing follows git config; a chunk's onboarding lands as its own reviewed item before Plan (`DER-338`).
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root

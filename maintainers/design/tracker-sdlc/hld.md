@@ -103,8 +103,9 @@ flowchart TD
     gate** runs only the offline setup check.
   - **Branch at onboarding** — The branch is cut when onboarding runs:
     a chunk's project-main at end of Brief (was Groom), an item's branch
-    at item Brief (was Build). The onboarding commit lands as its own
-    reviewed item before Plan. Parallel chunks: first to land on trunk
+    at item Brief (was Build). Item: the onboarding commit goes on the
+    item branch. Chunk: it lands on project-main as its own reviewed
+    item before Plan. Parallel chunks: first to land on trunk
     wins; the others rebase. Repair commits follow the same rule.
   - **Local tracker** — Long-lived `tickets` branch, never PR'd; linear
     history, no merges, no force-push. `tickets/<id>.md` (front matter:
