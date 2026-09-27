@@ -28,8 +28,8 @@
   family (variant from the harness notes) to frontier; the maintainer,
   who reads eval reports and decides.
 - **UX / stories** — `n/a`: no screen, no end-user journey; readers are
-  agents and the maintainer; the people doc moves unchanged. Manager
-  asks the operator to confirm `UX verification not required`.
+  agents and the maintainer; the people doc moves unchanged. Operator
+  wrote `UX verification not required` (2026-09-26).
 - **Comparables** — [comparables.md](comparables.md)
 
 ### Writing standard (checkable on the diff)
@@ -146,7 +146,8 @@ role); "no ninth role" → "use only the roles in the table". Empty
   ask; never pick a meaning while rewording.
 - **Open** — Harness details (models, quantization, how runs start):
   needed before Spec; Trial and the before-merge run wait on them.
-  People doc path: operator's OK.
+  People doc path `docs/how-software-gets-built.md`: operator OK
+  (2026-09-26).
 
 ## Optional
 
