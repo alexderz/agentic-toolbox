@@ -12,8 +12,8 @@ Protected rows touched: none. Banned names: none in the old file.
 | --- | --- | --- | --- |
 | 8–9 | Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening` | route (owner: `skills/language-router/SKILL.md#load-with-list`); no condition added (MQ1) | L9 |
 | 9 | No `scripts/` | kept verbatim | L8 |
-| 9–10 | May be the second skill next to the host language | route (owner: `skills/language-router/SKILL.md#algorithm` step 6, "proto and hand-edited host code, load both"); same route line (MQ2) | L9 |
-| 46–47 | PR review: a host language change loads the host skill as the other of the two | dropped, duplicate of old L9–10; owner `skills/language-router/SKILL.md#algorithm` step 6, routed at L9 (MQ2) | L9 |
+| 9–10 | May be the second skill next to the host language | kept, with the old L46–47 condition stated: "If any hand-edited host code changed too, also load that language's skill"; links `skills/language-router/SKILL.md#algorithm`, no step number (MQ2) | L8 |
+| 46–47 | PR review: a host language change, if any, loads the host skill as the other of the two | merged into L8, duplicate of old L9–10; condition "any" kept (MQ2) | L8 |
 
 All other lines are unchanged. The frontmatter description (old L3,
 "load with the host language when you also change application code") is
@@ -25,10 +25,9 @@ trigger text and stays verbatim.
   `shell-safety` for shell turns. Resolved from the text: "Compatible
   with" is not exclusive, and the owner's list applies to every
   language skill, so the route adds no condition.
-- **MQ2** — The owner's step 5 loads one skill when one language owns
-  ≥80% of the change, while old L46–47 says "if any" host change.
-  Resolved from the text: step 6 names "proto and hand-edited host code"
-  as a case of two first-class languages that loads both, so any
-  hand-edited host code beside proto loads the host skill, as the old
-  lines said. The anchor `#algorithm` is used because the Load-with
-  list does not hold this rule.
+- **MQ2** — The router's Algorithm checks the ≥80% one-language rule
+  before the two-language rule, so a small host edit beside proto could
+  stop at one skill, while old L46–47 says "if any" host change.
+  Resolved (DER-334 review, 2026-09-27): the old condition is kept in
+  the text at L8 ("If any hand-edited host code changed too"); the link
+  to `#algorithm` names no step number.
