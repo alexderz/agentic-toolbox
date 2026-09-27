@@ -1,7 +1,7 @@
 # Conventions (optional, recommended)
 
-Follow these unless the repo already has a rule. Do not rename mid-chunk to
-match. Prefer consistency across agents and repos over a prettier local scheme.
+Follow these unless the repo already has a rule; then keep it. Do not rename
+mid-chunk to match. Consistency across agents and repos beats a prettier local scheme.
 
 ## Name formats
 
@@ -20,8 +20,7 @@ commit and the changelog line. If not, omit the ID; keep the rest.
 
 ## Commits
 
-Write each commit subject in the imperative, one idea per commit. If tickets
-exist, write the subject as `[ticket-id] subject`.
+Commit one idea with an imperative subject; if tickets exist, `[ticket-id] subject`.
 
 ## Product repo layout
 
@@ -67,7 +66,7 @@ Fixed, Removed; skip empty ones. The board, git, and changelog must agree:
   tickets and the Trunk merge.
 - The **manager** marks an item `done` after land and verify:
   [Land path](branches-and-lands.md#land-path). Do not mark the chunk
-  shipped until [Trunk](trunk-changelog-monthly.md#trunk).
+  shipped until [Trunk](trunk-changelog-monthly.md#trunk); mark it there.
 
 ## Designs in git
 
@@ -97,4 +96,5 @@ Do not re-read a new heading as your step.
 | Stage 8 | **Monthly** | Use this as a substitute for Spec/Review security |
 | New work after this lands | **Entry** | Write `Stage 4` in new text |
 
-Delete this table when no open ticket cites a Stage number; until then keep it.
+Delete this table when every ticket that cites a Stage number has landed; until
+then keep it.
