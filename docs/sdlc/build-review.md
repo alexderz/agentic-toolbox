@@ -17,10 +17,9 @@ open, resolve it, ask, or defer the item:
 
 1. If the blocker is an item in this chunk, **resolve** it first: work
    that item, honoring *its* blockers, then return.
-2. Otherwise, ask the operator
-   ([Asking the operator](../SDLC.md#asking-the-human)) whether to
-   wait, drop the wait, or go ahead anyway. **manager** records the
-   call on the ticket with `comment`.
+2. Otherwise, ask the operator ([Asking the operator](../SDLC.md#asking-the-human))
+   whether to wait, drop the wait, or go ahead anyway. **manager**
+   records the call on the ticket with `comment`.
 3. If the operator is not available and the blocker cannot be resolved
    here, **defer** the item. Pick an unblocked item. Do not start the
    deferred item.
@@ -50,16 +49,15 @@ Unreleased; human and agent docs current for this item; no silent scope
 leftover.
 
 The verifier checks the tone and voice of deliverables against the
-project's style guide. If the project names none, use
-`docs-google-style`. The verifier does not review agent context for
-tone.
+project's style guide; if the project names none, `docs-google-style`.
+The verifier does not review agent context for tone.
 
 Do not exit Build after one pass. Loop implement → test → fix until the
 item meets DoD. Builder and verifier: one each per item, minted and
 resumed per [Item agents](subagents.md#item-agents).
 
-An item is merge-ready when it meets DoD and passes
-[Review](#review). Land each merge-ready item, one land at a time, per
+An item is merge-ready when it meets DoD and passes [Review](#review).
+Land each merge-ready item, one land at a time, per
 [Land path](branches-and-lands.md#land-path).
 
 Notify only when work is **landed and verified**. Landed means on
@@ -75,19 +73,16 @@ On an unexpected failure:
 2. Load `tdd` for the cause.
 3. Load `verify-before-done` to prove the fix.
 
-Debug in Build is **not** a second Brief. During Build, find the root
-cause with `debug` on the chosen fix. Do not re-open item Brief unless
-the failure shows the chosen fix was the wrong *kind* of change; in
-that case, escalate.
+Debug in Build is **not** a second Brief: find the root cause with
+`debug` on the chosen fix. Do not re-open item Brief unless the failure
+shows the chosen fix was the wrong *kind* of change; then escalate.
 
 ### Skills-home DoD
 
-In this repo, the skills home, any skill-body diff must match the pinned
-SHA in [SOURCES.md](../../SOURCES.md) for that id. If that SHA is empty,
-no body may land. Remote agent PRs into this repo still pass
-**security** intake.
-
-Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
+In this repo, any skill-body diff must match the pinned SHA in
+[SOURCES.md](../../SOURCES.md) for that id. If that SHA is empty, no
+body may land. Remote agent PRs into this repo still pass **security**
+intake. Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
 
 ## Review
 
@@ -104,5 +99,4 @@ it. Review the item before it lands on project-main or trunk.
    **and** passes the **security** gate: intake, SHA pins, and
    trust-boundary deltas.
 
-Monthly is not the security gate: see
-[Monthly](trunk-changelog-monthly.md#monthly).
+Monthly is not the security gate: see [Monthly](trunk-changelog-monthly.md#monthly).
