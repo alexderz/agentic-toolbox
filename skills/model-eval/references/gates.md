@@ -90,3 +90,19 @@ Things that have silently broken counters:
 
 Exclude vendored and generated paths; detect language by shebang as
 well as extension; sum terminal events, not deltas.
+
+## 6. Endpoint semantics, if you front the target with a filter
+
+A filter that checks the HTTP method *before* resolving the path returns 405 for
+every non-GET — including paths that do not exist. Models use method-probing as
+API discovery, read 405 as "this endpoint exists, wrong method", and build
+against endpoints that were never real. One model produced a CLI whose commands
+mapped to `/api/battery`, `/api/device_registry` and `/api/scene`, none of which
+exist.
+
+Resolve the path first. A bogus path 404s for any method; 405 then means only
+"real path, wrong method".
+
+Verify from *inside* the sandbox, not just from the host. A guard that passes on
+the host proves nothing about a container, where `127.0.0.1` is the container
+itself. Three cases were run against a dead endpoint before that was caught.

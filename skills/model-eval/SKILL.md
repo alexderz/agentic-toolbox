@@ -100,20 +100,59 @@ room or is looping. More budget is sometimes *worse*.
 Execute generated code in a **container**, never on the host — it is
 model-written and unreviewed. See `references/grading.md`.
 
-## Repeatability
+**Sandbox the agent too, not just its output.** The agent is the active party:
+it installs packages, writes files, reaches services. Run it in a container with
+only its work dir mounted, its own throwaway package roots, an unprivileged
+user, and no route to host-local services. Agents left on the host for one
+cohort installed 199 crates and 45 Python packages into the operator's home
+directory, and two cases discovered another model's project through shared
+site-packages — `pip install -e` writes a `.pth` that every later run can see.
+An audit of 3,733 executed tool calls found no credential access and no sudo,
+but nothing had prevented either.
 
-An eval you cannot re-run is an anecdote.
+## Cohorts, not baselines
 
-- **Snapshot the environment** with the results: runtime version, model
-  files and quantisation, parameters per case, harness commit, date.
-- **Keep every artifact**: prompt, matrix, raw event stream, produced
-  files, grades.
-- **Expect drift** when the target is a live system. Record a
-  fingerprint (entity counts, API version) so a later run can tell
-  "the model changed" from "the house changed". Re-run the baseline
-  alongside the new model rather than comparing to an old number.
-- **Archive conditions separately.** If you change the prompt or the
-  isolation, that is a new round, not an edit to the old one.
+An eval measures a **cohort**: these models, this harness, this day. That is the
+only unit that compares.
+
+There is no baseline to anchor to. Re-running a model six months later does not
+measure that model against its past self -- the runtime moved, the libraries
+moved, the harness moved. You get a second cohort, not a trend.
+
+So:
+
+- **Rank only within a cohort.** All models saw the same fixture, the same
+  harness, the same day. That comparison is defensible.
+- **Do not carry numbers across cohorts.** "It scored 5/5 in September" and the
+  same model in March are two different measurements of two different systems.
+- **Snapshot conditions to describe them, not to recreate them.** Runtime
+  version, model files and quantisation, flags per case, harness commit, date.
+- **Re-run the whole cohort** when a new model arrives, baseline models included.
+  That is cheaper and more honest than trying to freeze the world.
+
+What survives across cohorts is the **method** and the **qualitative findings** --
+"bounded reasoning beats unbounded", "a graded prompt lifts weak models most",
+"LOC measures nothing". Those are claims about how things behave. The numbers
+are not.
+
+For the same reason, do not freeze a package cache to make runs reproducible: it
+only guarantees that every future cohort is tested against staler libraries.
+
+## Measure your variance, or do not rank
+
+Run two or three representative cases three times each, same settings, before
+believing any ordering. Observed in one real cohort:
+
+| metric | spread across identical runs |
+|---|---|
+| duration | 11-25% |
+| turns | 16-32% |
+| lines of code | 12-22% (one model: 926 / 1091 / 1535) |
+| **execution checks** | **one model swung 5/5, 5/5, 2/5** |
+
+Execution grading is more stable than LOC. It is **not** stable. A one- or
+two-check difference between models is noise. Report tiers -- works / partly
+works / does not work -- not a leaderboard, and say n=1 where it is n=1.
 
 ## Prompting the models
 

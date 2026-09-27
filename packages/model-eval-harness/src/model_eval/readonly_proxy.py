@@ -102,6 +102,13 @@ class Handler(http.server.BaseHTTPRequestHandler):
     def _proxy(self):
         client = self.client_address[0]
 
+        # ORDER MATTERS. Refusing on method before resolving the path makes every
+        # non-GET return 405, including for paths that do not exist -- and models
+        # read 405 as "this endpoint exists, wrong method". Several models used
+        # method-probing as API discovery (correct against a real server) and
+        # built whole CLIs against endpoints that were never real. Resolve the
+        # path first: a bogus path 404s for any method, and 405 then means only
+        # "real path, wrong method".
         if self.command not in ALLOWED_METHODS:
             return self._refuse(
                 405,
