@@ -13,8 +13,8 @@ Changed lines only. No upstream text added. Pin, SHA, license, tools unchanged.
 ## SOURCES.md
 
 Only row `golang-testing` (L31), Notes cell: appended the LLD vendor-derived note
-`Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.`
-Upstream, SHA and License cells unchanged. `<YYYY-MM-DD>` is left for **security** to fill at Review.
+`Wording edit DER-288, pins unchanged; security-cleared 2026-09-27.`
+Upstream, SHA and License cells unchanged. **security** cleared the body on 2026-09-27.
 
 ## Checks
 
