@@ -32,6 +32,11 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/sdlc/entry-brief-repo.md` follows the writing standard: Entry
+  and item Brief step 4 as condition tables, end of chunk Brief as
+  numbered steps, and one-line routes to the owners of the AFK pick,
+  step-agent ids, branch sources, designs in git and the item-path
+  Never; rules unchanged (`DER-300`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
