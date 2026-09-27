@@ -1,15 +1,11 @@
 # Groom — Instruction refinement: agent text that works across model strengths
 
-DRAFT (pre-review)
-
-<!-- At freeze, replace the draft marker above with this sentence and
-delete this comment: Frozen record of the plan as reviewed at Groom on
-<YYYY-MM-DD>. Not live: the tracker is the source of truth for tickets,
-blockers and state. -->
+Frozen record of the plan as reviewed at Groom on 2026-09-27. Not live:
+the tracker is the source of truth for tickets, blockers and state.
 
 - Chunk: `DER-288` · LLD: [lld.md](lld.md) · Date: `2026-09-27`
-- Review: `pending` (filled at freeze)
-- Tickets: filled at freeze
+- Review: groom reviewer — pass on 2026-09-27 at `aeadbc2`
+- Tickets: `G<n>` = `DER-<290+n>` (`G1` = `DER-291` … `G50` = `DER-340`)
 
 Each body names its LLD section, branch base and checks. K1–K10, the
 every-item set and the rule-map format are defined in the LLD
