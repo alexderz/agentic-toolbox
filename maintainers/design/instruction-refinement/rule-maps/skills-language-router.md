@@ -28,13 +28,13 @@ of their subjects occur in this file. K2 exempt (standard 9).
 | 17 | Heading "Algorithm" | kept; moved after Map, Family rules and Stubs so no step refers forward (standard 4) | L102 |
 | 19 | List files the turn reads or writes | kept | L106 |
 | 20 | Match the table; extensions and well-known filenames beat chat keywords | kept | L107–108 |
-| 21 | One language owns ≥80% → load that skill only | kept; DER-346: step 5 first states that proto plus any hand-edited host code loads both, even at ≥80% (MQ8) | L110–113 |
-| 22 | Two first-class languages (SQL + host, TSX + stylesheet, proto + hand-edited host) → load both | kept; parenthesis → "such as" examples (standard 8) (MQ7); DER-346: the proto example moves into step 5 as a rule (MQ8) | L110–112, L114–115 |
+| 21 | One language owns ≥80% → load that skill only | kept; DER-346: step 5 first states that a proto-led change (proto ≥80%) with any hand-edited host code loads both (MQ8) | L110–113 |
+| 22 | Two first-class languages (SQL + host, TSX + stylesheet, proto + hand-edited host) → load both | kept; parenthesis → "such as" examples (standard 8) (MQ7) | L114–116 |
 | 23 | Stub language → load nothing, official docs, do not invent a pack | kept, as step 4 routing to Stubs; the rule itself at Stubs | L109, L98–100 |
-| 24 | Read the chosen `SKILL.md`; stop routing; do not summarize the catalog | kept; "Do not" → "Never", allowed action beside it | L116–117 |
+| 24 | Read the chosen `SKILL.md`; stop routing; do not summarize the catalog | kept; "Do not" → "Never", allowed action beside it | L117–118 |
 | 26 | Heading "Map" | kept | L51 |
 | 28–29 | Table header | kept | L55–56 |
-| 30 | Go row: pointer `lang-go` → one of `golang-safety` / `golang-testing` / `golang-security` | kept, merged with `AGENTS.md` L199 (MQ4); DER-346: the `lang-go` signals fold in (MQ9) | L57 |
+| 30 | Go row: pointer `lang-go` → one of `golang-safety` / `golang-testing` / `golang-security` | kept, merged with `AGENTS.md` L199 (MQ4); DER-346: the `lang-go` signals move in (MQ9) | L57 |
 | 31 | Python row | kept, merged with `AGENTS.md` L200 | L58 |
 | 32 | Shell row | kept, merged with `AGENTS.md` L201 | L59 |
 | 33 | Rust row | kept | L60 |
@@ -50,14 +50,14 @@ of their subjects occur in this file. K2 exempt (standard 9).
 | 62 | `discover-the-idea` gather-only, `buying-researcher` research-only, `ux-design` UX-only: no language skill | kept, as No-language turns rows (MQ6) | L28–38 |
 | 64 | Heading "Stubs (no body)" | kept as "Stubs"; "no body" into the text | L96 |
 | 66–67 | Stub list; say so; official docs only | kept; "load no language skill" and "never create a pack" from old L23 | L98–100 |
-| 69 | Heading "Never" | kept | L119 |
-| 71 | No second methodology router | kept, allowed action beside it | L121–122 |
+| 69 | Heading "Never" | kept | L120 |
+| 71 | No second methodology router | kept, allowed action beside it | L122–123 |
 | 72 | No two debug skills in one turn | kept, in the Load-with list | L48–49 |
 | 73 | No remint of `golang-*`, `modern-python`, `shell-safety` | kept, in the iron law with the old L15 remint rule | L25–26 |
 | 74 | No language skill on README-only, git-only, gather/refine-only, research-only, UX-only, templates-only turns | kept, as No-language turns rows | L35, L37–39 |
-| 75 | No style guides in context "just in case" | kept, allowed action beside it | L123–124 |
-| 77 | Heading "Red flags" | kept; lead-in line added naming the action | L126, L128 |
-| 79–81 | Three red-flag thoughts | kept verbatim | L130–132 |
+| 75 | No style guides in context "just in case" | kept, allowed action beside it | L124–125 |
+| 77 | Heading "Red flags" | kept; lead-in line added naming the action | L127, L129 |
+| 79–81 | Three red-flag thoughts | kept verbatim | L131–133 |
 
 ## Old `AGENTS.md` (merged)
 
@@ -75,7 +75,7 @@ of their subjects occur in this file. K2 exempt (standard 9).
 | 185–186 | `ux-design`: UX-only turns load no language skill | kept | L37 |
 | 186–187 | `buying-researcher`: research-only turns load no language skill | kept | L38 |
 | 187–188 | Load one of `debug` / `debug-pocock` / `debug-anthropic` | kept (MQ5) | L48–49 |
-| 190–191 | If `language-router` is installed and the table is ambiguous, load it first, then the one skill it names | changed per the Outcome: the router loads on any code turn (MQ1); "then the one skill it names" kept as step 7 | L3, L8, L116 |
+| 190–191 | If `language-router` is installed and the table is ambiguous, load it first, then the one skill it names | changed per the Outcome: the router loads on any code turn (MQ1); "then the one skill it names" kept as step 7 | L3, L8, L117 |
 | 193–195 | Pointer ids exist so every identified language has a file; they do not count as a load; they route to the ids | kept | L17–19, L80–81 |
 | 197–198 | Table header | kept | L55–56 |
 | 199 | Go row: `golang-safety` default; `golang-testing` when writing tests; `golang-security` for input, auth, SQL, files, subprocesses, crypto; pick one; optional pointer | kept, merged with old router L30 (MQ4); "Optional" at L80–81 | L57 |
@@ -95,22 +95,24 @@ L53 "Writing or reviewing code"), L30, L53 (table lead-ins), L104–105
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
-| `lang-go` old L20 | Adding or changing tests, tables, race, goleak → `golang-testing` | kept, folded into the Go row: "writing or changing tests or test tables, or when the change touches races or `goleak`" (MQ9) | L57 |
-| `lang-go` old L21 | HTTP → `golang-security` | kept, folded into the Go row's `golang-security` list (MQ9) | L57 |
-| `lang-protobuf` old L9–10, L46–47 | Proto may be the second skill; any host language change loads the host skill | kept, as step 5's first sentence; overrides the ≥80% rule (MQ8) | L110–112 |
+| `lang-go` old L20 | Adding or changing tests, tables, race, goleak → `golang-testing` | moved into the Go row: "writing or changing tests or test tables, or when the change touches races or `goleak`"; before, only an agent that read the optional `lang-go` pointer saw it (MQ9) | L57 |
+| `lang-go` old L21 | HTTP → `golang-security` | moved into the Go row's `golang-security` list; before, only an agent that read the optional `lang-go` pointer saw it (MQ9) | L57 |
+| `lang-protobuf` old L9–10, L46–47 | Proto may be the second skill; any host language change loads the host skill | kept, as step 5's first sentence, for a proto-led change (proto ≥80%), the only case where `lang-protobuf` loaded and its rule applied (MQ8) | L110–112 |
 
 ### Before and after, DER-346
 
-"Before" is project-main 44d6842: the router plus the `lang-go`
-addendum or the `lang-protobuf` L8 condition. "After" is the router alone.
+"Before" is project-main 44d6842. "After" is this item. Before, the
+`lang-go` addendum reached an agent only when it read the optional
+`lang-go` pointer; the `lang-protobuf` L8 host rule applied only when
+`lang-protobuf` loaded.
 
 | Case | Before | After |
 | --- | --- | --- |
-| Go: edit an existing table test | `golang-testing` (`lang-go` addendum) | `golang-testing` (Go row) |
-| Go: add `goleak.VerifyTestMain` or fix a race | `golang-testing` (`lang-go` addendum) | `golang-testing` (Go row) |
-| Go: change an HTTP handler | `golang-security` (`lang-go` addendum) | `golang-security` (Go row) |
-| `*.proto` plus a small hand-edited Go handler, proto ≥80% | `lang-protobuf` and the Go skill (`lang-protobuf` L8 "if any") | `lang-protobuf` and the Go skill (step 5) |
-| `*.proto` plus regenerated stubs only | `lang-protobuf` only | `lang-protobuf` only |
+| Go: edit a table test, fix a race, or add `goleak` | `golang-testing` if the agent read `lang-go`; the router row alone named only "writing tests" | `golang-testing` (Go row) |
+| Go: change an HTTP handler | `golang-security` if the agent read `lang-go`; the router row alone did not name HTTP | `golang-security` (Go row) |
+| Proto ≥80% plus a small hand-edited Go change | `lang-protobuf` and the Go skill (step 5, then `lang-protobuf` L8 "if any") | `lang-protobuf` and the Go skill (step 5) |
+| Go ≥80% plus a small proto change | Go skill only (step 5) | Go skill only (step 5) |
+| Proto and Go both first-class, neither ≥80% | `lang-protobuf` and the Go skill (step 6) | `lang-protobuf` and the Go skill (step 6) |
 
 ## Meaning questions
 
@@ -141,16 +143,22 @@ addendum or the `lang-protobuf` L8 condition. "After" is the router alone.
 - **MQ7** — Old L22 "first-class" is not checkable (standard 2).
   Resolved from the text: the word and its three examples are kept, no
   threshold is added; step 5 (≥80%) stays the checkable test.
-  DER-346: the proto example leaves step 6 and becomes a rule in step 5
-  (MQ8); step 6 keeps two examples.
 - **MQ8** — Proto plus hand-edited host code: old L21–22 checks ≥80%
-  before the two-language rule, so a small host edit could stop at one
-  skill, while `lang-protobuf` says "if any". Resolved by the operator
-  2026-09-27 (Q17): this file owns the rule; proto plus any hand-edited
-  host code loads both and overrides the ≥80% rule (L110–113).
-  `lang-protobuf` keeps a route with no condition.
+  before the two-language rule, so in a proto-led change a small host
+  edit could stop at `lang-protobuf`, while `lang-protobuf` says "if
+  any". Resolved by the operator 2026-09-27 (Q17): this file owns the
+  rule. Step 5 loads both when proto owns ≥80% and any hand-edited host
+  code changed (L110–113). When the host language owns ≥80%,
+  `lang-protobuf` never loaded before, so its rule never applied; step 5
+  still loads the host skill only. Step 6 keeps the proto example
+  unchanged. `lang-protobuf` keeps a route with no condition.
 - **MQ9** — Go signals: `lang-go` kept "changing tests, tables, race,
-  goleak" and "HTTP" as an addendum to the Go row (DER-332, Q14).
-  Resolved by the operator 2026-09-27 (Q18): the Go row owns them
-  (L57); `lang-go` routes to `#map`. "Tables" are test tables (`lang-go`
-  PR checklist "Tables in `_test.go`"). No precedence added (MQ4).
+  goleak" and "HTTP" as an addendum to the Go row (DER-332, Q14). That
+  pointer is optional (L80–81), so before this item the signals reached
+  an agent only when it read `lang-go`; an agent that read only this
+  file could load `golang-safety` for them. Resolved by the operator
+  2026-09-27 (Q18): the Go row owns them (L57), so every code turn sees
+  them; `lang-go` routes to `#map`. This is a deliberate change for
+  agents that skipped the pointer. "Tables" are test tables (`lang-go`
+  PR checklist "Tables in `_test.go`"). No precedence added (MQ4);
+  overlapping signals are backlog DER-347.

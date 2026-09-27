@@ -22,9 +22,9 @@ of their subjects occur in this file. Banned names: none in the old file.
 | 17–18 | Load table header | dropped: the table is gone; owner `skills/language-router/SKILL.md#map` (MQ2) | L17 |
 | 19 | Default write or review of `*.go` → `golang-safety` | route: owner `skills/language-router/SKILL.md#map`, Go row ("`golang-safety` by default") (MQ2) | L17 |
 | 20 | Adding tests → `golang-testing` | route: owner `#map`, Go row ("writing or changing tests") (MQ2) | L17 |
-| 20 | Changing tests, tables, race, goleak → `golang-testing` | route: owner `#map`, Go row ("writing or changing tests or test tables, or when the change touches races or `goleak`") (MQ2) | L17 |
+| 20 | Changing tests, tables, race, goleak → `golang-testing` | route: moved into the owner `#map`, Go row ("writing or changing tests or test tables, or when the change touches races or `goleak`"); before, only an agent that read this optional pointer saw it (MQ2) | L17 |
 | 21 | Input, auth, SQL, files, subprocesses, crypto → `golang-security` | route: owner `#map`, Go row (same six signals) (MQ2) | L17 |
-| 21 | HTTP → `golang-security` | route: owner `#map`, Go row ("input, auth, HTTP, …") (MQ2) | L17 |
+| 21 | HTTP → `golang-security` | route: moved into the owner `#map`, Go row ("input, auth, HTTP, …"); before, only an agent that read this optional pointer saw it (MQ2) | L17 |
 | 23 | "Then stop. Apply that skill." | kept verbatim | L19 |
 | 23 | Pair process skills as they already say | route: owner `skills/language-router/SKILL.md#load-with-list` (MQ1) | L9 |
 | 47 | Never: `golang-safety` + `golang-testing` + `golang-security` in one turn | route: owner `skills/language-router/SKILL.md#iron-law`, in the L9 route line | L9 |
@@ -35,14 +35,15 @@ new L18 and L20–42.
 
 ## Before and after, DER-346
 
-"Before" is project-main 44d6842: the router Go row plus this file's
-addendum. "After" is the router Go row alone.
+"Before" is project-main 44d6842: the router Go row, plus this file's
+addendum only when the agent read this optional pointer. "After" is the
+router Go row alone, which every code turn reads.
 
 | Case | Before | After |
 | --- | --- | --- |
-| Edit an existing table test | `golang-testing` (addendum) | `golang-testing` (Go row) |
-| Add `goleak.VerifyTestMain` or fix a race | `golang-testing` (addendum) | `golang-testing` (Go row) |
-| Change an HTTP handler | `golang-security` (addendum) | `golang-security` (Go row) |
+| Edit an existing table test | `golang-testing` if the agent read `lang-go`; the router row alone named only "writing tests" | `golang-testing` (Go row) |
+| Add `goleak.VerifyTestMain` or fix a race | `golang-testing` if the agent read `lang-go`; the router row alone named only "writing tests" | `golang-testing` (Go row) |
+| Change an HTTP handler | `golang-security` if the agent read `lang-go`; the router row alone did not name HTTP | `golang-security` (Go row) |
 | Plain `*.go` change, no test, no listed signal | `golang-safety` (Go row) | `golang-safety` (Go row) |
 
 ## Meaning questions
@@ -59,5 +60,9 @@ addendum. "After" is the router Go row alone.
   `golang-testing`. Resolved by the operator 2026-09-27 (Q14): route +
   Go-only addendum. **Revised by operator 2026-09-27 (Q18):** the
   router's Go row owns every signal; this file keeps only the route at
-  L17, and the addendum table is removed. Each signal keeps its old
-  skill; see the before-and-after table.
+  L17, and the addendum table is removed. This file is an optional
+  pointer, so before DER-346 the signals reached an agent only when it
+  read `lang-go`. They now sit in the router row, which every code turn
+  reads; the operator chose this. Each signal loads the skill the
+  addendum named; see the before-and-after table. Overlapping signals,
+  such as HTTP with tests, predate this item: backlog DER-347.

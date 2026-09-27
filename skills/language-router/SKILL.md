@@ -107,12 +107,13 @@ so, and use the official docs only. Never create a pack for it.
 3. Match each file to a Map row. Extensions and well-known file names
    beat chat keywords.
 4. If a file's language is a stub, follow Stubs for it.
-5. If the change has `*.proto` files and any hand-edited host code, load
-   `lang-protobuf` and the host language skill, even if one language owns
-   ≥80%. Otherwise, if one language owns ≥80% of the change, load that
+5. If `*.proto` files own ≥80% of the change and any hand-edited host
+   code changed, load `lang-protobuf` and the host language skill.
+   Otherwise, if one language owns ≥80% of the change, load that
    language skill only.
 6. If two languages are first-class in the change, such as SQL and its
-   host language, or TSX and a stylesheet, load both.
+   host language, TSX and a stylesheet, or proto and hand-edited host
+   code, load both.
 7. Read the chosen `SKILL.md`. Stop routing. Never summarize the
    catalog; name only the skill you load.
 
