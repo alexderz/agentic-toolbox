@@ -4,7 +4,7 @@ Item: DER-309 (D1; delivers DER-265).
 
 Old: `skills/tracker-sdlc/SKILL.md` at main 7a11696, lines 1–187.
 New: [`skills/tracker-sdlc/SKILL.md`](../../../../skills/tracker-sdlc/SKILL.md), 174 lines
-(cap 150: over, see MQ6).
+(target 150: over, accepted, see MQ6).
 Disposition: **kept** (same rule, this file), **route** (the rule lives in its owner; this
 file links it), **dropped** (duplicate, owner named), **DER-265**, **DER-271**. "Old L" =
 line in the old file; "L" = line in the new file.
@@ -95,7 +95,7 @@ edited, so none needs its own rule map.
 
 ## Meaning questions
 
-- **MQ1 — open, awaiting the operator.** Old L107 comment shape `Released by <stale-label>
+- **MQ1 — resolved by operator 2026-09-27 (Q9): named K3 exception, contract text.** Old L107 comment shape `Released by <stale-label>
   <UTC> (per orchestrator <who>/<why>)` contains the banned name "orchestrator", so K3 is
   not empty for this file. The shape is contract text: Claim L80 says only comments of
   exactly these shapes count, and this repo's own `maintainers/.agents/tracker/SKILL.md`
@@ -121,7 +121,7 @@ edited, so none needs its own rule map.
   agent's marker)", "(a repeated own claim is fine)"), against standard 8. Resolved from the
   text: they are a protected rule ("Claim steps 1–5 kept"), and splitting a parenthesis
   means choosing its reading; they stay byte-identical.
-- **MQ6 — open, awaiting the operator.** Cap: 174 lines at the repo width (~72) after
+- **MQ6 — resolved by operator 2026-09-27 (Q10): 174 accepted, target is a goal.** Cap: 174 lines at the repo width (~72) after
   every cut of real duplication (routes for the writer rule, sub-items and open blockers;
   in-file restatements dropped). Reaching 150 needs dropping or changing content. Candidates,
   largest first: the Model state table (L25–33, 9 lines; its Set-when and By columns are
