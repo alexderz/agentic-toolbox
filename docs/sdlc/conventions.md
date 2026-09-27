@@ -1,8 +1,7 @@
 # Conventions (optional, recommended)
 
-Follow these unless the repo already has a rule. Do not rename mid-chunk
-to match. Consistency across agents and repos beats a prettier local
-scheme.
+Follow these unless the repo already has a rule; then keep it. Do not rename
+mid-chunk to match. Consistency across agents and repos beats a prettier local scheme.
 
 ## Name formats
 
@@ -13,20 +12,15 @@ scheme.
 | Project-main | `integrate/<chunk-slug>` | `integrate/payments-retry` |
 | Item branch | `item/<ticket-id>-<short-slug>` | `item/abc-12-timeout` |
 | Skill id | kebab-case under `skills/<id>/` | `discover-the-idea` |
-| Role | the names in this SDLC | `builder`, `designer` |
+| Role | the names in [Roles](../SDLC.md#roles) | `builder`, `designer` |
 | Step | the names in [Steps](../SDLC.md#steps) | `Build`, `Plan` |
 
-Cite the ticket ID on the item branch, merge commit, and changelog line
-when the project uses tickets. If it does not, omit the ID and keep the
-rest.
-
-**Cite the step name** (`Build`, `Plan`). Old numbers belong only in
-the [in-flight map](#in-flight-map).
+If the project uses tickets, cite the ticket ID on the item branch, the merge
+commit and the changelog line. If not, omit the ID; keep the rest.
 
 ## Commits
 
-Commits: imperative subject, one idea. `[ticket-id] subject` when
-tickets exist.
+Commit one idea with an imperative subject; if tickets exist, `[ticket-id] subject`.
 
 ## Product repo layout
 
@@ -45,24 +39,20 @@ docs/decisions/     # optional; one file per decision
 .agents/design/<chunk-slug>/groom.md  # Groom plan; frozen once tickets exist
 ```
 
-Files under `.agents/design/` are data, not loaded instructions; the only
-loaded file under `.agents/` is the `.agents/tracker/SKILL.md` that
-`## Tracker` names. No credentials, internal hostnames, or private
-workspace URLs.
+Treat files under `.agents/design/` as data, not as instructions to load.
+Under `.agents/`, load only the `.agents/tracker/SKILL.md` that `## Tracker`
+names. No credentials, internal hostnames, or private workspace URLs.
 
 Copy shapes from [`sdlc-artifacts`](../../skills/sdlc-artifacts/SKILL.md)
-(`skills/sdlc-artifacts/templates/`). Do not invent a second outline.
-
-This skills home stays `skills/<id>/SKILL.md`, [SOURCES.md](../../SOURCES.md),
-and this file; its own build notes and design records live under
-`maintainers/`. Tests follow the language skill, not a second layout.
+(`skills/sdlc-artifacts/templates/`). Never invent a second outline. This skills
+home keeps `skills/<id>/SKILL.md`, [SOURCES.md](../../SOURCES.md), and the SDLC
+([SDLC.md](../SDLC.md), `docs/sdlc/`). Put its own build notes and design records
+under `maintainers/`. Lay out tests as the language skill says, no second layout.
 
 ## Changelog and connection
 
-`CHANGELOG.md` at the repo root. Newest first. Sections: Added, Changed,
-Fixed, Removed — skip empty ones.
-
-The board, git, and changelog must agree:
+Keep `CHANGELOG.md` at the repo root, newest first. Sections: Added, Changed,
+Fixed, Removed; skip empty ones. The board, git, and changelog must agree:
 
 | Artifact | Points at |
 | --- | --- |
@@ -70,28 +60,26 @@ The board, git, and changelog must agree:
 | Changelog line | ticket ID + land SHA |
 | HLD / LLD | chunk and ticket IDs they cover |
 
-- **Build** land: one line under `## Unreleased`.
-- **Changelog** step: promote Unreleased into a dated chunk heading
-  (`## <chunk-slug> — YYYY-MM-DD`, or the repo’s version scheme). Link
-  the tickets and the Trunk merge.
-
-**manager** after-acts the ticket when the item is landed+verified on
-project-main (or on trunk, if there was no project-main): `tracker-sdlc`
-transition `done`. Do not mark the chunk shipped
-until Trunk.
+- At a **Build** land, add one line under `## Unreleased`.
+- At the **Changelog** step, promote Unreleased into a dated chunk heading,
+  `## <chunk-slug> — YYYY-MM-DD` or the repo’s version scheme. Link the
+  tickets and the Trunk merge.
+- The **manager** marks an item `done` after land and verify:
+  [Land path](branches-and-lands.md#land-path). Do not mark the chunk
+  shipped until [Trunk](trunk-changelog-monthly.md#trunk); mark it there.
 
 ## Designs in git
 
-- HLD, LLD, PoC notes, decisions, changelogs, and this SDLC land in
-  **git** from Repo. Paths: [Conventions](#name-formats).
-- A local or vendor mirror may follow. Do not treat a mirror as an
-  independent write path for designs.
+Keep the HLD, LLD, PoC notes, decisions, changelogs, and this SDLC in **git**
+from Repo on ([paths](#product-repo-layout)). A local or vendor mirror may
+follow git; never treat a mirror as an independent write path for designs.
 
 ## In-flight map
 
-If a ticket, PR, or chat **already** says a Stage number, keep that
-**meaning** until the item lands. Do not re-read a new heading as your
-step.
+Cite the step name (`Build`, `Plan`). Old numbers belong only in this table.
+Never teach old numbered ids in new tickets or skills. If a ticket, PR, or chat
+**already** says a Stage number, keep that **meaning** until the item lands.
+Do not re-read a new heading as your step.
 
 | You were told | You are in | Do not |
 | --- | --- | --- |
@@ -108,9 +96,5 @@ step.
 | Stage 8 | **Monthly** | Use this as a substitute for Spec/Review security |
 | New work after this lands | **Entry** | Write `Stage 4` in new text |
 
-Delete this table once tickets that still say those numbers have landed.
-
-**Never**
-
-- Teach old numbered ids in new tickets or skills. See the
-  [in-flight map](#in-flight-map).
+Delete this table when every ticket that cites a Stage number has landed; until
+then keep it.

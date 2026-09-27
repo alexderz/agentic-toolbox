@@ -36,6 +36,10 @@ Newest first. Skip empty sections.
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
   `AGENTS.md` load table and `SOURCES.md` (`DER-299`)
+- SDLC conventions (`docs/sdlc/conventions.md`) rewritten to the writing
+  standard, same rules: the item `done` rule routes to the land path, the
+  old Stage-number rule sits with the in-flight map, and "this file" names
+  the SDLC again (`DER-307`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
