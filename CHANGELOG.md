@@ -32,6 +32,8 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `pr-review`: section links fixed, the distinct-reviewer rule routed to
+  `docs/sdlc/subagents.md#item-agents`; pins unchanged (`DER-320`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
