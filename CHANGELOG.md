@@ -32,6 +32,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/sdlc/trunk-changelog-monthly.md` rewritten to the writing
+  standard: numbered Trunk steps, a Changelog condition table, and
+  Monthly as the one owner of "Monthly is not the security gate"
+  (`DER-304`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
