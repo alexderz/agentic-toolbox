@@ -32,6 +32,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/SDLC.md` index rewritten to the writing standard: numbered
+  tracker and asking rules, a Names list, the ask shape routed to
+  `ask-human.md`, and the skill table replaced by routes to the root
+  `AGENTS.md` load table and `SOURCES.md` (`DER-299`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move

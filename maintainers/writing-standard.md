@@ -79,7 +79,7 @@ roles and step names. Write the Use name, never the banned one:
 | Skill inventory | `SOURCES.md` | `AGENTS.md`; SDLC skill table dropped |
 | Third-party intake | `docs/INTAKE.md` | `AGENTS.md`, `SOURCES.md` |
 | Public-repo voice | root `AGENTS.md#public-repo` | `maintainers/AGENTS.md` |
-| `researcher` is not an SDLC role; "no ninth role" → "use only the roles in the table" | root `AGENTS.md` Research row | — |
+| `researcher` is not an SDLC role; "no ninth role" → "use only the roles in the table" | `docs/SDLC.md#roles` | root `AGENTS.md` Research row |
 
 ## Protected rules
 
