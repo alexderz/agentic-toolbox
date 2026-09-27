@@ -5,9 +5,8 @@ description: use this when writing or reviewing Dockerfiles, *.dockerfile, or co
 
 # Dockerfile
 
-Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. No `scripts/`. Real `.sh` files still
-load `shell-safety`.
+No `scripts/`.
+Process skills that may load with this one, and the skill for `.sh` files: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Map](../language-router/SKILL.md#map).
 
 ## Iron law
 

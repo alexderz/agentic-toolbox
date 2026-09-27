@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go`: lines repeating `language-router` rules become one route line per file (`DER-332`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)

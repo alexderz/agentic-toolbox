@@ -5,8 +5,8 @@ description: use this when writing, reviewing, or testing C# — *.cs, *.csproj,
 
 # C#
 
-Language guide. Compatible with `tdd`, `verify-before-done`,
-`pr-review`, `security-hardening`. No `scripts/`.
+Language guide. No `scripts/`.
+Process skills that may load with this one: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
