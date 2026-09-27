@@ -69,7 +69,7 @@ Host and personal-account locks are **Never**, not Ask first.
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **security** | This gate at LLD and Review when shell touches a boundary; skill intake | Writing tester CI yaml |
+| **security** | This gate at Spec and Review when shell touches a boundary; skill intake | Writing tester CI yaml |
 | **tester** | ShellCheck hooks when `.sh` appears | Skipping **security** because CI is green |
 | **builder** | Classifying commands before they run | Self-excepting “just this once” |
 | **manager** | After-act | Blessing a ship that skipped the gate |
