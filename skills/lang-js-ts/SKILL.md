@@ -8,7 +8,8 @@ description: use this when writing, reviewing, or testing JavaScript or TypeScri
 One skill for both. TS-strict is the default when `tsconfig.json` exists;
 JS is the same rules minus the type checker. No `scripts/`. Not a
 React/Next/Vue skill.
-Skills that load with this one, and `.tsx` vs `lang-web-markup`: [`language-router` Load-with list](../language-router/SKILL.md#load-with-list), [Map](../language-router/SKILL.md#map).
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
+Whether `.tsx` loads this skill or `lang-web-markup`: [map](../language-router/SKILL.md#map).
 
 ## Iron law
 

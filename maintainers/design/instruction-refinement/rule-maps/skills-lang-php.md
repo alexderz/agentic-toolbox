@@ -9,10 +9,13 @@ Key: **kept**, **route**, **dropped** (owner named).
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 8–9 | "PHP 8+ types." and "No `scripts/`." | **kept** | L8 |
-| 8–9 | Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening` | **dropped** (owner `skills/language-router/SKILL.md#load-with-list`); **route**, one line, no condition added | L9 |
+| 8–9 | Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening` | **dropped** (owner `skills/language-router/SKILL.md#load-with-list`); **route**, one line, "may" kept (see MQ1) | L9 |
 
 Lines 84 → 84. Banned names: none in old or new.
 
 ## Meaning questions
 
-None.
+- **MQ1** — The old line listed 4 skills that may load with this one;
+  the owner `skills/language-router/SKILL.md#load-with-list` lists 9.
+  Resolved from the text (2026-09-27): the route defers to the owner, and
+  "may" keeps the old optionality. It adds no load and no requirement.

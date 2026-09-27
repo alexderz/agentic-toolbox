@@ -6,7 +6,7 @@ description: use this when writing, reviewing, or testing Lua — *.lua includin
 # Lua
 
 Thin-but-complete guide. You actually write Lua. No `scripts/`.
-Skills that load with this one: [`language-router` Load-with list](../language-router/SKILL.md#load-with-list).
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
