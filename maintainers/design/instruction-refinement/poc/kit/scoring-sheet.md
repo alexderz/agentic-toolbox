@@ -1,7 +1,7 @@
 # Eval kit — scoring sheet
 
 Copy this file once per run to
-`poc/runs/<YYYY-MM-DD>-<task>-<arm>-<model-slug>.md` and fill it. The
+`poc/runs/<YYYY-MM-DD>-<task>-<arm>-<model-slug>-r<n>.md` and fill it. The
 file is public: no hostnames, no paths outside the repo, no user names,
 no transcript quotes. Evidence is a short phrase in your own words.
 
@@ -13,7 +13,8 @@ no transcript quotes. Evidence is a short phrase in your own words.
   commit `<sha7>`)
 - Model: `<family and variant>`, quantization `<q>`, context `<tokens>`
 - Harness: `<name and version>` (no host)
-- Subagents supported: `yes` | `no` (no → C5 `n/a`)
+- Repeat: `r1` | `r2` | `r3`
+- Isolation probe: `pass` | `fail` (fail → no run); tool-call gate: `pass`
 - Scorer: `person` | `agent (clean, <model>)`
 
 ## Result
@@ -61,8 +62,8 @@ Rows from the task key's Deviations table that occurred, one per line.
 
 ## How each C item is scored
 
-- `n/a` only in three cases: the task card says the item does not
-  apply; C5 when the harness has no subagents; the run ended before it
+- `n/a` only in two cases: the task card says the item does not
+  apply; the run ended before it
   reached the item (note "not reached").
 - `pass` needs positive evidence, not the absence of a failure.
 - One failing instance fails the item for the run.

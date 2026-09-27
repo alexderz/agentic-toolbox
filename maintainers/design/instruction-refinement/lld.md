@@ -12,9 +12,8 @@ Old text = `main` 7a11696 (`docs/SDLC.md` 1128 lines); "Old L" cites it.
 
 ### Paths / modules: file and anchor map
 
-Final names; no basename equals a template. C1 creates every heading
-below (old anchor in parentheses); later items keep them. Caps apply
-from the rewrite items on.
+No basename equals a template. C1 creates every heading (old anchor in
+parentheses); later items keep them. Caps apply from the rewrites on.
 
 | File | Old L (moved in C1) | Anchors, H2 unless noted (old) | Cap |
 | --- | --- | --- | --- |
@@ -26,31 +25,24 @@ from the rewrite items on.
 | `docs/sdlc/trunk-changelog-monthly.md` | 870–900 | `#trunk`, `#changelog`, `#monthly` | ≤80 |
 | `docs/sdlc/branches-and-lands.md` | 902–954; 959 | `#branches`, `#project-main` (`#project-main-intermediate-integration`), `#land-path` (`#land-path-manager`), `#never` | ≤120 |
 | `docs/sdlc/subagents.md` | 963–1087 | `#step-agents`, `#item-agents` (`#subagents-per-work-item`), `#fallback`, `#tracker-writes`, `#writable-worktree`, `#spawn-prompts` (`#spawn-prompts-pack-vs-point`), `#workers` | ≤150 |
-| `docs/sdlc/conventions.md` | 385–463; 488–509; 960–961; 1090–1095 | `#name-formats` (`#conventions-optional-recommended`, old `#names`), `#commits`, `#product-repo-layout`, `#changelog-and-connection`, `#designs-in-git` (`#git-designs-from-onset`), `#in-flight-map` (`#in-flight-map-old-numbers`; until C10) | ≤100 |
+| `docs/sdlc/conventions.md` | 385–463; 488–509; 960–961; 1090–1095 | `#name-formats` (`#conventions-optional-recommended`, old `#names`), `#commits`, `#product-repo-layout`, `#changelog-and-connection`, `#designs-in-git` (`#git-designs-from-onset`), `#in-flight-map` (`#in-flight-map-old-numbers`) | ≤100 |
 | `docs/how-software-gets-built.md` | 119–383 | one H1, headings raised one level (`#how-software-gets-built`) | — |
-| `maintainers/writing-standard.md` | — (A) | `#standard`, `#names`, `#rule-owners`, `#rule-maps`, `#checks` | ≤150 |
+| `maintainers/writing-standard.md` | — (A) | `#standard`, `#names`, `#rule-owners`, `#protected-rules`, `#rule-maps`, `#checks` | ≤150 |
 | `maintainers/evals/…` | — (B) | [Eval step](#eval-step) | — |
 
-Index **How to read** (Trial draft): find your step in Steps, read that
-row's file; **manager** → also `branches-and-lands.md`, `subagents.md`.
-Steps gains a "Read" column and rows for the last three step files.
+Index **How to read** (Trial draft): find your step, read that row's
+file; **manager** → also the branches and subagents files. Steps gains a
+"Read" column. The Stage table stays (open tickets still cite it).
 
 **Links.** C1 turns the 21 internal links of old SDLC into `path#anchor`
-and updates the 4 inbound anchors that break:
-
-| File | Old | New |
-| --- | --- | --- |
-| `AGENTS.md` | `docs/SDLC.md#entry` | `docs/sdlc/entry-brief-repo.md#entry` |
-| `AGENTS.md` | `docs/SDLC.md#brief` | `docs/sdlc/entry-brief-repo.md#brief` |
-| `README.md` | `docs/SDLC.md#how-software-gets-built` | `docs/how-software-gets-built.md` |
-| `skills/pr-lens/SKILL.md` | `SDLC.md#monthly` | `sdlc/trunk-changelog-monthly.md#monthly` |
-
-Unchanged: `#asking-the-human` from `AGENTS.md`, `sdlc-onboarding` (×2),
-`ux-design`. Section names in prose, fixed by the owning item: `AGENTS.md`
-L37, L100–101; `docs/ARCHITECTURE.md` L20; `templates/changelog.md` L4;
-`pr-review` L20; `verify-before-done` L17. Frozen records keep theirs
-(`groom-graph/lld.md` `#plan`, `poc/`). Other old anchors from outside
-land on the index top.
+and fixes the 4 inbound anchors that break: `AGENTS.md` `#entry`,
+`#brief` → `docs/sdlc/entry-brief-repo.md#entry`, `#brief`; `README.md`
+`#how-software-gets-built` → `docs/how-software-gets-built.md`;
+`pr-lens` `#monthly` → `sdlc/trunk-changelog-monthly.md#monthly`.
+`#asking-the-human` links (`AGENTS.md`, `sdlc-onboarding` ×2,
+`ux-design`) hold. Prose section names, fixed by the owning item:
+`AGENTS.md` L37, L100–101; `docs/ARCHITECTURE.md` L20;
+`templates/changelog.md` L4; `pr-review` L20; `verify-before-done` L17.
 
 **Duplicate owners.** Each rewrite keeps the owner copy; others become a
 one-line route or are dropped.
@@ -75,56 +67,51 @@ one-line route or are dropped.
 
 ### Behavior: work areas
 
-Every item: rule map, clarifications, one CHANGELOG Unreleased line,
-K1–K4 and K7 on its files. **Needs** = blocker; **land after** = land
-order. Clarifications (operator, 2026-09-27), wherever they occur: the
-architect fixes groom-review findings, the groom reviewer re-checks;
-gate reasons in parentheses are examples; a review item's verdict says
-whether a re-check of the whole is needed, the manager files it; "a
-person" → "the operator, or someone the operator names in writing";
-"Improvise when the work needs it" → "If no listed skill fits the task,
-do the work without one. Never create a new skill id mid-task."
+Every item: rule map, clarifications, one Unreleased line, K1–K4 and K7.
+**Needs** = blocker; **land after** = land order. Clarifications
+(operator, 2026-09-27), everywhere: architect fixes groom-review
+findings, groom reviewer re-checks; gate reasons in parentheses are
+examples; a review item's verdict says whether a whole re-check is
+needed, the manager files it; "a person" → "the operator, or someone the
+operator names in writing"; "Improvise when the work needs it" → "If no
+listed skill fits the task, do the work without one. Never create a new
+skill id mid-task."
 
 - **A. Standard.** `maintainers/writing-standard.md`: HLD standard 1–10,
-  rule owners with this LLD's anchors, banned names, rule-map format,
-  Checks K1–K9; one route line in `maintainers/AGENTS.md`. Needs —.
+  rule owners and protected rules with this LLD's anchors, banned names,
+  rule-map format, Checks K1–K10; one route line in
+  `maintainers/AGENTS.md`. Needs —.
 - **B. Eval step** ([below](#eval-step)). Needs —. **B1** baseline on
-  `main` 7a11696: needs B, runner ([Open](#open)); any land order (fixed
-  commit; supersedes the HLD's "before any land", operator 2026-09-27).
+  `main` 7a11696: needs B, runner ([Open](#open)) and its security read;
+  any land order (fixed commit; supersedes the HLD's "before any land").
 - **C1 Move.** Mapped files; old lines verbatim; headings; links; How to
   read and the Read column. No other wording. Needs —.
-- **C2–C10 Rewrite**, one file each: C2 index (from the Trial draft and
-  map; drops the skill table, each note a map row landing in a step
-  file, `AGENTS.md`, or `SOURCES.md`); C3 entry-brief-repo (end-of-chunk
-  Brief → numbered list; item Brief step 4 → condition table; "not too
-  dirty to reason" → a checkable condition, else ask); C4
-  plan-trial-spec; C5 groom-step (from the Trial draft); C6 build-review;
-  C7 trunk-changelog-monthly; C8 branches-and-lands (drop "(an
-  operator-confirmed rule)"); C9 subagents (pack vs point → "the manager
-  holds the bodies and the child needs them: pack; else point"); C10
-  conventions (Stage map: Risks). Needs C1.
+- **C2–C10 Rewrite**, one file each, in map order: C2 index (Trial
+  draft; skill-table notes → map rows landing in a step file,
+  `AGENTS.md`, or `SOURCES.md`); C3 (end-of-chunk Brief → numbered list;
+  item Brief step 4 → condition table; "not too dirty to reason" →
+  checkable condition, else ask); C4; C5 (Trial draft); C6 (DoD links
+  `#review`, `#land-path`); C7; C8 (drop "(an operator-confirmed
+  rule)"); C9 (pack vs point → "the manager holds the bodies and the
+  child needs them: pack; else point"); C10. Needs C1.
 - **C11 `AGENTS.md`** ≤100: what the repo is, `maintainers/` pointer,
   public-repo rule, load table (one row per need, one file each; Workers
   and Diagrams opt-in rows kept; `researcher` only in Research), intake
   route, related. Out: role table, inventory, `cursor-cloud-agents-when`,
   language section, subagent and branch paragraphs. Needs C1, E7.
-- **D. SDLC skills.** D1 `tracker-sdlc` ≤150 (DER-265): tracker-writer
-  text → route to index `#tracker`; manager; Contract version, Model,
-  Verbs, Claim, Map, Repair keep meaning; adapters: names only. D2
-  `sdlc-onboarding` from the Trial draft; drops the `maintainers/`
-  example link (DER-271). D3 `sdlc-artifacts` + templates: manager; "land
-  SHA" (`changelog.md` `<merge SHA>` → `<land SHA>`); `agents-stub.md`
-  gains one bullet naming `## Tracker`. Land after C1.
-- **E. First-party skills**, one item each: E1 `discover-the-idea`, E2
-  `yagni`, E3 `buying-researcher` (+ `references/`, `assets/`), E4
-  `grok-acp` (permission posture unchanged), E5 `security-hardening`, E6
-  `modern-python`, E7 `language-router` (owns the map with AGENTS
-  L203–229 merged, the load-with list, no-language turns incl.
-  `sdlc-onboarding`; may grow ≤250; description: loads on any code
-  turn). Needs —; land after C1.
+- **D.** D1 `tracker-sdlc` ≤150 (DER-265): writer rule → route to index
+  `#tracker`; Contract version, Model, Verbs, Claim, Map, Repair keep
+  meaning; adapters: names only. D2 `sdlc-onboarding` from the Trial
+  draft, no `maintainers/` link (DER-271). D3 `sdlc-artifacts` +
+  templates: `<merge SHA>` → `<land SHA>`; `agents-stub.md` + one bullet
+  naming `## Tracker`. Land after C1.
+- **E.** One item each: E1 `discover-the-idea`, E2 `yagni`, E3
+  `buying-researcher` (+ `references/`, `assets/`), E4 `grok-acp`, E5
+  `security-hardening`, E6 `modern-python`, E7 `language-router` (owns
+  the map with AGENTS L203–229 merged, load-with list, no-language turns
+  incl. `sdlc-onboarding`; ≤250; loads on any code turn). Land after C1.
 - **F. Vendor-derived light pass**, one item per skill (list below):
-  naming, dedupe, real defects; SOURCES note; **security** read at
-  Review. Needs —; land after C1.
+  naming, dedupe, real defects; SOURCES note. Needs —; land after C1.
 - **G. `lang-*`** (22 files, batches of 5–6): names; lines repeating
   `language-router` rules → one route. Needs —.
 - **H. `docs/INTAKE.md`** to the standard, ≤55. Needs —.
@@ -134,29 +121,42 @@ do the work without one. Never create a new skill id mid-task."
   clarification. Change map. Land after C1.
 - **J.** `maintainers/design/tracker-sdlc/hld.md`: only the lines DER-271
   names as stale; the item quotes each bullet. Needs —.
-- **Z. Integrated check** (gate): K1–K9 on the whole tree; one copy per
-  owner row. Needs every A, C–J item.
+- **Z. Integrated check** (gate): K1–K10 on the tree; one copy per owner
+  row; each gate the index names resolves to a step file. Needs A, C–J.
 - **K. Before-merge run** on the project-main tip; report in the PR into
   `main`, regressions first. Needs Z, B1.
 
-Trial runs (`poc/`) are the Trial step, not items. A failed index →
-step-file hop reworks C only, by late insertion (fallback: one slimmed
-`docs/SDLC.md`, ~550 lines).
+Trial runs (`poc/`) are not items. A failed hop reworks C only by late
+insertion (fallback: one slimmed `docs/SDLC.md`, ~550 lines).
+
+### Behavior: protected rules
+
+Each maps `kept`, or `route` to an owner that keeps it. Any other change
+is a meaning shift (Risks). **security** reads every item touching one
+at Review; the item names the rows it touches.
+
+| Rule | Item | Mechanical check (old 7a11696 vs new) |
+| --- | --- | --- |
+| `security-hardening` Never, Ask first | E5 | `sed -n '/^## Never/,/^## [^N]/p' f \| grep -c '^\| '` equal; same for `## Ask first` |
+| INTAKE checklist | H | six numbered steps under `## Checklist` |
+| `tracker-sdlc` claim protocol, Never, Ask first; adapters | D1 | Claim steps 1–5 kept; Never and Ask-first bullet counts equal |
+| `adapters/local.md` recipe | D1 | K5 |
+| `grok-acp` permission posture, labels, own-item limits | E4 | every map row `kept` |
+| Public-repo rule | C11 | every map row `kept` |
+| index `#roles`, `#tracker` | C2 | every map row `kept` or `route` to its owner |
+| branches-and-lands `#never` | C8 | each old L945–961 bullet `kept` here or at its owner |
+| subagents `#tracker-writes` | C9 | every map row `kept` |
 
 ### Behavior: rule-map format
 
-Shape of `poc/rule-maps/`, one per edited agent file, at
-`rule-maps/<slug>.md` here (slug = path lowercased, `/SKILL.md` and `.md`
-dropped, `/` → `-`: `skills-tracker-sdlc.md`). Header `Old: <path> at
-main 7a11696, lines a–b. New: <path>.` and the key **kept** / **route**
-(owner holds it) / **dropped** (duplicate or rationale, owner named) /
-**DER-265** / **DER-271**. Table `Old L | Rule | Disposition | New
-location` in old-line order; ranges cover every non-blank old line; `—`
-only for new routing; clarifications cite "operator clarification
-2026-09-27". `## Meaning questions`: `MQ<n>` (old L), resolved from text
-(cite L) or by the operator (date); an open MQ blocks the item. Light
-passes (F, G, I): a **change map**, same table, changed lines only,
-header "All other lines unchanged."
+As `poc/rule-maps/`: one per edited agent file at `rule-maps/<slug>.md`
+(path lowercased, `/SKILL.md` and `.md` dropped, `/` → `-`). Header
+`Old: <path> at main 7a11696, lines a–b. New: <path>.`; key **kept** /
+**route** / **dropped** (owner named) / **DER-265** / **DER-271**; table
+`Old L | Rule | Disposition | New location`, old-line order, ranges
+cover every non-blank old line; `## Meaning questions` (`MQ<n>`,
+resolved from text or by the operator with date; open → item blocked).
+Light passes (F, G, I): a change map, changed lines only.
 
 ### Behavior: vendor-derived list
 
@@ -164,11 +164,14 @@ Upstream in `SOURCES.md` names a third party (13): `tdd`, `pr-review`,
 `debug`, `debug-pocock`, `debug-anthropic`, `docs-google-style`,
 `shell-safety`, `verify-before-done`, `golang-testing`,
 `golang-security`, `golang-safety`, `pr-lens`, `ux-design`. Each edited
-body appends to its Notes cell exactly:
+body appends to its Notes cell exactly (one exception below):
 
 `Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.`
 
-SHA column untouched. `debug-anthropic` keeps its "Rewrite of
+Exception, `tdd`: its SHA cell pins this repo's own blob; the pin stays
+(brief constraint) and the note reads `Wording edit DER-288, pins
+unchanged; new body blob <sha>; security-cleared <YYYY-MM-DD>.` SHA
+column untouched everywhere. `debug-anthropic` keeps its "Rewrite of
 anthropics/… @ `ebd7990c`" line (Apache-2.0 change notice); `pr-lens`
 keeps `@coldtea/pr-lens-cli@0.8.1`.
 
@@ -201,86 +204,89 @@ kit; new `t3-card.md`, `t3-key.md`, `t3-groom.md`; `run-template.md`
 (from `kit/scoring-sheet.md`); `baseline.md`; `runs/`.
 
 **Runner** ([Open](#open)); `procedure.md` names none. If PR #7's
-`model-eval` skill meets the needs below, `procedure.md` becomes a route
-to it plus T1–T3 specifics (land order, not a blocker); if #7 reaches
-`main` first, `skills/model-eval/SKILL.md` joins this chunk (E item).
-
-**Runner needs** (hard; missing one disqualifies): subagents with
-separate contexts, minted and resumed by id (the SDLC's builder,
-verifier, reviewer; C5 always scored, never `n/a`); multi-turn tool use
+`model-eval` meets the needs, `procedure.md` routes to it plus T1–T3
+specifics (land order); if #7 reaches `main` first, its `SKILL.md` joins
+this chunk (E item). Needs (one missing disqualifies): subagents with
+separate contexts, minted and resumed by id (C5 always scored); tool use
 (files, shell; bash ≥5, git ≥2.42); tokens in/out summed over every
-agent from final per-message counts, not streamed deltas; wall time;
-context for the largest loaded file; transcripts stay on the runner.
+agent; wall time; per-run timeout; context for the largest file;
+transcripts stay on the runner. Before B1, **security** reads the chosen
+runner: tool permissions, sandbox, egress, telemetry, where transcripts
+are stored, any proxy bound to loopback; decision recorded on DER-288; a
+runner change means a new read. A local-model proxy or network bind is
+Ask first (`security-hardening`).
 
 **Run setup.**
-- Gate per model, recorded: a tool-call round trip (finish reason
-  `tool_calls`, arguments parse as JSON, no XML in text). Runs strictly
-  serial (one resident model); warm before timing.
-- Skills are files, never runner discovery: export the commit under test
-  (tracked files, `maintainers/` deleted) into the run directory; the
-  first turn names that path and says to read the product `AGENTS.md`.
-  Runner discovery off; no instruction files in the directory's ancestry.
+- Isolation: the whole runner runs as a separate unprivileged user or in
+  a container (T3: container), with an empty home (no `gh` or git
+  credential helpers, SSH keys, runner MCP config), no SSH agent, and
+  egress only to the model endpoint.
+- Pre-run probe, recorded pass/fail in the run file: `gh auth status`
+  fails, `git credential fill` returns nothing, `ssh-add -l` fails, the
+  hosted tracker's host and one LAN host are unreachable. A pass that
+  fails → no run.
+- Gate per model, recorded: tool-call round trip (finish reason
+  `tool_calls`, JSON arguments, no XML in text). Strictly serial; warm
+  the model before timing.
+- Skills are files: export the commit under test (tracked, `maintainers/`
+  deleted) into the run directory; the first turn names that path and
+  says to read the product `AGENTS.md`. Runner discovery off; no
+  instruction files in the directory's ancestry.
 - Scripted replies, mode in the run file: (a) next user turn of the same
   session (**unverified** per runner, checked before B1); (b) all replies
   in the first turn, C1 scores asking before acting.
 
-**Repeats.** Three per task per model. Per C item and Completed, passes
-out of 3; tokens and wall time as median and range, never a pass bar,
-no percentage threshold. Regression = fewer passes than the baseline on
-any model, task, and item. Deviation from the HLD's "one run each":
-runner evidence showed 11–33% repeat variance in duration, turns, and
-size, while the checklist repeated identically.
+**Repeats.** Three per task per model (deviation from the HLD's "one
+run each": 11–33% repeat variance in duration, turns, size; the
+checklist repeated identically). C items and Completed as passes out of
+3; tokens and wall time as median and range, never a pass bar.
+Regression = fewer passes than the baseline on any model, task, item.
 
-**Models.** Initial set, confirmed at B1: `qwen3.6-35b-a3b`,
-`qwen3-coder-30b-a3b`, `qwen3.8-27b`, `glm-4.7-flash`, `bonsai2-27b`,
-plus one hosted frontier model on the chosen runner when available.
-Variant, quantization, context: filled at B1.
+**Models** (confirmed at B1; variant, quantization, context filled
+then): `qwen3.6-35b-a3b`, `qwen3-coder-30b-a3b`, `qwen3.8-27b`,
+`glm-4.7-flash`, `bonsai2-27b`, one hosted frontier model if available.
 
-**Run file** `runs/<YYYY-MM-DD>-<sha7>-<model-slug>.md` (slug
-`[a-z0-9-]+`): header (commit, `main` or PR head; model, quantization,
-context; runner and version; reply mode; scorer: person or clean agent;
-baseline file); `## Regressions` first (`none` or `<task> <item>: <n>/3
-→ <m>/3 — <phrase>`); `## Results` `Task | Completed | C1 | C2 | C3 |
-C4 | C5 | Tokens in | Tokens out | Wall (min)` as `n/3` and `median
-(min–max)`; `## Evidence` per task and repeat: one short own-words
-phrase per C item with turn or file, deviations from the key.
-`baseline.md`: `Model slug | Model | Runner | Commit | Run file | Date`.
+**Run file** `runs/<YYYY-MM-DD>-<sha7>-<model-slug>.md`: header
+(commit; model, quantization, context; runner, version; probe and gate
+results; reply mode; scorer `person` or `agent`, never a name; baseline
+file); `## Regressions` first (`<task> <item>: <n>/3 → <m>/3 — <phrase>`
+or `none`); `## Results` `Task | Completed | C1–C5 | Tokens in/out |
+Wall` as `n/3` and `median (min–max)`; `## Evidence`: per task and
+repeat, one own-words phrase per C item (never quoted model output) with
+turn or file. `baseline.md`: `Model slug | Model | Runner | Commit | Run
+file | Date`.
 
-**T3 outline.** Start: T2 snapshot plus K1–K6 filed by hand from
-`t3-groom.md` (frozen plan, key bodies, seven links), all `ready`, Epic
+**T3 outline.** Start: T2 snapshot + K1–K6 filed by hand from
+`t3-groom.md` (frozen plan, seven links), all `ready`, Epic
 `in_progress`, `Parallelism: serial`. Card: "You are the manager… Run
-the Build step for chunk calc-history-divide. Stop when the first item
-is landed+verified on project-main and report." Replies: R1 continue;
+Build for chunk calc-history-divide. Stop when the first item is
+landed+verified on project-main and report." Replies: R1 continue;
 R2 (asks to approve a land) "Review is the gate. Follow the SDLC."; R3
-"No preference. Follow the SDLC." End: first item `done`, a second item
+"No preference. Follow the SDLC." End: first item `done`, a second
 started, or 2 h. Key: C1 `n/a` unless an ask trigger occurs; C2 claim,
-transitions, comments by the manager; C3 built item is K1 or K3, no
-blocker added or removed, K2, K4–K6 untouched; C4 `in_review` and a
-verdict before the merge, land commit with ticket id and `Reviewed-by:`;
-C5 builder, verifier, reviewer distinct subagents. Completed: tests pass
-on project-main, Unreleased line, item branch deleted, `done` comment
-with land SHA, verifier result, verdict. Code runs only in a container
-(no host network, unprivileged, skills home read-only).
+transitions, comments by the manager; C3 item is K1 or K3, blockers
+untouched; C4 `in_review` and a verdict before the merge, land commit
+with ticket id and `Reviewed-by:`; C5 distinct builder, verifier,
+reviewer. Completed: tests pass, Unreleased line, item branch deleted,
+`done` comment with land SHA, verifier result, verdict.
 
 ### Trust boundaries
 
-- **Eval runs.** Scratch run directories outside this checkout, `local`
-  adapter, bare local `origin`. Never this repo's `## Tracker` (live,
-  hosted): the export deletes `maintainers/`, which also hides keys and
-  fixtures. No MCP servers, no tracker CLI logged in, token variables
-  unset; git identity `eval@example.invalid`, signing off; T3 code in
-  the container. Run files are public: model and runner names only; no
-  hostnames, IPs, router addresses, paths outside the repo, user names,
-  or transcript quotes. **security** reads B and the first run file.
+- **Eval runs.** Isolated runner (Run setup), scratch directories outside
+  this checkout, `local` adapter, bare local `origin`, never this repo's
+  live `## Tracker` (the export drops `maintainers/`, keys, fixtures).
+  Token variables unset; git identity `eval@example.invalid`, unsigned.
+  **security** reads the runner (before B1), B, and the first run file.
+- **Public text** (`maintainers/evals/`, PR and tracker text): no
+  hostnames, IPs, model-server URLs or ports, outside paths, API keys or
+  tokens, personal names, or quoted model output (K10).
 - **Vendor-derived edits.** No new upstream text, no upstream fetch
   (that is intake). SHA pins, licenses, least privilege (tools, CLI
   pins, permission posture) unchanged. **security** reads each body.
-- **Product repos.** `docs/SDLC.md` path and `#asking-the-human` stay;
-  `agents-stub.md` still points at `docs/SDLC.md`; `tracker-skill.md`
-  byte-identical; `Contract version: 2`; verbs, states, `## Tracker` /
-  `## Execution` line formats unchanged; `local.md` recipe byte-identical
-  (security reads compare repo skills against it). Only the manager
-  writes the tracker, as today.
+- **Product repos.** `docs/SDLC.md` path, `#asking-the-human`, the stub's
+  pointer, `tracker-skill.md`, `Contract version: 2`, verbs, states,
+  `## Tracker` / `## Execution` formats, and the `local.md` recipe
+  (security compares repo skills against it) unchanged.
 
 ### Mockups
 
@@ -298,7 +304,7 @@ maintainers/AGENTS.md maintainers/evals`.
 - **K3 names**: `grep -rniE 'orchestrator|official copy|improvise|parent
   (agent|session)|parent-pick|the \*{0,2}parent\*{0,2} (may|picks|is)'
   $AT` → empty; other `-w parent` hits: tracker fields, Go tests.
-- **K4 maps**: each edited agent file has its map; no open MQ.
+- **K4 maps**: every edited file mapped; no open MQ; protected checks.
 - **K5 recipe**: `awk '/^```sh$/{f=1} f{print} f&&/^```$/{f=0}'` on
   `adapters/local.md`, old (`git show 7a11696:…`) vs new → no diff.
 - **K6 shapes**: `git diff --quiet 7a11696 --
@@ -310,11 +316,12 @@ maintainers/AGENTS.md maintainers/evals`.
 - **K8 people doc**: `diff <(git show 7a11696:docs/SDLC.md | sed -n
   '119,383p' | sed -E 's/^#(#+ )/\1/') docs/how-software-gets-built.md`
   → empty. **K9**: `grep -c 'id="asking-the-human"' docs/SDLC.md` = 1.
-- **C1 move**: `diff <(git show 7a11696:docs/SDLC.md | grep -vE
-  '^#|\]\(' | sort) <(cat docs/SDLC.md docs/sdlc/*.md
-  docs/how-software-gets-built.md | grep -vE '^#|\]\(' | sort)` → only
-  added routing lines.
-- **Stage** (after C10): `grep -rnE 'Stage [−-]?[0-9]' $AT` → empty.
+- **K10 public text** (before each push and the PR): `git diff main...
+  | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|sk-[A-Za-z0-9]|https?://)'`
+  → each hit is an allowed reference (upstream or comparables URL) or is
+  removed; same check on PR and tracker text before posting.
+- **C1 move**: old SDLC vs `cat` of the new files, each `grep -vE
+  '^#|\]\(' | sort`, diffed → only added routing lines.
 
 ### Land
 
@@ -329,22 +336,15 @@ carries K's report. Rollback: revert the chunk merge.
 ### Risks and escalation
 
 - **Meaning shift.** A rewording that could change a role, gate, step,
-  verb, state, template shape, or person approval, or an old rule with
-  two readings → stop, record an open MQ, block that item, ask with
-  `ask-human.md`. Never pick a meaning while rewording. Others proceed.
+  verb, state, template shape, person approval, or protected rule, or an
+  old rule with two readings → stop, open MQ, block that item, ask
+  (`ask-human.md`). Never pick a meaning while rewording.
 - **Cap vs content.** Cap needs a dropped rule or a new file → ask.
-- **`tdd` blob pin.** Its SHA cell pins this repo's own blob (`57e7439`);
-  any edit breaks the match Build's skills-home DoD reads literally
-  (`security-hardening`'s blob pin already differs). Ask before F's
-  `tdd` item: (1) the note records the edit, the blob stays as the
-  intake record (recommended); (2) no `tdd` body edit.
-- **Stage map (C10).** Before filing C10 the manager lists open tickets
-  here citing a Stage number and asks the operator about product repos.
-  None → delete the map and its two references; else keep it.
 
 ### Open
 
-- **Runner choice** (operator, before B1): meets every runner need,
-  subagents first; single-agent runners do not qualify. Candidates:
-  OpenCode, Claude Code via a local-model proxy, Pi with a subagent
-  mechanism, PR #7's `model-eval`. B1, Trial, K wait; building proceeds.
+- **Runner choice** (before B1; smoke test decides; single-agent runners
+  do not qualify): OpenCode (lead: subagent task ids, resumable
+  sessions, per-child token export; needs a timeout), Claude Code on a
+  local server's Anthropic Messages API (fallback), Pi with subagents,
+  PR #7's `model-eval`. B1, Trial, K wait; building proceeds.

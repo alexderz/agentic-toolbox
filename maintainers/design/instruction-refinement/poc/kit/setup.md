@@ -9,9 +9,10 @@ in the Trial.
 - Multi-turn agent sessions with tool use: read and write files, run
   shell commands (bash ≥ 5, git ≥ 2.42: the `local` tracker recipe
   needs both).
-- Subagents with their own transcripts, and resuming one by id. T1 and
-  T2 need several distinct agents (see the task cards). No subagents →
-  C5 is scored `n/a` and the sheet says so.
+- Subagents with their own contexts and transcripts, minted and resumed
+  by id (required: T1 and T2 need several distinct agents, see the task
+  cards). A runner without them does not qualify; C5 is always scored.
+- A per-run timeout.
 - A pause where the operator's scripted reply is typed in, as a normal
   user turn.
 - Token counts in and out per run, summed over the main agent and
@@ -20,6 +21,23 @@ in the Trial.
   per run. Context must hold the largest file an arm loads: arm A's
   `docs/SDLC.md` is 1128 lines.
 - Transcripts stay on the harness. They never enter this repo.
+- Before the first run, **security** reads the chosen runner (tool
+  permissions, sandbox, egress, telemetry, where transcripts are stored,
+  any proxy bound to loopback); the decision is recorded on DER-288. A
+  local-model proxy or network bind is Ask first (`security-hardening`).
+
+## Isolation (every run)
+
+- The whole runner runs as a separate unprivileged user or in a
+  container, with an empty home: no `gh` or git credential helpers, no
+  SSH keys, no runner MCP config. No SSH agent. Egress only to the model
+  endpoint.
+- Pre-run probe, pass/fail recorded on the sheet: `gh auth status`
+  fails, `git credential fill` returns nothing, `ssh-add -l` fails, the
+  hosted tracker's host and one LAN host are unreachable. Any probe that
+  does not fail as expected → no run.
+- Per model, before its first run: a tool-call round trip (finish reason
+  `tool_calls`, arguments parse as JSON, no XML in the text), recorded.
 
 ## Skills home (per arm)
 
@@ -95,7 +113,8 @@ Built once, then copied fresh for every T2 run (both arms, all models):
   onboarding's Discover reads MCP and CLI config, and must find none.
 - Same sampling settings for both arms on one model.
 - Alternate arms (A, B, B, A…) so harness drift does not favor one.
-- One run per task per arm per model: 2 tasks × 2 arms × 2 models = 8.
+- Three repeats per task per arm per model: 2 tasks × 2 arms × 2 models
+  × 3 = 24. Runs strictly serial; warm the model before timing.
 - Stop a run at the task card's end point, or at 2 hours wall time
   (then `completed: no`).
 - Score with [scoring-sheet.md](scoring-sheet.md), from the transcript
