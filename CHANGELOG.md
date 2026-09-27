@@ -13,6 +13,9 @@ Newest first. Skip empty sections.
   `main` that changes agent text gets T1–T3 runs, three repeats per
   model, regressions first) and `maintainers/evals/` (procedure, T1 and
   T2 cards, keys and fixture, run template, baseline) (`DER-292`)
+- Maintainer eval task T3 in `maintainers/evals/`: build one item of a
+  groomed toy chunk to landed+verified; task card, answer key and the
+  frozen Groom fixture (`DER-293`)
 - `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
   before any ticket is filed, then frozen (`DER-275`)
 - `sdlc-onboarding` Execution area: asks for and records the Build
