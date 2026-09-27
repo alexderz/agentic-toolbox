@@ -16,7 +16,7 @@ Rewrite of anthropics/knowledge-work-plugins `engineering/skills/debug` @ `ebd79
 1. **Reproduce** — expected vs actual, exact steps, scope (when, who).
 2. **Isolate** — component/path, recent deploys/config/deps, logs.
 3. **Diagnose** — hypotheses you can test, trace the path, name the cause not the symptom.
-4. **Fix** — propose with side effects; add a regression test (`tdd`); verify (`verify-before-done`).
+4. **Fix** — propose the fix and name its side effects; add a regression test (`tdd`); verify (`verify-before-done`).
 
 ## Report
 
