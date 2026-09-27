@@ -21,3 +21,15 @@ None. Out of scope, not changed: the Roles row gives **architect**
 "Requesting a clean reviewer"; the owner, `subagents.md#item-agents`,
 gives the item-agent ids to the manager session. Changing a role is a
 meaning shift, so this pass leaves it.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 34–35 | "send the new range and what changed — do not re-paste the spec" → "and send the new range; see" + route [Item agents](../../../../docs/sdlc/subagents.md#item-agents) | F5: owner `subagents.md#item-agents` states resume `reviewer_id`, send what changed, never re-paste the spec | L34–35 |
+
+SOURCES row unchanged.

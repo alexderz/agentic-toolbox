@@ -2,7 +2,7 @@
 
 ## Build
 
-An **open blocker** is a blocker not in `done` or `canceled`.
+Open blocker: defined in [Tracker](../SDLC.md#tracker).
 
 **manager**: before minting or resuming a **builder** on an item, claim
 the item with the `tracker-sdlc` claim verb, under the builder's agent
@@ -81,8 +81,8 @@ shows the chosen fix was the wrong *kind* of change; then escalate.
 
 In this repo, any skill-body diff must match the pinned SHA in
 [SOURCES.md](../../SOURCES.md) for that id. If that SHA is empty, no
-body may land. Remote agent PRs into this repo still pass **security**
-intake. Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
+body may land. Worker PR intake: [Workers](../INTAKE.md#workers).
+Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
 
 ## Review
 

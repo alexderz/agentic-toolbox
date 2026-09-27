@@ -35,9 +35,9 @@ and why.** Do not invent a parallel outline.
 | Bug | Groom | `templates/bug.md` | Board issue, label Bug |
 | Changelog | Build / Changelog | `templates/changelog.md` | repo-root `CHANGELOG.md` |
 | PR / land | Review | `templates/pr.md` | PR body or land commit message |
-| Monthly | Monthly | `templates/monthly.md` | Ticket or `docs/monthly/` |
+| Monthly | Monthly | `templates/monthly.md` | `docs/monthly/`, or a Task once filed |
 | Human doc | Spec+ | `templates/human-doc.md` | `docs/` how-to (Google style) |
-| Ask the human | any gate | `templates/ask-human.md` | The message to the operator — not a git file |
+| Ask the operator | any gate | `templates/ask-human.md` | The message to the operator — not a git file |
 | AGENTS stub | Repo | `templates/agents-stub.md` | product-repo `AGENTS.md` |
 | Repo tracker skill | Brief (onboarding) | `templates/tracker-skill.md` | product-repo `.agents/tracker/SKILL.md` |
 

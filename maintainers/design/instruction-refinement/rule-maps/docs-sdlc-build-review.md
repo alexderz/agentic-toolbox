@@ -88,3 +88,14 @@ All resolved.
   old SDLC section; growth up to the cap is allowed only where it makes
   rules checkable; the line target is a goal, not a blocker (Q10). Old
   83 lines, new 102; the growth is itemized under the header.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 5 | Open-blocker definition → route "Open blocker: defined in Tracker", linking `../SDLC.md#tracker` | F5: owner `docs/SDLC.md#tracker` (L79–81) states "a blocker not in `done` or `canceled`" | L5 |
+| 84–85 | "Remote agent PRs into this repo still pass **security** intake." → route "Worker PR intake: Workers", linking `../INTAKE.md#workers`; the Roles route is kept | F5: owner `docs/INTAKE.md#workers` states the remote-agent PR security clear and the pinned-SHA match | L84–85 |

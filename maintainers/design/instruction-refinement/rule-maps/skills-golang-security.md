@@ -30,3 +30,15 @@ SHA, Upstream and License cells and pins unchanged.
 ## Meaning questions
 
 None.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 10 | "Separate PRs OK." → "Each Go concern may be its own item." | F1: internal lands use no PRs; the split is per item | L10 |
+
+SOURCES row unchanged.

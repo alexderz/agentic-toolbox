@@ -110,3 +110,15 @@ Notes, not MQs (one reading each; wording kept):
   condition (standard 2). It has one reading. A checkable threshold
   would change the rule, so the wording stays; the operator may set one
   later.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 99 | "**at most one** language-family skill" → link to `../../skills/language-router/SKILL.md#iron-law`; text kept | F8: the router's Iron law holds the one-skill rule and the second-skill condition | L99 |
+| 129 | "Box-local gated builds." → "Gated builds on the local machine." | F10: plain wording | L129 |
+| 135–137 | Intake and SHA-pin copy → route "Worker PR intake: Workers", linking `../INTAKE.md#workers`; the Roles route is kept | F5: owner `docs/INTAKE.md#workers` states the security clear, "not an exemption" and the pinned-SHA match | L135–136 |
