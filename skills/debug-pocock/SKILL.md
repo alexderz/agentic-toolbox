@@ -5,11 +5,11 @@ description: use this as an alternative to debug when you want a tight red-capab
 
 # Debug (Pocock alternative)
 
-Rewrite of mattpocock/skills `diagnosing-bugs` @ `74ca5fe0`. Compress, not a paste. **Alternative** to default `debug`. Load **one** debug skill. No `scripts/`.
+**Alternative** to default `debug`.
 
 ## Iron law
 
-**No hypothesis until you have a tight loop that can go red on this exact symptom.** You have already run that command once (show output, secrets redacted).
+**No hypothesis until you have a tight loop that can go red on this exact symptom.** Run that command once and show its output before the first hypothesis.
 
 ## Phases
 
@@ -32,4 +32,4 @@ Redact secrets in anything you show (`<REDACTED>`). Credentials stay in env, not
 
 ## Upstream
 
-mattpocock/skills `skills/engineering/diagnosing-bugs` @ `74ca5fe077456a0b3b2f5310cf9430999fd0b5fd` (MIT). See [SOURCES.md](../../SOURCES.md).
+Rewrite of mattpocock/skills `skills/engineering/diagnosing-bugs` @ `74ca5fe077456a0b3b2f5310cf9430999fd0b5fd` (MIT). See [SOURCES.md](../../SOURCES.md).

@@ -32,6 +32,8 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `debug-pocock` light pass: duplicate lines dropped, Iron law states its
+  run-once step as an instruction; pins unchanged (`DER-322`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
