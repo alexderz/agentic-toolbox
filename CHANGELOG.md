@@ -83,6 +83,8 @@ Newest first. Skip empty sections.
 - Tracker-sdlc HLD fixes the two stale lines DER-271 names: signing follows git config; a chunk's onboarding lands as its own reviewed item before Plan (`DER-338`).
 - `modern-python` rewritten to the writing standard, same rules; the
   load-with list routes to `language-router` (`DER-317`)
+- `tracker-sdlc` rewritten to the writing standard: the writer rule routes to
+  the SDLC index; contract and claim steps unchanged (`DER-309`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
