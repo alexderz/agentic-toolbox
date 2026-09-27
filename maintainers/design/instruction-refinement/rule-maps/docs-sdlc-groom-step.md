@@ -36,7 +36,7 @@ pointed to Procedure. Both are replaced by the rules themselves.
 | 726–728 | File from the passed SHA; any diff → review again | kept, as the manager's first check | Procedure 3.1 |
 | 729–733 | Freeze: marker text (verbatim), `Review:` line, `G<n>` → ticket map, commit, never edit | kept, one action per step; actor manager (MQ5); "never" names the allowed action | Procedure 4.1–4.4 |
 | 735 | B blocks A only when A needs B's output | kept | Blockers 1 |
-| 735–736 | Same files is not a blocker; lands serialized | kept | Blockers 2 |
+| 735–736 | Same files is not a blocker; lands serialized | kept; the "lands are serialized" reason dropped (owner: `branches-and-lands.md#land-path`) | Blockers 2 |
 | 736–738 | Land-time need is land order | kept; the example is its own sentence | Blockers 3 |
 | 738–739 | set-blocker append-only; agents never remove | kept; allowed action named | Blockers 4 |
 | 739 | Waiting on a person = blocker on that issue | kept; "a person" → "the operator, or someone the operator names in writing" (operator clarification 2026-09-27) | Blockers 5 |
@@ -48,7 +48,7 @@ pointed to Procedure. Both are replaced by the rules themselves.
 | 752–754 | Review item closes with verdict; fixes blocked by it; re-check = new item blocked by fixes | kept, numbered; the verdict says whether a re-check is needed, the manager files it (MQ3) | Review items |
 | 756–758 | Late insertion: frozen; tracker holds new work; manager drafts item and blockers | kept | Late insertion intro, 1 |
 | 760–761 | Re-layer from the tracker | kept; actor manager (old L757) | Late insertion 2 |
-| 761–763 | `done` need gets no link, except fix → review item | kept | Late insertion 3 |
+| 761–763 | `done` need gets no link; a fix still gets set-blocker to its review item, though that item is `done` | kept | Late insertion 3 |
 | 764–765 | Cycle link not written; fix direction or drop | kept; the "(append-only)" rationale dropped (owner: Blockers 4, same file) | Late insertion 4 |
 | 766–767 | Link blocking `in_progress` / `in_review` → ask first | kept; route to the index `#asking-the-human` as before | Late insertion 5 |
 | 768–769 | Separate architect reviews the reshape with the Review checks | kept; "step 2 above" → link to Review | Late insertion 6 |
@@ -82,7 +82,9 @@ All resolved.
   of the incoming-item branch; this file routes. The owner must keep
   "Review versus trunk and a local merge" (G15, DER-288 C8).
 - **MQ5** (old L729–733, L971–972), resolved from text: the manager
-  freezes, and stores and resumes `groom_reviewer_id`. Old L719–728 has
-  the manager file and hold the ticket map; the index `#tracker` and
-  `subagents.md#spawn-prompts` have the manager mint subagents and hold
-  their ids.
+  freezes, and stores and resumes `groom_reviewer_id`. Basis: the Trial
+  draft that LLD C5 adopts
+  ([`poc/rewrite/docs/sdlc/groom-step.md`](../poc/rewrite/docs/sdlc/groom-step.md))
+  names the manager on both. Old L719–728 has the manager file and hold
+  the ticket map; `subagents.md#spawn-prompts` has the manager mint
+  subagents.

@@ -32,11 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
-- `docs/sdlc/groom-step.md` rewritten to the writing standard: numbered
-  rules and one-action steps; owns the groom reviewer id; the architect
-  fixes groom-review findings, gate reasons are examples, and a review
-  item's verdict says whether a re-check is needed; land order and the
-  incoming-item branch route to `branches-and-lands.md` (`DER-302`)
+- `docs/sdlc/groom-step.md` rewritten to the writing standard; owns the groom reviewer id (`DER-302`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move

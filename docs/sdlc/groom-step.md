@@ -13,7 +13,7 @@ asking the operator: [SDLC](../SDLC.md).
   this skills home, its path is `maintainers/design/<chunk-slug>/groom.md`.
 - **`G<n>`**: a work item's id inside `groom.md`, before it has a
   ticket.
-- **Groom reviewer**: a **clean** mint, never the author of `groom.md`.
+- **Groom reviewer**: a **clean** subagent, never the author of `groom.md`.
   The manager stores its id as `groom_reviewer_id` on the chunk and
   resumes it across review rounds. Clean and resume:
   [Subagents](subagents.md#item-agents).
@@ -27,7 +27,7 @@ asking the operator: [SDLC](../SDLC.md).
 ## Blockers
 
 1. B blocks A only when A needs B's output.
-2. Touching the same files is not a blocker: lands are serialized.
+2. Touching the same files is not a blocker.
 3. A need that applies only at land time is land order, not a blocker.
    Example: a `SOURCES.md` row another item adds.
 4. set-blocker is append-only. Agents add blockers and never remove one.
@@ -119,7 +119,7 @@ Waves are a view computed from blockers, never stored.
    under the Epic and its blockers; compute the waves with the new
    links.
 3. A need on an item already `done` is met: no link. Exception: a fix
-   keeps its link to its review item.
+   still gets its link to its review item.
 4. A new link would close a cycle → do not write it. Fix the direction
    or drop the link.
 5. A new link would block an item already `in_progress` or `in_review`
