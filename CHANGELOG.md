@@ -39,6 +39,8 @@ Newest first. Skip empty sections.
 - `debug-pocock` light pass: duplicate lines dropped, Iron law states its
   run-once step as an instruction; pins unchanged (`DER-322`)
 - `debug-anthropic` skill: light wording pass; the Fix step now says to name the fix's side effects; pins unchanged (`DER-323`)
+- `docs-google-style` light pass: one punctuation fix, one apostrophe
+  fix, and the duplicate `## Source` section dropped; pins unchanged (`DER-324`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
