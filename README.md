@@ -32,7 +32,7 @@ If no listed skill fits the task, do the work without one. Never create
 a new skill id mid-task. Do not remint a skill that already lives here.
 
 PRs welcome. Maintainer: [alexderz](https://github.com/alexderz). See
-[CONTRIBUTING.md](CONTRIBUTING.md).
+[CONTRIBUTING.md](CONTRIBUTING.md). Internal work skips PRs: it lands by local merge.
 
 ## Bundles
 

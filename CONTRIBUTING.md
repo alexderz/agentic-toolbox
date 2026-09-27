@@ -1,7 +1,7 @@
 # Contributing
 
 PRs are welcome. **[alexderz](https://github.com/alexderz)** is the
-only maintainer.
+only maintainer. Internal work lands by local merge, not by pull request.
 
 ## How to send a change
 
