@@ -5,8 +5,8 @@ description: use this when writing or reviewing *.proto files or generated stubs
 
 # Protocol Buffers
 
-No `scripts/`.
-Process skills that may load with this one, and the host language skill beside it: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Algorithm](../language-router/SKILL.md#algorithm) step 6.
+No `scripts/`. If any hand-edited host code changed too, also load that language's skill ([router](../language-router/SKILL.md#algorithm)).
+Process skills that may load with this one: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
