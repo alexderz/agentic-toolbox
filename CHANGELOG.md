@@ -32,7 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
-- `language-router` owns two more rules: proto plus any hand-edited host code loads both skills, even when one language owns at least 80% of the change; the Go row now lists the test-table, race, `goleak` and HTTP signals. `lang-go` and `lang-protobuf` keep only routes to it (`DER-346`)
+- `language-router` owns two more rules: a proto-led change (proto at least 80%) with any hand-edited host code loads both skills; the Go row now lists the test-table, race, `goleak` and HTTP signals. `lang-go` and `lang-protobuf` keep only routes to it (`DER-346`)
 - `discover-the-idea` rewritten to the writing standard, same gather loop (`DER-312`)
 - `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
 - `pr-review`: section links fixed, the distinct-reviewer rule routed to
