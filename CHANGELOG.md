@@ -32,6 +32,8 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs-google-style` light pass: one punctuation fix, one apostrophe
+  fix, and the duplicate `## Source` section dropped; pins unchanged (`DER-324`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
