@@ -27,3 +27,7 @@ Upstream, SHA and License cells unchanged. `<YYYY-MM-DD>` is left for **security
 
 - New L55 `stdversion` "Go 1.27+ default vet", L126 `httptest.NewTestServer`, L138 `synctest.Sleep`: version claims not verifiable without upstream; left as is (no fetch).
 - New L112 condition in parentheses and L83 "genuinely unwieldy" fall under standard 2/8, outside a light pass.
+
+## Meaning questions
+
+None.
