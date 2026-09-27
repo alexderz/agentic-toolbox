@@ -5,8 +5,8 @@ description: use this when writing, reviewing, or testing PHP — *.php, compose
 
 # PHP
 
-PHP 8+ types. Compatible with `tdd`, `verify-before-done`,
-`pr-review`, `security-hardening`. No `scripts/`.
+PHP 8+ types. No `scripts/`.
+Skills that load with this one: [`language-router` Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 

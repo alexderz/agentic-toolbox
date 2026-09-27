@@ -5,8 +5,8 @@ description: use this when writing, reviewing, or testing Kotlin — *.kt, *.kts
 
 # Kotlin
 
-Null safety and coroutines, not a framework pack. Compatible
-with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`. No `scripts/`.
+Null safety and coroutines, not a framework pack. No `scripts/`.
+Skills that load with this one: [`language-router` Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 

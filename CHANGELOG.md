@@ -52,6 +52,8 @@ Newest first. Skip empty sections.
   description and one upstream name made consistent; CLI pin and
   local-only limits unchanged (`DER-330`)
 - `ux-design` light pass: the approver is named the operator, and the review loop routes to `docs/sdlc/plan-trial-spec.md#ux` (`DER-331`)
+- `lang-java`, `lang-js-ts`, `lang-kotlin`, `lang-lua`, `lang-makefile`,
+  `lang-php`: load-with and `.tsx` copies route to `language-router` (`DER-333`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
