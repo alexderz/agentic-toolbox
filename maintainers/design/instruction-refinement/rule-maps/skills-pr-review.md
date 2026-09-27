@@ -12,7 +12,7 @@ named).
 | 45 | Act: Critical/Important before merge | kept; "merge" → "land", the SDLC name for the gate | L40 |
 
 `SOURCES.md` L21 (`pr-review` row): Notes cell appends `Wording edit
-DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.` Upstream, SHA
+DER-288, pins unchanged; security-cleared 2026-09-27.` Upstream, SHA
 and License cells unchanged.
 
 ## Meaning questions
