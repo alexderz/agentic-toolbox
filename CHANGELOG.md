@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)

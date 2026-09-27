@@ -15,13 +15,13 @@ Wrote code first? Delete it. Restart from a failing test. Do not keep it as refe
 
 ## Ask first
 
-Stop and ask the operator (or the pairing human) before skipping the cycle for:
+Stop and ask the operator, or someone the operator names in writing, before skipping the cycle for a topic below. Ask per [Asking the operator](../../docs/SDLC.md#asking-the-human).
 
 | Topic | Why it is a stop |
 | --- | --- |
 | Renames / mechanical moves | Easy to treat as "no behavior" and skip the proof |
 | Configuration-only changes | Config can still change runtime behavior |
-| Throwaway / prototype | Fine to explore; throw the exploration away and remint with TDD if it ships |
+| Throwaway / prototype | Fine to explore; throw the exploration away and rebuild it with TDD if it ships |
 | Generated code | Confirm it is generated and not behavior you owe a test |
 
 Thinking "skip TDD just this once"? Stop. That is rationalization. Ask first — do not self-except.
