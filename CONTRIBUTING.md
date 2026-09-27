@@ -13,7 +13,7 @@ only maintainer.
    [SOURCES.md](SOURCES.md). No marketplace install, no `scripts/` in
    skill dirs, no secrets.
 4. Open a pull request against `main`. Keep the diff one idea.
-5. Wait for maintainer review. Do not expect merge without it.
+5. Wait for maintainer review. A change merges only after that review.
 
 ## License
 
