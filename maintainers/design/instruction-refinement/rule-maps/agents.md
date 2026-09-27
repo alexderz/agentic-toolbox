@@ -58,7 +58,7 @@ The other clarifications have no subject in this file.
 | 51 | Human: what it is, how it works, how to use it; agent: locatable contracts | dropped: duplicate (owner `docs/sdlc/plan-trial-spec.md#documentation` table) | — |
 | 52 | A skill: read `skills/<id>/SKILL.md` | kept | L54 |
 | 52 | "Ids are listed below" | route (owner `SOURCES.md`, standard Rule owners "Skill inventory") | L55 |
-| 53 | Language row: code turn; at most one language skill; table below, or `language-router` first if ambiguous; pointers do not count | route, one row (owner `skills/language-router/SKILL.md` `#iron-law`, `#map`); "if ambiguous" → read the router on every code turn (MQ3) | L56 |
+| 53 | Language row: code turn; at most one language skill; table below, or `language-router` first if ambiguous; pointers do not count | route, one row (owner `skills/language-router/SKILL.md` `#iron-law`, `#map`); "at most one language skill per turn" named in the row with a link to `#iron-law`; "if ambiguous" → read the router on every code turn (MQ3) | L56 |
 | 54 | Pins / intake: third-party content, or checking ownership → `SOURCES.md`, `docs/INTAKE.md` | kept, split one file each: ownership and pins → row **Skill ids**; third-party content → Intake section | L55, L65–66 |
 | 55 | Knowledge: read `knowledge/README.md`, then the note | kept | L61 |
 | 55 | Do not remint as a skill; live vendor docs win | dropped: duplicate (owner `knowledge/README.md` L3–6, L50) | — |
@@ -96,7 +96,7 @@ The other clarifications have no subject in this file.
 | 168–169, 171 | First-party placeholder `cursor-cloud-agents-when`; no body claim until SHA and `SKILL.md` on `main` | dropped: duplicate (owner `SOURCES.md` L3–4, L19; `docs/INTAKE.md` Layout-only exception) | — |
 | 173 | Load by id from this repo | kept, in row **A skill** | L54 |
 | 175 | Heading "Language routing" | dropped: section out (LLD C11); owner `skills/language-router/SKILL.md` | — |
-| 177–178 | At most one language skill; a second only for a mixed-language diff; never load the catalog | route (owner `skills/language-router/SKILL.md#iron-law`, DER-318 map) | L56 |
+| 177–178 | At most one language skill; a second only for a mixed-language diff; never load the catalog | route (owner `skills/language-router/SKILL.md#iron-law`, DER-318 map); "at most one" named at L56 with the `#iron-law` link | L56 |
 | 179–181 | Process skills that may load alongside | route (owner `#load-with-list`) | L56 |
 | 182–187 | Onboarding, gather/refine-only, incoming-item Brief, UX-only, research-only turns load no language skill | route (owner `#no-language-turns`) | L56 |
 | 187–188 | Load one of `debug` / `debug-pocock` / `debug-anthropic` | route (owner `#load-with-list` item 3); also kept in row **Debug** | L51, L56 |

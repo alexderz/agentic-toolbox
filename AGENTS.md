@@ -53,7 +53,7 @@ path, or **pack** its text into a subagent prompt per
 | **Docs** | Human how-to or agent-facing comments after Spec | **Read `skills/docs-google-style/SKILL.md`**. |
 | **A skill** | The id applies to this turn | **Read `skills/<id>/SKILL.md`** in this repo. |
 | **Skill ids** | Checking a skill id, its ownership, or its SHA pin | **Read [SOURCES.md](SOURCES.md)**. Do not remint an id without a new **security** cut. |
-| **Language** | Writing or reviewing code | **Read `skills/language-router/SKILL.md`**: its [map](skills/language-router/SKILL.md#map), [load-with list](skills/language-router/SKILL.md#load-with-list) and [no-language turns](skills/language-router/SKILL.md#no-language-turns). |
+| **Language** | Writing or reviewing code | Load at most one language skill per turn: [iron law](skills/language-router/SKILL.md#iron-law). **Read `skills/language-router/SKILL.md`**: its [map](skills/language-router/SKILL.md#map), [load-with list](skills/language-router/SKILL.md#load-with-list) and [no-language turns](skills/language-router/SKILL.md#no-language-turns). |
 | **Workers** | The operator picks Grok Build over ACP as a builder | **Read `skills/grok-acp/SKILL.md`**. Operator opt-in: load it only then. |
 | **Diagrams** | The operator asks for a diagram, such as one in the PR into `main` | **Read `skills/pr-lens/SKILL.md`**. Operator opt-in: load it only then. |
 | **Branches and lands** | Branching an item, or landing one | **Read [branches-and-lands.md](docs/sdlc/branches-and-lands.md)**. |
