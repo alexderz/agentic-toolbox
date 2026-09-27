@@ -33,6 +33,56 @@ Newest first. Skip empty sections.
 ### Changed
 
 - `discover-the-idea` rewritten to the writing standard, same gather loop (`DER-312`)
+- `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
+- `pr-review`: section links fixed, the distinct-reviewer rule routed to
+  `docs/sdlc/subagents.md#item-agents`; pins unchanged (`DER-320`)
+- `debug` skill: light wording pass (duplicate "default" line dropped); `SOURCES.md` note records it, pins unchanged (`DER-321`)
+- `debug-pocock` light pass: duplicate lines dropped, Iron law states its
+  run-once step as an instruction; pins unchanged (`DER-322`)
+- `debug-anthropic` skill: light wording pass; the Fix step now says to name the fix's side effects; pins unchanged (`DER-323`)
+- `docs-google-style` light pass: one punctuation fix, one apostrophe
+  fix, and the duplicate `## Source` section dropped; pins unchanged (`DER-324`)
+- `shell-safety` light pass, same Always, Ask first and Never rules: the **security** gate names Review, not PR, and the workers rule routes to the SDLC index (`DER-325`)
+- `verify-before-done` light pass: the verifier and landed+verified rules route to their SDLC owners, and "HITL" reads "operator in the loop"; pins unchanged (`DER-326`)
+- `golang-testing`: light pass; the duplicate pin and samber-pack lines dropped, load-with and workers-bypass rules routed to their owners; `SOURCES.md` note added (`DER-327`)
+- `golang-security` light pass: one `language-router` route replaces the
+  pairing line; the workers line names **security** (`DER-328`)
+- `golang-safety`: Go-skill choice routes to `language-router`; typed-nil
+  example compiles; nil-map `cap` row fixed (`DER-329`)
+- `pr-lens` light pass: one duplicate clause dropped from the
+  description and one upstream name made consistent; CLI pin and
+  local-only limits unchanged (`DER-330`)
+- `ux-design` light pass: the approver is named the operator, and the review loop routes to `docs/sdlc/plan-trial-spec.md#ux` (`DER-331`)
+- `lang-java`, `lang-js-ts`, `lang-kotlin`, `lang-lua`, `lang-makefile`,
+  `lang-php`: load-with and `.tsx` copies route to `language-router` (`DER-333`)
+- `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby` and `lang-rust` route their load-with lines to `language-router` (`DER-334`)
+- People docs: role tables match the SDLC index, README skill-fit line, links to the new SDLC layout (`DER-337`)
+- `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go`: lines repeating `language-router` rules become one route line per file (`DER-332`)
+- `lang-shell`, `lang-sql`, `lang-swift`, `lang-terraform` and `lang-web-markup` replace their copies of the `language-router` load-with and one-language-skill rules with one route line each; language advice unchanged (`DER-335`)
+- `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
+  and `## Execution` formats: numbered steps, a When table, and the
+  proposal shape routed to `ask-human.md` (`DER-310`)
+- `sdlc-artifacts` and its `changelog.md` template cite the land SHA, not
+  a merge SHA or a PR; the tracker-writer line routes to the SDLC index
+  `#tracker`; the AGENTS stub names `## Tracker` (`DER-311`)
+- `yagni` skill rewritten to the writing standard, same rules (`DER-313`)
+- `buying-researcher` skill and its references rewritten to the writing standard, same research method: one owner per rule, a numbered procedure, and a Never list with allowed actions (`DER-314`)
+- `grok-acp` skill rewritten to the writing standard: "manager" replaces
+  "orchestrator", each Never rule names the allowed action, and branch
+  source and fallback route to their SDLC owners; permission posture,
+  labels and own-item limits unchanged (`DER-315`)
+- `security-hardening` rewritten to the writing standard, same rules:
+  Ask first as numbered steps, Never and Ask first rows unchanged, and
+  the workers, intake and Monthly rules routed to their owners (`DER-316`)
+- `language-router` owns the language map (merged from `AGENTS.md`), the
+  load-with list and the no-language turns, and loads on any code turn
+  (`DER-318`)
+- `docs/INTAKE.md` rewritten to the writing standard, same six-step
+  checklist and rules; the tracker-skill **security** read is numbered
+  steps (`DER-336`)
+- Tracker-sdlc HLD fixes the two stale lines DER-271 names: signing follows git config; a chunk's onboarding lands as its own reviewed item before Plan (`DER-338`).
+- `modern-python` rewritten to the writing standard, same rules; the
+  load-with list routes to `language-router` (`DER-317`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root

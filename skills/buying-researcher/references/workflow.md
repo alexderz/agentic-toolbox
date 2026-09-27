@@ -1,83 +1,80 @@
 # Buying workflow
 
-These phases are this skill’s map — frame, then survey, then refine by
-decision impact. If the chunk is on the board, one project per research
-track. Do not mint a second project for the same track.
+These phases are this skill's map: frame, then survey, then refine by
+decision impact. If the chunk is on the board, keep one project per
+research track. Never mint a second project for the same track; use the
+track's existing project.
 
 | Phase | Name | Pass |
 | --- | --- | --- |
-| 0 | Brief | Pass 0 Frame |
+| 0 | Purchase brief | Pass 0 Frame |
 | 1 | Category map | Pass 1 Survey |
 | 2 | Long → short list | Pass 1 Survey |
 | 3 | Product dossiers | Pass 2+ Refine |
 | 4 | Evidence pass | Pass 2+ Refine |
-| 5 | Score against brief | Pass 2+ Refine |
+| 5 | Score against the purchase brief | Pass 2+ Refine |
 | 6 | Decision | Pass 2+ Refine |
 
-Default market: US retail unless stated otherwise. Recommend; do not spend.
+Default market: US retail, unless the buyer states another.
 
-## Phase 0 — Brief (Pass 0 Frame)
+## Phase 0 — Purchase brief (Pass 0 Frame)
 
-Lock job-to-be-done, must-haves, nice-to-haves, deal-breakers, budget band (hard cap vs stretch), users/place/frequency, timeline, constraints, and 4–8 ranked criteria. Infer or mark unknown; do not dump a 20-question form. If they say go, proceed with stated priorities plus explicit assumptions. Re-rank if weights change.
+Phase 0 is [Intake](../SKILL.md#intake): it fills the purchase brief. Then sort products with these rules.
 
 ### Inclusion / exclusion
 
-- **Include** if it can do the job, meets must-haves, and sits in the budget band (or is a named stretch).
-- **Exclude** on deal-breakers, wrong job, wrong region/voltage, discontinued with no parts, or config mismatch (base vs loaded).
-- Popular-but-wrong items may stay as **traps** (1–2), labeled as such — they are not shortlist members.
-
-Do not research until priorities exist or are assumed out loud.
+- **Include** a product if it can do the job, meets the must-haves, and sits in the budget band or is a named stretch.
+- **Exclude** a product on a deal-breaker, wrong job, wrong region/voltage, discontinued with no parts, or config mismatch, for example base vs loaded.
+- A popular-but-wrong product may stay as a **trap**, 1–2 at most, labeled as a trap. A trap is not a shortlist member.
 
 ## Phase 1 — Category map (Pass 1 Survey)
 
-BFS, not a rabbit hole. Sketch how the market splits this year:
+Go breadth-first: sketch the whole market before you study any one product. Sketch how the market splits this year:
 
-- Tiers: premium / mid / budget / dark horses
+- Tiers: premium / mid / budget / little-known contenders
 - Current vs outgoing generation
-- Refresh cadence **only** when it changes the buy (wait vs last-gen)
+- Refresh cadence, **only** when it changes the buy: wait vs last-gen
 
-Name the split in one short paragraph. Do not crown a winner here.
+Name the split in one short paragraph. Pick no winner in this phase.
 
 ## Phase 2 — Long → short list (Pass 1 Survey)
 
-1. Long list: anything that survives inclusion/exclusion.
+1. Long list: every product that passes inclusion/exclusion.
 2. Cut to **4–8 serious candidates**.
 3. Optionally keep **1–2 popular traps** if they are widely recommended and likely to waste money.
-4. Pin exact SKU / model year / config. Never compare base to loaded without saying so.
+4. Pin the exact SKU / model year / config. When you compare base to loaded, say so.
 
 ## Phase 3 — Product dossiers (Pass 2+ Refine)
 
-One dossier per shortlist SKU. Fields:
+Write one dossier per shortlist SKU. Fields:
 
 - Exact SKU / config / model year
-- Street price band (label list vs street; note temp deals)
+- Street price band; label list vs street; note temporary deals
 - Warranty, parts, service, return policy
-- Strengths vs **this** brief
+- Strengths vs **this** purchase brief
 - Weaknesses / residual deal-breakers
-- Evidence tags (source class + date)
+- Evidence tags: source class + date
 
-Skip encyclopedia dumps. If a field is unknown, say unknown.
+Write only these fields; no encyclopedia dumps. If a field is unknown, write unknown.
 
 ## Phase 4 — Evidence pass (Pass 2+ Refine)
 
-Mine across source types. Prefer long-ownership, independent instrumented tests, specialist/repair forums, recall/complaint databases over star averages. See `review-skepticism.md`.
+Gather feedback across source types. Prefer long-ownership, independent instrumented tests, specialist/repair forums, recall/complaint databases over star averages. Weigh each source by [`review-skepticism.md`](review-skepticism.md).
 
 ### Evidence mix minimums (per serious candidate)
 
 Aim for at least **three classes** before you score:
 
-1. Independent test or specialist write-up (or note none exists)
-2. Long-ownership report (model + date + tenure)
+1. Independent test or specialist write-up; if none exists, note that
+2. Long-ownership report: model + date + tenure
 3. Technician / repair / parts signal **or** recall/complaint check
 4. Live-enough US price / stock / warranty / returns
 
-If a class is missing, say so. Do not invent quotes or scores.
+If a class is missing, say so.
 
-## Phase 5 — Score against brief (Pass 2+ Refine)
+## Phase 5 — Score against the purchase brief (Pass 2+ Refine)
 
-Score only against **this** project's weighted criteria. No universal rubric.
-
-Qualitative grades (ranges beat fake precision):
+Score only against **this** purchase brief's weighted criteria. No universal rubric. Grade each criterion:
 
 | Grade | Meaning |
 | --- | --- |
@@ -86,15 +83,15 @@ Qualitative grades (ranges beat fake precision):
 | Weak | Meets it thinly or with caveats |
 | Fail | Misses a must-have or trips a deal-breaker |
 
-Do not average marketplace stars into the grade.
+Never average marketplace stars into the grade. Grade from the Phase 4 evidence.
 
 ## Phase 6 — Decision (Pass 2+ Refine)
 
-Pick from this set. Willing to say wait or buy last-gen.
+Pick from this set. Say wait or last-gen when its row applies.
 
 | Pick | Use when |
 | --- | --- |
-| **Primary** | Best fit for this brief at a sane street price |
+| **Primary** | Best fit for this purchase brief at a sane street price |
 | **Value** | Most of the job for less; name what you give up |
 | **Stretch** | Better on top-weighted criteria; over the hard cap or at the stretch line |
 | **Wait** | Refresh, stock, or evidence is about to change the buy |

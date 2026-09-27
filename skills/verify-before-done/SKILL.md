@@ -7,14 +7,11 @@ description: use this when about to claim work is complete, fixed, or passing �
 
 Rewrite of obra/superpowers `verification-before-completion` @ `b36e0829`. Compress, not a paste. Id: `verify-before-done`.
 
-Pairs with SDLC **Build**: notify **landed+verified** on **project-main**
-(or trunk if that was the land target), not “pushed to an item branch”
-and not LGTM without evidence.
+Notify only when the work is **landed+verified**: see SDLC
+[Definition of done](../../docs/sdlc/build-review.md#definition-of-done).
 
-The **proving command** is always re-run. The **verifier subagent** is
-not: first verify of a work item is a clean verifier; later verifies of
-that item **resume** it. Never use the builder as the verifier. See
-[docs/SDLC.md](../../docs/SDLC.md) (Subagents per work item).
+The **proving command** is always re-run. Verifier mint, resume, and
+never the builder: see SDLC [Item agents](../../docs/sdlc/subagents.md#item-agents).
 
 ## Iron law
 
@@ -40,10 +37,10 @@ Skip a step = claiming, not verifying.
 | --- | --- | --- |
 | Fresh command for this claim | Softening verify for throwaway spikes you will delete | “Should pass” / “probably” / “seems” |
 | Full suite or scoped command that actually covers the claim | Partial checks when full suite is expensive — name what you skipped | Trusting agent “success” without VCS/diff or independent run |
-| Red-green proof for new regression tests | HITL when evidence is ambiguous or flaky | Satisfaction (“Great!”, “Done!”) before evidence |
+| Red-green proof for new regression tests | Operator in the loop when evidence is ambiguous or flaky | Satisfaction (“Great!”, “Done!”) before evidence |
 | Line-by-line checklist for requirements DoD | Unsupervised push to protected / prod deploy / secret rotate | Extrapolating from linter to build, or build to product fix |
 
-**HITL:** run verification for evidence — bots oversee workers. Do **not** unsupervised destructive/irreversible actions (push to protected branches, prod deploy, secret rotate) without the operator. If **security** or CI marks a check flaky/MEDIUM, do not self-clear — show the operator the output and wait.
+**Operator in the loop:** run verification for evidence — bots oversee workers. If **security** or CI marks a check flaky/MEDIUM, do not self-clear — show the operator the output and wait.
 
 ## Claim → evidence
 
@@ -61,9 +58,9 @@ Skip a step = claiming, not verifying.
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **builder** | Running this gate before ship claims | Skipping **security** on skill-home PRs |
-| **tester** | CI that produces evidence; verifier subagent for the item | Claiming product DoD from fmt-only green; minting a new verifier every loop |
-| **security** | Intake / PR security clear | Day-to-day verify coaching |
+| **builder** | Running this gate before ship claims | Skipping **security** on changes to skill homes, reviewed at Review |
+| **tester** | CI that produces evidence; verifier subagent for the item | Claiming product DoD from fmt-only green |
+| **security** | Intake / security clear at Review | Day-to-day verify coaching |
 | **manager** | After-act landed+verified | Blessing without evidence |
 
 ## Red flags
@@ -71,7 +68,6 @@ Skip a step = claiming, not verifying.
 - Wording that implies success without a command in this turn
 - “Just this once” / “I’m tired” / “agent said it’s fine”
 - Moving on because the diff “looks right”
-- Using the builder as the verifier, or minting a new verifier every loop
 - Calling the item landed when it only exists on an item branch
 
 Stop. Run the proof. Or say what is still unverified.

@@ -103,8 +103,9 @@ flowchart TD
     gate** runs only the offline setup check.
   - **Branch at onboarding** — The branch is cut when onboarding runs:
     a chunk's project-main at end of Brief (was Groom), an item's branch
-    at item Brief (was Build). The onboarding commit lands there at once,
-    visible to every worktree. Parallel chunks: first to land on trunk
+    at item Brief (was Build). Item: the onboarding commit goes on the
+    item branch. Chunk: it lands on project-main as its own reviewed
+    item before Plan. Parallel chunks: first to land on trunk
     wins; the others rebase. Repair commits follow the same rule.
   - **Local tracker** — Long-lived `tickets` branch, never PR'd; linear
     history, no merges, no force-push. `tickets/<id>.md` (front matter:
@@ -113,7 +114,7 @@ flowchart TD
     `comments/<id>/<UTC>-<agent>.md`. ID = repo prefix + 4 random chars,
     unique-checked before push. Each operation: fresh detached worktree
     at `origin/tickets` (outside the repo or gitignored), exactly one
-    commit, hooks and commit signing off, push `HEAD:refs/heads/tickets`.
+    commit, hooks off, signing per git config, push `HEAD:refs/heads/tickets`.
     On rejection: fetch, rebase the one commit, push; jittered retry ~10.
     On rebase conflict: abort, re-read, re-decide (claim taken → give
     up; ID collision → mint a new ID). Never `-X ours/theirs`. Give-up:

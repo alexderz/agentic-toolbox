@@ -1,13 +1,13 @@
 ---
 name: ux-design
-description: use this when writing user stories, high-level UX, or UI mockups — designer persona; variants in any attached tool or markdown/HTML/canvas; agent review vs requirements then human. do not use to implement, apply reviewer taste, or skip the human gate.
+description: use this when writing user stories, high-level UX, or UI mockups — designer persona; variants in any attached tool or markdown/HTML/canvas; agent review vs requirements then operator. do not use to implement, apply reviewer taste, or skip the operator gate.
 ---
 
 # UX design
 
 **designer** skill. Stories and how it feels, not the Spec (LLD).
-Templates: `user-story.md`, `ux.md`, `mockup.md`, `comparables.md`. No
-`scripts/`. No language skill on a UX-only turn.
+Templates (`sdlc-artifacts`): `user-story.md`, `ux.md`, `mockup.md`,
+`comparables.md`. No `scripts/`. No language skill on a UX-only turn.
 
 Inspired by Pocock UI variants (structurally different options), Addy
 anti-“AI default” UI, hueyexe composition (hierarchy, states, explain
@@ -16,14 +16,15 @@ as function not taste). Not those packs.
 ## Iron law
 
 **Agents agree the design meets the written requirements. Then the
-human accepts — unless they waive in writing.** Designer, architect, and
-builder do not self-approve. Agent reviewers do **not** apply their own
-taste.
+operator accepts — unless they waive in writing.** Designer, architect,
+and builder do not self-approve. Agent reviewers do **not** apply their
+own taste.
 
 ## Medium (mockups)
 
-The job is a **deliverable in git** the human can look at. Pick **one**
-medium this agent can actually produce. Do not stall for a plugin.
+The job is a **deliverable in git** the operator can look at. Pick
+**one** medium this agent can actually produce. Do not stall for a
+plugin.
 
 | Medium | When |
 | --- | --- |
@@ -42,7 +43,7 @@ are fine. Prototype code is not production — fold the winner later via
 For a screen, default **3** structurally different options (cap 5).
 Different layout, hierarchy, or primary action — not three color tweaks.
 If two look the same, redo one. Label A/B/C. After a winner, keep the
-set in git until the human has picked; then keep the winner, drop the
+set in git until the operator has picked; then keep the winner, drop the
 rest from the live path.
 
 ## Produce (designer)
@@ -59,34 +60,33 @@ rest from the live path.
    wants novelty.
 6. Explain choices as task fit, not “I like it.”
 
-Resume the same **designer** on later rounds.
+Designer and UX reviewer ids, and resume across rounds:
+[Step agents](../../docs/sdlc/subagents.md#step-agents).
 
-## Review loop (agents, then human)
+## Review loop (agents, then operator)
 
-1. **Designer** produces (stories, comparables for look/flow if there
-   are screens, then mockup variants).
-2. **UX reviewer** — a **different** subagent, not the designer. Resume
-   `ux_reviewer_id`. Reads brief, stories, and written taste/shape
+Loop and operator acceptance: [UX](../../docs/sdlc/plan-trial-spec.md#ux).
+
+1. **UX reviewer** reads the brief, the stories, and written taste/shape
    **if those are requirements**. Checks:
-   - Can the person finish the job in the stories?
+   - Can the user finish the job in the stories?
    - Empty/error/loading covered?
    - Matches stated constraints (brand, density, platform)?
    - Variants are actually different?
    Does **not** add “I would use more whitespace” unless the write-up
    asked for that shape.
-3. Designer fixes. Loop until the reviewer agrees it meets the
-   **requirements** (or they disagree and need the human).
-4. **Then** ask the human ([Asking the
-   human](../../docs/SDLC.md#asking-the-human)): show variants, say
-   which the agents recommend and why (requirements, not taste), what
-   to reply. Do not continue UX until they answer — unless they already
-   wrote `UX verification not required`.
+2. Designer fixes; the UX reviewer re-checks until those agents agree.
+   If they disagree on the requirements, ask the operator ([Asking the
+   operator](../../docs/SDLC.md#asking-the-human)).
+3. When the agents agree, ask the operator the same way: show the
+   variants and say which the agents recommend and why (requirements,
+   not taste).
 
 ## Always
 
 - Copy templates. Link brief, HLD, stories, mockups.
 - One job per story. Checkable “done when.”
-- Agent review before human, except a written waiver.
+- Agent review before the operator, except a written waiver.
 - If UI changes in Build, update stories/mockups in the same land.
 
 ## Ask first
@@ -100,10 +100,10 @@ Resume the same **designer** on later rounds.
 - Reviewer taste, or “the architect liked it.”
 - Fake screenshots. One medium with nothing in git.
 - Load a language skill “so we can code the screen next.”
-- Show the human before agents agree, unless they asked to see drafts.
+- Show the operator before agents agree, unless they asked to see drafts.
 
 ## Red flags
 
-- “We’ll show the human after it works”
+- “We’ll show the operator after it works”
 - Three variants that are the same card grid
 - Reviewer rewriting the palette with no requirement
