@@ -14,12 +14,7 @@ At most one language skill per turn, and the process skills that may load with i
 
 ## Load
 
-Which Go skill loads: the Go row in `language-router` [Map](../language-router/SKILL.md#map). Go-only addendum to that row:
-
-| Situation | Load |
-| --- | --- |
-| Changing tests or tables; race; goleak | `golang-testing` |
-| HTTP | `golang-security` |
+Which Go skill loads: the Go row in `language-router` [Map](../language-router/SKILL.md#map).
 
 Then stop. Apply that skill.
 
