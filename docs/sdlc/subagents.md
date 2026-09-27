@@ -5,8 +5,8 @@
 - **Work item**: one Task, Bug, or outside or remote PR; one
   implementable unit.
 - **Mint**: start a new subagent.
-- **Yagni agent**: the item Brief agent that loads `yagni` only; its id
-  is `contrarian_id`.
+- **Contrarian**: the agent that loads `yagni` at item Brief; its id is
+  `contrarian_id`.
 - **Clean**: a subagent whose transcript is empty except the crafted
   task: ticket, LLD, acceptance, paths, and standards. Never seed it
   with another role's chat.
@@ -38,7 +38,7 @@ Never:
   **different** item; mint clean agents for that item.
 - Never mint a new builder or verifier on each Build loop while this
   item's previous one is still resumable; resume it.
-- Never make the manager the yagni agent, builder, or verifier of that
+- Never make the manager the contrarian, builder, or verifier of that
   item; mint a clean subagent for the role.
 
 ## Fallback
@@ -62,14 +62,15 @@ rotate roles to "save" context; replace the agent of the same role.
   them across UX and mockup rounds. The review loop and the operator's
   acceptance: [UX](plan-trial-spec.md#ux).
 - **Groom** keeps `groom_reviewer_id`: [Groom names](groom-step.md#names).
-- **Incoming item Brief** keeps `contrarian_id` on the item. Resume it
-  if the debate has another round. The troubleshooter may be the
-  manager. The troubleshooter and the yagni agent are two
-  different agents. Neither is the builder, verifier, or reviewer of
-  that item.
+- **Incoming item Brief** keeps `contrarian_id` on the item. Resume the
+  contrarian if the fix-vs-removal choice gets another round. The
+  troubleshooter, and when the manager may be it: [Item
+  brief](entry-brief-repo.md#item-brief), step 1. The troubleshooter
+  and the contrarian are two different agents. Neither is the builder,
+  verifier, or reviewer of that item.
 
 Item grain, fewer agents: for a no-screen incoming item, do not mint a
-gatherer, designer, or UX reviewer. Mint the yagni agent at Brief. Mint
+gatherer, designer, or UX reviewer. Mint the contrarian at Brief. Mint
 the builder, verifier, and reviewer as usual. Add **security** if a
 trust boundary moves.
 
@@ -98,7 +99,7 @@ manager holds the bodies and the child needs them → **Pack**; else →
 | **Point** | High-level task + which skill ids / MCP servers to load (or the host default: "read the matching `SKILL.md`"). | Load those itself. Still **at most one** language-family skill. |
 
 Typical pack mints: first gatherer with `discover-the-idea`; first
-refiner with `yagni`; item yagni agent with `yagni`; designer with
+refiner with `yagni`; contrarian with `yagni`; designer with
 `ux-design` + `sdlc-artifacts`; UX reviewer, review loop only, with
 `ux-design`; architect Plan/Spec with `sdlc-artifacts`; first builder
 with one language skill + `tdd` / `yagni` / `debug` /

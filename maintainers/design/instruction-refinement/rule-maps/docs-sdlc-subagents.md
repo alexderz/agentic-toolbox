@@ -22,16 +22,16 @@ rows marked **P**. **security** reads these rows at Review.
 | --- | --- | --- | --- |
 | 545–546 | Mint a clean gatherer and a clean refiner on a chunk's first pass; resume those ids on later rounds; never the same agent for both | kept here as owner (copy in `entry-brief-repo.md#chunk-brief` → route, DER-300); "Never the same agent for both" → "Never use the same agent for both" | Step agents, Chunk Brief |
 | 547 | No language skill on a gather- or refine-only turn | not moved; stays in `entry-brief-repo.md#chunk-brief` (DER-300) | — |
-| 596–597 | Store `contrarian_id` (the yagni agent) on the item; resume it if the debate has another round | kept here as owner (copy in `entry-brief-repo.md#item-brief` → route, DER-300) | Step agents, Incoming item Brief |
+| 596–597 | Store `contrarian_id` (the yagni agent) on the item; resume it if the debate has another round | kept here as owner (copy in `entry-brief-repo.md#item-brief` → route, DER-300); "the debate has another round" → "the fix-vs-removal choice gets another round" (the debate is item Brief steps 1–3: troubleshooter's fix vs the contrarian's removal) | Step agents, Incoming item Brief |
 | 597 | Do not add a ninth role | not moved; roles owner `docs/SDLC.md#roles` (DER-300, C2) | — |
 | 963 | Heading "Subagents per work item" | kept as `## Item agents` and `## Step agents` (C1 anchors `#item-agents`, `#step-agents`); Item agents placed first so Clean and Resume are defined before Step agents uses them (standard 4) | `#item-agents`, `#step-agents` |
 | 965–967 | Chunk Brief keeps `gatherer_id`, `refiner_id` on the chunk; not the same agent; resume across Gather ↔ Refine; see Brief | kept; merged with old L545–546 into one bullet; link `entry-brief-repo.md#brief` (C1) | Step agents, Chunk Brief |
 | 967–969 | Plan–Spec keeps `designer_id`, `ux_reviewer_id` on the chunk; not each other, not the architect; resume across UX and mockup rounds | kept; the parenthesis → a sentence | Step agents, Plan–Spec |
 | 969–970 | UX reviewer checks requirements only, not taste; the human sees it after the two agree | route (owner: `docs/sdlc/plan-trial-spec.md#ux`, which holds the loop "against the written requirements … not the reviewer's taste" and "then the operator accepts") | Step agents, Plan–Spec, last sentence |
 | 970–972 | Groom keeps `groom_reviewer_id` on the chunk: clean mint, never the author of `groom.md`; resume across review rounds | route (owner: `docs/sdlc/groom-step.md#names`, per the writing standard's Rule owners; DER-302 carries the text there) | Step agents, Groom |
-| 974 | Incoming item Brief keeps `contrarian_id` (yagni agent) | kept; one name, **yagni agent**, defined in Item agents before its first use (old L1006) as "the item Brief agent that loads `yagni` only" (`entry-brief-repo.md#item-brief` step 2) | Item agents, **Yagni agent**; Step agents, Incoming item Brief |
-| 975 | The troubleshooter may be the parent | kept; "parent" → "manager" (banned name; MQ1) | Step agents, Incoming item Brief |
-| 975–976 | Troubleshooter and yagni agent differ; neither is the item's builder, verifier, or reviewer | kept | Step agents, Incoming item Brief |
+| 974 | Incoming item Brief keeps `contrarian_id` (yagni agent) | kept; one name, **contrarian** (matches the id and DER-300), defined in Item agents before its first use (old L1006) as "the agent that loads `yagni` at item Brief" (`entry-brief-repo.md#item-brief` step 2); "yagni agent" replaced everywhere | Item agents, **Contrarian**; Step agents, Incoming item Brief |
+| 975 | The troubleshooter may be the parent | route (owner: `entry-brief-repo.md#item-brief` step 1, which holds the troubleshooter and the condition under which the manager session may do that work) | Step agents, Incoming item Brief |
+| 975–976 | Troubleshooter and contrarian differ; neither is the item's builder, verifier, or reviewer | kept; "yagni agent" → "contrarian" | Step agents, Incoming item Brief |
 | 978–979 | Work item = one Task, Bug, or outside/remote PR; one implementable unit | kept, as a name line | Item agents, **Work item** |
 | — | Mint = start a new subagent | new name line (standard 3); the word is used unchanged from old L985–987, L1008, L1036 | Item agents, **Mint** |
 | 979–981 | Orchestrator (manager session, parent agent, or workflow) keeps `builder_id`, `verifier_id`; Review adds `reviewer_id`; the three are not the same agent | kept; "orchestrator (manager session, parent agent, or workflow)" → "the manager, a session or a workflow" (banned names; MQ1) | Item agents ¶1 |
@@ -44,11 +44,11 @@ rows marked **P**. **security** reads these rows at Review.
 | 1001 | Verifier or reviewer gets the builder's transcript as memory | kept; allowed action: mint them clean (old L989–990) | Item agents, Never 2 |
 | 1002–1003 | An item's builder, verifier, reviewer reused on a different item | kept; allowed action: mint clean agents for that item | Item agents, Never 3 |
 | 1004–1005 | New builder or verifier minted each Build loop while the previous is resumable | kept; allowed action: resume it | Item agents, Never 4 |
-| 1006 | Parent is the yagni agent, builder, or verifier of that item | kept; "Parent" → "manager" (MQ1); allowed action: mint a clean subagent for the role | Item agents, Never 5 |
+| 1006 | Parent is the yagni agent, builder, or verifier of that item | kept; "Parent" → "manager" (MQ1), "yagni agent" → "contrarian"; allowed action: mint a clean subagent for the role | Item agents, Never 5 |
 | 1008–1011 | Fallback: resume fails (expired, quota, host error) → mint a clean agent of the same role, replace the id, short handoff (paths, decisions, open failures), not the other role's transcript | kept; condition → action table, one action per step; the dash clause → its own Never sentence with the allowed action | Fallback row 1; Fallback last ¶ |
 | 1013–1015 | Overflow: resumed transcript too large to be useful → replace that role's agent the same way; do not rotate roles to save context | kept; condition wording unchanged (Note N1); "Do not" → "Never" with the allowed action | Fallback row 2; Fallback last ¶ |
 | 1017–1018 | Orchestrators that spawn in parallel mint one pair per item, not per loop; independent items get independent pairs | kept; "Orchestrators" → "A manager" (banned name); moved to Item agents | Item agents ¶ after the table |
-| 1020–1023 | Item grain: no gatherer, designer, UX reviewer for a no-screen incoming item; yagni agent at Brief; builder, verifier, reviewer as usual; security if a trust boundary moves | kept; moved to Step agents; the fragment "Security if a trust boundary moves" → "Add **security** if a trust boundary moves" (actor and condition unchanged) | Step agents, last ¶ |
+| 1020–1023 | Item grain: no gatherer, designer, UX reviewer for a no-screen incoming item; yagni agent at Brief; builder, verifier, reviewer as usual; security if a trust boundary moves | kept; moved to Step agents; "yagni agent" → "contrarian"; the fragment "Security if a trust boundary moves" → "Add **security** if a trust boundary moves" (actor and condition unchanged) | Step agents, last ¶ |
 | 1025–1026 | **P** Only the orchestrator writes to the tracker (see Hierarchy) | kept; "orchestrator" → "**manager**" (banned name); the old link, now `../SDLC.md#tracker` (C1), makes the line the route to the owner `docs/SDLC.md#tracker` | Tracker writes, L1 |
 | 1026–1027 | **P** Builder, verifier, reviewer prompts carry no tracker-writing instructions; those roles report | kept, unchanged | Tracker writes, L2–3 |
 | 1029–1032 | Writable worktree: some hosts pin it to the orchestrator's worktree; then one item worktree writable; other builders write to scratch for the orchestrator to commit, or items run in sequence | kept; "orchestrator" → "manager"; one sentence split in two | Writable worktree |
@@ -56,7 +56,7 @@ rows marked **P**. **security** reads these rows at Review.
 | 1036–1037 | On each mint the manager picks the cheaper prompt; no default is always right | kept, reworded per LLD C9: the manager picks the mode by "the manager holds the bodies and the child needs them → Pack; else → Point"; "cheaper" and "no default" are replaced by that rule (MQ2) | Spawn prompts ¶1 |
 | 1039–1042 | Mode table: Pack, Point; prompt; what the child does; at most one language-family skill | kept, unchanged (curly quotes straightened) | Spawn prompts table |
 | 1044–1045 | Pack when the parent has the bodies, the child uses most of them, and a re-read costs more than inlining | kept, reworded per LLD C9 as the Pack condition (MQ2) | Spawn prompts ¶1 |
-| 1046–1053 | Typical pack mints and their skills; builder gets no `tracker-sdlc`, no tracker writes; UX reviewer review loop only | kept; parentheses → clauses | Spawn prompts, Typical pack mints |
+| 1046–1053 | Typical pack mints and their skills; builder gets no `tracker-sdlc`, no tracker writes; UX reviewer review loop only | kept; parentheses → clauses; "item yagni-agent" → "contrarian" | Spawn prompts, Typical pack mints |
 | 1055–1057 | Point when several skills or servers might apply, the parent lacks the bodies, or a thin slice matters | kept, reworded per LLD C9 as "else → Point" (MQ2) | Spawn prompts ¶1 |
 | 1057 | Do not load a catalog into the parent just to pack it | kept; "parent" → "manager" (MQ1); allowed action: point instead | Spawn prompts, Never 1 |
 | 1059–1061 | Resume is delta-only; no re-pack; a new skill or tool → pack that slice or name it | kept; "If … required" → "→" | Spawn prompts, Resume ¶ |
@@ -87,7 +87,7 @@ Acceptance notes:
 
 All resolved.
 
-- **MQ1** (old L975, L979, L991, L1006, L1017, L1044, L1056–1057,
+- **MQ1** (old L979, L991, L1006, L1017, L1044, L1056–1057,
   L1069), resolved from the text: "parent", "parent agent" and
   "orchestrator" name the manager. Old L979 lists the parent agent as a
   form of the orchestrator, and old L1036 writes "the orchestrator
