@@ -16,20 +16,20 @@ rows marked **P**. **security** reads these rows at Review.
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
+| 780–785 (Groom) | Incoming item's branch, cut at item Brief: from project-main if one already exists (chunk still integrating) and lands there; else from trunk (no chunk in flight, or parent chunk already Trunked), Review versus trunk, local merge; never create project-main | owner copy added here (handoff from DER-302, which routes Groom's copy here); parentheses → condition column; wording kept | Branches bullet 2 table; bullet 3 |
+| 866–867 (Review) | Diff range versus project-main, or versus trunk if there is no project-main | stays at its owner `build-review.md#review`; the trunk case appears here as "Review versus trunk" | Branches bullet 2 table, row 2 |
+| 878–879 (Trunk) | Incoming item with no project-main: already on trunk after Review; Trunk step `n/a` | stays at its owner `trunk-changelog-monthly.md#trunk`; routed as "Trunk is then `n/a`" | Branches bullet 2 table, row 2 |
 | 902 | Heading "Project-main (intermediate integration)" | kept as `## Project-main` (C1 anchors `#branches`, `#project-main`) | `#branches`, `#project-main` headings |
 | 904–906 | Integrate each merge-ready item onto a temporary project branch, then land it on trunk as the chunk; do not build a stack of isolated item branches integrated once at the end | kept; "temporary project branch" named project-main; the positive rule first, "Do not" → "Never" beside it; Trunk step linked | Project-main ¶1 |
 | 908–912 | Branch table: trunk, project-main, item branch; what and lifetime | kept; item-branch row's parentheses spelled out as conditions ("or from trunk if there is no project-main"; "at item Brief for an incoming item, or at Build for an item split from Spec") | Branches table |
 | 912, 935, 952 | Item branch source and land target: project-main, or trunk | kept; named once as **land target** = the branch the item branch was created from (MQ1) | Branches, "land target" line |
 | 914–915 | Create project-main from trunk at end of chunk Brief when this chunk is still integrating | kept, bold dropped | Branches bullet 1 |
 | 915–916 | Do not create one for an incoming item that has no live project-main | kept, merged with old L784–785 into "Never create a project-main for an incoming item"; allowed action: the incoming-item table | Branches bullet 3 |
-| 780–785 (Groom) | Incoming item's branch, cut at item Brief: from project-main if one already exists (chunk still integrating) and lands there; else from trunk (no chunk in flight, or parent chunk already Trunked), Review versus trunk, local merge; never create project-main | owner copy added here (handoff from DER-302, which routes Groom's copy here); parentheses → condition column; wording kept | Branches bullet 2 table; bullet 3 |
-| 866–867 (Review) | Diff range versus project-main, or versus trunk if there is no project-main | stays at its owner `build-review.md#review`; the trunk case appears here as "Review versus trunk" | Branches bullet 2 table, row 2 |
-| 878–879 (Trunk) | Incoming item with no project-main: already on trunk after Review; Trunk step `n/a` | stays at its owner `trunk-changelog-monthly.md#trunk`; routed as "Trunk is then `n/a`" | Branches bullet 2 table, row 2 |
 | 916–917 | Name project-main and item branches as in Conventions | kept; link already `conventions.md#name-formats` (C1) | Branches bullet 4 |
 | 917–918 | When project-main exists, builders branch off the current tip | kept, bold dropped | Branches bullet 5 |
 | 918–920 | After an item lands, in-flight builders rebase or merge project-main and resume; the verifier re-runs | kept, split into two sentences, wording unchanged (MQ2) | Branches bullet 6 |
 | 922–923 | Lands on project-main are serialized; builds may run in parallel; one item merges at a time | kept, one sentence each | Project-main ¶2 |
-| 923–925 | Landing builder de-conflicts against the current tip: resume that builder, then its verifier | kept; parenthesis → numbered steps 1–2 | Project-main ¶3, steps 1–2 |
+| 923–925 | Landing builder de-conflicts against the current tip: resume that builder, then its verifier | kept; parenthesis → numbered steps 1–2; no actor added: the old text names none for "resume" |  Project-main ¶3, steps 1–2 |
 | 925 | Do not race two merges onto project-main | kept, "Never" with the allowed action beside it (merge one item, then the next) | Project-main ¶2 |
 | 927 | Heading "Land path (manager)" | kept as `## Land path` (C1) | `#land-path` heading |
 | 929 | No PRs; manager sets the land order; builders follow it | kept, unchanged (DER-266 owns "No PRs") | Land path ¶1 |
@@ -43,7 +43,7 @@ rows marked **P**. **security** reads these rows at Review.
 | 947 | **P** Never leave merge-ready items unmerged to integrate together later | kept, text unchanged; do instead: land each in the land order | Never row 2 |
 | 948 | **P** Never skip Review because there is no PR | kept, text unchanged; do instead: run Review before every land | Never row 3 |
 | 949–950 | **P** Never force-push project-main to win a race (shared branch; `shell-safety` Ask first) | kept; parenthesis → its own sentence, same words; do instead: de-conflict against the current tip (old L923–925) | Never row 4 |
-| 951–952 | **P** Never treat a green item branch as landed+verified; landed means on project-main, or trunk if that was the land target | kept; the first sentence in the row; "Landed means …" kept as the definition under the table (MQ1) | Never row 5; Branches, "Landed" line |
+| 951–952 | **P** Never treat a green item branch as landed+verified; landed means on project-main, or trunk if that was the land target | kept; the first sentence in the row; do instead: treat an item as landed+verified only when it is on its land target and verified; "Landed means …" kept as the definition under the table (MQ1) | Never row 5; Branches, "Landed" line |
 | 953–954 | **P** Never start or land an item with an open blocker without an operator call | kept, text unchanged; do instead: route to `build-review.md#open-blockers` (owner of the open-blocker procedure) | Never row 6 |
 | 955–956 | **P** Never treat designer or architect self-OK as the UX gate, or skip mockups without a written `UX verification not required` | kept at its owner by C1, text unchanged | `docs/sdlc/plan-trial-spec.md` `#ux` Never |
 | 957–958 | **P** Never lock Plan shape without 2–4 real comparables unless the operator waived look-around in writing | kept at its owner by C1, text unchanged | `docs/sdlc/plan-trial-spec.md` `#comparables` Never |

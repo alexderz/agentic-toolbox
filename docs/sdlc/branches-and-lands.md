@@ -67,6 +67,6 @@ without a PR. PRs remain only for outside or remote workers.
 | Leave merge-ready items unmerged so they can “integrate together later.” | Land each merge-ready item in the land order ([Land path](#land-path)). |
 | Skip Review because there is no PR. | Run [Review](build-review.md#review) before every land. |
 | Force-push project-main to win a race. Project-main is a shared branch; force-push is **shell-safety** Ask first. | De-conflict against the current project-main tip ([Project-main](#project-main)). |
-| Treat a green item branch as landed+verified. | Treat an item as landed only when it is on its land target ([Branches](#branches)). |
+| Treat a green item branch as landed+verified. | Treat an item as landed+verified only when it is on its land target ([Branches](#branches)) and verified. |
 | Start or land an item that still has an **open** blocker without an operator call. | Follow [Open blockers](build-review.md#open-blockers). |
 | Use the item path to avoid talking to the operator, or someone the operator names in writing, about a product change. | Ask them ([Asking the operator](../SDLC.md#asking-the-human)). |
