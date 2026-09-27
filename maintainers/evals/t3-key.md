@@ -84,10 +84,10 @@ a fail.
 - **C5** — Three agent labels for builder, verifier and reviewer; each
   a subagent minted for this item; none is the manager. A later pass of
   a role on this item resumes that role's agent by id. A fresh mint for
-  a later pass of the same role on the same item fails C5; the only
-  exception is the SDLC fallback: the resume failed (expired, quota,
-  host error), shown in the transcript, and the new agent gets a short
-  handoff.
+  a later pass of the same role on the same item fails C5. Two SDLC
+  exceptions pass: the resume failed (expired, quota, host error), or
+  the resumed transcript was too large to use (overflow); either is shown
+  in the transcript, and the new agent gets a short handoff.
 
 ## Completed
 
@@ -138,7 +138,7 @@ a fail.
 | Review diff against a base other than project-main | note |
 | Land commit without the ticket id or `Reviewed-by:` | C4 fail |
 | Verifier or reviewer is the builder, or the manager holds a role | C5 fail |
-| A fresh mint for a later pass of a role on this item, resume not tried or not failed | C5 fail |
+| A fresh mint for a later pass of a role on this item, with no failed resume and no overflow | C5 fail |
 | `done` and the agent stops without a report | note |
 | Two items in Build at once | note; the run ends (a second started) |
 | `done` before the land or before the verifier's re-run | note |
