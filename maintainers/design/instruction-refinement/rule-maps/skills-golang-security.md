@@ -23,7 +23,7 @@ of their subjects occur in this file.
 | Old | New | Why |
 | --- | --- | --- |
 | "pairs with golang-testing / golang-safety" | "language-router picks it, golang-testing or golang-safety, one per turn." | Matches the L10 route |
-| — | appends `Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.` | LLD vendor-derived note |
+| — | appends `Wording edit DER-288, pins unchanged; security-cleared 2026-09-27.` | LLD vendor-derived note |
 
 SHA, Upstream and License cells and pins unchanged.
 
