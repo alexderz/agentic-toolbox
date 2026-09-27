@@ -43,15 +43,11 @@ items: see [Writable worktree](subagents.md#writable-worktree).
 
 ### Definition of done
 
-**DoD** (definition of done) includes:
-
-- acceptance on the ticket;
-- tests or verification evidence;
-- the [land path](branches-and-lands.md#land-path) cites a ticket ID
-  when the project uses tickets;
-- a changelog line under Unreleased;
-- human and agent docs current for this item;
-- no silent scope leftover.
+**DoD** (definition of done) includes: acceptance on the ticket; tests
+or verification evidence; the [land path](branches-and-lands.md#land-path)
+cites a ticket ID when the project uses tickets; a changelog line under
+Unreleased; human and agent docs current for this item; no silent scope
+leftover.
 
 The verifier checks the tone and voice of deliverables against the
 project's style guide. If the project names none, use
@@ -86,12 +82,10 @@ that case, escalate.
 
 ### Skills-home DoD
 
-In this repo, the skills home, DoD also includes:
-
-- Any skill-body diff must match the pinned SHA in
-  [SOURCES.md](../../SOURCES.md) for that id.
-- If that SHA is empty, no body may land.
-- Remote agent PRs into this repo still pass **security** intake.
+In this repo, the skills home, any skill-body diff must match the pinned
+SHA in [SOURCES.md](../../SOURCES.md) for that id. If that SHA is empty,
+no body may land. Remote agent PRs into this repo still pass
+**security** intake.
 
 Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
 
@@ -110,5 +104,5 @@ it. Review the item before it lands on project-main or trunk.
    **and** passes the **security** gate: intake, SHA pins, and
    trust-boundary deltas.
 
-Security at land is a gate. Monthly is not the security gate: see
+Monthly is not the security gate: see
 [Monthly](trunk-changelog-monthly.md#monthly).
