@@ -1,0 +1,25 @@
+Write a Python command-line tool for the Home Assistant REST API.
+
+You have a live Home Assistant instance to work against:
+
+  Base URL:  $HA_URL
+  Token:     in the environment variable HA_TOKEN
+
+It is READ-ONLY. GET and HEAD succeed; anything else returns 405. It fronts a
+real installation, so it is rate limited. Explore the API and validate your
+work against it, but do not hammer it in a loop.
+
+Your work is being graded on five criteria, weighted equally:
+
+1. COMPLETENESS  - How much of the Home Assistant REST API is usefully covered,
+                   and how useful the commands are in practice.
+2. CORRECTNESS   - Does it actually work against the live endpoint? Are auth,
+                   errors, timeouts and bad input handled rather than crashing?
+3. CODE QUALITY  - Structure, naming, readability. No duplication, no dead code,
+                   no copy-pasted blocks.
+4. TESTS         - Real tests that run and assert something meaningful. Tests
+                   that hit the network must not be required to pass offline.
+5. USABILITY     - Help output, sensible subcommands, useful output formats,
+                   correct exit codes, and a README that shows real usage.
+
+Deliver whatever files you think the job needs.

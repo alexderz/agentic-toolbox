@@ -1,0 +1,9 @@
+# case	model	flags	note
+# Ordered fastest expected -> slowest. One model resident at a time.
+# Variants are a model PLUS a parameter set; see assets/case-matrix.md.
+small-speed	your-small-moe	-ngl 999 -ncmoe 8 -c 65536	most weight resident, small window
+small-max	your-small-moe	-ngl 999 -ncmoe 36 -c 262144	full context, more offload
+mid-max	your-mid-dense	-ngl 999 -c 49152	dense: context is the only lever
+mid-nothink	your-mid-dense	-ngl 999 -c 49152 --reasoning off	adjusted setting, baseline kept on record
+mid-budget	your-mid-dense	-ngl 999 -c 49152 --reasoning-budget 4096	bounded thinking
+large-max	your-large-moe	-ngl 999 -ncmoe 94 -c 40960	heavy CPU offload, slow by construction

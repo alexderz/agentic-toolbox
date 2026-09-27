@@ -1,0 +1,7 @@
+# Sandbox for executing model-generated code during grading.
+# Never run generated code on the host: it is unreviewed.
+FROM docker.io/library/python:3.12-slim
+RUN pip install --no-cache-dir requests pytest httpx aiohttp click rich tabulate pyyaml
+RUN useradd -m grader
+USER grader
+WORKDIR /app
