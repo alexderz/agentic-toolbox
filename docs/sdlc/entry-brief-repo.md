@@ -18,7 +18,8 @@ The classification line goes on the ticket at Brief.
 
 Do not implement at Entry: classify, or ask. Never use the item path to
 avoid talking to the operator, or someone the operator names in
-writing, about a product change: [Never](branches-and-lands.md#never).
+writing, about a product change; ask them:
+[Never](branches-and-lands.md#never).
 
 ## Brief
 
@@ -44,8 +45,7 @@ exists for this chunk. Do not implement in this step: write the brief.
 4. Repeat 1–3 until the operator confirms a brief that Refine did not
    send back.
 
-Gatherer and refiner ids (clean mint on the first pass, resume on later
-rounds, never one agent for both): [Step agents](subagents.md#step-agents).
+Gatherer and refiner ids: [Step agents](subagents.md#step-agents).
 No language skill on a gather- or refine-only turn:
 [`language-router` Never](../../skills/language-router/SKILL.md#never).
 
@@ -114,13 +114,12 @@ Brief.
    | The operator already wrote that they are AFK, headless, or autonomous | Apply the AFK pick in [Asking the operator](../SDLC.md#asking-the-human). |
    | Otherwise | Ask the operator. The wait blocks this issue only; other items proceed: [Asking the operator](../SDLC.md#asking-the-human). |
 
-Contrarian id (store `contrarian_id` on the item, resume it for another
-round): [Step agents](subagents.md#step-agents). Use only the roles in
-[Roles](../SDLC.md#roles).
+Contrarian id: [Step agents](subagents.md#step-agents). Use only the
+roles in [Roles](../SDLC.md#roles).
 
 ## Repo
 
-Before Plan, confirm:
+Before Plan, make sure each exists; set up what is missing:
 
 1. Repo or subdir exists (private as needed).
 2. A README or AGENTS stub, so agents who need access are aware. Layout:

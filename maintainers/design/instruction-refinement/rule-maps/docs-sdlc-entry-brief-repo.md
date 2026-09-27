@@ -20,7 +20,7 @@ line in the new file. Protected rows touched: none (the route to
 | 518–519 | Unclear → a short look (reproduce? design choice?); still unclear → ask | kept, numbered if/then; "ask" links the owner of how to ask, index `#asking-the-human` | L14–17 |
 | 519 | Do not implement here | kept; allowed action named: classify, or ask (standard 7) | L19 |
 | 521–523 | Read-only: classify from what you were handed; no template, subagent, tracker write; classification line goes on the ticket at Brief | kept | L5–7 |
-| — | Never use the item path to avoid talking to a person about a product change | route (owner: `branches-and-lands.md#never`), new line from the DER-298 review; "a person" per the clarification | L19–21 |
+| — | Never use the item path to avoid talking to a person about a product change | route (owner: `branches-and-lands.md#never`), new line from the DER-298 review; "a person" per the clarification; allowed action named: ask them (standard 7) | L19–22 |
 | 525 | Heading Brief | kept, anchor `#brief` | L23 |
 | 527 | Before Plan | kept | L25 |
 | — | Heading Chunk brief (C1) | kept, anchor `#chunk-brief` | L27 |
@@ -28,7 +28,7 @@ line in the new file. Protected rows touched: none (the route to
 | 533–537 | Gather: load `discover-the-idea`; the skill owns interview, facts, options map, brief; read it or pack it into the gatherer prompt; do not copy or paraphrase its loop | kept, step 1; parenthesis → "or" (standard 8); allowed action named: link the skill | L32–37 |
 | 539–542 | Refine: a different subagent from the gatherer; load `yagni`; question necessity; less stupid, simpler; first principles from the dump and facts, not a product template | kept, step 2 | L38–41 |
 | 542–543 | Requirement dies or new fog → return to Gather with the delta (resume the gatherer) | kept, step 3; "fog" (metaphor, standard 8) → "unresolved point" (MQ3); parenthesis → own sentence | L42–43 |
-| 545–547 | Mint a clean gatherer and refiner on the first pass; resume later; never one agent for both | route (owner: `subagents.md#step-agents`); see Owner gaps | L47–48 |
+| 545–547 | Mint a clean gatherer and refiner on the first pass; resume later; never one agent for both | route (owner: `subagents.md#step-agents`, which holds the whole rule since DER-306); plain route line | L48 |
 | 547 | No language skill on a gather- or refine-only turn | route (owner: `language-router` `#never`, rule-owner row "no-language turns") | L49–50 |
 | 549 | Plan from the confirmed brief, not a raw dump | kept; "never" with the allowed source | L52 |
 | 551–552 | End of chunk Brief: cut project-main `integrate/<chunk-slug>` from trunk | kept as step 1 of a numbered list; source "from trunk" → route (owner: `branches-and-lands.md#branches`) | L54–57 |
@@ -52,26 +52,15 @@ line in the new file. Protected rows touched: none (the route to
 | 588–590 | Parent is the troubleshooter or yagni agent → mint a clean parent-pick (or ask); neither of those two chooses | kept, moved into step 3 (it decides who picks; no forward reference, standard 4); "parent-pick" → "a clean agent for the pick" (Names) | L107–108 |
 | 587–588 | Ask the human if the two options look different to a user or either is a plan change | kept, step 4 condition table rows 1 and 3 (first match applies) | L109–115 |
 | 590–594 | That wait blocks this issue unless AFK / headless / autonomous, then the parent may pick between two item fixes that honor the plan; other items proceed | route (owner: index `#asking-the-human`, AFK pick and wait-is-a-blocker), rows 2 and 3 (MQ5) | L114–115 |
-| 596–597 | Store `contrarian_id` on the item; resume it for another round | route (owner: `subagents.md#step-agents`); see Owner gaps | L117–118 |
-| 597 | Do not add a ninth role | kept as "Use only the roles in Roles" (rule-owner replacement phrase), link index `#roles` | L118–119 |
-| 599 | Heading Repo | kept, anchor `#repo` | L121 |
-| 601 | Before Plan | kept | L123 |
-| 603 | Repo or subdir exists (private as needed) | kept verbatim, **MQ2 open** | L125 |
-| 604–606 | README / AGENTS stub so agents who need access are aware; layout: Conventions; stub template `agents-stub.md` | kept; layout link → `conventions.md#product-repo-layout` (old L413, inside the old Conventions section it linked; C1 had `#name-formats`); template path linked | L126–128 |
-| 607 | **tester** watch if applicable | kept verbatim, **MQ2 open** | L129 |
-| 608 | Designs live in git from onset | route (owner: `conventions.md#designs-in-git`) | L130–131 |
-| 610 | Item: confirm the workspace exists; do not reinvent it | kept; allowed action named | L133 |
-
-## Owner gaps
-
-Not meaning questions here: the rules keep their text in this file's
-route lines. The owner must hold them whole (standard 5); the C9 item
-(`subagents.md`) should add them.
-
-- `subagents.md#step-agents` does not say "clean mint on the first pass"
-  for the gatherer and refiner (old L545–546).
-- `subagents.md#step-agents` does not say "resume the contrarian for
-  another round" (old L596–597).
+| 596–597 | Store `contrarian_id` on the item; resume it for another round | route (owner: `subagents.md#step-agents`, which holds the whole rule since DER-306); plain route line | L117 |
+| 597 | Do not add a ninth role | kept as "Use only the roles in Roles" (rule-owner replacement phrase), link index `#roles` | L117–118 |
+| 599 | Heading Repo | kept, anchor `#repo` | L120 |
+| 601 | Before Plan: the list below is set up for a chunk | kept as "make sure each exists; set up what is missing"; old L610's "confirm … do not reinvent" stays the item-only contrast | L122 |
+| 603 | Repo or subdir exists (private as needed) | kept verbatim, **MQ2 open** | L124 |
+| 604–606 | README / AGENTS stub so agents who need access are aware; layout: Conventions; stub template `agents-stub.md` | kept; layout link → `conventions.md#product-repo-layout` (old L413, inside the old Conventions section it linked; C1 had `#name-formats`); template path linked | L125–127 |
+| 607 | **tester** watch if applicable | kept verbatim, **MQ2 open** | L128 |
+| 608 | Designs live in git from onset | route (owner: `conventions.md#designs-in-git`) | L129–130 |
+| 610 | Item: confirm the workspace exists; do not reinvent it | kept; allowed action named | L132 |
 
 ## Meaning questions
 
