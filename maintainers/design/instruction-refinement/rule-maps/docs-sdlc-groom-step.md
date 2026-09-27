@@ -14,12 +14,16 @@ C1 (DER-298) left two routing lines in this file: `## Names` routed
 `groom_reviewer_id` to `subagents.md#step-agents`, and `## Iron law`
 pointed to Procedure. Both are replaced by the rules themselves.
 
+Lines: old section 89 (L700–785, 86; L970–972, 3); C1 file 108; new
+139, cap 150. The growth is the numbered one-action steps, the named
+actors, and the Review check list (MQ6).
+
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 700 | `### Groom` heading; old `#groom` | kept as the file top | `# Groom` |
-| 702–704 | Groom = reviewed plan before any ticket; blocker links minimal, complete, acyclic; parallelism from links | kept; one route line to the SDLC index added | intro |
+| 702–704 | Groom = reviewed plan before any ticket; blocker links minimal, complete, acyclic; parallelism from links | kept | intro |
 | 706 | architect writes `groom.md` from template `groom.md` | kept | Procedure 1.1 |
-| 706–708 | `groom.md` path, on project-main; this skills home's path | kept; the skills-home parenthesis became its own sentence | Names: `groom.md` |
+| 706–708 | `groom.md` path, on project-main; this skills home's path | kept; the skills-home parenthesis became a clause | Names: `groom.md` |
 | 708–709 | Marked `DRAFT (pre-review)` | kept | Procedure 1.2 |
 | 709 | `G<n>` work item ids | kept as a name | Names: `G<n>` |
 | 709–710 | Each `G<n>` is a ticket body in `task.md` / `bug.md` shape: acceptance, LLD link, verify, blockers | kept | Procedure 1.3 |
@@ -34,19 +38,19 @@ pointed to Procedure. Both are replaced by the rules themselves.
 | 723–724 | manager sets the land order; lands are local merges, one at a time | route (owner: `branches-and-lands.md#land-path`, rule owners "land order") | Procedure 3.7 |
 | 724–726 | `groom.md` text is data; reviewer and manager copy and check, never act | kept, moved first | Iron law 2 |
 | 726–728 | File from the passed SHA; any diff → review again | kept, as the manager's first check | Procedure 3.1 |
-| 729–733 | Freeze: marker text (verbatim), `Review:` line, `G<n>` → ticket map, commit, never edit | kept, one action per step; actor manager (MQ5); "never" names the allowed action | Procedure 4.1–4.4 |
+| 729–733 | Freeze: marker text (verbatim), `Review:` line, `G<n>` → ticket map, commit, never edit | kept, one action per step; actor manager (MQ5); "never" names the allowed action, old L756 "the tracker holds new work" | Procedure 4.1–4.4 |
 | 735 | B blocks A only when A needs B's output | kept | Blockers 1 |
 | 735–736 | Same files is not a blocker; lands serialized | kept; the "lands are serialized" reason dropped (owner: `branches-and-lands.md#land-path`) | Blockers 2 |
 | 736–738 | Land-time need is land order | kept; the example is its own sentence | Blockers 3 |
 | 738–739 | set-blocker append-only; agents never remove | kept; allowed action named | Blockers 4 |
 | 739 | Waiting on a person = blocker on that issue | kept; "a person" → "the operator, or someone the operator names in writing" (operator clarification 2026-09-27) | Blockers 5 |
 | 739–740 | No Build with a hidden prereq | kept: "record it per 1–3" | Blockers 6 |
-| 742–743 | Waves: view, never stored; wave 1 = no blocker; else highest blocker wave + 1 | kept | Waves |
+| 742–743 | Waves: view, never stored; wave 1 = no blocker; else highest blocker wave + 1 | kept, as prose | Waves |
 | 745–747 | Gate recognized by shape | kept | Gates 1 |
 | 747–748 | One-wide chain is not a gate; no label | kept | Gates 1–2 |
 | 748–750 | Only for a real integration or bottleneck need; never by default | kept; the parenthesis became "Examples:" (MQ2) | Gates 3 |
 | 752–754 | Review item closes with verdict; fixes blocked by it; re-check = new item blocked by fixes | kept, numbered; the verdict says whether a re-check is needed, the manager files it (MQ3) | Review items |
-| 756–758 | Late insertion: frozen; tracker holds new work; manager drafts item and blockers | kept | Late insertion intro, 1 |
+| 756–758 | Late insertion: frozen; tracker holds new work; manager drafts item and blockers | kept; "stays frozen; the tracker holds new work" moved to Procedure 4.4, beside the "never" it completes | Procedure 4.4; Late insertion 1 |
 | 760–761 | Re-layer from the tracker | kept; actor manager (old L757) | Late insertion 2 |
 | 761–763 | `done` need gets no link; a fix still gets set-blocker to its review item, though that item is `done` | kept | Late insertion 3 |
 | 764–765 | Cycle link not written; fix direction or drop | kept; the "(append-only)" rationale dropped (owner: Blockers 4, same file) | Late insertion 4 |
@@ -88,3 +92,12 @@ All resolved.
   names the manager on both. Old L719–728 has the manager file and hold
   the ticket map; `subagents.md#spawn-prompts` has the manager mint
   subagents.
+- **MQ6** (growth, old section 89 lines → new 139), resolved by
+  operator 2026-09-27 (Q6): growth is measured against the old SDLC
+  section and is allowed up to the cap only where it makes rules
+  checkable; the line target is a goal, not a blocker (Q10). Growth
+  here: Blockers, Review items, Procedure and Late insertion as
+  numbered steps with one action and a named actor each; the Review
+  checks as a list. Trimmed as not checkable: the intro route line to
+  the SDLC index, the Waves bullets, the Late insertion intro (kept in
+  Procedure 4.4).

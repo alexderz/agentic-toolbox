@@ -2,15 +2,14 @@
 
 Groom produces a reviewed plan on paper before any ticket exists. The
 plan's job is to get blocker links right: minimal, complete, and
-acyclic. Parallelism in Build comes from those links. Roles, names, and
-asking the operator: [SDLC](../SDLC.md).
+acyclic. Parallelism in Build comes from those links.
 
 ## Names
 
 - **`groom.md`**: the plan, from template
-  [`groom.md`](../../skills/sdlc-artifacts/templates/groom.md), on
-  project-main. Its path is `.agents/design/<chunk-slug>/groom.md`. In
-  this skills home, its path is `maintainers/design/<chunk-slug>/groom.md`.
+  [`groom.md`](../../skills/sdlc-artifacts/templates/groom.md), at
+  `.agents/design/<chunk-slug>/groom.md` on project-main; in this skills
+  home, `maintainers/design/<chunk-slug>/groom.md`.
 - **`G<n>`**: a work item's id inside `groom.md`, before it has a
   ticket.
 - **Groom reviewer**: a **clean** subagent, never the author of `groom.md`.
@@ -37,11 +36,9 @@ asking the operator: [SDLC](../SDLC.md).
 
 ## Waves
 
-Waves are a view computed from blockers, never stored.
-
-- An item with no blocker is in wave 1.
-- Any other item's wave is one more than the highest wave among its
-  blockers.
+Waves are a view computed from blockers, never stored. An item with no
+blocker is in wave 1; any other item's wave is one more than the
+highest wave among its blockers.
 
 ## Gates
 
@@ -107,12 +104,10 @@ Waves are a view computed from blockers, never stored.
    the source of truth for tickets, blockers and state.`
 2. **manager** fills the `Review:` line: reviewer, date, passed SHA.
 3. **manager** fills the `G<n>` → ticket map.
-4. **manager** commits. Never edit `groom.md` again; new work goes to
-   the tracker.
+4. **manager** commits. Never edit `groom.md` again; the tracker holds
+   new work.
 
 ## Late insertion
-
-`groom.md` stays frozen; the tracker holds new work.
 
 1. **manager** drafts the item (`task.md` / `bug.md`) and its blockers.
 2. **manager** re-layers from the tracker: `read` every open item
