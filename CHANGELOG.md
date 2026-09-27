@@ -32,6 +32,9 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `sdlc-artifacts` and its `changelog.md` template cite the land SHA, not
+  a merge SHA or a PR; the tracker-writer line routes to the SDLC index
+  `#tracker`; the AGENTS stub names `## Tracker` (`DER-311`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
