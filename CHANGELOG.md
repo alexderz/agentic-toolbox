@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Trial proof-of-concept code stays in the repo: a frozen `poc/` folder beside the chunk's design records holds the note, the code and a `README.md`, and is never imported into product paths; Plan drafts and Trial files are pushed as written after a diff scan, and **security** reads `poc/` at Spec (`DER-278`)
 - Wording fixes from the integrated check: duplicate worker-intake, open-blocker and reviewer-resume copies now route to their owners; the Monthly row lands in `docs/monthly/` or a filed Task; plainer words replace "box-local", "local box", "Separate PRs OK" and "Ask the human" (`DER-344`)
 - Writing standard records three operator decisions: K1 treats the `tracker-sdlc` 150-line target as a goal and blocks only on a cap; K3 exempts the `tracker-sdlc` `(per orchestrator …)` comment shape as contract text; frontmatter descriptions are metadata. Stale links in the design records are now code spans or fixed paths (`DER-345`)
 - `language-router` owns two more rules: a proto-led change (proto at least 80%) with any hand-edited host code loads both skills; the Go row now lists the test-table, race, `goleak` and HTTP signals. `lang-go` and `lang-protobuf` keep only routes to it (`DER-346`)

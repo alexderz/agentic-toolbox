@@ -27,7 +27,7 @@ and why.** Do not invent a parallel outline.
 | Comparables | Plan | `templates/comparables.md` | `docs/comparables.md` or `docs/<slug>/comparables.md` |
 | UX / journeys | Plan | `templates/ux.md` | `docs/ux.md` or `docs/<slug>/ux.md` |
 | User story | Plan | `templates/user-story.md` | `docs/stories/` or the board |
-| PoC | Trial | `templates/poc.md` | `docs/` next to the HLD |
+| PoC | Trial | `templates/poc.md` | `poc/poc.md` beside the chunk's design records: [Trial](../../docs/sdlc/plan-trial-spec.md#trial) |
 | LLD | Spec | `templates/lld.md` | `docs/lld.md` or `docs/<slug>/lld.md` |
 | Mockups | Spec | `templates/mockup.md` | `docs/mockups/` (or `n/a`) |
 | Decision | any | `templates/decision.md` | `docs/decisions/<slug>.md` |

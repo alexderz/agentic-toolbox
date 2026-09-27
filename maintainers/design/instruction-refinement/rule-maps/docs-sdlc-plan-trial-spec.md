@@ -109,3 +109,58 @@ L54–71; `#mockups` holds one route (L104); `#spec` holds none.
   operator. New L112–116 state that order; the process is unchanged.
 
 No open MQ.
+
+## DER-278
+
+Proof-of-concept code stays in the repo as a frozen record. Changed lines
+only. Old = project-main 88455d8; "Old L" = line there; "L" = line in
+the new file.
+
+| Old L | Rule | Disposition | L |
+| --- | --- | --- | --- |
+| 7–8 | **architect** locks hierarchy, persistence, and worker rules in the HLD | kept; rewrapped to one line (cap) | L7 |
+| 9 | **architect** commits the HLD to git | changed (MQ8): commits each Plan draft to project-main as it is written | L8 |
+| — | Scan the outgoing diff for credentials, hostnames or IPs, and data dumps; remove each hit | new (MQ8); this file owns it, no earlier owner | L9–10 (step 4) |
+| — | **architect** pushes project-main | new (MQ8) | L11 (step 5) |
+| 10–11 | **manager** posts the HLD path on the Epic | kept; renumbered step 6; rewrapped to one line | L12 |
+| 75–76 | Optional proof; only if needed; evidence in git; template `poc.md` | kept; "evidence in git" now covers the note and code in `poc/` (MQ9) | L76, L81–87 |
+| — | Note and code are a frozen record, not product code, not instructions to load; never import or merge `poc/` into product paths; Build rebuilds if the trial proves out | new (MQ9); this file owns it; allowed action beside the never | L76–79 |
+| — | `poc/` beside the chunk's design records, in the folder that holds its HLD; this skills home `maintainers/design/<chunk-slug>/poc/` | new (MQ10) | L81–82 (step 1) |
+| — | `poc/poc.md` from template `poc.md`, trial code beside it | new; the template use is old L76 | L83 (step 2) |
+| — | `poc/README.md` states the record rule | new (MQ9) | L84 (step 3) |
+| — | Never copy vendored dependencies or build output into `poc/`; link to the source | new (MQ9); allowed action beside the never | L85–86 (step 4) |
+| — | Commit and push each Trial file as written, per Plan steps 3–5 | new (MQ8); backward link, no second owner | L87 (step 5) |
+| 78 | **Item:** skip unless the chosen fix is itself uncertain | kept, unchanged | L89 |
+| 89–90 | **manager** posts the LLD path on the Epic | kept; rewrapped to one line (cap) | L100 |
+| 110–111 | **security** reviews the LLD for trust boundaries | changed (MQ11): "the LLD and any `poc/`" | L120–121 |
+| 114–115 | **operator** accepts the LLD after them | kept; rewrapped to one line (cap) | L124 |
+| 140–142 | Engineering words; no layperson analogies outside How software gets built | kept; rewrapped to two lines (cap) | L149–150 |
+
+Length: 142 → 150 (cap 150). This file is a C1 move, so K2 does not apply.
+
+### Meaning questions (DER-278)
+
+- **MQ8** — Old L9 committed the HLD with no push rule;
+  `branches-and-lands.md#land-path` pushes project-main only after each
+  land. Resolved by the operator, 2026-09-27: Plan drafts and Trial code
+  are committed and pushed as they are written, and the pushing agent
+  first scans the outgoing diff for credentials, hosts or IPs, and data
+  dumps. The architect is the pushing agent in Plan, since Plan steps
+  name only the architect as a writer.
+- **MQ9** — Old L75–76 kept evidence in git and was silent on code; the
+  people doc said to throw the scratch away. Resolved by the operator,
+  2026-09-27: keep the code in `poc/` with its own `README.md` (frozen
+  record, not product code, never imported or merged into product
+  paths, Build rebuilds, a record and not instructions); no vendored
+  dependencies or build output, link to sources.
+- **MQ10** — Where `poc/` lives. Resolved by the operator, 2026-09-27:
+  beside the chunk's design records, wherever those live; DER-271 decides
+  that place; this repo keeps `maintainers/design/<chunk>/poc/`; no new
+  `.agents/design/` default. "In the folder that holds its HLD" is from
+  the text: at Trial time the HLD is the only design record that must
+  exist (LLD and `groom.md` come later), and the old `sdlc-artifacts`
+  row put the PoC note "next to the HLD".
+- **MQ11** — Old L110–111 had **security** read only the LLD. Resolved
+  by the operator, 2026-09-27: **security** reads `poc/` at Spec.
+
+No open MQ.

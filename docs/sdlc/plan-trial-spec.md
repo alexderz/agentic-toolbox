@@ -4,11 +4,12 @@
 
 1. **architect** writes the HLD with `sdlc-artifacts` templates `hld.md`
    and `track.md` / `chunk.md`.
-2. **architect** locks hierarchy, persistence, and worker rules in the
-   HLD.
-3. **architect** commits the HLD to git.
-4. **manager** posts the HLD path on the Epic with `tracker-sdlc`
-   `comment`.
+2. **architect** locks hierarchy, persistence, and worker rules in the HLD.
+3. **architect** commits each Plan draft to project-main as it is written.
+4. **architect** scans the outgoing diff for credentials, hostnames or IPs,
+   and data dumps, and removes each one it finds.
+5. **architect** pushes project-main.
+6. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
 
 **Item:** do not write a new HLD. Read the existing one. **manager**
 posts one verdict on the ticket with `tracker-sdlc` `comment`:
@@ -72,8 +73,18 @@ of Spec.
 
 ## Trial
 
-The Trial is optional proof. Run it only if needed. Keep its evidence in
-git. Use template `poc.md`.
+The Trial is optional proof. Run it only if needed. Its note and code are a
+frozen record of a trial, not product code and not instructions to load. Never
+import or merge `poc/` into product paths; if the trial proves out, Build
+rebuilds it.
+
+1. Make `poc/` beside the chunk's design records, in the folder that holds its
+   HLD. This skills home: `maintainers/design/<chunk-slug>/poc/`.
+2. Write `poc/poc.md` with template `poc.md`. Put the trial code beside it.
+3. Write `poc/README.md` that states the record rule above.
+4. Never copy vendored dependencies or build output into `poc/`; link to the
+   source.
+5. Commit and push each Trial file as it is written: [Plan](#plan) steps 3–5.
 
 **Item:** skip the Trial unless the chosen fix is itself uncertain.
 
@@ -86,8 +97,7 @@ Entry gate: run the offline `tracker-sdlc` setup check. If it fails, run
    trust-boundary section is required. If there is no trust boundary,
    write `n/a` and why.
 2. **architect** commits the LLD to git.
-3. **manager** posts the LLD path on the Epic with `tracker-sdlc`
-   `comment`.
+3. **manager** posts the LLD path on the Epic with `tracker-sdlc` `comment`.
 
 **Item:** align to the existing LLD the same way as in [Plan](#plan).
 Make a clarification in place. Escalate a shape change. **security**
@@ -107,12 +117,11 @@ No screen: write `n/a` and why. Do not invent pictures.
 
 ### Security gate
 
-1. Before Groom or Build, **security** reviews the LLD for trust
-   boundaries: authn/z, secrets, egress, data class, who may write what.
+1. Before Groom or Build, **security** reviews the LLD and any `poc/` for
+   trust boundaries: authn/z, secrets, egress, data class, who may write what.
 2. **architect** accepts the LLD, and **security** accepts it on trust
    boundaries.
-3. **operator** accepts the LLD after them
-   ([Asking the operator](../SDLC.md#asking-the-human)).
+3. **operator** accepts the LLD after them ([Asking the operator](../SDLC.md#asking-the-human)).
 4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:
@@ -137,6 +146,5 @@ surfaces in the same land as the change. The Build
 [definition of done](build-review.md#definition-of-done) includes docs
 current with the item.
 
-Skills, templates, and other technical docs use engineering words. Do
-not reuse the layperson analogies outside
-[How software gets built](../how-software-gets-built.md).
+Skills, templates, and other technical docs use engineering words. Do not reuse
+the layperson analogies outside [How software gets built](../how-software-gets-built.md).

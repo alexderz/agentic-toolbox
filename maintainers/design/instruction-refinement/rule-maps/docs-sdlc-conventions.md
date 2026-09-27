@@ -64,3 +64,26 @@ clarifications (2026-09-27): none of their subjects occur in this file.
 - **MQ5** — Old L1093 linked the whole Conventions section; the paths it
   names are in the product repo layout. Resolved from the text: the link
   narrows to `#product-repo-layout`, same target content.
+
+## DER-278
+
+Proof-of-concept code stays in the repo. Changed lines only. Old =
+project-main 88455d8; "Old L" = line there; "L" = line in the new file.
+
+| Old L | Rule | Disposition | L |
+| --- | --- | --- | --- |
+| 73–75 | Keep HLD, LLD, PoC notes, decisions, changelogs, the SDLC in git from Repo on; mirrors follow git | kept; "PoC notes" → "PoC notes and code"; route to owner `plan-trial-spec.md#trial`; rewrapped within the same three lines | L73–75 |
+
+Length: 100 → 100 (cap 100). The product repo layout is unchanged: the
+`poc/` place is owned by `plan-trial-spec.md#trial`, and DER-271 decides
+where design records live. The push-as-written rule is owned by
+`plan-trial-spec.md#plan` steps 3–5 and reached through the Trial route.
+
+### Meaning questions (DER-278)
+
+- **MQ6** — Does "PoC notes and code" change the designs-in-git rule?
+  Resolved by the operator, 2026-09-27: trial code is kept in the repo.
+  The rule's scope grows by that one artifact; mirrors and the
+  from-Repo-on timing are unchanged.
+
+No open MQ.

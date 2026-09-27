@@ -70,9 +70,9 @@ Fixed, Removed; skip empty ones. The board, git, and changelog must agree:
 
 ## Designs in git
 
-Keep the HLD, LLD, PoC notes, decisions, changelogs, and this SDLC in **git**
-from Repo on ([paths](#product-repo-layout)). A local or vendor mirror may
-follow git; never treat a mirror as an independent write path for designs.
+Keep the HLD, LLD, PoC notes and code ([Trial](plan-trial-spec.md#trial)), decisions,
+changelogs, and this SDLC in **git** from Repo on ([paths](#product-repo-layout)). A local
+or vendor mirror may follow git; never treat a mirror as an independent write path for designs.
 
 ## In-flight map
 
