@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `discover-the-idea` rewritten to the writing standard, same gather loop (`DER-312`)
 - `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
 - `pr-review`: section links fixed, the distinct-reviewer rule routed to
   `docs/sdlc/subagents.md#item-agents`; pins unchanged (`DER-320`)
