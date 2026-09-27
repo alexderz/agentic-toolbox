@@ -229,8 +229,8 @@ Ask first (`security-hardening`).
   `tool_calls`, JSON arguments, no XML in text). Strictly serial; warm
   the model before timing.
 - Skills are files: export the commit under test (tracked, `maintainers/`
-  deleted) into the run directory; the first turn names that path and
-  says to read the product `AGENTS.md`. Runner discovery off; no
+  deleted) into the run directory, read-only for the agent; the first
+  turn names that path and says to read the product `AGENTS.md`. Runner discovery off; no
   instruction files in the directory's ancestry.
 - Scripted replies, mode in the run file: (a) next user turn of the same
   session (**unverified** per runner, checked before B1); (b) all replies
@@ -317,7 +317,7 @@ maintainers/AGENTS.md maintainers/evals`.
   '119,383p' | sed -E 's/^#(#+ )/\1/') docs/how-software-gets-built.md`
   → empty. **K9**: `grep -c 'id="asking-the-human"' docs/SDLC.md` = 1.
 - **K10 public text** (before each push and the PR): `git diff main...
-  | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|sk-[A-Za-z0-9]|https?://)'`
+  | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|\bsk-[A-Za-z0-9_-]{20,}|\.(lan|local|internal|ts\.net)\b|https?://)'`
   → each hit is an allowed reference (upstream or comparables URL) or is
   removed; same check on PR and tracker text before posting.
 - **C1 move**: old SDLC vs `cat` of the new files, each `grep -vE
