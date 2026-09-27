@@ -50,6 +50,9 @@ Newest first. Skip empty sections.
 - `language-router` owns the language map (merged from `AGENTS.md`), the
   load-with list and the no-language turns, and loads on any code turn
   (`DER-318`)
+- `docs/INTAKE.md` rewritten to the writing standard, same six-step
+  checklist and rules; the tracker-skill **security** read is numbered
+  steps (`DER-336`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
