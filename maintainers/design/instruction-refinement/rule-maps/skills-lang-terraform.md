@@ -12,11 +12,12 @@ Red flags) and frontmatter `description`: unchanged.
 
 | Old L | Change | Kind | Reason |
 | --- | --- | --- | --- |
-| 8–9 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`." → one route line (new L9) linking `language-router#load-with-list`; "No `scripts/`." kept on new L8 | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
+| 8–9 | "Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`." → the route line "Process skills that **may** load with this one: [load-with list](…#load-with-list)." (new L9); "No `scripts/`." kept on new L8 | dedupe | Repeats the load-with list; its owner is [`language-router#load-with-list`](../../../../skills/language-router/SKILL.md#load-with-list); the route adds no condition |
 
 ## Meaning questions
 
 - **MQ1** — Old L8–9 named four process skills; the owner's load-with
   list names nine. Resolved from the text: the owner holds the rule
   (standard 5, writing-standard `#rule-owners` "Language map, load-with
-  list"), so the route follows the owner's list.
+  list"), so the route follows the owner's list, and "**may**" keeps
+  each one optional.

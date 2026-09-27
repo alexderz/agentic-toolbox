@@ -6,7 +6,7 @@ description: use this when writing or reviewing Terraform / HCL — *.tf, *.hcl.
 # Terraform
 
 No `scripts/`.
-Skills that load with it: [`language-router` load-with list](../language-router/SKILL.md#load-with-list).
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 

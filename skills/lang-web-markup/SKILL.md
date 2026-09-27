@@ -6,7 +6,7 @@ description: use this when writing or reviewing HTML or CSS — *.html, *.htm, *
 # HTML / CSS
 
 One skill for markup and style. No `scripts/`.
-Skills that load with it, including `lang-js-ts` and the cap of 2: [`language-router` load-with list](../language-router/SKILL.md#load-with-list), [iron law](../language-router/SKILL.md#iron-law), [Algorithm](../language-router/SKILL.md#algorithm) step 6.
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list). When a second language skill may load: [iron law](../language-router/SKILL.md#iron-law), [Algorithm](../language-router/SKILL.md#algorithm).
 
 ## Iron law
 

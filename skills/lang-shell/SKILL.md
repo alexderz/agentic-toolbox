@@ -5,8 +5,8 @@ description: use this when the change is shell or bash and you need the pointer 
 
 # Shell (router)
 
-**This id routes.** Load `shell-safety`. Do not remint Always / Ask first /
-Never for bash. No `scripts/`.
+**This id routes.** Load `shell-safety`. Do not remint Always / Ask first / Never for bash. No `scripts/`.
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
@@ -15,7 +15,7 @@ before a command runs.
 
 ## Load
 
-`shell-safety` only, then stop, and the skills that load with it: [`language-router` map](../language-router/SKILL.md#map), [load-with list](../language-router/SKILL.md#load-with-list).
+`shell-safety` only. Then stop.
 
 Dockerfile `RUN` snippets stay `lang-docker` first. Load `shell-safety`
 only when the change is a real `.sh` / shebang script or an agent shell
