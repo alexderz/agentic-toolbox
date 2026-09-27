@@ -42,7 +42,8 @@ A turn in this table loads no language skill.
 
 1. These process skills may load with the one language skill: `tdd`,
    `verify-before-done`, `pr-review`, `security-hardening`, `yagni`,
-   `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`.
+   `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`,
+   `ui-craft`.
 2. If the turn includes shell, `shell-safety` may also load with the
    one language skill.
 3. When a debug skill loads, load **one** of `debug`, `debug-pocock` or

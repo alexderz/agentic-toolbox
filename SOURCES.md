@@ -3,8 +3,8 @@
 Pin every third-party cherry-pick here **before** the body lands. Empty
 SHA cells mean no body may land.
 
-Repo license is MIT ([LICENSE](LICENSE)); `skills/debug-anthropic/` is
-Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
+Repo license is MIT ([LICENSE](LICENSE)); `skills/debug-anthropic/` and
+`skills/ui-craft/` are Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 **security** intake before any third-party content. No auto-update.
 
 | Skill | Upstream | SHA | License | Notes |
@@ -32,6 +32,7 @@ Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 | golang-security | samber/cc-skills-golang (`golang-security`) | 22c58a55a0a799b901aa251172923180bad9e010 (intent pin; body rewrite) | MIT upstream / rewrite | SKILL only / no evals / no scripts; language-router picks it, golang-testing or golang-safety, one per turn. Wording edit DER-288, pins unchanged; security-cleared 2026-09-27. |
 | golang-safety | samber/cc-skills-golang (`golang-safety`) | 22c58a55a0a799b901aa251172923180bad9e010 | MIT upstream / rewrite | SKILL only / no evals / no scripts/; compress not paste; do not merge with golang-testing or golang-security. Wording edit DER-288, pins unchanged; security-cleared 2026-09-27. |
 | pr-lens | coldteadotai/pr-lens (`skills/pr-lens`) | 09f6378c082ff8ddb17e211f36bfc71c2f2b8d86 (intent pin; body rewrite) | MIT upstream / rewrite | Opt-in; operator asks. Local render + PR attach only (no `canvas`, no `analyze`). CLI pinned exactly `@coldtea/pr-lens-cli@0.8.1`; every new release is a one-line SOURCES bump with a security read (no automatic patch releases). SKILL only; references linked at the pin, not vendored. No `scripts/`. CLI subcommands allowlisted to `validate` and `render`. The CLI's transitive dependencies float (`npx` uses no lockfile). Scanner waived by maintainer for DER-274 (scanner work: DER-273); manual security read done. Compared with upstream at Monthly. Wording edit DER-288, pins unchanged; security-cleared 2026-09-27. |
+| ui-craft | pbakaus/impeccable (`skill/`) | 9d715cc4f5564a990ca8345abfdd5df6dc9b41c8 (intent pin; body rewrite) | Apache-2.0 upstream / rewrite | Builder craft rules for implementing a UI; loads beside `ux-design`, never in its place. Topic-only rewrite; no scripts, agents, references or hooks vendored. SKILL and `LICENSE` only. No `allowed-tools`, commands, network use or subagents. Nothing from `ios.md`/`android.md` (MIT, ehmo/platform-design-skills). Upstream itself is option 2, asked once per product repo, at the user's own risk: a link at the pin and a disclosure, no install command we endorse. Scanner waived by operator 2026-09-27 (DER-273 pending); manual security read done. Compared with upstream at Monthly; a new pin needs a new security read. security-cleared 2026-09-27. |
 | language-router | first-party (this repo) | first-party | MIT | Map only. Pointers do not count as a load. Cap 1–2 language skills. |
 | lang-go | first-party pointer (this repo) | first-party | MIT | Routes to golang-safety / golang-testing / golang-security. Does not remint. |
 | lang-python | first-party pointer (this repo) | first-party | MIT | Routes to modern-python. Does not remint. |

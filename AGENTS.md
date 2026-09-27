@@ -56,6 +56,7 @@ path, or **pack** its text into a subagent prompt per
 | **Language** | Writing or reviewing code | Load at most one language skill per turn: [iron law](skills/language-router/SKILL.md#iron-law). **Read `skills/language-router/SKILL.md`**: its [map](skills/language-router/SKILL.md#map), [load-with list](skills/language-router/SKILL.md#load-with-list) and [no-language turns](skills/language-router/SKILL.md#no-language-turns). |
 | **Workers** | The operator picks Grok Build over ACP as a builder | **Read `skills/grok-acp/SKILL.md`**. Operator opt-in: load it only then. |
 | **Diagrams** | The operator asks for a diagram, such as one in the PR into `main` | **Read `skills/pr-lens/SKILL.md`**. Operator opt-in: load it only then. |
+| **UI craft** | builder implementing or reviewing UI code | **Read `skills/ui-craft/SKILL.md`**, beside `ux-design`'s approved mockups, not in place of `ux-design`. Upstream instead is operator opt-in, once per product repo: the skill's ask. |
 | **Branches and lands** | Branching an item, or landing one | **Read [branches-and-lands.md](docs/sdlc/branches-and-lands.md)**. |
 | **Subagents** | Minting, resuming, or prompting a subagent or worker | **Read [subagents.md](docs/sdlc/subagents.md)**. |
 | **Knowledge** | Facts about a model, vendor, API, or platform that are not a skill | **Read [knowledge/README.md](knowledge/README.md)**, then `knowledge/<domain>/<kind>/<slug>.md`. |
