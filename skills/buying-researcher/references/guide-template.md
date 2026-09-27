@@ -1,6 +1,6 @@
 # Guide template (Consumer Reports-style)
 
-Chat-first. Use this shape unless they asked for shorter. Skip empty sections; do not pad. Tag source class. Ranges beat fake precision.
+Use this shape unless the buyer asked for shorter. Skip empty sections; do not pad.
 
 ## Title
 
@@ -15,21 +15,21 @@ Product / job + year. Example: `Quiet robot vacuum for hardwood + cat, US, 2026`
 ## What you said you care about
 
 - Job to be done
-- Ranked criteria (this project’s weights)
+- Ranked criteria: the purchase brief's weights
 - Must-haves, deal-breakers, budget band
-- Assumptions if they said go
+- Assumptions, if the buyer said go
 
 If weights changed mid-project, show the current ranking.
 
 ## How this market looks
 
-- Premium / mid / budget / dark horses this year
+- Premium / mid / budget / little-known contenders this year
 - Current vs outgoing; refresh only if it changes the buy
-- Popular traps (if any)
+- Popular traps, if any
 
 ## Shortlist table
 
-4–8 serious candidates. Exact SKU / year / config. Columns = **their** criteria, not a universal rubric. Label list vs street. Grade Strong / Adequate / Weak / Fail (see `workflow.md`). Optional trap row, labeled.
+4–8 serious candidates. Exact SKU / year / config. Columns: **the buyer's** criteria, not a universal rubric. Label list vs street. Grade Strong / Adequate / Weak / Fail, as in [`workflow.md`](workflow.md). Optional trap row, labeled.
 
 ## Feedback that survived skepticism
 
@@ -42,7 +42,7 @@ If weights changed mid-project, show the current ranking.
 
 - Street price band, stock, temporary deals
 - Warranty, parts, service, return policy
-- US retail default; pickup vs ship if it matters
+- The market; pickup vs ship if the purchase brief names it
 
 ## Decision rules
 
@@ -51,4 +51,4 @@ If weights changed mid-project, show the current ranking.
 
 ## Open questions
 
-Only what still blocks confidence. No 20-question dump.
+List only what still blocks confidence, not a 20-question dump.

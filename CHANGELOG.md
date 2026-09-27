@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `buying-researcher` skill and its references rewritten to the writing standard, same research method: one owner per rule, a numbered procedure, and a Never list with allowed actions (`DER-314`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
