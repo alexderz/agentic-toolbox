@@ -31,7 +31,8 @@ asking the operator: [SDLC](../SDLC.md).
 3. A need that applies only at land time (for example, a `SOURCES.md`
    row another item adds) is land order, not a blocker.
 4. set-blocker is append-only. Agents never remove a blocker.
-5. Waiting on the operator is a blocker on **that** issue.
+5. Waiting on the operator, or someone the operator names in writing,
+   is a blocker on **that** issue.
 6. Do not start Build with a hidden prerequisite; record it per 1–3.
 
 ## Waves
@@ -48,16 +49,17 @@ Waves are a view computed from blockers, never stored.
   previous wave, and every item of the next wave waits on it. No label.
 - An item that is gate-shaped only because the chain is one item wide
   is not a gate.
-- Add a gate only for a real integration or bottleneck need (a review
-  of the integrated whole, one shared resource). Never add one by
-  default.
+- Add a gate only for a real integration or bottleneck need. Examples:
+  a review of the integrated whole; one shared resource. Never add one
+  by default.
 
 ## Review items
 
 1. A review item closes with its verdict.
 2. Its fixes are items blocked by it.
-3. A re-check of the whole, if needed, is a new item blocked by the
-   fixes.
+3. The review item's verdict says whether a re-check of the whole is
+   needed. It is → the **manager** files the re-check as a new item
+   blocked by the fixes.
 
 ## Procedure
 
@@ -80,9 +82,9 @@ Waves are a view computed from blockers, never stored.
    - needless blocker links (needless serialization costs parallelism);
    - cycles;
    - whether each gate is truly needed.
-2. Findings → fix them, then resume the groom reviewer for another
-   round.
-3. Repeat until it passes. The pass names the commit SHA it reviewed.
+2. Findings → the **architect** (the author of `groom.md`) fixes them.
+3. The **groom reviewer** re-checks, resumed for another round.
+4. Repeat until it passes. The pass names the commit SHA it reviewed.
 
 ### 3. File
 
@@ -99,20 +101,21 @@ Waves are a view computed from blockers, never stored.
 
 ### 4. Freeze
 
-1. Replace the draft marker with: `Frozen record of the plan as
-   reviewed at Groom on <YYYY-MM-DD>. Not live: the tracker is the
-   source of truth for tickets, blockers and state.`
-2. Fill the `Review:` line: reviewer, date, passed SHA.
-3. Fill the `G<n>` → ticket map.
-4. Commit. Never edit `groom.md` again.
+1. **manager** replaces the draft marker with: `Frozen record of the
+   plan as reviewed at Groom on <YYYY-MM-DD>. Not live: the tracker is
+   the source of truth for tickets, blockers and state.`
+2. **manager** fills the `Review:` line: reviewer, date, passed SHA.
+3. **manager** fills the `G<n>` → ticket map.
+4. **manager** commits. Never edit `groom.md` again.
 
 ## Late insertion
 
 `groom.md` stays frozen; the tracker holds new work.
 
 1. **manager** drafts the item (`task.md` / `bug.md`) and its blockers.
-2. **manager** re-layers from the tracker: `read` every open item under the Epic
-   and its blockers; compute the waves with the new links.
+2. **manager** re-layers from the tracker: `read` every open item
+   under the Epic and its blockers; compute the waves with the new
+   links.
 3. A need on an item already `done` is met: no link. Exception: a fix
    keeps its link to its review item.
 4. A new link would close a cycle → do not write it. Fix the direction
@@ -122,9 +125,9 @@ Waves are a view computed from blockers, never stored.
 6. A separate **architect** agent exists → it reviews the reshape with
    the [Review](#2-review) checks.
 7. **manager** runs `create`, set-blocker, and `ready`.
-8. **manager** posts the new wave view of open items as one Epic `comment`: ticket
-   ids, `G` ids (if any), titles, and wave numbers only. No links, no
-   body text.
+8. **manager** posts the new wave view of open items as one Epic
+   `comment`: ticket ids, `G` ids (if any), titles, and wave numbers
+   only. No links, no body text.
 
 Post a wave view only when the graph reshapes after filing: an item
 added or canceled, or a blocker set. The blockers set at filing are

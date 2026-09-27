@@ -23,7 +23,7 @@ delivers). "Old L" = line in the old file.
 | 31–35 | Cut the branch first if absent; chunk → `integrate/<slug>` from trunk; item → from live project-main else trunk | kept | Branch 1 |
 | 37–41 | Item: commit on that branch. Chunk: item branch from project-main, own item through Review before Plan, own verifier, reviewer, security read; never bare; never on trunk | kept | Branch 2–3 |
 | 43–46 | Dropped item branch: cherry-pick (promoted) or land alone (closed); fresh security read; keep branch until landed or discarded | kept as if/then list | Branch, list + next paragraph |
-| 47–48 | Clashing onboardings: a person resolves in Review, never auto-merge | kept; "a person" → operator (MQ4) | Branch, last sentence |
+| 47–48 | Clashing onboardings: a person resolves in Review, never auto-merge | kept; "a person" → "the operator, or someone the operator names in writing" (operator clarification 2026-09-27) | Branch, last sentence |
 | 144, 146–156 | Tracker Check = `tracker-sdlc` Map (AGENTS.md selection, stamp; a `v1` stamp gets a Repair-style diff on operator OK, not a full onboarding) | route to Map steps 1–3 (owner: `tracker-sdlc` Map; step 3 holds the `v1` upgrade); the Check says `v1` is not a fail | Tracker Check; "governing `AGENTS.md`" in Names |
 | 115–119 | "the AGENTS.md that Check step 1 selects" (forward reference) | kept as a name | Names: governing `AGENTS.md` |
 | 54–62 | Find the tracker, sources in order; host names only; env var names via `compgen -e` / awk; never `env`/`printenv`; none → ask; "no hosted tracker" → `local` | kept, numbered (MQ2 resolved) | Discover 1–2 |
@@ -69,8 +69,7 @@ Resolved from the current text (coordinator review, 2026-09-26):
 - **MQ5** (old L199): telling the operator is a report, not a
   permission.
 
-Open for the operator:
+Resolved by the operator:
 
-- **MQ4** (old L47): "resolved by a person in Review". Draft says the
-  operator. Could it be another person (for example a maintainer who
-  is not the operator)? Same question as index MQ5.
+- **MQ4** (old L47), operator clarification 2026-09-27: "a person" means the operator, or someone
+  the operator names in writing. Same answer as index MQ5.

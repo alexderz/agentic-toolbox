@@ -62,16 +62,16 @@ If the item branch holding the onboarding commit is dropped:
 
 Either way, **security** reads it again. Keep the branch until that
 commit lands or is explicitly discarded. Two onboardings clash → the
-operator resolves them in Review; never auto-merge.
+operator, or someone the operator names in writing, resolves them in
+Review; never auto-merge.
 
 ## Tracker
 
 ### Check
 
-Run [`tracker-sdlc` Map](../tracker-sdlc/SKILL.md#map) steps 1–3.
-Offline: file reads only. Map step 3 decides: both hold → pass; stamp
-`v1` → the upgrade diff Map step 3 names, not a full onboarding;
-anything else → fail.
+Run [`tracker-sdlc` Map](../tracker-sdlc/SKILL.md#map) steps 1–3, offline
+(file reads only). Step 3 decides: both hold → pass; stamp `v1` → its
+upgrade diff, not a full onboarding; anything else → fail.
 
 ### Discover
 

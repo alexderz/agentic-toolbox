@@ -29,8 +29,8 @@
   Rule maps (a reviewer checks each draft kept its meaning):
   [onboarding](rule-maps/sdlc-onboarding.md),
   [index](rule-maps/sdlc-index.md), [Groom](rule-maps/groom-step.md).
-  Open meaning questions are listed in each; the drafts do not pick an
-  answer.
+  Meaning questions and their answers (review, operator clarification
+  2026-09-27) are listed in each.
 
 - **Evidence** — One scoring sheet per run in `runs/` here
   (`<YYYY-MM-DD>-<task>-<arm>-<model-slug>.md`). The Results table

@@ -20,8 +20,9 @@ docs/sdlc/not-yet-split.md, an unchanged copy of docs/SDLC.md at main
 
 ## Roles
 
-Skills are tools, keyed by role. Improvise when the work needs it. Do
-not remint a skill that already has an id. Use only these roles. Step
+Skills are tools, keyed by role. If no listed skill fits the task, do
+the work without one. Never create a new skill id mid-task. Do not
+remint a skill that already has an id. Use only these roles. Step
 jobs (gatherer, refiner, troubleshooter, verifier, reviewer, groom
 reviewer) are agents acting in one of these roles, not new roles.
 
@@ -47,8 +48,9 @@ and pins: [SOURCES.md](../SOURCES.md).
   release target.
 - **project-main**: `integrate/<chunk-slug>`, the integration branch of
   one chunk. Items land on it; it lands on trunk at Trunk.
-- **chunk**: work that needs the operator for taste, opinions, or a
-  design talk. Board object: Epic.
+- **chunk**: work that needs the operator, or someone the operator
+  names in writing, for taste, opinions, or a design talk. Board
+  object: Epic.
 - **item**: one implementable unit, a Task or Bug under its Epic.
   Mechanical, tactical, or immediate work enters as an item.
 - **landed+verified**: merged onto project-main (or onto trunk when
@@ -80,7 +82,7 @@ not in `done` or `canceled`.
 
 The board layer is the grain. Do not add a fourth issue type.
 
-| Arrives as | Needs the operator for taste or design talk? | Enter at |
+| Arrives as | Needs the operator, or someone the operator names in writing, for taste or design talk? | Enter at |
 | --- | --- | --- |
 | New product or process track | Yes | **Chunk** that also writes `track.md`. Full ladder; write Plan and Spec |
 | Feature, redesign, fuzzy idea | Yes | **Chunk**: interview; write or extend Plan and Spec |
@@ -91,14 +93,16 @@ The board layer is the grain. Do not add a fourth issue type.
   should this screen be?". Then it is a chunk (or promote it).
 - Work split from an accepted Spec is already an item in Build. Do not
   re-run item Brief on it.
-- Build finds a shape change → escalate: ask the operator, block that
-  issue; siblings proceed.
+- Build finds a shape change → escalate: ask as
+  [Asking the operator](#asking-the-human) says, block that issue;
+  siblings proceed.
 
 <a id="asking-the-human"></a>
 
 ## Asking the operator
 
-A decision needs the operator:
+A decision needs the operator, or someone the operator names in
+writing:
 
 1. Stop and say so. Do not hide the ask in a status dump.
 2. Write the message from template
@@ -109,7 +113,7 @@ A decision needs the operator:
 4. Give your recommendation and why. No good default → say so.
 5. Ask one question per message when you can. Several must go together
    → number them and say which set you recommend.
-6. Wait. Do not continue that part until the operator answers.
+6. Wait. Do not continue that part until they answer.
 
 An ask is required for: accepting the write-up, the look-and-feel, or
 the detailed design; waiving a check; an open blocker you cannot
@@ -127,7 +131,8 @@ While you wait:
 - The operator wrote that they are AFK, headless, or autonomous → the
   manager may pick between two **item** fixes that both honor the
   existing plan. The manager never changes Plan or Spec shape; that
-  stays blocked until the operator answers.
+  stays blocked until the operator, or someone the operator names in
+  writing, answers.
 
 ## Steps
 
