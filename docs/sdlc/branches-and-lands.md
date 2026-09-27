@@ -13,20 +13,18 @@ from: project-main, or trunk. **Landed** means on the land target.
 
 - Create project-main from trunk at the end of chunk Brief when this
   chunk is still integrating.
-- Cut an incoming item's branch at item Brief, per this table:
-
-  | Condition at item Brief | Branch from | Land |
-  | --- | --- | --- |
-  | A project-main already exists: this chunk is still integrating | project-main | On project-main |
-  | No project-main: no chunk in flight, or the parent chunk already Trunked | trunk | Review versus trunk, then a local merge into trunk. [Trunk](trunk-changelog-monthly.md#trunk) is then `n/a` |
-
-- Never create a project-main for an incoming item. Use the table
-  above instead.
 - Name project-main and item branches as in
   [Conventions](conventions.md#name-formats).
 - When project-main exists, builders branch off the current tip.
 - After an item lands, in-flight builders rebase or merge project-main
   and resume. The verifier re-runs.
+- Cut an incoming item's branch at item Brief, per this table. Never
+  create a project-main for an incoming item.
+
+  | Condition at item Brief | Branch from | Land |
+  | --- | --- | --- |
+  | A project-main already exists: this chunk is still integrating | project-main | On project-main |
+  | No project-main: no chunk in flight, or the parent chunk already Trunked | trunk | Review versus trunk, then a local merge into trunk. [Trunk](trunk-changelog-monthly.md#trunk) is then `n/a` |
 
 ## Project-main
 
@@ -36,8 +34,7 @@ project branch. Then land project-main on trunk as the chunk
 isolated item branches and integrate them once at the end.
 
 **Lands on project-main are serialized.** Builds may run in parallel.
-Only one item merges at a time. Never race two merges onto
-project-main; merge one item, then the next.
+Only one item merges at a time. Never race two merges onto project-main.
 
 The landing builder de-conflicts against the current project-main tip:
 

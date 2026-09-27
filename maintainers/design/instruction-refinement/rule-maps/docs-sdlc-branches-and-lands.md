@@ -16,21 +16,21 @@ rows marked **P**. **security** reads these rows at Review.
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
-| 780–785 (Groom) | Incoming item's branch, cut at item Brief: from project-main if one already exists (chunk still integrating) and lands there; else from trunk (no chunk in flight, or parent chunk already Trunked), Review versus trunk, local merge; never create project-main | owner copy added here (handoff from DER-302, which routes Groom's copy here); parentheses → condition column; wording kept | Branches bullet 2 table; bullet 3 |
-| 866–867 (Review) | Diff range versus project-main, or versus trunk if there is no project-main | stays at its owner `build-review.md#review`; the trunk case appears here as "Review versus trunk" | Branches bullet 2 table, row 2 |
-| 878–879 (Trunk) | Incoming item with no project-main: already on trunk after Review; Trunk step `n/a` | stays at its owner `trunk-changelog-monthly.md#trunk`; routed as "Trunk is then `n/a`" | Branches bullet 2 table, row 2 |
+| 780–785 (Groom) | Incoming item's branch, cut at item Brief: from project-main if one already exists (chunk still integrating) and lands there; else from trunk (no chunk in flight, or parent chunk already Trunked), Review versus trunk, local merge; never create project-main | owner copy added here (handoff from DER-302, which routes Groom's copy here); parentheses → condition column; wording kept | Branches bullet 5 and its table |
+| 866–867 (Review) | Diff range versus project-main, or versus trunk if there is no project-main | stays at its owner `build-review.md#review`; the trunk case appears here as "Review versus trunk" | Branches bullet 5 table, row 2 |
+| 878–879 (Trunk) | Incoming item with no project-main: already on trunk after Review; Trunk step `n/a` | stays at its owner `trunk-changelog-monthly.md#trunk`; routed as "Trunk is then `n/a`" | Branches bullet 5 table, row 2 |
 | 902 | Heading "Project-main (intermediate integration)" | kept as `## Project-main` (C1 anchors `#branches`, `#project-main`) | `#branches`, `#project-main` headings |
 | 904–906 | Integrate each merge-ready item onto a temporary project branch, then land it on trunk as the chunk; do not build a stack of isolated item branches integrated once at the end | kept; "temporary project branch" named project-main; the positive rule first, "Do not" → "Never" beside it; Trunk step linked | Project-main ¶1 |
 | 908–912 | Branch table: trunk, project-main, item branch; what and lifetime | kept; item-branch row's parentheses spelled out as conditions ("or from trunk if there is no project-main"; "at item Brief for an incoming item, or at Build for an item split from Spec") | Branches table |
 | 912, 935, 952 | Item branch source and land target: project-main, or trunk | kept; named once as **land target** = the branch the item branch was created from (MQ1) | Branches, "land target" line |
 | 914–915 | Create project-main from trunk at end of chunk Brief when this chunk is still integrating | kept, bold dropped | Branches bullet 1 |
-| 915–916 | Do not create one for an incoming item that has no live project-main | kept, merged with old L784–785 into "Never create a project-main for an incoming item"; allowed action: the incoming-item table | Branches bullet 3 |
-| 916–917 | Name project-main and item branches as in Conventions | kept; link already `conventions.md#name-formats` (C1) | Branches bullet 4 |
-| 917–918 | When project-main exists, builders branch off the current tip | kept, bold dropped | Branches bullet 5 |
-| 918–920 | After an item lands, in-flight builders rebase or merge project-main and resume; the verifier re-runs | kept, split into two sentences, wording unchanged (MQ2) | Branches bullet 6 |
+| 915–916 | Do not create one for an incoming item that has no live project-main | kept, merged with old L784–785 into "Never create a project-main for an incoming item"; allowed action: the incoming-item table | Branches bullet 5 |
+| 916–917 | Name project-main and item branches as in Conventions | kept; link already `conventions.md#name-formats` (C1) | Branches bullet 2 |
+| 917–918 | When project-main exists, builders branch off the current tip | kept, bold dropped | Branches bullet 3 |
+| 918–920 | After an item lands, in-flight builders rebase or merge project-main and resume; the verifier re-runs | kept, split into two sentences, wording unchanged (MQ2) | Branches bullet 4 |
 | 922–923 | Lands on project-main are serialized; builds may run in parallel; one item merges at a time | kept, one sentence each | Project-main ¶2 |
-| 923–925 | Landing builder de-conflicts against the current tip: resume that builder, then its verifier | kept; parenthesis → numbered steps 1–2; no actor added: the old text names none for "resume" |  Project-main ¶3, steps 1–2 |
-| 925 | Do not race two merges onto project-main | kept, "Never" with the allowed action beside it (merge one item, then the next) | Project-main ¶2 |
+| 923–925 | Landing builder de-conflicts against the current tip: resume that builder, then its verifier | kept; parenthesis → numbered steps 1–2; no actor added: the old text names none for "resume" | Project-main ¶3, steps 1–2 |
+| 925 | Do not race two merges onto project-main | kept, "Never"; the allowed action beside it is "Only one item merges at a time" | Project-main ¶2 |
 | 927 | Heading "Land path (manager)" | kept as `## Land path` (C1) | `#land-path` heading |
 | 929 | No PRs; manager sets the land order; builders follow it | kept, unchanged (DER-266 owns "No PRs") | Land path ¶1 |
 | 931–933 | Review: an explicit SDLC gate, not a PR | kept, unchanged; link `build-review.md#review` (C1) | Land path table, Review |
@@ -74,3 +74,13 @@ others (groom-review fixes, gate-reason examples, review-item verdicts,
   old words unchanged: old L923–925 pairs each resumed builder with its
   verifier, and the landed item's verify is the Done row's "land +
   verify". No rewording made, so no meaning picked.
+- **MQ3** — Growth over the old section. Resolved by operator
+  2026-09-27 (Q6). Old section: `docs/SDLC.md` L902–961, 60 lines.
+  New file: 69 lines. The growth makes rules checkable: the **land
+  target** and **Landed** definitions (2 lines); the incoming-item owner
+  copy from old L780–785 as a condition table; the de-conflict
+  parenthesis as numbered steps; and the Do-instead column in Never. The
+  rest was trimmed, without changing meaning: the separate
+  incoming-item "Never" bullet was merged into the table's lead line, and
+  "merge one item, then the next" was dropped because "Only one item
+  merges at a time" says it.
