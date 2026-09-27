@@ -101,6 +101,10 @@ Newest first. Skip empty sections.
   standard: numbered Trunk steps, a Changelog condition table, and
   Monthly as the one owner of "Monthly is not the security gate"
   (`DER-304`)
+- `docs/sdlc/branches-and-lands.md` rewritten to the writing standard:
+  one name for the land target, the land-commit trailer rule without its
+  "(an operator-confirmed rule)" note, and each Never rule paired with
+  what to do instead; rules and gates unchanged (`DER-305`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
