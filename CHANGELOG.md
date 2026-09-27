@@ -9,6 +9,10 @@ Newest first. Skip empty sections.
 - `maintainers/writing-standard.md`: the writing standard for agent text
   (ten rules, banned names, rule owners, protected rules, rule-map
   format, checks K1–K10), routed from `maintainers/AGENTS.md` (`DER-291`)
+- Maintainer eval step: `maintainers/AGENTS.md` `## Evals` (a PR into
+  `main` that changes agent text gets T1–T3 runs, three repeats per
+  model, regressions first) and `maintainers/evals/` (procedure, T1 and
+  T2 cards, keys and fixture, run template, baseline) (`DER-292`)
 - `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
   before any ticket is filed, then frozen (`DER-275`)
 - `sdlc-onboarding` Execution area: asks for and records the Build
