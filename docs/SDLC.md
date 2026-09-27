@@ -18,8 +18,9 @@ when the project uses tickets.
 Skills are tools, keyed by role. If no listed skill fits the task, do
 the work without one. Never create a new skill id mid-task. Do not
 remint a skill that already has an id. Use only these roles. Step jobs
-(gatherer, refiner, troubleshooter, verifier, reviewer, groom reviewer)
-are agents acting in one of these roles, not new roles.
+(gatherer, refiner, troubleshooter, contrarian, verifier, reviewer, UX
+reviewer, groom reviewer) are agents acting in one of these roles, not
+new roles.
 
 | Role | Job |
 | --- | --- |
@@ -50,8 +51,8 @@ content: **security** intake first, per [INTAKE.md](INTAKE.md).
   object: Epic.
 - **item**: one implementable unit, a Task or Bug under its Epic.
   Mechanical, tactical, or immediate work enters as an item.
-- **landed+verified**: merged onto project-main (or onto trunk when
-  that was the land target) and verified there.
+- **landed+verified**: merged onto project-main and verified there.
+  When trunk was the land target: merged onto trunk and verified there.
 - **Steps**: Entry, Brief, Repo, Plan, Trial, Spec, Groom, Build,
   Review, Trunk, Changelog, Monthly, in that order.
 - Name formats (slugs, branches, skill ids):
@@ -97,9 +98,8 @@ The board layer is the grain. Do not add a fourth issue type.
   should this screen be?". Then it is a chunk (or promote it).
 - Work split from an accepted Spec is already an item in Build. Do not
   re-run item Brief on it.
-- Build finds a shape change → escalate: ask as
-  [Asking the operator](#asking-the-human) says, block that issue;
-  siblings proceed.
+- Build finds a shape change → escalate: ask the operator, block that
+  issue; siblings proceed.
 
 <a id="asking-the-human"></a>
 
@@ -156,7 +156,7 @@ agents, not which steps exist. Headings and tickets use the step
 | [Groom](sdlc/groom-step.md) | Tickets, blockers, land path. Incoming item: this ticket | [groom-step.md](sdlc/groom-step.md) |
 | [Build](sdlc/build-review.md#build) | Implement ↔ test until DoD | [build-review.md](sdlc/build-review.md) |
 | [Review](sdlc/build-review.md#review) | Reviewer ≠ builder. Required for every land (no PRs) | [build-review.md](sdlc/build-review.md) |
-| [Trunk](sdlc/trunk-changelog-monthly.md#trunk) | Land project-main on trunk (when a chunk used one) | [trunk-changelog-monthly.md](sdlc/trunk-changelog-monthly.md) |
+| [Trunk](sdlc/trunk-changelog-monthly.md#trunk) | The chunk used a project-main → land it on trunk | [trunk-changelog-monthly.md](sdlc/trunk-changelog-monthly.md) |
 | [Changelog](sdlc/trunk-changelog-monthly.md#changelog) | Promote Unreleased | [trunk-changelog-monthly.md](sdlc/trunk-changelog-monthly.md) |
 | [Monthly](sdlc/trunk-changelog-monthly.md#monthly) | Cadence, not a ship gate | [trunk-changelog-monthly.md](sdlc/trunk-changelog-monthly.md) |
 | Manager: branches and lands | Project-main, land path, Never | [branches-and-lands.md](sdlc/branches-and-lands.md) |
