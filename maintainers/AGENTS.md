@@ -6,6 +6,7 @@ root [AGENTS.md](../AGENTS.md) and do not load this file.
 
 Read the root [AGENTS.md](../AGENTS.md) and [docs/SDLC.md](../docs/SDLC.md)
 first. This file adds only what is specific to building this repository.
+Write agent text to the [writing standard](writing-standard.md#standard).
 
 The tracker skill path in `## Tracker` is relative to this directory:
 [`maintainers/.agents/tracker/SKILL.md`](.agents/tracker/SKILL.md).

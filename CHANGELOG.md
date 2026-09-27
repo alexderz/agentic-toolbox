@@ -6,6 +6,9 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- `maintainers/writing-standard.md`: the writing standard for agent text
+  (ten rules, banned names, rule owners, protected rules, rule-map
+  format, checks K1–K10), routed from `maintainers/AGENTS.md` (`DER-291`)
 - `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
   before any ticket is filed, then frozen (`DER-275`)
 - `sdlc-onboarding` Execution area: asks for and records the Build
