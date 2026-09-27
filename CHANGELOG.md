@@ -43,6 +43,7 @@ Newest first. Skip empty sections.
   fix, and the duplicate `## Source` section dropped; pins unchanged (`DER-324`)
 - `shell-safety` light pass, same Always, Ask first and Never rules: the **security** gate names Review, not PR, and the workers rule routes to the SDLC index (`DER-325`)
 - `verify-before-done` light pass: the verifier and landed+verified rules route to their SDLC owners, and "HITL" reads "operator in the loop"; pins unchanged (`DER-326`)
+- `golang-testing`: light pass; the duplicate pin and samber-pack lines dropped, load-with and workers-bypass rules routed to their owners; `SOURCES.md` note added (`DER-327`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
