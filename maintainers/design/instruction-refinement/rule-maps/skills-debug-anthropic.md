@@ -18,7 +18,7 @@ SHA, license, tools and pins unchanged.
 
 Also changed: `SOURCES.md` L24 (`debug-anthropic` row), Notes cell
 only: `Dropped CONNECTORS` → `Dropped CONNECTORS. Wording edit DER-288,
-pins unchanged; security-cleared <YYYY-MM-DD>.` (the LLD note; the date
+pins unchanged; security-cleared 2026-09-27.` (the LLD note; the date
 is filled when **security** clears the body).
 
 Considered, not changed: Never L40 repeats L8 "Load **one** debug skill";
