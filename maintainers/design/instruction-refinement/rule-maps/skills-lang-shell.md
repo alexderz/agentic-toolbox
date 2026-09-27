@@ -21,12 +21,12 @@ Frontmatter `description`: unchanged (see MQ2).
 - **MQ1** — Old L21–23 ("Dockerfile `RUN` snippets stay `lang-docker`
   first. Load `shell-safety` only when …") partly restates the
   `language-router` map row for `*.sh` / shebang / agent shell, but the
-  Docker `RUN` clause is not in the router. Open: kept as old wording;
-  the operator decides whether it becomes part of the route.
+  Docker `RUN` clause is not in the router. Resolved by the operator
+  2026-09-27 (Q15): kept. The clause is shell-specific and no other file
+  owns it.
 - **MQ2** — The frontmatter `description` repeats routing hints (pointer
-  to `shell-safety`, `lang-docker` first). It is trigger text and holds
-  no link. Open: kept as old wording; the operator decides whether
-  descriptions count as copies under standard 5.
+  to `shell-safety`, `lang-docker` first). Resolved by the operator
+  2026-09-27 (Q16): descriptions are metadata, kept.
 - **MQ3** — Old L8 "Load `shell-safety`", L14 Iron law and L19
   "`shell-safety` only. Then stop." restate the one-language-skill rule
   ([`language-router#iron-law`](../../../../skills/language-router/SKILL.md#iron-law))

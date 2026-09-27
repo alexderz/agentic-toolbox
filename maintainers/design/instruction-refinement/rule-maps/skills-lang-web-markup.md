@@ -18,9 +18,8 @@ Red flags): unchanged. Frontmatter `description`: unchanged (see MQ1).
 
 - **MQ1** — The frontmatter `description` says "load lang-js-ts first;
   this may be the second skill", a repeat of the router map note on
-  `*.tsx`. It is trigger text and holds no link. Open: kept as old
-  wording; the operator decides whether descriptions count as copies
-  under standard 5.
+  `*.tsx`. Resolved by the operator 2026-09-27 (Q16): descriptions are
+  metadata, kept.
 - **MQ2** — Old L10 "May be the second skill next to `lang-js-ts`. Cap
   is still 2." carried no condition; the owner allows a second language
   skill only when the diff is mixed-language (iron law) and names TSX

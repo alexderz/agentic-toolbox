@@ -18,9 +18,8 @@ flags): unchanged. Frontmatter `description`: unchanged (see MQ1).
 
 - **MQ1** — The frontmatter `description` says "load with the host
   language skill when the query lives in application code", a repeat of
-  the `language-router` Algorithm. It is trigger text and holds no
-  link. Open: kept as old wording; the operator decides whether
-  descriptions count as copies under standard 5.
+  the `language-router` Algorithm. Resolved by the operator 2026-09-27
+  (Q16): descriptions are metadata, kept.
 - **MQ2** — Old L8–9 named four process skills; the owner's load-with
   list names nine. Resolved from the text: the owner holds the rule
   (standard 5, writing-standard `#rule-owners` "Language map, load-with
