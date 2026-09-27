@@ -29,5 +29,6 @@ trust boundaries at Spec and Review. Never defer a Spec or Review
 security check to Monthly; **security** runs it at that gate.
 
 Monthly is a cadence review of vulns, updates and new solutions. Write
-it from template `monthly.md`. Recurrence note only until **manager** /
-**operator** cut a Task. Monthly needs no watcher and no cron.
+it from template `monthly.md`. Keep it a recurring note, not a ticket,
+until the **manager** or the **operator** files a Task. Monthly needs no
+watcher and no cron.

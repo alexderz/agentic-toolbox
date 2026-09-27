@@ -29,8 +29,8 @@ old `docs/SDLC.md`; "L" = line in the new file.
 | 892 | Heading Monthly | kept; anchor `#monthly` | L25 |
 | 894 | Vuln / updates / new solutions review | kept; merged with L899–900 "cadence review of vulns/updates/new solutions" into one sentence | L31 |
 | 894 | Template `monthly.md` | kept as "Write it from template `monthly.md`" | L31–32 |
-| 894–895 | Recurrence note only until **manager** / **operator** cut a Task | kept word for word; MQ1 open, awaits the operator | L32–33 |
-| 895–896 | No watcher, no cron required | kept as "Monthly needs no watcher and no cron" | L33 |
+| 894–895 | Recurrence note only until **manager** / **operator** cut a Task | kept; stated per the operator's answer (MQ1) as "Keep it a recurring note, not a ticket, until the **manager** or the **operator** files a Task" | L32–33 |
+| 895–896 | No watcher, no cron required | kept as "Monthly needs no watcher and no cron" | L33–34 |
 | 898 | Monthly is **not** the security gate | kept; owner of this rule (writing standard, Rule owners); placed first in the section (standard 7) | L27 |
 | 898–899 | **security** already gated trust boundaries at Spec and Review | kept | L27–28 |
 | 899–900 | Monthly is not a substitute for those gates | kept as "Never defer a Spec or Review security check to Monthly", with the allowed action beside it: "**security** runs it at that gate" (MQ3); the old sentence is dropped as a duplicate of that line | L28–29 |
@@ -49,8 +49,10 @@ rule is owned by
   **operator** cut a Task" has two readings: the Monthly recurs as a
   note until a Task is cut for it; or a Monthly's findings stay a note
   until a Task is cut. "/" can also mean either role or both.
-  **Open — awaits the operator.** Until the operator answers, the
-  sentence stays word for word and the rewrite picks no reading.
+  Resolved by operator 2026-09-27 (Q3): the monthly recurrence is a
+  recurring note, not a ticket, until the manager or the operator files
+  a Task. The new line states that answer; wording only, the process is
+  unchanged.
 - **MQ2** — Old L888–889 lists the next Changelog pass in parentheses
   ("a later chunk, or a dated heading …"). Resolved from the text: the
   two forms and the "or" are kept word for word after a colon; no "for
