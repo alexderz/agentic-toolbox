@@ -23,7 +23,7 @@ Did not initialize it, bound-check it, or copy it? Treat it as a latent panic or
 | Nil, slices/maps, numbers, defer, zero values | Injection, crypto, secrets, path traversal → `golang-security` / `security-hardening` |
 | Stopping the next crash | Debugging a crash already in hand |
 
-Do not merge the three Go skills into one body. Which Go skill loads, and what loads with it: [`language-router`](../language-router/SKILL.md#map).
+Do not merge `golang-testing`, `golang-security` and `golang-safety` into one body. Which Go skill loads, and what loads with it: [`language-router`](../language-router/SKILL.md#map).
 
 ## Always
 
@@ -78,7 +78,7 @@ An interface is nil only when **type and value** are both nil.
 ```go
 func handler(ok bool) http.Handler {
     if !ok {
-        return nil // not a nil *MyHandler: boxed, it is != nil
+        return nil // return plain nil; a nil *MyHandler in an interface is != nil
     }
     return &MyHandler{}
 }
