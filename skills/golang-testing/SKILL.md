@@ -5,9 +5,7 @@ description: use this when writing, reviewing, or debugging Go tests — table-d
 
 # Go testing
 
-Rewrite inspired by samber/cc-skills-golang `golang-testing` @ `22c58a55a0a799b901aa251172923180bad9e010`. **Not** a verbatim paste. **Not** a pack install. No `evals/`, no `scripts/`, no clawhub. Id: `golang-testing`.
-
-Pairs with `tdd` (fail-first) and `verify-before-done` (fresh `go test` evidence). **builder owns.** Do not install the rest of the samber pack to get this.
+Process skills that may load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
@@ -168,7 +166,7 @@ go test -bench=. -benchmem ./...
 | **security** | Intake; CLEAR conditions (SKILL only) | Day-to-day testify coaching |
 | **manager** | After-act landed+verified | Blessing a suite that skipped `tdd` / verify |
 
-Workers do not bypass intake. A green `go test` is not a **security** clear of this skill home.
+Workers do not bypass **security**: [Roles](../../docs/SDLC.md#roles). A green `go test` is not a **security** clear of this skill home.
 
 ## Red flags
 
