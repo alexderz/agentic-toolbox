@@ -7,6 +7,7 @@ docs are not agent text.
 
 | Old L | Change | Why | L |
 | --- | --- | --- | --- |
+| 4 (fix-forward) | Appended "Internal work lands by local merge, not by pull request." after "only maintainer."; L3 (maintainer link) and L15 unchanged | Review: pairs "PRs are welcome" with the role table's "no PRs" (internal work) | 4 |
 | 16 | "Do not expect merge without it." → "A change merges only after that review." | Tone pass (`docs-google-style`: plain statement) | 16 |
 
 ## Checks

@@ -11,7 +11,6 @@ docs are not agent text.
 | 24 | "unless they waive." → "unless they waive it." | Tone pass | 24 |
 | 25 | `[SDLC.md](SDLC.md)` → `[Steps](SDLC.md#steps)` | Link to the section that names the steps | 25 |
 | 69–77 | Header "Boundary" → "Job"; rows replaced by the SDLC index `#roles` rows | G47: role tables = the index's seven roles and jobs | 69–77 |
-
 ## Checks
 
 - Role table equals `docs/SDLC.md` L25–33 byte for byte.
