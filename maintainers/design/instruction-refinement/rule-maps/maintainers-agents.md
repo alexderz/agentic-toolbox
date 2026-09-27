@@ -1,4 +1,6 @@
-# Rule map — `maintainers/AGENTS.md` (DER-291)
+# Rule map — `maintainers/AGENTS.md`
+
+Item: DER-291. A later item that edits this file appends its own section.
 
 Old: `maintainers/AGENTS.md` at main 7a11696, lines 1–32.
 New: [`maintainers/AGENTS.md`](../../../AGENTS.md).
