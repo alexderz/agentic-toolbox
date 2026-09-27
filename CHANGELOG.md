@@ -6,6 +6,9 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- Maintainer eval task T3 in `maintainers/evals/`: build one item of a
+  groomed toy chunk to landed+verified; task card, answer key and the
+  frozen Groom fixture (`DER-293`)
 - `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
   before any ticket is filed, then frozen (`DER-275`)
 - `sdlc-onboarding` Execution area: asks for and records the Build
