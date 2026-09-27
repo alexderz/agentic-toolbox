@@ -103,7 +103,7 @@ upgrade diff, not a full onboarding; anything else → fail.
 
 ### Propose
 
-1. Write one message from template
+1. Send one message from template
    [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md)
    ([Asking the operator](../../docs/SDLC.md#asking-the-human)).
 2. Tag each line `[found]` (read live) or `[guess]` (your pick).
@@ -113,12 +113,12 @@ upgrade diff, not a full onboarding; anything else → fail.
    **3** also make one test write. 3 combines with 1 or 2 (`1+3`,
    `2+3`). Default: no test write.
 5. Claim line: propose `Claimed by <agent-label> <UTC>`, the default
-   claim comment ([`tracker-sdlc` Claim](../tracker-sdlc/SKILL.md#claim)). Offer a
-   native agent field only if the tracker has one, and say it is
-   last-write-wins and not race-safe alone: it relies on the manager's
-   assignment. Offer per-agent labels only if the operator creates
-   them. Use either only on the operator's yes. `local`: keep
-   `assignee: <agent-label>`.
+   claim comment ([`tracker-sdlc`
+   Claim](../tracker-sdlc/SKILL.md#claim)). Offer a native agent field
+   only if the tracker has one, and say it is last-write-wins and not
+   race-safe alone: it relies on the manager's assignment. Offer
+   per-agent labels only if the operator creates them. Use either only
+   on the operator's yes. `local`: keep `assignee: <agent-label>`.
 6. `local` only: put the first `tickets` bootstrap on its own proposal
    line, because it creates a shared remote branch. Add the signing
    choice: the default follows the operator's git signing config; off
@@ -132,6 +132,7 @@ No answer → write nothing.
 ### Write
 
 Only after the operator confirms:
+
 1. Add `## Tracker` to the governing `AGENTS.md`: exactly two lines,
    the heading, then
    `<Tracker> — load .agents/tracker/SKILL.md (tracker-sdlc v<N>).`
@@ -142,9 +143,8 @@ Only after the operator confirms:
    it ≤180 lines.
 3. Get the ticket id for the commit:
    - item: the item's ticket id;
-   - chunk: the Epic id, got as [Chunk brief](../../docs/sdlc/entry-brief-repo.md#chunk-brief)
-     (end of chunk Brief) says; the **manager** creates a new one with
-     the new repo skill's `create` recipe.
+   - chunk: the Epic id, got as end of chunk Brief says ([Chunk
+     brief](../../docs/sdlc/entry-brief-repo.md#chunk-brief)).
 4. Commit both files as one commit on the [Branch](#branch) step 2 branch:
    `[<ticket-id>] Onboard tracker: <Tracker>`.
 5. **security** reads that change as
