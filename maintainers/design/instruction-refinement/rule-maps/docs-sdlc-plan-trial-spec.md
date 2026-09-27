@@ -51,23 +51,23 @@ parentheses become "for example" lists (New L20).
 | 662–664 | Same review loop as Plan: agents agree, **then** the **operator** accepts or writes `UX verification not required` | route (owner: `#ux`) | L104 |
 | 664–665 | No screen: `n/a` and why; do not invent pictures | kept | L106 |
 | 667–669 | Before Groom/Build, **security** reviews the LLD for trust boundaries (authn/z, secrets, egress, data class, who may write what) | kept, H3 `#security-gate`, numbered; the list is a definition, not a condition | L110–111 |
-| 669 | This is a gate | kept | L115 |
-| 669 | Not a later monthly note | route (owner: `docs/sdlc/trunk-changelog-monthly.md#monthly`, "Monthly is not the security gate") | L115–116 |
-| 669–670 | Do not skip to Build without it when the change touches a boundary | kept; allowed action beside it | L118–119 |
-| 672–673 | **Accept the LLD** (architect + **security** on trust boundaries) before Groom/Build | kept, old wording verbatim until MQ7 is answered; moved after the security review it closes | L112–113 (step 2) |
+| 669 | This is a gate | kept | L118 |
+| 669 | Not a later monthly note | route (owner: `docs/sdlc/trunk-changelog-monthly.md#monthly`, "Monthly is not the security gate") | L118–119 |
+| 669–670 | Do not skip to Build without it when the change touches a boundary | kept; allowed action beside it | L121–122 |
+| 672–673 | **Accept the LLD** (architect + **security** on trust boundaries) before Groom/Build | kept; stated per MQ7 (operator, 2026-09-27): architect and security accept, then the operator; moved after the security review it closes | L112–116 (steps 2–4) |
 | 673–674 | If people see a screen, **designer** mockups (`mockup.md`) are part of Spec | kept, merged with L659 (same rule) | L99 |
 | 674–675 | The **operator** accepts those mockups, or writes `UX verification not required`, before Groom | kept in the owner `#ux`; "before Groom" moved there | L62–63 |
 | 675–676 | Then Documentation is in force | dropped (owner: `#documentation`, whose first line "Once the LLD is accepted" holds the trigger); removes a forward reference | — |
 | 678–679 | **Item:** align to the existing LLD as in Plan; clarification in place; shape change → escalate | kept; link `#plan` | L92–93 |
 | 679–680 | **security** still reads the trust-boundary note; `n/a` + why if the item does not touch a boundary | kept; parenthesis → sentence | L93–95 |
-| 682 | Heading Documentation (after Spec) | kept, H2 `#documentation` (C1) | L121 |
-| 684–685 | Once the LLD is accepted, builders keep docs current through land; two surfaces, do not mix their jobs | kept | L123–124 |
-| 687–690 | Surface table: Human, Agent | kept, unchanged | L126–129 |
-| 692 | Human docs are for people; agent notes are enablement, not tutorials | kept; metaphor "enablement" → "enable future agents" | L131–132 |
-| 693 | Do not paste the SDLC into product docs | kept | L132 |
-| 693–694 | Update both in the same land as the change | kept | L132–133 |
-| 694 | Build DoD includes docs current with the item | route (owner: `docs/sdlc/build-review.md#definition-of-done`) | L133–135 |
-| 696–698 | Skills, templates, technical docs use engineering words; no layperson analogies outside How software gets built | kept; link `../how-software-gets-built.md` (C1) | L137–139 |
+| 682 | Heading Documentation (after Spec) | kept, H2 `#documentation` (C1) | L124 |
+| 684–685 | Once the LLD is accepted, builders keep docs current through land; two surfaces, do not mix their jobs | kept | L126–127 |
+| 687–690 | Surface table: Human, Agent | kept, unchanged | L129–132 |
+| 692 | Human docs are for people; agent notes are enablement, not tutorials | kept; metaphor "enablement" → "enable future agents" | L134–135 |
+| 693 | Do not paste the SDLC into product docs | kept | L135 |
+| 693–694 | Update both in the same land as the change | kept | L135–136 |
+| 694 | Build DoD includes docs current with the item | route (owner: `docs/sdlc/build-review.md#definition-of-done`) | L136–138 |
+| 696–698 | Skills, templates, technical docs use engineering words; no layperson analogies outside How software gets built | kept; link `../how-software-gets-built.md` (C1) | L140–142 |
 | 955–956 | Never: designer or architect self-OK as the UX gate; skip mockups for a screen without a written `UX verification not required` | kept (owner `#ux`); allowed action beside each | L65–71 |
 | 957–958 | Never: lock Plan shape without 2–4 real comparables unless the operator waived look-around in writing | kept; allowed action beside it | L42–45 |
 
@@ -100,11 +100,12 @@ L54–71; `#mockups` holds one route (L104); `#spec` holds none.
   as "small clarification, made in place"; where "in place" is (HLD or
   ticket) is not named, as before.
 
-- **MQ7** — **open, awaits the operator.** Old L672 "**Accept the
-  LLD** (architect + **security** on trust boundaries)" has two readings:
-  (a) the architect accepts the LLD and security accepts its trust
-  boundaries; (b) the parenthesis names reviewers, and acceptance itself
-  is the operator's, as index `#asking-the-human` lists "accepting …
-  the detailed design" as an operator ask. The new file keeps the old
-  wording verbatim (L112–113) until the operator answers. This item is
-  blocked on MQ7.
+- **MQ7** — Old L672 "**Accept the LLD** (architect + **security** on
+  trust boundaries)" had two readings: (a) the architect accepts the LLD
+  and security accepts its trust boundaries; (b) acceptance is also the
+  operator's, as index `#asking-the-human` lists "accepting … the
+  detailed design" as an operator ask. Resolved by operator 2026-09-27
+  (Q5): the architect and security accept the LLD first, then the
+  operator. New L112–116 state that order; the process is unchanged.
+
+No open MQ.

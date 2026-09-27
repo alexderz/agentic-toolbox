@@ -109,8 +109,11 @@ No screen: write `n/a` and why. Do not invent pictures.
 
 1. Before Groom or Build, **security** reviews the LLD for trust
    boundaries: authn/z, secrets, egress, data class, who may write what.
-2. **Accept the LLD** (architect + **security** on trust boundaries)
-   before Groom/Build.
+2. **architect** accepts the LLD, and **security** accepts it on trust
+   boundaries.
+3. **operator** accepts the LLD after them
+   ([Asking the operator](../SDLC.md#asking-the-human)).
+4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:
 [Monthly](trunk-changelog-monthly.md#monthly).
