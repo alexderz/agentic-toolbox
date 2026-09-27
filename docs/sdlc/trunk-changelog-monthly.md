@@ -25,9 +25,8 @@ The `CHANGELOG.md` update may wait for the Changelog step. If
 ## Monthly
 
 Monthly is **not** the security gate. **security** has already gated
-trust boundaries at Spec and Review. Monthly is not a substitute for
-those gates. Never defer a Spec or Review security check to Monthly;
-**security** runs it at that gate.
+trust boundaries at Spec and Review. Never defer a Spec or Review
+security check to Monthly; **security** runs it at that gate.
 
 Monthly is a cadence review of vulns, updates and new solutions. Write
 it from template `monthly.md`. Recurrence note only until **manager** /

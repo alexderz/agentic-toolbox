@@ -27,13 +27,13 @@ old `docs/SDLC.md`; "L" = line in the new file.
 | 888–889 | Promote it with the next Changelog pass: a later chunk, or a dated heading that lists that ticket and the trunk SHA | kept; parenthesis → colon, both forms and the "or" word for word (MQ2) | L23 |
 | 889–890 | Do not invent a chunk heading just to close a lone item | kept as "Never write a chunk heading only to close a lone item"; allowed action named beside it: leave the line under Unreleased (standard 7) | L23 |
 | 892 | Heading Monthly | kept; anchor `#monthly` | L25 |
-| 894 | Vuln / updates / new solutions review | kept; merged with L899–900 "cadence review of vulns/updates/new solutions" into one sentence | L32 |
-| 894 | Template `monthly.md` | kept as "Write it from template `monthly.md`" | L32–33 |
-| 894–895 | Recurrence note only until **manager** / **operator** cut a Task | kept word for word (MQ1) | L33–34 |
-| 895–896 | No watcher, no cron required | kept as "Monthly needs no watcher and no cron" | L34 |
+| 894 | Vuln / updates / new solutions review | kept; merged with L899–900 "cadence review of vulns/updates/new solutions" into one sentence | L31 |
+| 894 | Template `monthly.md` | kept as "Write it from template `monthly.md`" | L31–32 |
+| 894–895 | Recurrence note only until **manager** / **operator** cut a Task | kept word for word; MQ1 open, awaits the operator | L32–33 |
+| 895–896 | No watcher, no cron required | kept as "Monthly needs no watcher and no cron" | L33 |
 | 898 | Monthly is **not** the security gate | kept; owner of this rule (writing standard, Rule owners); placed first in the section (standard 7) | L27 |
 | 898–899 | **security** already gated trust boundaries at Spec and Review | kept | L27–28 |
-| 899–900 | Monthly is not a substitute for those gates | kept; the allowed action is named beside it: "Never defer a Spec or Review security check to Monthly; **security** runs it at that gate" (MQ3) | L28–30 |
+| 899–900 | Monthly is not a substitute for those gates | kept as "Never defer a Spec or Review security check to Monthly", with the allowed action beside it: "**security** runs it at that gate" (MQ3); the old sentence is dropped as a duplicate of that line | L28–29 |
 
 Clarifications (operator, 2026-09-27): none of the five occurs in old
 L870–900; nothing to apply.
@@ -49,11 +49,8 @@ rule is owned by
   **operator** cut a Task" has two readings: the Monthly recurs as a
   note until a Task is cut for it; or a Monthly's findings stay a note
   until a Task is cut. "/" can also mean either role or both.
-  Resolved from the text: the sentence is kept word for word, so the
-  rewrite picks no reading and the meaning cannot shift. Filing a Task
-  is a tracker write, which only the manager does
-  (`docs/SDLC.md#tracker`), under either reading. Making the fragment
-  an imperative (standard 8) needs the operator to pick a reading.
+  **Open — awaits the operator.** Until the operator answers, the
+  sentence stays word for word and the rewrite picks no reading.
 - **MQ2** — Old L888–889 lists the next Changelog pass in parentheses
   ("a later chunk, or a dated heading …"). Resolved from the text: the
   two forms and the "or" are kept word for word after a colon; no "for
@@ -72,5 +69,3 @@ rule is owned by
   deleting project-main. Resolved from the text: steps 2 and 3 follow the
   old sentence order; the only old constraint, delete after project-main
   is on trunk, holds because step 3 follows step 1. Neither is a gate.
-
-No open MQ.
