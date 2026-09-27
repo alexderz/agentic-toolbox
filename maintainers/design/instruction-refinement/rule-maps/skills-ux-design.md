@@ -7,7 +7,7 @@ Light pass (vendor-derived, LLD area F): naming, dedupe, real defects.
 Changed lines only. Upstream attribution (old L12–14) is unchanged. No
 upstream text is added. `SOURCES.md` changes only the `ux-design` Notes
 cell, which gets the LLD note appended:
-`Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.`
+`Wording edit DER-288, pins unchanged; security-cleared 2026-09-27.`
 
 Key: **renamed**: a banned or non-index name is replaced with the index
 name. **route**: the copy is replaced with a link to its owner.
