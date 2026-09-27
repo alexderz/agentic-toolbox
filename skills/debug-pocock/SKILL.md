@@ -9,7 +9,7 @@ description: use this as an alternative to debug when you want a tight red-capab
 
 ## Iron law
 
-**No hypothesis until you have a tight loop that can go red on this exact symptom.** Run that command once and show its output before the first hypothesis.
+**No hypothesis until you have a tight loop that can go red on this exact symptom.** Run the loop command once and show its output before the first hypothesis.
 
 ## Phases
 

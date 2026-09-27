@@ -17,7 +17,7 @@ apply. No new upstream text; SHA, license, tools and pins unchanged.
 | 8 | "Load **one** debug skill." dropped: owner is `## Never` L29 and the description | dedupe | 29 |
 | 8 | "No `scripts/`." dropped: owner is `## Never` L30 | dedupe | 30 |
 | 8 | "**Alternative** to default `debug`." | kept | 8 |
-| 12 | "You have already run that command once" stated a fact, not an instruction → "Run that command once and show its output before the first hypothesis." | defect | 12 |
+| 12 | "You have already run that command once" stated a fact, not an instruction → "Run the loop command once and show its output before the first hypothesis." | defect | 12 |
 | 12 | "(secrets redacted)" dropped: owner is `## Always` L25, "Redact secrets in anything you show" | dedupe | 25 |
 | 35 | "Rewrite of " prepended; SHA and license unchanged | dedupe | 35 |
 
