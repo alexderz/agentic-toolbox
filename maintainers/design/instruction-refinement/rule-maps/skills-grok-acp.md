@@ -41,28 +41,28 @@ none of their subjects occur in this file.
 | 92 | Exit 5: resume or raise `--timeout`; `sessionId: null` → mint again | kept, as if/then | L90 |
 | 93 | Exit 6: read `stopReason`; usually overflow → `--replace` (P) | kept verbatim (MQ1) | L91 |
 | 95 | Heading "SDLC fit" | kept | L93 |
-| 97–100 | Grok is a builder unless the operator says otherwise; verifier and reviewer are different agents, never see Grok's transcript; do not read `response.md` / `events.ndjson` into their prompts (P) | kept verbatim; allowed action added beside "Do not": "give them the ticket and the proving commands", from old L145–146 (MQ6) | L95–98 |
-| 101–102 | One label per role per item; `DER-12:builder` never reused on another item, never resumed to verify or review its own work (P) | kept verbatim; the bold rule is the allowed action | L99–100 |
-| 103–106 | Mint = pack: whole handoff; tell it to read `AGENTS.md` first; Grok cannot see this skills home unless packed or pathed | kept; parenthesis "(tell it to read …)" → own sentence; last clause → imperative "so pack the text or give the path" | L101–104 |
-| 107–108 | Resume = delta; do not re-send the spec | kept verbatim | L105–106 |
-| 109–111 | Create the item branch and worktree yourself from project-main (or trunk); pass it as `--cwd` | kept "yourself" and `--cwd`; branch source → route to `docs/sdlc/branches-and-lands.md#branches` (MQ3) | L107–109 |
-| 111–112 | Tell Grok to commit on the branch, never push, never merge the item branch into anything | kept verbatim; "commit on that branch" is the allowed action | L109–110 |
-| 112–115 | De-conflicting is the builder's job: resume the label with a merge/rebase delta; lands stay serialized and with the orchestrator (P, label) | kept; "orchestrator" → "manager" (K3, MQ5); link to `branches-and-lands.md#land-path` added, no condition | L110–113 |
-| 116–117 | Check blockers before minting; offloading skips no gate; Review and security still run | kept verbatim | L114–115 |
-| 118–119 | Fallback and overflow: exit 3 or a session too long to be useful → `--replace` with a short handoff (paths, decisions, open failures) (P) | kept (MQ1); the handoff list → route to `subagents.md#fallback`, which holds it verbatim | L116–117 |
-| 121–136 | Handoff shape heading and template block | kept verbatim | L119–134 |
-| 138 | Heading "After it returns" | kept; anchor used by L165 | L136 |
-| 140 | Load `verify-before-done`; you are the orchestrator, not the verifier | kept; "orchestrator" → "manager" (K3, MQ5) | L138 |
-| 142–144 | Step 1: smoke-check `git status`, `git diff <base>...`, branch and git rule; `filesEdited` misses shell-made changes; not the gate | kept, one step; parenthesis → sentence | L140–142 |
-| 145–147 | Step 2: verifier runs the proving commands; first pass mint clean with ticket and commands; later passes resume `verifier_id` with the delta; never give it Grok's output (P) | kept, split for standard 1: manager's mint/resume step (L143–145), then the verifier's step with **verifier** first (L146) | L143–146 |
-| 148 | Step 3: verifier failures go back to the same Grok label as a delta (P) | kept, imperative | L147 |
-| 149 | Step 4: do not take "tests pass" from `text` at any step (P) | kept as a rule under the list, not a step (no action in sequence); "from the verifier" names the allowed action | L149 |
+| 97–100 | Grok is a builder unless the operator says otherwise; verifier and reviewer are different agents, never see Grok's transcript; do not read `response.md` / `events.ndjson` into their prompts (P) | kept verbatim; allowed action added beside "Do not", per role: the verifier gets the ticket and the proving commands (old L145–146); the reviewer gets the inputs `skills/pr-review/SKILL.md` names (route, not restated) (MQ6) | L95–99 |
+| 101–102 | One label per role per item; `DER-12:builder` never reused on another item, never resumed to verify or review its own work (P) | kept verbatim; the bold rule is the allowed action | L100–101 |
+| 103–106 | Mint = pack: whole handoff; tell it to read `AGENTS.md` first; Grok cannot see this skills home unless packed or pathed | kept; parenthesis "(tell it to read …)" → own sentence; last clause → imperative "so pack the text or give the path" | L102–105 |
+| 107–108 | Resume = delta; do not re-send the spec | kept verbatim | L106–107 |
+| 109–111 | Create the item branch and worktree yourself from project-main (or trunk); pass it as `--cwd` | kept "yourself" and `--cwd`; branch source → route to `docs/sdlc/branches-and-lands.md#branches` (MQ3) | L108–110 |
+| 111–112 | Tell Grok to commit on the branch, never push, never merge the item branch into anything | kept verbatim; "commit on that branch" is the allowed action | L110–111 |
+| 112–115 | De-conflicting is the builder's job: resume the label with a merge/rebase delta; lands stay serialized and with the orchestrator (P, label) | kept; "orchestrator" → "manager" (K3, MQ5); link to `branches-and-lands.md#land-path` added, no condition | L111–114 |
+| 116–117 | Check blockers before minting; offloading skips no gate; Review and security still run | kept verbatim | L115–116 |
+| 118–119 | Fallback and overflow: exit 3 or a session too long to be useful → `--replace` with a short handoff (paths, decisions, open failures) (P) | kept (MQ1); the handoff list → route to `subagents.md#fallback`, which holds it verbatim | L117–118 |
+| 121–136 | Handoff shape heading and template block | kept verbatim | L120–135 |
+| 138 | Heading "After it returns" | kept; anchor used by L165 | L137 |
+| 140 | Load `verify-before-done`; you are the orchestrator, not the verifier | kept; "orchestrator" → "manager" (K3, MQ5) | L139 |
+| 142–144 | Step 1: smoke-check `git status`, `git diff <base>...`, branch and git rule; `filesEdited` misses shell-made changes; not the gate | kept, one step; parenthesis → sentence | L141–143 |
+| 145–147 | Step 2: verifier runs the proving commands; first pass mint clean with ticket and commands; later passes resume `verifier_id` with the delta; never give it Grok's output (P) | kept, split for standard 1: manager's mint/resume step (L144–146), then the verifier's step with **verifier** first (L147) | L144–147 |
+| 148 | Step 3: verifier failures go back to the same Grok label as a delta (P) | kept, imperative | L148 |
+| 149 | Step 4: do not take "tests pass" from `text` at any step (P) | kept as step 5; "from the verifier" names the allowed action | L149 |
 | 151–155 | Always: scope, do-not-touch paths, git rule in every mint; secrets out of prompts; report what, label, evidence | kept verbatim | L151–155 |
 | 157–161 | Ask first: offloading without an operator ask; `--cwd` at a live host's config, `$HOME`, `/`; credentials in the prompt | kept verbatim | L157–161 |
 | 163 | Heading "Never" | kept | L163 |
 | 165 | Never treat `ok: true` as landed+verified (P) | kept verbatim; allowed action "Run After it returns" (MQ6) | L165 |
 | 166 | Never let one Grok session build and verify the same item (P) | kept verbatim; allowed action "Mint a separate verifier" (MQ6) | L166 |
-| 167 | Never feed Grok's transcript to a verifier or reviewer (P) | kept verbatim; allowed action "Give them the ticket" (MQ6) | L167 |
+| 167 | Never feed Grok's transcript to a verifier or reviewer (P) | kept verbatim; allowed action "Give each its Role inputs": the per-role inputs at L98–99, no new input named (MQ6) | L167 |
 | 168 | Never run two turns against the same session at once (P) | kept verbatim; allowed action "Wait, then resume" (MQ6) | L168 |
 | 169–170 | Never tighten or loosen the permission posture without a new operator order; recorded above with its date (P) | kept verbatim; allowed action "Ask the operator for one" (MQ4, MQ6) | L169–170 |
 | 172–177 | Red flags: four rationalizations | kept verbatim | L172–177 |
@@ -95,8 +95,11 @@ none of their subjects occur in this file.
   The added actions come from this file's own text: old L145–147 (mint a
   clean verifier with the ticket and commands), old L54 (one turn at a
   time), old L169 (a new operator order), old L138–149 (After it
-  returns). Resolved from the text: each protected sentence stays
-  verbatim; no condition is added.
+  returns). The old text names no reviewer inputs, so for the reviewer
+  the Role bullet routes to `skills/pr-review/SKILL.md` (clean reviewer,
+  crafted inputs) and restates nothing; Never L167 points back to Role.
+  Resolved from the text: each protected sentence stays verbatim; no
+  condition or input is added.
 - **MQ7** — Old L13–15 "resolve this skill directory's real path (it is
   usually a symlink), run `packages/grok-acp/grok_acp.py` from that
   checkout". Resolved from the text: "from the checkout that holds this

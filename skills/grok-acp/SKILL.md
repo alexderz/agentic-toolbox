@@ -95,7 +95,8 @@ directory and the run directories it creates are `0700`.
 - **Role.** Grok is a **builder** unless the operator says otherwise. The
   verifier and the reviewer of that item are different agents and never
   see Grok's transcript. Do not read `response.md` or `events.ndjson` into
-  their prompts; give them the ticket and the proving commands.
+  their prompts. Give the verifier the ticket and the proving commands;
+  give the reviewer the inputs [pr-review](../pr-review/SKILL.md) names.
 - **One label per role per item.** `DER-12:builder` is never reused on
   another item and never resumed to verify or review its own work.
 - **Mint = pack.** The first prompt is the whole handoff: ticket, LLD
@@ -145,8 +146,7 @@ Load `verify-before-done`. You are the manager, not the verifier.
    delta. Never give it Grok's output.
 3. **verifier** runs the proving commands.
 4. Send verifier failures to the **same** Grok label as a delta.
-
-At every step, take "tests pass" from the verifier, never from `text`.
+5. At every step, take "tests pass" from the verifier, never from `text`.
 
 ## Always
 
@@ -164,7 +164,7 @@ At every step, take "tests pass" from the verifier, never from `text`.
 
 - Treat `ok: true` as landed+verified. Run [After it returns](#after-it-returns).
 - Let one Grok session build and verify the same item. Mint a separate verifier.
-- Feed Grok's transcript to a verifier or reviewer. Give them the ticket.
+- Feed Grok's transcript to a verifier or reviewer. Give each its Role inputs.
 - Run two turns against the same session at once. Wait, then resume.
 - Tighten or loosen the permission posture here without a new operator
   order; it is recorded above with its date. Ask the operator for one.
