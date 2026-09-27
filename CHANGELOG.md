@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Root `AGENTS.md` is routing only: a load table, the public-repo rule, and routes to the SDLC, `language-router`, `SOURCES.md` and intake (`DER-308`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
