@@ -5,7 +5,7 @@ Item: DER-332 (G42). Light pass: changed lines only (standard, Rule maps 6).
 Old: `skills/lang-go/SKILL.md` at main 7a11696, lines 1–47.
 New: [`skills/lang-go/SKILL.md`](../../../../skills/lang-go/SKILL.md).
 Disposition: **kept**, **route** (the rule lives in its owner; this file
-links it), **dropped** (owner named). 47 lines old, 46 new.
+links it), **dropped** (owner named). 47 lines old, 47 new.
 
 Protected rows touched: none. Operator clarifications (2026-09-27): none
 of their subjects occur in this file. Banned names: none in the old file.
@@ -18,12 +18,19 @@ of their subjects occur in this file. Banned names: none in the old file.
 | 9 | No `scripts/` | kept verbatim | L8 |
 | 13 | Iron law: pick one Go skill; never load all three | route: owner `skills/language-router/SKILL.md#iron-law`, in the L9 route line | L9 |
 | 13 | Iron law: never write a parallel Go guide | kept verbatim, first (standard 7) | L13 |
-| 23 | "Then stop. Apply that skill." | kept verbatim | L23 |
+| 17–18 | Load table header | kept verbatim, as the addendum table header | L19–20 |
+| 19 | Default write or review of `*.go` → `golang-safety` | route: owner `skills/language-router/SKILL.md#map`, Go row ("`golang-safety` by default") (MQ2) | L17 |
+| 20 | Adding tests → `golang-testing` | route: owner `#map`, Go row ("when writing tests") (MQ2) | L17 |
+| 20 | Changing tests, tables, race, goleak → `golang-testing` | kept, as a Go-only addendum row; wording kept (MQ2) | L21 |
+| 21 | Input, auth, SQL, files, subprocesses, crypto → `golang-security` | route: owner `#map`, Go row (same six signals) (MQ2) | L17 |
+| 21 | HTTP → `golang-security` | kept, as a Go-only addendum row (MQ2) | L22 |
+| 23 | "Then stop. Apply that skill." | kept verbatim | L24 |
 | 23 | Pair process skills as they already say | route: owner `skills/language-router/SKILL.md#load-with-list` (MQ1) | L9 |
 | 47 | Never: `golang-safety` + `golang-testing` + `golang-security` in one turn | route: owner `skills/language-router/SKILL.md#iron-law`, in the L9 route line | L9 |
 
-Unchanged old lines 1–7, 10–12, 14–22 and 24–46 keep their line numbers.
-Old L17–21 (the Load table) is kept verbatim pending MQ2.
+New line with no old line: L17 (route to the Go row and addendum lead-in).
+Unchanged old lines 1–7, 10–12, 14–16 keep their line numbers; old L22
+and L24–46 are new L23 and L25–47.
 
 ## Meaning questions
 
@@ -33,13 +40,9 @@ Old L17–21 (the Load table) is kept verbatim pending MQ2.
   `language-router` loads on every code turn (its description), so the
   owner list already governs every turn that loads this skill. The route
   adds no condition.
-- **MQ2** — **Open.** Old L17–21, the Load table, repeats the owner's Go
-  row (`skills/language-router/SKILL.md#map`) with extra signals: `HTTP`
-  → `golang-security`; "tables, race, goleak" → `golang-testing`. Two
-  readings: (a) a duplicate of the Go row (HTTP is input; race and
-  goleak are tests), so the table becomes a route to `#map`; (b) Go
-  pointer content the owner allows ("it routes to the language skill in
-  its row", router L80–81), so it stays. Kept verbatim; the route line
-  does not link `#map`. Operator to pick (a) or (b); under (a) the table
-  and "Then stop. Apply that skill." become one link to `#map`, and the
-  route line adds it.
+- **MQ2** — Old L17–21, the Load table, repeats the owner's Go row
+  (`skills/language-router/SKILL.md#map`) and adds signals: `HTTP` →
+  `golang-security`; changing tests, tables, race, goleak →
+  `golang-testing`. Resolved by the operator 2026-09-27 (Q14): route +
+  Go-only addendum. The repeated Go row routes to `#map` (L17); the
+  extra signals stay as addendum rows (L21–22) with their old meaning.
