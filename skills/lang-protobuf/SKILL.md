@@ -5,9 +5,8 @@ description: use this when writing or reviewing *.proto files or generated stubs
 
 # Protocol Buffers
 
-Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. No `scripts/`. May be the second skill
-next to the host language.
+No `scripts/`.
+Process skills that may load with this one, and the host language skill beside it: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Algorithm](../language-router/SKILL.md#algorithm) step 6.
 
 ## Iron law
 
@@ -43,8 +42,6 @@ Diff only the intended schema change plus the expected generated files.
 - No reused numbers.
 - No type change of a shipped field.
 - Generated files only from codegen.
-- Host language change, if any, loads the host skill as the other of
-  the two.
 
 ## Security
 

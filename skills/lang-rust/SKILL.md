@@ -6,8 +6,8 @@ description: use this when writing, reviewing, or testing Rust — Cargo.toml, *
 # Rust
 
 Language guide. Distills what agents get wrong; not a paste of
-the Microsoft Pragmatic Rust Guidelines or a 200-rule dump. Compatible
-with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`. No `scripts/`.
+the Microsoft Pragmatic Rust Guidelines or a 200-rule dump. No `scripts/`.
+Process skills that may load with this one: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
