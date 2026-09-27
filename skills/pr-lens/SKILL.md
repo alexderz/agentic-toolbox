@@ -1,6 +1,6 @@
 ---
 name: pr-lens
-description: use this when the operator asks for a diagram of a change or a system — "diagram this PR", "add a pr-lens diagram", "draw the architecture of this change", "put a diagram in the PR into main" — to write a PR Lens graph document, validate and render it locally with the pinned CLI, and attach the SVG to a pull request body. do not use on your own initiative, do not use for canvases or model-driven analysis, and do not use for a diagram the operator did not ask for.
+description: use this when the operator asks for a diagram of a change or a system — "diagram this PR", "add a pr-lens diagram", "draw the architecture of this change", "put a diagram in the PR into main" — to write a PR Lens graph document, validate and render it locally with the pinned CLI, and attach the SVG to a pull request body. do not use for a diagram the operator did not ask for, for canvases, or for model-driven analysis.
 ---
 
 # PR Lens
@@ -211,7 +211,7 @@ reports a correction that matched nothing.
 
 ## Upstream
 
-- Official skill, pinned:
+- Upstream skill, pinned:
   [coldteadotai/pr-lens `skills/pr-lens/SKILL.md` at `09f6378`](https://github.com/coldteadotai/pr-lens/blob/09f6378c082ff8ddb17e211f36bfc71c2f2b8d86/skills/pr-lens/SKILL.md)
   (MIT). Pin and notes: [SOURCES.md](../../SOURCES.md).
 - **Excluded: `canvas push`, `open`, `look`, `answer`, `show`, and

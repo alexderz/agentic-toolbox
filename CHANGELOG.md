@@ -48,6 +48,9 @@ Newest first. Skip empty sections.
   pairing line; the workers line names **security** (`DER-328`)
 - `golang-safety`: Go-skill choice routes to `language-router`; typed-nil
   example compiles; nil-map `cap` row fixed (`DER-329`)
+- `pr-lens` light pass: one duplicate clause dropped from the
+  description and one upstream name made consistent; CLI pin and
+  local-only limits unchanged (`DER-330`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
