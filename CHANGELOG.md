@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/sdlc/build-review.md` follows the writing standard: numbered steps and a Parallelism table; copies of the branch, subagent, land, worker-security and Monthly rules become one-line links to their owners; it owns "notify only when landed and verified" (`DER-303`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move

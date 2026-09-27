@@ -2,95 +2,113 @@
 
 ## Build
 
-Before minting or resuming a **builder** on an item, **manager** claims
-it with the `tracker-sdlc` claim verb, under the builder's agent label
-(claim reads the blockers first). An **open**
-blocker is a blocker not in `done` or `canceled`.
+An **open blocker** is a blocker not in `done` or `canceled`.
+
+**manager**: before minting or resuming a **builder** on an item, claim
+the item with the `tracker-sdlc` claim verb, under the builder's agent
+label. The claim reads the blockers first.
+
+Branch source for each item: see [Branches](branches-and-lands.md#branches).
 
 ### Open blockers
 
-If any blocker is open:
+Do not land past an open blocker to "make progress". If any blocker is
+open, resolve it, ask, or defer the item:
 
-1. **Resolve** it first when it is an item in this chunk (work that
-   item, honoring *its* blockers, then return).
-2. **Otherwise ask the human** (see [Asking the human](../SDLC.md#asking-the-human))
-   whether to wait, drop the wait, or go ahead anyway. **manager**
-   records the call on the ticket with `comment`.
+1. If the blocker is an item in this chunk, **resolve** it first: work
+   that item, honoring *its* blockers, then return.
+2. Otherwise, ask the operator
+   ([Asking the operator](../SDLC.md#asking-the-human)) whether to
+   wait, drop the wait, or go ahead anyway. **manager** records the
+   call on the ticket with `comment`.
 3. If the operator is not available and the blocker cannot be resolved
-   here: **defer** the item. Pick an unblocked one. Do not start it.
-
-Do not land past an open blocker to “make progress.”
+   here, **defer** the item. Pick an unblocked item. Do not start the
+   deferred item.
 
 ### Dispatch
 
-**Dispatch.** Start every item `list-ready` returns for the Epic (a lone
-incoming item: that item), up to the `Parallelism:` ceiling in the
-product repo's `## Execution`: `max` (none), `serial` (one item in Build
-at a time), or `at most <N>` (N a positive integer). The ceiling never
-orders work; blockers do. The harness may run fewer ([Writable
-worktree](subagents.md#writable-worktree)). No `## Execution`, or any other
-value → run `sdlc-onboarding` Execution (ask); one at a time until the
-operator answers.
+Start every item `list-ready` returns for the Epic. For a lone incoming
+item, start that item. Start them up to the `Parallelism:` ceiling in
+the product repo's `## Execution`:
 
-**Do not exit Build after one pass.** Loop implement → test → fix
-until the ticket Definition of Done is actually met. Use **one builder
-subagent and one verifier subagent per work item** for that loop (see
-[Subagents per work item](subagents.md#item-agents)).
+| `Parallelism:` in `## Execution` | Ceiling |
+| --- | --- |
+| `max` | None |
+| `serial` | One item in Build at a time |
+| `at most <N>`, where N is a positive integer | N items in Build at a time |
+| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which asks the operator. Run one item at a time until the operator answers. |
 
-Each item **branches off project-main** (or off trunk if there is no
-project-main), not off a pile of sibling item branches. Items split from
-an accepted Spec branch here; incoming items already have theirs from
-item Brief. Independent
-items may **build** in parallel. When an item is merge-ready (DoD +
-Review), **land it on project-main** (or trunk) — do not stockpile
-finished-but-unmerged branches for a batch integrate. Lands are one at
-a time.
+The ceiling never orders work; blockers do. The harness may run fewer
+items: see [Writable worktree](subagents.md#writable-worktree).
 
 ### Definition of done
 
-DoD includes: acceptance on the ticket, tests/verification evidence,
-land path cites a ticket ID when the project uses tickets, changelog
-line under Unreleased, human + agent docs current for this item, no
-silent scope leftover. The verifier checks the tone and voice of
-deliverables against the project's style guide (default
-`docs-google-style`); it does not review agent context for tone.
+**DoD** (definition of done) includes:
 
-Notify only when work is **landed and verified**.
+- acceptance on the ticket;
+- tests or verification evidence;
+- the [land path](branches-and-lands.md#land-path) cites a ticket ID
+  when the project uses tickets;
+- a changelog line under Unreleased;
+- human and agent docs current for this item;
+- no silent scope leftover.
+
+The verifier checks the tone and voice of deliverables against the
+project's style guide. If the project names none, use
+`docs-google-style`. The verifier does not review agent context for
+tone.
+
+Do not exit Build after one pass. Loop implement → test → fix until the
+item meets DoD. Builder and verifier: one each per item, minted and
+resumed per [Item agents](subagents.md#item-agents).
+
+An item is merge-ready when it meets DoD and passes
+[Review](#review). Land each merge-ready item, one land at a time, per
+[Land path](branches-and-lands.md#land-path).
+
+Notify only when work is **landed and verified**. Landed means on
+project-main, or on trunk if trunk was the land target. Do not notify on
+"pushed to an item branch" or on "LGTM" without evidence.
 
 ### Debug in Build
 
-On unexpected failure, load **`debug`** (default). Alternatives
-`debug-pocock` / `debug-anthropic` — load **one**. Then `tdd` for the
-cause and `verify-before-done` to prove the fix. Notify
-**landed+verified** on **project-main** (or trunk if that was the land
-target) — not “pushed to an item branch” and not “LGTM without
-evidence.”
+On an unexpected failure:
 
-This is **not** a second Brief. Root cause during Build is `debug` on
-the chosen fix. Do not re-open item-Brief unless the failure shows the
-chosen fix was the wrong *kind* of change (then escalate).
+1. Load `debug` by default. `debug-pocock` and `debug-anthropic` are
+   alternatives. Load only **one** of the three.
+2. Load `tdd` for the cause.
+3. Load `verify-before-done` to prove the fix.
+
+Debug in Build is **not** a second Brief. During Build, find the root
+cause with `debug` on the chosen fix. Do not re-open item Brief unless
+the failure shows the chosen fix was the wrong *kind* of change; in
+that case, escalate.
 
 ### Skills-home DoD
 
-**Skill-home DoD (this repo):** any skill-body diff must match the pinned
-SHA in [SOURCES.md](../../SOURCES.md) for that id. Empty SHA means no body
-may land. Remote agent PRs into this repo still pass **security intake**.
-Workers **do not bypass** intake, SHA pins, or security Spec/Review gates.
+In this repo, the skills home, DoD also includes:
+
+- Any skill-body diff must match the pinned SHA in
+  [SOURCES.md](../../SOURCES.md) for that id.
+- If that SHA is empty, no body may land.
+- Remote agent PRs into this repo still pass **security** intake.
+
+Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
 
 ## Review
 
-Review **before** the item lands on project-main (or trunk). When
-Review starts, **manager** transitions the item to `in_review` with
-`tracker-sdlc`. The
-reviewer is **not** the builder who wrote the diff. Same-session
-self-review does not count. Review is an explicit gate, not a PR; a
-local merge does **not** skip it.
+Review is an explicit gate, not a PR. A local merge does **not** skip
+it. Review the item before it lands on project-main or trunk.
 
-First review of this item: mint a **clean reviewer**. Later review rounds
-on the same item (after fixes): **resume that reviewer**. Do not mint a
-new reviewer each round, and do not feed it the builder’s transcript.
+1. **manager**: when Review starts, transition the item to `in_review`
+   with `tracker-sdlc`.
+2. Get a **reviewer** that is not the builder: mint or resume it per
+   [Item agents](subagents.md#item-agents).
+3. Take the diff range versus project-main, or versus trunk if there is
+   no project-main.
+4. **reviewer**: approve only if the item meets the ticket and the LLD
+   **and** passes the **security** gate: intake, SHA pins, and
+   trust-boundary deltas.
 
-Reviewer approves only if the item meets the ticket + LLD **and** the
-**security** gate (intake, SHA pins, trust-boundary deltas). Security at
-land is a gate, not deferred to Monthly. Diff range is versus
-**project-main** (or versus trunk if there is no project-main).
+Security at land is a gate. Monthly is not the security gate: see
+[Monthly](trunk-changelog-monthly.md#monthly).
