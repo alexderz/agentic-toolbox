@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby` and `lang-rust` route their load-with lines to `language-router` (`DER-334`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
