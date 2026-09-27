@@ -179,7 +179,10 @@ Rewrite `sdlc-onboarding` and Groom (index + step file) on a scratch
 branch; run T1, T2 in both arms on the weakest and one frontier model.
 (1) Does the weak model make the index → step-file hop? (2) Do passes
 hold, tokens fall? (3) Does frontier hold? Evidence: `poc.md` here. Hop
-fails → one slimmed `docs/SDLC.md` (~550 lines), decided before Spec.
+fails → one slimmed `docs/SDLC.md` (~550 lines). Operator (2026-09-27):
+proceed on the split hypothesis; the baseline (at `main` 7a11696), the
+Trial and the final run happen when the harness is ready, all before the
+PR into `main`. A failed hop reworks area C only.
 
 ### Trust boundaries (for Spec)
 
