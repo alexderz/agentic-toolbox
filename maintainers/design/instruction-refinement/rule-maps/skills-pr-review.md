@@ -30,6 +30,6 @@ file. No rule changes meaning.
 
 | Old L | Change | Why | L |
 | --- | --- | --- | --- |
-| 34–35 | "send the new range and what changed — do not re-paste the spec" → "with the new range:" + route [Item agents](../../../../docs/sdlc/subagents.md#item-agents) | F5: owner `subagents.md#item-agents` states resume `reviewer_id`, send what changed, never re-paste the spec | L34–35 |
+| 34–35 | "send the new range and what changed — do not re-paste the spec" → "and send the new range; see" + route [Item agents](../../../../docs/sdlc/subagents.md#item-agents) | F5: owner `subagents.md#item-agents` states resume `reviewer_id`, send what changed, never re-paste the spec | L34–35 |
 
 SOURCES row unchanged.

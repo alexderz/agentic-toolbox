@@ -31,7 +31,7 @@ Builder, verifier and reviewer are distinct; mint, then resume:
 2. **Craft context only (first launch).** Description, ticket/LLD/spec
    link, base/head SHAs, standards sources (`AGENTS.md`,
    `CODING_STANDARDS.md`, CONTRIBUTING). Not the builder transcript.
-   **Later rounds:** resume the same reviewer with the new range:
+   **Later rounds:** resume the same reviewer and send the new range; see
    [Item agents](../../docs/sdlc/subagents.md#item-agents).
 3. **Two axes, separate:**
    - **Standards** — repo conventions + judgement smells (see baseline). Documented repo rules override smells.
