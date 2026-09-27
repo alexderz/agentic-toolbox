@@ -50,9 +50,11 @@ is [security-intake.md](security-intake.md), copied as written.
 
 - **Load rule:** the skill loads on UI build turns; only the upstream
   option is operator opt-in (brief risk 1).
-- **Who asks:** a subagent returns the ask to the manager; until the
-  answer, option 1 applies, since it is the default and runs nothing
-  (brief risk 2).
+- **Who asks:** the builder puts the ask in its handoff and keeps building
+  with option 1, the default, which runs nothing (brief risk 2). Only
+  after the operator answers does the manager write the product repo's
+  UI craft note (Review round 1). The options are a numbered list, so a
+  third answer ("neither") can be added as one more item.
 - **`language-router`:** `ui-craft` joins load-with item 1. That list
   names the process skills that may load beside the one language skill;
   a UI build is a code turn with `lang-web-markup` or `lang-js-ts`, so

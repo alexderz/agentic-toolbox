@@ -27,6 +27,6 @@ Light pass, changed lines only. Old = project-main 88455d8.
 | --- | --- | --- | --- |
 | 12–13 | License line names `skills/ui-craft/` beside `skills/debug-anthropic/` as Apache-2.0 | `ui-craft` is a rewrite of Impeccable (Apache-2.0); `NOTICE` lists it | 12–13 |
 | — | Bundle row **ui**: `ui-craft`, builder rules beside `ux-design`; upstream is an operator choice per product repo | New skill; the Bundles table lists every bundle | 47 |
-| — | `### ui` ids table with the `ui-craft` row | Same shape as `### diagrams` | 115–120 |
+| — | `### ui` ids table with the `ui-craft` row | Same shape as `### diagrams` | 116–121 |
 
 K7 and K10 rerun on the added lines: links resolve; K10 has no hits.
