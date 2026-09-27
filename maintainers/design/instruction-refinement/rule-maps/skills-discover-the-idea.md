@@ -29,7 +29,7 @@ meaning (steps 0–5, their order, the brief outline).
 | 31–34 | Reflect: one short paragraph in their words, tightened; confirm or correct before any question list; name what is still fog | kept, numbered; "fog" → "vague" (standard 8) | L38–43 |
 | 36 | Step 2 heading "(only if it exists)" | kept | L45 |
 | 38 | Look around after the dump; may not be a code repo | kept | L47 |
-| 40–42 | Inspect only what is there (list); skip when no environment worth reading | kept, numbered, skip condition first; "worth reading" kept verbatim (MQ1, open) | L49–51 |
+| 40–42 | Inspect only what is there (list); skip when no environment worth reading | kept, one step, skip condition first; "no environment worth reading" → "only when there is nothing to read" (MQ1, resolved by operator 2026-09-27 (Q7)) | L49–51 |
 | 44–45 | Facts you can look up are your job; do not ask what a file, ticket, or public page says | kept; "Never … ; read it instead" names the allowed action (standard 7); owner of old L110, L125 | L52–53 |
 | 47 | Step 3 heading "(when alternatives exist)" | kept | L55 |
 | 49–50 | Real options (tools, patterns, prior art): research 3–5 before the first round that depends on the choice | kept; parenthesis → "such as" (MQ4); "grill round" → "question round" | L58–60 |
@@ -41,8 +41,8 @@ meaning (steps 0–5, their order, the brief outline).
 | 65–75 | Question format block | kept verbatim, indented under step 1 so the step names it without a forward reference (standard 4) | L73–81 |
 | 77–78 | Recompute the frontier; a question depending on one still open goes to the next round | kept | L84–85 |
 | 80–81 | Push back on fog ("probably", "later", "something like"); propose a strawman | kept; "fog" → "vague words" | L87–88 |
-| 81–82 | When you feel ready to stop, ask one more round on out-of-scope and failure modes, then stop | kept verbatim, in its old place before the done rule (MQ2, open) | L88–89 |
-| 84–86 | Done when the frontier is empty or the next question cannot be answered by talking (prototype, screenshot, live system); mark those open; do not invent | kept; parenthesis → "for example because" (MQ5); "never invent" beside "Mark … open" | L91–94 |
+| 81–82 | When you feel ready to stop, ask one more round on out-of-scope and failure modes, then stop | kept; "When you feel ready to stop" → "When the frontier is empty"; that round counts toward the cap of four (MQ2, resolved by operator 2026-09-27 (Q8)); placed after the cap so it names the cap without a forward reference (standard 4) | L91–93 |
+| 84–86 | Done when the frontier is empty or the next question cannot be answered by talking (prototype, screenshot, live system); mark those open; do not invent | kept; the frontier-empty branch is the L91–93 stop (Q8); "Also stop when …" keeps the other branch; parenthesis → "for example because" (MQ5); "never invent" beside "Mark … open" | L93–95 |
 | 88 | Step 5 heading | kept | L97 |
 | 90 | Emit the brief; ask the user to confirm | kept, numbered | L99, L113 |
 | 90 | Do not implement | dropped: duplicate; owner in this file: Iron law (L20) and Never (L124) | L124 |
@@ -50,16 +50,16 @@ meaning (steps 0–5, their order, the brief outline).
 | 93–102 | Brief outline block | kept verbatim, indented under step 1 | L101–110 |
 | 104 | Brief stays in chat; no file unless asked | kept | L112 |
 | 106 | Heading "Always" | dropped: every bullet now sits with its owner (rows below) | — |
-| 108 | Start at step 0 unless a dump is already in the thread | kept, merged into step 0.1 (MQ3) | L27–28 |
+| 108 | Start at step 0 unless a dump is already in the thread | kept, merged into step 0.1 (MQ3) | L27–29 |
 | 109 | Recommended answer on every question | dropped: duplicate of old L63; owner step 4.1 | L70–71 |
-| 110 | Look up facts before asking | dropped: duplicate of old L44–45; owner step 2.3 | L52–53 |
-| 111–112 | Cap at four rounds; round 4 still widens scope → split, gather one slice | kept, moved into step 4 beside the done rule | L94–95 |
+| 110 | Look up facts before asking | dropped: duplicate of old L44–45; owner step 2.2 | L52–53 |
+| 111–112 | Cap at four rounds; round 4 still widens scope → split, gather one slice | kept, moved into step 4 before the stop rules | L90–91 |
 | 113 | No language skill on a gather-only turn | route: owner `skills/language-router/SKILL.md#no-language-turns` (added by DER-318; this item lands after it) (rule owners: no-language turns) | L14–16 |
 | 115–119 | Ask first: any file; expanding scope; critiquer or builder before the user confirms | kept; "a critiquer or builder" → "the refiner or a builder" (one name) | L116–120 |
 | 121 | Heading "Never" | kept | L122 |
 | 123 | Never implement, scaffold, sketch the API | kept; "emit the brief" names the allowed action | L124 |
 | 124 | Never critique the brief in the same turn (different agent) | kept; parenthesis → "the refiner does that", the refiner defined in the intro; gatherer ≠ refiner routed to `docs/sdlc/subagents.md#step-agents` (MQ6) | L125, L12–14 |
-| 125 | Never ask for what the environment answers | dropped: duplicate of old L44–45; owner step 2.3 | L52–53 |
+| 125 | Never ask for what the environment answers | dropped: duplicate of old L44–45; owner step 2.2 | L52–53 |
 | 126 | Never recommend a tool not looked at this session | kept; "look first" names the allowed action | L126 |
 | 127–128 | Never name pantheon personas; roles are architect / designer / builder / tester / security / manager / operator | kept; role list → route to `docs/SDLC.md#roles` (same seven roles; rule owners: "use only the roles in the table") | L127 |
 | 130–136 | Red flags | kept verbatim | L129–135 |
@@ -83,18 +83,13 @@ Resolved from the text:
   refiner are never the same agent; the route adds no condition. "In the
   same turn" is kept.
 
-Open (old wording kept; the item is blocked until the operator answers):
+Resolved by the operator:
 
 - **MQ1** (old L41–42): "Skip this step when there is no environment
-  worth reading" is a judgment condition (standard 2). Reading A: skip
-  only when none of the listed sources (L40–41) exist, matching the
-  heading "(only if it exists)". Reading B: also skip when sources exist
-  but none bears on the idea. Proposed: reading A, written "If none of
-  these exist, skip this step."
-- **MQ2** (old L81): "When you feel ready to stop" is a judgment
-  condition. Reading A: when the done rule (old L84–86) holds. Reading
-  B: the agent's own sense, which may come earlier, for example at the
-  four-round cap. Also open: whether that extra round counts toward the
-  cap of four. Proposed: reading A; move the line after the done rule
-  as "When the session is done, ask one more round … then stop". No
-  proposal on the cap; the operator says whether the extra round counts.
+  worth reading" was a judgment condition (standard 2). Resolved by
+  operator 2026-09-27 (Q7): skip the environment read only when there is
+  nothing to read. Written at L49–51.
+- **MQ2** (old L81): "When you feel ready to stop" was a judgment
+  condition. Resolved by operator 2026-09-27 (Q8): "ready to stop" means
+  the frontier is empty, and the extra round on out-of-scope and failure
+  modes counts toward the four-round cap. Written at L91–93.

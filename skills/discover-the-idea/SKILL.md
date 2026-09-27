@@ -46,10 +46,10 @@ The user owns decisions. You own facts. The session ends in a brief.
 
 The environment may not be a code repo. Run this step after the dump.
 
-1. Skip this step when there is no environment worth reading.
-2. Inspect only what is actually there: working tree, notes, prior
-   briefs, open tickets, linked docs, public pages the user named.
-3. Look up every fact you can. Never ask the user what a file, ticket,
+1. Skip this step only when there is nothing to read. Otherwise inspect
+   only what is actually there: working tree, notes, prior briefs, open
+   tickets, linked docs, public pages the user named.
+2. Look up every fact you can. Never ask the user what a file, ticket,
    or public page already says; read it instead.
 
 ### 3. Options map (when alternatives exist)
@@ -85,14 +85,14 @@ The idea is a **design tree**: each decision raises more decisions. The
    still open this round goes in the next round.
 
 Push back on vague words ("probably", "later", "something like").
-Propose a strawman they can reject. When you feel ready to stop, ask one
-more round on out-of-scope and failure modes, then stop.
+Propose a strawman they can reject.
 
-The session is done when the frontier is empty, or when the next
-question cannot be answered by talking, for example because it needs a
-prototype, a screenshot, or a live system. Mark those questions open;
-never invent an answer. Cap the session at four rounds. If round 4
-still widens scope, split the idea and gather one slice.
+Cap the session at four rounds. If round 4 still widens scope, split
+the idea and gather one slice. When the frontier is empty, ask one more
+round on out-of-scope and failure modes; that round counts toward the
+four. Then stop. Also stop when the next question cannot be answered by
+talking, for example because it needs a prototype, a screenshot, or a
+live system. Mark those questions open; never invent an answer.
 
 ### 5. Brief, then stop
 
