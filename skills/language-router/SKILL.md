@@ -54,7 +54,7 @@ Match files to a row. The Load column names the language skill.
 
 | Files / signals | Load |
 | --- | --- |
-| `*.go`, `go.mod` | **One** of: `golang-safety` by default; `golang-testing` when writing tests; `golang-security` when the change touches input, auth, SQL, files, subprocesses, or crypto. Pointer: `lang-go`. |
+| `*.go`, `go.mod` | **One** of: `golang-safety` by default; `golang-testing` when writing or changing tests or test tables, or when the change touches races or `goleak`; `golang-security` when the change touches input, auth, HTTP, SQL, files, subprocesses, or crypto. Pointer: `lang-go`. |
 | `*.py`, `pyproject.toml`, `uv.lock` | `modern-python`. Pointer: `lang-python`. |
 | `*.sh`, `*.bash`, shebang sh/bash, agent shell | `shell-safety`. Pointer: `lang-shell`. |
 | `*.rs`, `Cargo.toml` | `lang-rust` |
@@ -107,11 +107,12 @@ so, and use the official docs only. Never create a pack for it.
 3. Match each file to a Map row. Extensions and well-known file names
    beat chat keywords.
 4. If a file's language is a stub, follow Stubs for it.
-5. If one language owns ≥80% of the change, load that language skill
-   only.
+5. If the change has `*.proto` files and any hand-edited host code, load
+   `lang-protobuf` and the host language skill, even if one language owns
+   ≥80%. Otherwise, if one language owns ≥80% of the change, load that
+   language skill only.
 6. If two languages are first-class in the change, such as SQL and its
-   host language, TSX and a stylesheet, or proto and hand-edited host
-   code, load both.
+   host language, or TSX and a stylesheet, load both.
 7. Read the chosen `SKILL.md`. Stop routing. Never summarize the
    catalog; name only the skill you load.
 
