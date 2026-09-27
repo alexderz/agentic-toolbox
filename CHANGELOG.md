@@ -95,6 +95,7 @@ Newest first. Skip empty sections.
   acceptance owned once in `#ux`, a route to `#monthly` for "Monthly is
   not the security gate", and the process-change plan names the SDLC and
   its step files (`DER-301`)
+- `docs/sdlc/groom-step.md` rewritten to the writing standard; owns the groom reviewer id (`DER-302`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
