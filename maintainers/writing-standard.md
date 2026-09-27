@@ -139,8 +139,8 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
 - **K7 links**: every relative link in changed files resolves; every
   `#anchor` matches a heading slug or `<a id>`; the anchors of the LLD
   [file map](design/instruction-refinement/lld.md#paths--modules-file-and-anchor-map) exist.
-- **K8 people doc**: DER-288 items leave `docs/how-software-gets-built.md` as the C1 move made it; later
-  items edit it with a tone read, never word for word (operator, 2026-09-27). **K9**: `grep -c 'id="asking-the-human"' docs/SDLC.md` = 1.
+- **K8 people doc**: `diff <(git show 7a11696:docs/SDLC.md | sed -n '119,383p' | sed -E 's/^#(#+ )/\1/') <(git show 88455d8:docs/how-software-gets-built.md)` → empty (DER-288 items, through project-main 88455d8);
+  each later commit in `git log 88455d8.. -- docs/how-software-gets-built.md` has a change map naming its `docs-google-style` read at Review (operator, 2026-09-27). **K9**: `grep -c 'id="asking-the-human"' docs/SDLC.md` = 1.
 - **K10 public text**, before each push and the PR: `git diff main...
   | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|\bsk-[A-Za-z0-9_-]{20,}|\.(lan|local|internal|ts\.net)\b|https?://)'`
   → each hit is an allowed reference (upstream or comparables URL) or is

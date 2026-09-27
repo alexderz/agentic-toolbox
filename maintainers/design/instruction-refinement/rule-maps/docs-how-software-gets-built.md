@@ -11,7 +11,10 @@ New: [`docs/how-software-gets-built.md`](../../../../docs/how-software-gets-buil
 | --- | --- | --- | --- |
 | 206–208 | "they keep the note and throw the scratch away" → they keep the note and the scratch pad, filed with the plans and marked "trial only"; if it works, the builders make the real math box properly | Lay copy of the Trial owner `docs/sdlc/plan-trial-spec.md#trial` (DER-278); it was the only text that said to discard trial code | L206–209 |
 
-K8 was a byte match to old `docs/SDLC.md` lines 119–383. DER-278 scopes
-it to the DER-288 items in `maintainers/writing-standard.md`, in place
-(150 → 150 lines), per the operator on 2026-09-27 ("never require
-anything word for word"). Later items edit this doc with a tone read.
+K8 (`maintainers/writing-standard.md`, rewritten in place by DER-278)
+holds the byte match at project-main 88455d8 and needs, for each later
+commit, a `docs-google-style` read at Review named here (operator,
+2026-09-27: "never require anything word for word").
+
+`docs-google-style` read at Review: _the DER-278 reviewer records the
+verdict here._

@@ -54,22 +54,15 @@ file. No rule changes meaning.
 
 Proof-of-concept code stays in the repo. Changed lines only. Old =
 project-main 88455d8; "Old L" = line there; "L" = line in the new file.
-First-party skill (`SOURCES.md`), so a full map, not a light pass.
+First-party skill (`SOURCES.md`), so a full map, not a light pass. The
+template's rows are in
+[skills-sdlc-artifacts-templates-poc.md](skills-sdlc-artifacts-templates-poc.md).
 
 | Old L | Rule | Disposition | L |
 | --- | --- | --- | --- |
 | 30 | PoC lands in `docs/` next to the HLD | changed (MQ2): `poc/poc.md` beside the chunk's design records; route to owner `docs/sdlc/plan-trial-spec.md#trial` | L30 |
 
-`templates/poc.md` (17 → 17 lines; bold labels and headings unchanged, K6):
-
-| Old L | Text | Change | L |
-| --- | --- | --- | --- |
-| 4 | `HLD: docs/<path>` | `HLD: <path to the chunk's HLD>`: no fixed folder (MQ2) | L4 |
-| 10 | **Setup** — how to run it | adds "the code sits in `poc/` beside this note" | L10 |
-| 13 | **What we will not treat as product** | adds the fill hint "all of `poc/`; name what Build must rebuild"; the rule stays in its owner | L13 |
-| 17 | Optional: Throwaway tree path | "Output kept outside git: where it is, and why it is not in `poc/`" (MQ3) | L17 |
-
-Length: `SKILL.md` 72 → 72, template 17 → 17 (K2).
+Length: 72 → 72 (K2).
 
 ### Meaning questions (DER-278)
 
@@ -77,9 +70,5 @@ Length: `SKILL.md` 72 → 72, template 17 → 17 (K2).
   2026-09-27: beside the chunk's design records, wherever those live;
   DER-271 decides that place. The owner is `plan-trial-spec.md#trial`;
   the Map row routes to it and names no fixed folder.
-- **MQ3** — "Throwaway tree path" assumed trial code lived outside
-  the repo. Resolved by the operator, 2026-09-27: code stays in `poc/`;
-  no data dumps, vendored dependencies or build output there. The
-  optional field now records only what stays out, and why.
 
 No open MQ.

@@ -2,14 +2,15 @@
 
 ## Plan
 
-1. **architect** writes the HLD with `sdlc-artifacts` templates `hld.md`
-   and `track.md` / `chunk.md`.
+1. **architect** writes the HLD with `sdlc-artifacts` templates `hld.md` and `track.md` / `chunk.md`.
 2. **architect** locks hierarchy, persistence, and worker rules in the HLD.
-3. **architect** commits each Plan draft to project-main as it is written.
-4. **architect** scans the outgoing diff for credentials, hostnames or IPs,
-   and data dumps, and removes each one it finds.
-5. **architect** pushes project-main.
-6. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
+3. **architect** stages each Plan draft on project-main as it is written.
+4. Before each commit, **architect** scans every staged file, binary files included, for
+   credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, and
+   data dumps, and removes each one it finds from the stage.
+5. **architect** commits.
+6. **architect** pushes project-main.
+7. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
 
 **Item:** do not write a new HLD. Read the existing one. **manager**
 posts one verdict on the ticket with `tracker-sdlc` `comment`:
@@ -21,9 +22,8 @@ posts one verdict on the ticket with `tracker-sdlc` `comment`:
 | Changes shape: for example new parts, a new trust boundary, a new screen, several tickets | `escalate` to a chunk. Never edit the HLD quietly for a shape change. |
 | Has no HLD to align to | Ask the operator ([Asking the operator](../SDLC.md#asking-the-human)): stub or promote. |
 
-In this skills home, when the change is the process itself,
-`docs/ARCHITECTURE.md` and the SDLC ([`docs/SDLC.md`](../SDLC.md) and
-its step files) count as the plan.
+In this skills home, when the change is the process itself, `docs/ARCHITECTURE.md`
+and the SDLC ([`docs/SDLC.md`](../SDLC.md) and its step files) count as the plan.
 
 ### Comparables
 
@@ -37,20 +37,18 @@ If there are screens, **designer** looks too.
 4. If the confirmed brief has an options map, reuse it. Still write this page.
 5. Cite only the real examples. Never invent an "industry standard".
 
-Skip this page only if the operator waives look-around in writing
-([Asking the operator](../SDLC.md#asking-the-human)).
+Skip this page only if the operator waives look-around in writing ([Asking the operator](../SDLC.md#asking-the-human)).
 
 **Never**
 
-- Lock Plan shape without 2–4 real comparables, unless the operator
-  waived look-around in writing. Write the comparables page first.
+- Lock Plan shape without 2–4 real comparables, unless the operator waived look-around
+  in writing. Write the comparables page first.
 
 ### UX
 
-**designer** writes high-level UX and user stories in this same step
-(`ux-design`, templates `ux.md` / `user-story.md`). This is not the
-Spec. Do not make mockups here. If there is a screen, mockups are part
-of Spec.
+**designer** writes high-level UX and user stories in this same step (`ux-design`,
+templates `ux.md` / `user-story.md`). This is not the Spec. Do not make mockups here.
+If there is a screen, mockups are part of Spec.
 
 **Review loop.** UX work and mockups both pass this loop:
 
@@ -65,26 +63,26 @@ of Spec.
 
 **Never**
 
-- Treat designer or architect self-OK as the UX gate. Architect and
-  designer do not self-approve. The gate is step 4, after a different
-  agent's review.
-- Skip mockups for a screen without a written `UX verification not
-  required`. Make the mockups, or get that line from the operator.
+- Treat designer or architect self-OK as the UX gate. Architect and designer do not
+  self-approve. The gate is step 4, after a different agent's review.
+- Skip mockups for a screen without a written `UX verification not required`. Make the
+  mockups, or get that line from the operator.
 
 ## Trial
 
 The Trial is optional proof. Run it only if needed. Its note and code are a
 frozen record of a trial, not product code and not instructions to load. Never
 import or merge `poc/` into product paths; if the trial proves out, Build
-rebuilds it.
+rebuilds it. If a pushed Plan or Trial file holds a secret, **security** removes
+it and has it rotated; that removal is the one edit a frozen `poc/` allows.
 
-1. Make `poc/` beside the chunk's design records, in the folder that holds its
-   HLD. This skills home: `maintainers/design/<chunk-slug>/poc/`.
-2. Write `poc/poc.md` with template `poc.md`. Put the trial code beside it.
-3. Write `poc/README.md` that states the record rule above.
-4. Never copy vendored dependencies or build output into `poc/`; link to the
-   source.
-5. Commit and push each Trial file as it is written: [Plan](#plan) steps 3–5.
+1. **architect** makes `poc/` beside the chunk's design records, in the folder that
+   holds its HLD. In this skills home, that is `maintainers/design/<chunk-slug>/poc/`.
+2. **architect** writes `poc/poc.md` with template `poc.md`, and the trial code beside it.
+3. **architect** writes `poc/README.md`, which states the two rules above.
+4. **architect** links to sources and never copies vendored dependencies or build
+   output into `poc/`.
+5. **architect** commits and pushes each Trial file as it is written: [Plan](#plan) steps 3–6.
 
 **Item:** skip the Trial unless the chosen fix is itself uncertain.
 
