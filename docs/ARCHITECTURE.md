@@ -17,8 +17,7 @@ SHA-pinned, intake-scanned, and loadable by id.
    and knowledge distillations (`knowledge/<domain>/<kind>/`).
 2. Thin **AGENTS.md** on product repos naming skill **ids** only (no body
    paste). Optional shared layout: `CHANGELOG.md`, `docs/hld.md`,
-   `docs/lld.md` (see
-   [Product repo layout](sdlc/conventions.md#product-repo-layout)).
+   `docs/lld.md` ([Product repo layout](sdlc/conventions.md#product-repo-layout)).
    Shapes: `skills/sdlc-artifacts/templates/`.
 3. Role split: architect design, designer UX/stories/mockups, builder
    ship, tester CI, security intake/gates, manager board. Human accepts

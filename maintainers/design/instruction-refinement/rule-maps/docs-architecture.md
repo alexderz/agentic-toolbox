@@ -7,10 +7,10 @@ docs are not agent text.
 
 | Old L | Change | Why | L |
 | --- | --- | --- | --- |
-| 20–21 | Prose name "SDLC Conventions" → link [Product repo layout](../../../../docs/sdlc/conventions.md#product-repo-layout); re-wrapped | LLD "Links": the `docs/ARCHITECTURE.md` L20 prose section name | 20–22 |
-| 24 | "unless they waive." → "unless they waive it." | Tone pass | 25 |
-| 25 | `[SDLC.md](SDLC.md)` → `[Steps](SDLC.md#steps)` | Link to the section that names the steps | 26 |
-| 69–77 | Header "Boundary" → "Job"; rows replaced by the SDLC index `#roles` rows | G47: role tables = the index's seven roles and jobs | 70–78 |
+| 20–21 | Prose name "SDLC Conventions" → link [Product repo layout](../../../../docs/sdlc/conventions.md#product-repo-layout); "Shapes:" moves to L21 | LLD "Links": the `docs/ARCHITECTURE.md` L20 prose section name | 20–21 |
+| 24 | "unless they waive." → "unless they waive it." | Tone pass | 24 |
+| 25 | `[SDLC.md](SDLC.md)` → `[Steps](SDLC.md#steps)` | Link to the section that names the steps | 25 |
+| 69–77 | Header "Boundary" → "Job"; rows replaced by the SDLC index `#roles` rows | G47: role tables = the index's seven roles and jobs | 69–77 |
 
 ## Checks
 

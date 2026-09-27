@@ -67,8 +67,7 @@ and a compress, not a vendor paste.
 - **security** intake before any third-party content lands in this repo.
 - **No auto-update.** No marketplace install. No scripts. No secrets.
 - First-party skills (`tracker-sdlc`, `sdlc-onboarding`,
-  `cursor-cloud-agents-when`, language guides) are written here; they
-  are not vendor copies.
+  `cursor-cloud-agents-when`, language guides) are written here; they are not vendor copies.
 
 Directories under `skills/<id>/` are placeholders (`.gitkeep` only) until
 a body lands.

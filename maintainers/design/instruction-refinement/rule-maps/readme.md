@@ -9,7 +9,6 @@ docs are not agent text.
 | --- | --- | --- | --- |
 | 24, 26–29 | Role jobs copied from the SDLC index `#roles` table | G47: role tables = the index's seven roles and jobs | 24, 26–29 |
 | 31–32 | "Improvise beyond predefinition when the work needs it." → "If no listed skill fits the task, do the work without one. Never create a new skill id mid-task." Remint sentence kept | Operator clarification 2026-09-27 (LLD "Behavior: work areas") | 31–32 |
-| 69–70 | Over-long line re-wrapped; same words | Tone pass | 69–71 |
 
 ## Checks
 
