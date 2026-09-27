@@ -21,7 +21,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 ### G1: A — writing standard and owner map
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (A) · Branch: `item/<ticket-id>-writing-standard` off `integrate/instruction-refinement`
 - **Outcome** — `maintainers/writing-standard.md` holds HLD standard 1–10, the rule owners and protected rules with the LLD anchors, banned names, the rule-map format and checks K1–K10; `maintainers/AGENTS.md` routes to it in one line.
-- **Acceptance** — anchors `#standard`, `#names`, `#rule-owners`, `#protected-rules`, `#rule-maps`, `#checks`; ≤150 lines; every rule traces to the HLD or LLD (no new rule); every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
+- **Acceptance** — anchors `#standard`, `#names`, `#rule-owners`, `#protected-rules`, `#rule-maps`, `#checks`; ≤150 lines; every rule traces to the HLD or LLD (no new rule); every-item set (rule map, clarifications, Unreleased line, K1–K4, K7), where the rule map covers the `maintainers/AGENTS.md` edit (the standard is a new file).
 - **Verify** — `wc -l` ≤150; K3, K7, K10 on the diff; a read-through against HLD "Writing standard" and the LLD tables.
 - **Blocked by** — `none` (source text is the accepted HLD and LLD) · **Blocks** — G49
 - **Out of scope** — editing any other agent file. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
@@ -30,7 +30,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 ### G2: B — eval rule, procedure and run format
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#eval-step`, `#trust-boundaries` · Branch: `item/<ticket-id>-eval-procedure` off `integrate/instruction-refinement`
 - **Outcome** — `maintainers/AGENTS.md` has `## Evals` after `## Execution`; `maintainers/evals/` has `procedure.md` (from `maintainers/design/instruction-refinement/poc/kit/setup.md`, no arms, names no runner), `t1-*` and `t2-*` from the kit, `run-template.md` (from `maintainers/design/instruction-refinement/poc/kit/scoring-sheet.md`), `baseline.md`, `runs/`.
-- **Acceptance** — `## Evals` matches the LLD block byte for byte; `procedure.md` carries Run setup (isolation, pre-run probe, tool-call gate, read-only export, reply modes), three repeats, models, regression rule; run file and `baseline.md` columns as the LLD; K10 clean; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
+- **Acceptance** — `## Evals` matches the LLD block byte for byte; `procedure.md` carries Run setup (isolation, pre-run probe, tool-call gate, read-only export, reply modes) and the LLD eval-run rules (scratch directories outside the checkout, `local` adapter, bare local `origin`, never this repo's live `## Tracker`, token variables unset, git identity `eval@example.invalid`, unsigned commits), three repeats, candidate models (confirmed at B1), regression rule; run file and `baseline.md` columns as the LLD; K10 clean; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
 - **Verify** — diff of `## Evals` against the LLD block is empty; K7, K10; diff touches only `maintainers/AGENTS.md`, `maintainers/evals/`, `CHANGELOG.md`.
 - **Blocked by** — `none` (the LLD fixes rule and files; the kit is on project-main) · **Blocks** — G6
 - **Out of scope** — T3 files (G3); runner choice; any run. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
@@ -83,8 +83,8 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 ### G8: C1 — move the SDLC into the index, step files and people doc
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#paths--modules-file-and-anchor-map`, `#verify` · Branch: `item/<ticket-id>-sdlc-move` off `integrate/instruction-refinement`
 - **Outcome** — old `docs/SDLC.md` lines sit verbatim in the mapped files with the map's headings and anchors; 21 internal links become `path#anchor`; the 4 broken inbound anchors (`AGENTS.md` `#entry`, `#brief`; `README.md`; `pr-lens` `#monthly`) are fixed; the index has How to read and the Read column.
-- **Acceptance** — no other wording; `#asking-the-human` kept by `<a id>`; Stage table kept; the file and anchor map is the rule map; **security** reads the `pr-lens` line (vendor-derived body); one Unreleased line.
-- **Verify** — the LLD C1 move check (only added routing lines); K7 on all changed files; K8; K9; every map anchor exists.
+- **Acceptance** — no other wording; `#asking-the-human` kept by `<a id>`; Stage table kept; the file and anchor map is the rule map; **security** reads the `pr-lens` line (vendor-derived body); the `pr-lens` `SOURCES.md` Notes line is added by G40, or by this item if G40 has not landed; one Unreleased line.
+- **Verify** — the LLD C1 move check (only added routing lines); K7 on all changed files; K8; K9; every map anchor exists; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G9–G17, G18
 - **Out of scope** — rewording; caps. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 - Notes: diff exceeds 400 lines but is a verbatim move checked mechanically; a partial move would break anchors.
@@ -92,16 +92,16 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 ### G9: C2 — rewrite the SDLC index
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C2), `#behavior-protected-rules` · Branch: `item/<ticket-id>-sdlc-index` off `integrate/instruction-refinement`
 - **Outcome** — `docs/SDLC.md` from the Trial draft (`maintainers/design/instruction-refinement/poc/rewrite/docs/SDLC.md`), ≤200; owner of `#tracker`, `#roles`, `#asking-the-human` rules.
-- **Acceptance** — skill table gone: each note gets a map row naming its home (step file, `AGENTS.md`, or `SOURCES.md`), added there if missing; Stage table kept; protected rows index `#roles`, `#tracker` kept or routed, **security** reads them at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤200; K9; K3, K7 on the file; rule map covers every non-blank old line.
-- **Blocked by** — G8 (rewrites the index C1 creates) · **Blocks** — G47, G49
+- **Acceptance** — skill table gone: each note gets a map row naming its home (step file, `AGENTS.md`, or `SOURCES.md`), added there if missing; "designs in git" (old L96–99) → route to `docs/sdlc/conventions.md#designs-in-git`; Stage table kept; protected rows index `#roles`, `#tracker` kept or routed, **security** reads them at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
+- **Verify** — `wc -l` ≤200; K9; K3, K7 on the file; rule map (start from `maintainers/design/instruction-refinement/poc/rule-maps/sdlc-index.md`) covers every non-blank old line; K10 before each push.
+- **Blocked by** — G8 (rewrites the index C1 creates) · **Blocks** — G47
 - **Out of scope** — step files. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
 ### G10: C3 — rewrite Entry, Brief, Repo
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C3), `#paths--modules-file-and-anchor-map` · Branch: `item/<ticket-id>-entry-brief-repo` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/entry-brief-repo.md` to the standard, ≤150.
 - **Acceptance** — end-of-chunk Brief → numbered list; item Brief step 4 → condition table; "not too dirty to reason" → a checkable condition, else ask; copies owned elsewhere (AFK pick, step-agent ids, branch source, designs in git) → one-line routes; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — other step files. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -109,7 +109,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C4) · Branch: `item/<ticket-id>-plan-trial-spec` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/plan-trial-spec.md` to the standard, ≤150; owner of the UX review loop and operator acceptance (`#ux`).
 - **Acceptance** — the UX copies collapse into `#ux`; "Monthly is not the security gate" → route to `trunk-changelog-monthly.md#monthly`; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — `ux-design` (G41). **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -117,15 +117,15 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C5) · Branch: `item/<ticket-id>-groom-step` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/groom-step.md` from the Trial draft (`maintainers/design/instruction-refinement/poc/rewrite/docs/sdlc/groom-step.md`), ≤150; owner of the groom reviewer id (`#names`).
 - **Acceptance** — the operator clarifications on groom-review fixes, gate reasons and review-item verdicts applied; old L970–972 dropped; incoming-item branch and File land order → routes; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map (start from `maintainers/design/instruction-refinement/poc/rule-maps/groom-step.md`) complete.
+- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map (start from `maintainers/design/instruction-refinement/poc/rule-maps/groom-step.md`) complete; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — the `groom.md` template shape. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
 ### G13: C6 — rewrite Build and Review
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C6) · Branch: `item/<ticket-id>-build-review` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/build-review.md` to the standard, ≤150; owner of "notify only landed+verified" (`#definition-of-done`).
-- **Acceptance** — DoD links `#review` and `branches-and-lands.md#land-path`; builder/verifier/reviewer, branch source, workers-and-security copies → routes to their owners; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ.
+- **Acceptance** — DoD links `#review` and `branches-and-lands.md#land-path`; builder/verifier/reviewer, branch source, workers-and-security copies → routes to their owners; the Build copy of serialized lands → route to `docs/sdlc/branches-and-lands.md#land-path`; Review's "not deferred to Monthly" (old L867) → route to `docs/sdlc/trunk-changelog-monthly.md#monthly`; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
+- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — subagent and land rules (G15, G16). **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -133,7 +133,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C7) · Branch: `item/<ticket-id>-trunk-changelog-monthly` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/trunk-changelog-monthly.md` to the standard, ≤80; owner of "Monthly is not the security gate".
 - **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤80; K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — `wc -l` ≤80; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — other step files. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -141,7 +141,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C8), `#behavior-protected-rules` · Branch: `item/<ticket-id>-branches-and-lands` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/branches-and-lands.md` to the standard, ≤120; owner of `#branches` and `#land-path`.
 - **Acceptance** — "(an operator-confirmed rule)" dropped; protected `#never`: each old L945–961 bullet kept here or at its owner, **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤120; K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — `wc -l` ≤120; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — `AGENTS.md` branch paragraphs (G18). **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -149,15 +149,15 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C9), `#behavior-protected-rules` · Branch: `item/<ticket-id>-subagents` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/subagents.md` to the standard, ≤150; owner of `#step-agents` and `#item-agents`.
 - **Acceptance** — pack vs point → "the manager holds the bodies and the child needs them: pack; else point"; tracker-writer, security and landed+verified copies → routes; protected `#tracker-writes` rows kept, **security** reads them at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — `wc -l` ≤150; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — `grok-acp` (G25). **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
 ### G17: C10 — rewrite conventions
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C10) · Branch: `item/<ticket-id>-conventions` off `integrate/instruction-refinement`
 - **Outcome** — `docs/sdlc/conventions.md` to the standard, ≤100; owner of `#designs-in-git`; `#in-flight-map` kept.
-- **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤100; K3, K7 on the file; rule map complete, no open MQ.
+- **Acceptance** — old L460–463 (manager marks `done` after land+verify) → route to `docs/sdlc/branches-and-lands.md#land-path`; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
+- **Verify** — `wc -l` ≤100; K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (rewrites the file C1 creates) · **Blocks** — G49
 - **Out of scope** — product-repo formats. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -165,7 +165,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (C11), `#behavior-protected-rules` · Branch: `item/<ticket-id>-agents-slim` off `integrate/instruction-refinement`
 - **Outcome** — `AGENTS.md` ≤100: what the repo is, `maintainers/` pointer, public-repo rule, load table (one row per need, one file each; Workers and Diagrams opt-in rows kept; `researcher` only in Research), intake route, related.
 - **Acceptance** — role table, inventory, `cursor-cloud-agents-when`, language section, subagent and branch paragraphs out (each mapped to its owner); prose names L37, L100–101 fixed; public-repo rule rows all `kept`, **security** reads them at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l AGENTS.md` ≤100; K3, K7; rule map complete, no open MQ.
+- **Verify** — `wc -l AGENTS.md` ≤100; K3, K7; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — G8 (its load table points each need at a file C1 creates and C1 retargets its links), G28 (the language section routes to the map E7 merges into `language-router`) · **Blocks** — G49
 - **Out of scope** — `SOURCES.md` rows. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -173,7 +173,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (D), `#behavior-protected-rules` · Branch: `item/<ticket-id>-tracker-sdlc` off `integrate/instruction-refinement`
 - **Outcome** — `skills/tracker-sdlc/SKILL.md` ≤150; writer rule → route to index `#tracker`; Contract version, Model, Verbs, Claim, Map, Repair keep meaning; adapters: names only.
 - **Acceptance** — Claim steps 1–5 kept; Never and Ask-first bullet counts equal; `adapters/local.md` recipe unchanged; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤150; K5; K6 (`Contract version: 2` once); K3, K7; rule map complete.
+- **Verify** — `wc -l` ≤150; K5; K6 (`Contract version: 2` once); K3, K7; rule map complete; K10 before each push.
 - **Blocked by** — `none` (the route target is in the LLD map) · **Blocks** — G49
 - **Out of scope** — verbs, states, contract bump. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 - Notes: delivers DER-265's wording bullets.
@@ -182,7 +182,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (D) · Branch: `item/<ticket-id>-sdlc-onboarding` off `integrate/instruction-refinement`
 - **Outcome** — `skills/sdlc-onboarding/SKILL.md` from `maintainers/design/instruction-refinement/poc/rewrite/skills/sdlc-onboarding/SKILL.md`, with no `maintainers/` link.
 - **Acceptance** — `## Tracker` and `## Execution` formats it writes are unchanged; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7); the rule map starts from `maintainers/design/instruction-refinement/poc/rule-maps/sdlc-onboarding.md`.
-- **Verify** — K2 (≤200); `grep -c 'maintainers/' skills/sdlc-onboarding/SKILL.md` = 0; K3, K7; rule map complete.
+- **Verify** — K2 (≤200); `grep -c 'maintainers/' skills/sdlc-onboarding/SKILL.md` = 0; K3, K7; rule map complete; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — DER-271's process bullets. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -190,7 +190,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (D), `#verify` (K6) · Branch: `item/<ticket-id>-sdlc-artifacts` off `integrate/instruction-refinement`
 - **Outcome** — `<merge SHA>` → `<land SHA>`; `agents-stub.md` gains one bullet naming `## Tracker`; tracker-writer copy → route; `templates/changelog.md` L4 prose name fixed.
 - **Acceptance** — template shapes and `tracker-skill.md` unchanged; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K6; K3, K7 on changed files.
+- **Verify** — K6; K3, K7 on changed files; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — new templates. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -198,7 +198,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E) · Branch: `item/<ticket-id>-discover-the-idea` off `integrate/instruction-refinement`
 - **Outcome** — the skill meets the standard; step-agent copies → route to `docs/sdlc/subagents.md#step-agents`.
 - **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — the gather loop's meaning. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -206,7 +206,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E) · Branch: `item/<ticket-id>-yagni` off `integrate/instruction-refinement`
 - **Outcome** — the skill meets the standard.
 - **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — other skills. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -214,7 +214,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E) · Branch: `item/<ticket-id>-buying-researcher` off `integrate/instruction-refinement`
 - **Outcome** — `SKILL.md`, `references/` and `assets/` meet the standard.
 - **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K1, K2, K3, K7 on changed files; rule maps complete, no open MQ.
+- **Verify** — K1, K2, K3, K7 on changed files; rule maps complete, no open MQ; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — research method changes. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -222,7 +222,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E), `#behavior-protected-rules` · Branch: `item/<ticket-id>-grok-acp` off `integrate/instruction-refinement`
 - **Outcome** — the skill meets the standard.
 - **Acceptance** — permission posture, labels, own-item limits: every map row `kept`; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — `packages/grok-acp/`. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -230,7 +230,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E), `#behavior-protected-rules` · Branch: `item/<ticket-id>-security-hardening` off `integrate/instruction-refinement`
 - **Outcome** — the skill meets the standard.
 - **Acceptance** — Never and Ask first keep their row counts; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — the LLD `sed … | grep -c '^\| '` check equal old vs new for both sections; K1, K2, K3, K7.
+- **Verify** — the LLD `sed … | grep -c '^\| '` check equal old vs new for both sections; K1, K2, K3, K7; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — new rules. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -238,7 +238,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E) · Branch: `item/<ticket-id>-modern-python` off `integrate/instruction-refinement`
 - **Outcome** — the skill meets the standard.
 - **Acceptance** — every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ.
+- **Verify** — K1, K2, K3, K7 on the file; rule map complete, no open MQ; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — tool choices. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -246,8 +246,8 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (E7) · Branch: `item/<ticket-id>-language-router` off `integrate/instruction-refinement`
 - **Outcome** — `skills/language-router/SKILL.md` ≤250 owns the language map (old `AGENTS.md` L203–229 merged), the load-with list and the no-language turns (including `sdlc-onboarding`); it loads on any code turn.
 - **Acceptance** — every merged `AGENTS.md` row mapped; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7) (K2 exempt).
-- **Verify** — `wc -l` ≤250; K3, K7; rule map complete, no open MQ.
-- **Blocked by** — `none` · **Blocks** — G18, G49
+- **Verify** — `wc -l` ≤250; K3, K7; rule map complete, no open MQ; K10 before each push.
+- **Blocked by** — `none` · **Blocks** — G18
 - **Out of scope** — removing the section from `AGENTS.md` (G18). **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
 ### G29: F — `tdd` light pass
@@ -358,7 +358,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (G) · Branch: `item/<ticket-id>-lang-batch-1` off `integrate/instruction-refinement`
 - **Outcome** — `skills/<id>/SKILL.md` for `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go` use the standard's names; lines repeating `language-router` rules (load-with list, one language skill) become one route line per file.
 - **Acceptance** — change map (changed lines only); one Unreleased line.
-- **Verify** — K2, K3, K7 on the 6 files.
+- **Verify** — K1 (≤250), K2, K3, K7 on the 6 files; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — language advice. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -366,7 +366,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (G) · Branch: `item/<ticket-id>-lang-batch-2` off `integrate/instruction-refinement`
 - **Outcome** — `skills/<id>/SKILL.md` for `lang-java`, `lang-js-ts`, `lang-kotlin`, `lang-lua`, `lang-makefile`, `lang-php` use the standard's names; lines repeating `language-router` rules (load-with list, one language skill) become one route line per file.
 - **Acceptance** — change map (changed lines only); one Unreleased line.
-- **Verify** — K2, K3, K7 on the 6 files.
+- **Verify** — K1 (≤250), K2, K3, K7 on the 6 files; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — language advice. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -374,7 +374,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (G) · Branch: `item/<ticket-id>-lang-batch-3` off `integrate/instruction-refinement`
 - **Outcome** — `skills/<id>/SKILL.md` for `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby`, `lang-rust` use the standard's names; lines repeating `language-router` rules (load-with list, one language skill) become one route line per file.
 - **Acceptance** — change map (changed lines only); one Unreleased line.
-- **Verify** — K2, K3, K7 on the 5 files.
+- **Verify** — K1 (≤250), K2, K3, K7 on the 5 files; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — language advice. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -382,7 +382,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (G) · Branch: `item/<ticket-id>-lang-batch-4` off `integrate/instruction-refinement`
 - **Outcome** — `skills/<id>/SKILL.md` for `lang-shell`, `lang-sql`, `lang-swift`, `lang-terraform`, `lang-web-markup` use the standard's names; lines repeating `language-router` rules (load-with list, one language skill) become one route line per file.
 - **Acceptance** — change map (changed lines only); one Unreleased line.
-- **Verify** — K2, K3, K7 on the 5 files.
+- **Verify** — K1 (≤250), K2, K3, K7 on the 5 files; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — language advice. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -390,7 +390,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (H), `#behavior-protected-rules` · Branch: `item/<ticket-id>-intake` off `integrate/instruction-refinement`
 - **Outcome** — `docs/INTAKE.md` meets the standard, ≤55.
 - **Acceptance** — six numbered steps under `## Checklist`; **security** reads it at Review; every-item set (rule map, clarifications, Unreleased line, K1–K4, K7).
-- **Verify** — `wc -l` ≤55; the checklist step count = 6; K3, K7; rule map complete.
+- **Verify** — `wc -l` ≤55; the checklist step count = 6; K3, K7; rule map complete; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — intake policy. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -398,7 +398,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (I) · Branch: `item/<ticket-id>-people-docs` off `integrate/instruction-refinement`
 - **Outcome** — `README.md`, `CONTRIBUTING.md`, `docs/ARCHITECTURE.md` pass a `docs-google-style` tone read; links point at the new layout; role tables = the index's seven roles and jobs; README "Improvise…" replaced per the clarification; `docs/ARCHITECTURE.md` L20 prose name fixed.
 - **Acceptance** — change map; one Unreleased line; verifier checks tone against `docs-google-style`.
-- **Verify** — K7 on the three files; role tables diff clean against the index roles table.
+- **Verify** — K7 on the three files; role tables diff clean against the index roles table; K10 before each push.
 - **Blocked by** — G9 (the role tables copy the roles and jobs C2 lands in the index) · **Blocks** — G49
 - **Out of scope** — other people-doc content; `docs/how-software-gets-built.md`. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -406,7 +406,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Type: Task · Parent: `DER-288` · LLD: `maintainers/design/instruction-refinement/lld.md#behavior-work-areas` (J) · Branch: `item/<ticket-id>-tracker-hld-stale` off `integrate/instruction-refinement`
 - **Outcome** — `maintainers/design/tracker-sdlc/hld.md` fixes only the lines DER-271 names as stale.
 - **Acceptance** — the item quotes each DER-271 bullet it applies; no other line changes.
-- **Verify** — the diff maps one-to-one to the quoted bullets; K7.
+- **Verify** — the diff maps one-to-one to the quoted bullets; K7; K10 before each push.
 - **Blocked by** — `none` · **Blocks** — G49
 - **Out of scope** — DER-271's process bullets. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
@@ -415,7 +415,8 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - **Outcome** — a verdict on project-main's tip: K1–K10 on the tree, one copy per owner row, and each gate the index names resolves to a step file.
 - **Acceptance** — each Duplicate-owners row: owner holds the rule, every copy is a route or gone; protected-rule checks rerun; findings list the check or row; the verdict says whether a whole re-check is needed. Fixes are items blocked by this one; the manager files them and links G50 to each.
 - **Verify** — every K check and owner row has a result line.
-- **Blocked by** — G1, G8–G48 (checks the tree those items land) · **Blocks** — G50
+- **Blocked by** — G1, G10–G27, G29–G48 (checks the tree those items land; G8, G9, G28 reach it through G10–G18 and G47) · **Blocks** — G50
+- Notes: runs after G2 and G3 have landed, so the tree includes `maintainers/evals/` (land order, not a link).
 - **Out of scope** — editing files. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
 
 ### G50: K — before-merge eval run
@@ -432,7 +433,7 @@ means `main` 7a11696. Rule maps go in `rule-maps/` beside this file.
 - Wave 1: G1–G4, G8, G19–G46, G48
 - Wave 2: G5 ← G4; G9–G17 ← G8 (each); G18 ← G8, G28
 - Wave 3: G6 ← G2, G3, G5; G7 ← G5; G47 ← G9
-- Wave 4: G49 ← G1, G8–G48
+- Wave 4: G49 ← G1, G10–G27, G29–G48
 - Wave 5: G50 ← G49, G6, G7
 
 Gates: G49 — review of the integrated text (one copy per owner, K1–K10
@@ -456,5 +457,5 @@ Land order (not blockers):
 - `CHANGELOG.md` (every item) and `SOURCES.md` (G9, G29–G41): the later
   land rebases and keeps every line.
 - Shared files: `AGENTS.md` (G8, G9, G18); `skills/pr-lens/SKILL.md`
-  (G8, G40); rewrites that add a route into another file follow that
+  (G8, G40); rewrites that add a route into another file land after that
   file's owner item.
