@@ -1,13 +1,13 @@
 # Changelog
 
 Newest first. Skip empty sections. Board, git, and this file must agree
-(see SDLC Conventions).
+(see `<skills-home>/docs/sdlc/conventions.md#changelog-and-connection`).
 
 ## Unreleased
 
 ### Added
 
-- <what> (`<ticket-id>`, `<PR or SHA>`)
+- <what> (`<ticket-id>`, `<land SHA>`)
 
 ### Changed
 
@@ -17,7 +17,7 @@ Newest first. Skip empty sections. Board, git, and this file must agree
 
 ## <chunk-slug> — YYYY-MM-DD
 
-Changelog step: move Unreleased lines here. Link tickets and the Trunk
-merge (or the item’s trunk SHA if there was no project-main).
+Changelog step: move Unreleased lines here. Link the tickets and the
+Trunk merge. If there was no project-main, link the item's land SHA.
 
-- <what> (`<ticket-id>`, `<merge SHA>`)
+- <what> (`<ticket-id>`, `<land SHA>`)
