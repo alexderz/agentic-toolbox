@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `debug-anthropic` skill: light wording pass; the Fix step now says to name the fix's side effects; pins unchanged (`DER-323`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
