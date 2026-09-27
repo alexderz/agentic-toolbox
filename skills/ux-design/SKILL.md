@@ -65,8 +65,7 @@ Designer and UX reviewer ids, and resume across rounds:
 
 ## Review loop (agents, then operator)
 
-The loop and the operator's acceptance:
-[UX](../../docs/sdlc/plan-trial-spec.md#ux).
+Loop and operator acceptance: [UX](../../docs/sdlc/plan-trial-spec.md#ux).
 
 1. **UX reviewer** reads the brief, the stories, and written taste/shape
    **if those are requirements**. Checks:
@@ -76,11 +75,12 @@ The loop and the operator's acceptance:
    - Variants are actually different?
    Does **not** add “I would use more whitespace” unless the write-up
    asked for that shape.
-2. If the reviewer and designer disagree on the requirements, ask the
-   operator.
-3. When the agents agree, ask the operator ([Asking the
-   operator](../../docs/SDLC.md#asking-the-human)): show the variants and
-   say which the agents recommend and why (requirements, not taste).
+2. Designer fixes; the UX reviewer re-checks until those agents agree.
+   If they disagree on the requirements, ask the operator ([Asking the
+   operator](../../docs/SDLC.md#asking-the-human)).
+3. When the agents agree, ask the operator the same way: show the
+   variants and say which the agents recommend and why (requirements,
+   not taste).
 
 ## Always
 
