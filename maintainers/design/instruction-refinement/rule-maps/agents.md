@@ -83,7 +83,7 @@ The other clarifications have no subject in this file.
 | 100–101 | "Full rules: docs/SDLC.md (Groom, Build, Project-main, Subagents per work item, Spawn prompts)" | prose section names fixed (LLD Links, L100–101): replaced by rows linking each file | L42, L59–60 |
 | 103 | Heading "Inventory" | dropped: section out (LLD C11) | — |
 | 105 | Authoritative table: `SOURCES.md`; bundles: `README.md` | route: row **Skill ids** (owner `SOURCES.md`); bundles kept in Related | L55, L70 |
-| 107 | Skill ids with `SKILL.md`; do not remint without a new **security** cut | ids: route (owner `SOURCES.md`); remint clause kept, old wording (MQ1, open) | L55 |
+| 107 | Skill ids with `SKILL.md`; do not remint without a new **security** cut | ids: route (owner `SOURCES.md`); remint clause split by actor (MQ1): agents at work never remint, route to `docs/SDLC.md#roles`; a skill-body change is maintainer work through `docs/INTAKE.md` plus a new **security** cut | L55 |
 | 109–127 | Process skill ids list | dropped: duplicate (owner `SOURCES.md` L12–33) | — |
 | 129, 131 | Research, not SDLC: **researcher** loads `buying-researcher` when relevant | dropped: duplicate (owner row **Research**; `SOURCES.md` L17) | L48 |
 | 133 | Workers: operator opt-in; load only when the operator picks that worker | kept, as row **Workers** | L57 |
@@ -121,19 +121,15 @@ list for `AGENTS.md`: L43 row **Roles** (`docs/SDLC.md#roles`); L52
 
 ## Meaning questions
 
-Open:
+Resolved by the operator:
 
-- **MQ1** (old L107 vs old L82): L82 and its owner `docs/SDLC.md#roles`
-  L20 say "Do not remint a skill that already has an id" with no
-  exception. L107 says "do not remint without a new **security** cut",
-  which allows a remint after one; `docs/ARCHITECTURE.md` Non-goals
-  agrees with L107. Two readings. Kept the L107 wording in row **Skill
-  ids** (L55). Recommendation: the operator picks one. Reading (a),
-  no remint ever: drop the clause here. Reading (b), a new body for an
-  existing id goes through intake and a **security**-cleared bump
-  (`docs/INTAKE.md` checklist 6): add that exception to
-  `docs/SDLC.md#roles` and make L55 a route. Blocks the item until
-  answered.
+- **MQ1** (old L107 vs old L82): resolved by operator 2026-09-27 (Q13):
+  split by actor. L82 and its owner `docs/SDLC.md#roles` L20 say "Do not
+  remint a skill that already has an id"; L107 says "do not remint
+  without a new **security** cut". Ruling: agents doing a task never
+  remint a skill (owner `docs/SDLC.md#roles`, unchanged); changing a
+  skill body is maintainer work through `docs/INTAKE.md` plus a new
+  **security** cut. Row **Skill ids** (L55) states both.
 
 Resolved from the text:
 

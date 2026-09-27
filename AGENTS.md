@@ -52,7 +52,7 @@ path, or **pack** its text into a subagent prompt per
 | **Tracker** | Any tracker read or write: file, claim, move, block, comment, list ready work | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. Only the **manager** writes: [Tracker](docs/SDLC.md#tracker). |
 | **Docs** | Human how-to or agent-facing comments after Spec | **Read `skills/docs-google-style/SKILL.md`**. |
 | **A skill** | The id applies to this turn | **Read `skills/<id>/SKILL.md`** in this repo. |
-| **Skill ids** | Checking a skill id, its ownership, or its SHA pin | **Read [SOURCES.md](SOURCES.md)**. Do not remint an id without a new **security** cut. |
+| **Skill ids** | Checking a skill id, its ownership, or its SHA pin | **Read [SOURCES.md](SOURCES.md)**. Agents at work never remint a skill: [Roles](docs/SDLC.md#roles). Changing a skill body is maintainer work: [Intake](docs/INTAKE.md) plus a new **security** cut. |
 | **Language** | Writing or reviewing code | Load at most one language skill per turn: [iron law](skills/language-router/SKILL.md#iron-law). **Read `skills/language-router/SKILL.md`**: its [map](skills/language-router/SKILL.md#map), [load-with list](skills/language-router/SKILL.md#load-with-list) and [no-language turns](skills/language-router/SKILL.md#no-language-turns). |
 | **Workers** | The operator picks Grok Build over ACP as a builder | **Read `skills/grok-acp/SKILL.md`**. Operator opt-in: load it only then. |
 | **Diagrams** | The operator asks for a diagram, such as one in the PR into `main` | **Read `skills/pr-lens/SKILL.md`**. Operator opt-in: load it only then. |
