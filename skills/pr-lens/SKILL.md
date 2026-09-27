@@ -221,7 +221,7 @@ reports a correction that matched nothing.
   provider.
 - **Excluded: `comment`.** It needs the SVGs published publicly first.
 - The pin, the CLI version, and this rewrite are compared with upstream
-  at [Monthly](../../docs/SDLC.md#monthly) review.
+  at [Monthly](../../docs/sdlc/trunk-changelog-monthly.md#monthly) review.
 
 ## Always
 

@@ -14,7 +14,7 @@ Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
 
 How the work gets done, in plain language (including a calculator
 walkthrough):
-[docs/SDLC.md](docs/SDLC.md#how-software-gets-built).
+[docs/how-software-gets-built.md](docs/how-software-gets-built.md).
 
 ## Roles
 
