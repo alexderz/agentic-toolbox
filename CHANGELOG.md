@@ -32,6 +32,9 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
+  and `## Execution` formats: numbered steps, a When table, and the
+  proposal shape routed to `ask-human.md` (`DER-310`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
