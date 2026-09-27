@@ -2,7 +2,7 @@
 
 - Slug: `groom-graph`
 - HLD: n/a — process-only change; `docs/ARCHITECTURE.md` +
-  `docs/SDLC.md` are the plan ([Plan](../../../docs/SDLC.md#plan))
+  `docs/SDLC.md` are the plan ([Plan](../../../docs/sdlc/plan-trial-spec.md#plan))
 - Tickets this LLD covers: DER-275 (chunk); items G1–G5 in
   [groom.md](groom.md) (ticket ids filled at freeze)
 - Date: `2026-09-25`
