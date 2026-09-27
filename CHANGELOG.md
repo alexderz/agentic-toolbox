@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- People docs: role tables match the SDLC index, README skill-fit line, links to the new SDLC layout (`DER-337`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)

@@ -21,15 +21,15 @@ walkthrough):
 | Role | Job |
 | --- | --- |
 | **architect** | Design, HLD/LLD, adversarial review of approach |
-| **designer** | User stories, high-level UX, mockups when there is a screen |
+| **designer** | User stories, high-level UX, Spec mockups when there is a screen |
 | **builder** | Implement and ship |
-| **tester** | Mechanical CI, hooks, cleanup |
-| **security** | Security gates across the SDLC, including skill intake |
-| **manager** | Process and SDLC after-act. Does not bless ships |
-| **operator** | Human in the loop: exceptions, vuln severity, extra hosts |
+| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
+| **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
-Improvise beyond predefinition when the work needs it. Do not remint a
-skill that already lives here.
+If no listed skill fits the task, do the work without one. Never create
+a new skill id mid-task. Do not remint a skill that already lives here.
 
 PRs welcome. Maintainer: [alexderz](https://github.com/alexderz). See
 [CONTRIBUTING.md](CONTRIBUTING.md).
@@ -67,7 +67,8 @@ and a compress, not a vendor paste.
 - **security** intake before any third-party content lands in this repo.
 - **No auto-update.** No marketplace install. No scripts. No secrets.
 - First-party skills (`tracker-sdlc`, `sdlc-onboarding`,
-  `cursor-cloud-agents-when`, language guides) are written here; they are not vendor copies.
+  `cursor-cloud-agents-when`, language guides) are written here; they
+  are not vendor copies.
 
 Directories under `skills/<id>/` are placeholders (`.gitkeep` only) until
 a body lands.
