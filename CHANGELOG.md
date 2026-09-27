@@ -90,6 +90,11 @@ Newest first. Skip empty sections.
   standard, same rules: the item `done` rule routes to the land path, the
   old Stage-number rule sits with the in-flight map, and "this file" names
   the SDLC again (`DER-307`)
+- `docs/sdlc/plan-trial-spec.md` to the writing standard: numbered Plan
+  and Spec steps, an item verdict table, the UX review loop and operator
+  acceptance owned once in `#ux`, a route to `#monthly` for "Monthly is
+  not the security gate", and the process-change plan names the SDLC and
+  its step files (`DER-301`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
