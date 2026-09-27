@@ -32,6 +32,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- SDLC conventions (`docs/sdlc/conventions.md`) rewritten to the writing
+  standard, same rules: the item `done` rule routes to the land path, the
+  old Stage-number rule sits with the in-flight map, and "this file" names
+  the SDLC again (`DER-307`)
 - `docs/SDLC.md` moves, text unchanged, into an index, step files under
   `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
   index adds How to read and a Read column, and links follow the move
