@@ -46,6 +46,8 @@ Newest first. Skip empty sections.
 - `golang-testing`: light pass; the duplicate pin and samber-pack lines dropped, load-with and workers-bypass rules routed to their owners; `SOURCES.md` note added (`DER-327`)
 - `golang-security` light pass: one `language-router` route replaces the
   pairing line; the workers line names **security** (`DER-328`)
+- `golang-safety`: Go-skill choice routes to `language-router`; typed-nil
+  example compiles; nil-map `cap` row fixed (`DER-329`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
