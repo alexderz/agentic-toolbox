@@ -4,7 +4,7 @@ Light pass (vendor-derived, DER-329): change map, changed lines only. Also
 `SOURCES.md` row `golang-safety`, Notes cell only: "pair golang-testing +
 golang-security" → "do not merge with golang-testing or golang-security"
 (same fix as L26), and the note `Wording edit DER-288, pins unchanged;
-security-cleared <YYYY-MM-DD>.` appended. Upstream, SHA and License cells
+security-cleared 2026-09-27.` appended. Upstream, SHA and License cells
 unchanged.
 
 Key: **kept**, **route**, **dropped** (owner named), **fix** (real defect).
