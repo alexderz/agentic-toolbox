@@ -25,11 +25,11 @@ parentheses become "for example" lists (New L20).
 | 619–620 | **designer** too, if there are screens | kept; parenthesis → sentence | L30 |
 | 620–621 | 2–4 real examples; page `comparables.md` | kept, numbered | L32–33 |
 | 621–622 | Per example: who, what they did, what we steal, what we will not copy, a link | kept | L34–35 |
-| 622–623 | Reuse the Brief's options map if it exists; still write this page | kept | L36 |
+| 622–623 | Reuse the brief's options map if it exists; still write this page | kept; "the confirmed brief" (the artifact, not the Brief step) | L36 |
 | 623–624 | Skip only if the operator waives look-around in writing; link Asking the human | kept; link `../SDLC.md#asking-the-human` | L39–40 |
 | 624–625 | No invented "industry standard" | kept; allowed action beside it | L37 |
 | 627–628 | **designer**: high-level UX and user stories in the same step (`ux-design`, `ux.md` / `user-story.md`); not the Spec | kept | L49–51 |
-| 629–631 | Loop: designer produces; a different agent reviews against the written requirements (function, stated taste/shape; not the reviewer's taste); designer fixes until those agents agree | kept, numbered; this file's `#ux` is the owner (writing standard, Rule owners) | L54–61 |
+| 629–631 | Loop (UX work and mockups): designer produces; a different agent reviews against the written requirements (function, stated taste/shape; not the reviewer's taste); designer fixes until those agents agree | kept, numbered; this file's `#ux` is the owner (writing standard, Rule owners) | L54–61 |
 | 631–632 | **then** the **operator** accepts, or writes `UX verification not required` | kept (owner `#ux`) | L62–63 |
 | 633 | Architect and designer do not self-approve | kept, merged into the first Never bullet (same rule) | L67–69 |
 | 633–634 | Skip mockups here; those are Spec if there is a screen | kept | L51–52 |
@@ -54,7 +54,7 @@ parentheses become "for example" lists (New L20).
 | 669 | This is a gate | kept | L115 |
 | 669 | Not a later monthly note | route (owner: `docs/sdlc/trunk-changelog-monthly.md#monthly`, "Monthly is not the security gate") | L115–116 |
 | 669–670 | Do not skip to Build without it when the change touches a boundary | kept; allowed action beside it | L118–119 |
-| 672–673 | **Accept the LLD** (architect + **security** on trust boundaries) before Groom/Build | kept; moved after the security review it closes | L112–113 (step 2) |
+| 672–673 | **Accept the LLD** (architect + **security** on trust boundaries) before Groom/Build | kept, old wording verbatim until MQ7 is answered; moved after the security review it closes | L112–113 (step 2) |
 | 673–674 | If people see a screen, **designer** mockups (`mockup.md`) are part of Spec | kept, merged with L659 (same rule) | L99 |
 | 674–675 | The **operator** accepts those mockups, or writes `UX verification not required`, before Groom | kept in the owner `#ux`; "before Groom" moved there | L62–63 |
 | 675–676 | Then Documentation is in force | dropped (owner: `#documentation`, whose first line "Once the LLD is accepted" holds the trigger); removes a forward reference | — |
@@ -100,4 +100,11 @@ L54–71; `#mockups` holds one route (L104); `#spec` holds none.
   as "small clarification, made in place"; where "in place" is (HLD or
   ticket) is not named, as before.
 
-No open MQ.
+- **MQ7** — **open, awaits the operator.** Old L672 "**Accept the
+  LLD** (architect + **security** on trust boundaries)" has two readings:
+  (a) the architect accepts the LLD and security accepts its trust
+  boundaries; (b) the parenthesis names reviewers, and acceptance itself
+  is the operator's, as index `#asking-the-human` lists "accepting …
+  the detailed design" as an operator ask. The new file keeps the old
+  wording verbatim (L112–113) until the operator answers. This item is
+  blocked on MQ7.

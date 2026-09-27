@@ -33,7 +33,7 @@ If there are screens, **designer** looks too.
 2. Write the comparables page with template `comparables.md`.
 3. For each example, write: who, what they did, what we steal, what we
    will not copy, a link.
-4. If the Brief has an options map, reuse it. Still write this page.
+4. If the confirmed brief has an options map, reuse it. Still write this page.
 5. Cite only the real examples. Never invent an "industry standard".
 
 Skip this page only if the operator waives look-around in writing
@@ -51,7 +51,7 @@ Skip this page only if the operator waives look-around in writing
 Spec. Do not make mockups here. If there is a screen, mockups are part
 of Spec.
 
-**Review loop.** Plan UX and Spec mockups both pass this loop:
+**Review loop.** UX work and mockups both pass this loop:
 
 1. **designer** produces the work.
 2. A **different** agent reviews it against the written requirements:
@@ -60,7 +60,7 @@ of Spec.
 3. **designer** fixes the findings. Repeat steps 2–3 until the designer
    and the reviewing agent agree the work meets the requirements.
 4. **operator** accepts the work, or writes `UX verification not
-   required`. For Spec mockups, this happens before Groom.
+   required`. For mockups, this happens before Groom.
 
 **Never**
 
@@ -109,8 +109,8 @@ No screen: write `n/a` and why. Do not invent pictures.
 
 1. Before Groom or Build, **security** reviews the LLD for trust
    boundaries: authn/z, secrets, egress, data class, who may write what.
-2. **architect** accepts the LLD, and **security** accepts it on trust
-   boundaries, before Groom or Build.
+2. **Accept the LLD** (architect + **security** on trust boundaries)
+   before Groom/Build.
 
 This review is a gate at Spec. Monthly is not the security gate:
 [Monthly](trunk-changelog-monthly.md#monthly).
