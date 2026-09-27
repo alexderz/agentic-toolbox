@@ -32,6 +32,10 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `grok-acp` skill rewritten to the writing standard: "manager" replaces
+  "orchestrator", each Never rule names the allowed action, and branch
+  source and fallback route to their SDLC owners; permission posture,
+  labels and own-item limits unchanged (`DER-315`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root

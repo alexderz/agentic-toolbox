@@ -7,12 +7,12 @@ description: use this when the operator chooses to offload work to Grok Build �
 
 Run Grok Build on this machine as a **worker** in the SDLC sense: a
 separate agent with its own transcript that you mint clean, resume by id,
-and never trust without verification. Transport is ACP (JSON-RPC over
-`grok agent stdio`), driven by the `grok-acp` command from
+and never trust without verification. Transport is ACP, JSON-RPC over
+`grok agent stdio`, driven by the `grok-acp` command from
 [packages/grok-acp](../../packages/grok-acp/) in this repo. Stdlib Python,
-Linux only. No `grok-acp` on `PATH`: resolve this skill directory's real
-path (it is usually a symlink), run `packages/grok-acp/grok_acp.py` from
-that checkout, or install it as the package README says.
+Linux only. If `grok-acp` is not on `PATH`, run `packages/grok-acp/grok_acp.py`
+from the checkout that holds this skill directory's real path, or install it
+as the package README says. This skill directory is usually a symlink.
 
 ## Iron law
 
@@ -44,31 +44,29 @@ $GROK run --cwd <item worktree> --label <item-id>:builder --prompt-file <handoff
 $GROK run --cwd <item worktree> --resume <item-id>:builder --prompt-file <delta.md>
 ```
 
-One invocation is one prompt turn. Stdout is one JSON object; progress
-lines go to stderr. Builds outlast a foreground shell call: start `run`
-**in the background** and read the result when notified. `--timeout`
-defaults to 3600 seconds. On timeout or SIGTERM the client sends ACP
-`session/cancel`, waits up to 20 seconds, and exits 5; the session stays
-resumable. A SIGTERM before the prompt is sent stops the run with no turn
-spent. A label and a session each take one turn at a time: a second run
-gets `busy` (exit 2).
+One invocation is one prompt turn. Stdout is one JSON object; progress lines
+go to stderr. Start `run` **in the background** and read the result when
+notified; builds outlast a foreground shell call. `--timeout` defaults to
+3600 seconds. On timeout or SIGTERM the client sends ACP `session/cancel`,
+waits up to 20 seconds, and exits 5; the session stays resumable. A SIGTERM
+before the prompt is sent stops the run with no turn spent. A label and a
+session each take one turn at a time: a second run gets `busy` (exit 2).
 
 | Flag | Use |
 | --- | --- |
 | `--cwd` | Item branch worktree. Required. A resumed label must use the cwd it was minted in |
 | `--label` | Registry name, `<item-id>:<role>`. This is the `builder_id` you store on the item |
-| `--resume` | A label, or a raw Grok session id (`grok sessions list` finds ones started elsewhere; add an unused `--label` to adopt it) |
-| `--replace` | With `--label` only: mint a new session under a label that already exists (fallback / overflow) |
+| `--resume` | A label, or a raw Grok session id. `grok sessions list` finds ids started elsewhere. To adopt one, add an unused `--label` |
+| `--replace` | With `--label` only: mint a new session under a label that already exists. For fallback or overflow |
 | `--prompt` / `--prompt-file` / stdin | The handoff. Prefer a file |
 | `--model`, `--effort` | `low` `medium` `high` `xhigh`. Omit for Grok's defaults |
 | `--rules-file` | Extra system-prompt rules. New sessions only; refused with `--resume` |
 | `--out` | Run directory. Default `~/.local/state/grok-acp/runs/<stamp>-<pid>` |
 
-`$GROK sessions` prints the label registry
-(`~/.local/state/grok-acp/sessions.json`; the state directory and the run
-directories it creates are `0700`, and the state directory moves with
-`GROK_ACP_STATE`). `$GROK forget <label>` drops a label;
-Grok keeps the session.
+`$GROK sessions` prints the label registry, `~/.local/state/grok-acp/sessions.json`.
+If `GROK_ACP_STATE` is set, the state directory is that path. The state
+directory and the run directories it creates are `0700`.
+`$GROK forget <label>` drops a label; Grok keeps the session.
 
 ### Result
 
@@ -78,7 +76,7 @@ Grok keeps the session.
 | `sessionId`, `label`, `resumed` | Store these on the item |
 | `text` | Grok's **final** message only. Full text: `response.md` in `runDir` |
 | `filesEdited`, `toolCalls`, `failedToolCalls` | From ACP tool-call updates. A hint, not a diff |
-| `leftoverProcessesKilled` | Grok's child processes still alive at exit and sent SIGTERM (its shell commands outlive it otherwise) |
+| `leftoverProcessesKilled` | Grok's child processes still alive at exit and sent SIGTERM. Its shell commands outlive it otherwise |
 | `permissionRequestsAutoApproved`, `plan`, `durationSec` | Permission prompts answered for Grok; its last plan, if any; wall time |
 | `usage` | Model, tokens, calls for this turn |
 | `runDir` | `prompt.md`, `response.md`, `result.json`, `events.ndjson` (every ACP message), `grok.stderr` |
@@ -87,9 +85,9 @@ Grok keeps the session.
 | --- | --- | --- |
 | 0 | `end_turn` | Verify |
 | 2 | Usage: `bad_cwd`, `empty_prompt`, `unreadable_file`, `bad_args`, `label_exists`, `unknown_label`, `cwd_mismatch`, `busy`, `bad_out` | Fix the call. `unknown_label` is a typo, not a reason to `--replace` |
-| 3 | Resume failed | Mint `--replace` with a short handoff (SDLC fallback) |
+| 3 | Resume failed | Mint `--replace` with a short handoff, per SDLC [Fallback](../../docs/sdlc/subagents.md#fallback) |
 | 4 | Agent or protocol error | Read `grok.stderr`. Auth: operator runs `grok login` |
-| 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout`. `sessionId: null` means it stopped before a session existed: mint again |
+| 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout`. If `sessionId` is `null`, it stopped before a session existed: mint again |
 | 6 | Stopped for another reason (`max_tokens`, `refusal`, …) | Read `stopReason`; usually overflow → `--replace` |
 
 ## SDLC fit
@@ -97,26 +95,26 @@ Grok keeps the session.
 - **Role.** Grok is a **builder** unless the operator says otherwise. The
   verifier and the reviewer of that item are different agents and never
   see Grok's transcript. Do not read `response.md` or `events.ndjson` into
-  their prompts.
+  their prompts; give them the ticket and the proving commands.
 - **One label per role per item.** `DER-12:builder` is never reused on
   another item and never resumed to verify or review its own work.
 - **Mint = pack.** The first prompt is the whole handoff: ticket, LLD
   slice, acceptance, paths, standards, the proving commands, and the repo
-  rules that bind it (tell it to read the repo `AGENTS.md` first). Grok
-  cannot see this skills home unless you pack the text or give the path.
+  rules that bind it. Tell it to read the repo `AGENTS.md` first. Grok
+  cannot see this skills home, so pack the text or give the path.
 - **Resume = delta.** What changed, what failed, what to do next. Do not
   re-send the spec.
-- **Branching is yours.** Create the item branch and worktree from
-  project-main (or trunk) yourself and pass it as `--cwd`. Tell Grok to
-  commit on that branch, **never** to push, and never to merge the item
-  branch into anything. De-conflicting is still the builder's job: when
-  project-main moves, resume the label with a delta that tells it to
-  merge or rebase project-main **into** the item branch. Lands stay
-  serialized and stay with the orchestrator.
+- **Branching is yours.** Create the item branch and worktree yourself from
+  the source [Branches](../../docs/sdlc/branches-and-lands.md#branches) names;
+  pass it as `--cwd`. Tell Grok to commit on that branch, **never** to push,
+  and never to merge the item branch into anything. De-conflicting is still
+  the builder's job: when project-main moves, resume the label with a delta
+  that tells it to merge or rebase project-main **into** the item branch.
+  Lands stay serialized and stay with the manager ([Land path](../../docs/sdlc/branches-and-lands.md#land-path)).
 - **Blockers and gates.** Check the item's blockers before minting.
   Offloading the build skips no gate: Review and security still run.
 - **Fallback and overflow.** Exit 3, or a session too long to be useful:
-  `--replace` with a short handoff (paths, decisions, open failures).
+  `--replace` with a short handoff, per SDLC [Fallback](../../docs/sdlc/subagents.md#fallback).
 
 ### Handoff shape
 
@@ -137,16 +135,18 @@ Finish with: files changed, commands run and their results, open risks.
 
 ## After it returns
 
-Load `verify-before-done`. You are the orchestrator, not the verifier:
+Load `verify-before-done`. You are the manager, not the verifier.
 
-1. Smoke-check yourself: `git status` and `git diff <base>...` in the
-   worktree (`filesEdited` misses shell-made changes), and that the branch
-   and git rule were kept. This is not the gate.
-2. The item's **verifier** runs the proving commands. First pass: mint it
-   clean with the ticket and the commands. Later passes: resume that
-   `verifier_id` with the delta. Never give it Grok's output.
-3. Verifier failures go back to the **same** Grok label as a delta.
-4. Do not take "tests pass" from `text` at any step.
+1. Smoke-check the worktree yourself: `git status`, `git diff <base>...`,
+   and that the branch and git rule were kept. `filesEdited` misses
+   shell-made changes. This smoke check is not the gate.
+2. First pass: mint the item's verifier clean with the ticket and the
+   proving commands. Later passes: resume that `verifier_id` with the
+   delta. Never give it Grok's output.
+3. **verifier** runs the proving commands.
+4. Send verifier failures to the **same** Grok label as a delta.
+
+At every step, take "tests pass" from the verifier, never from `text`.
 
 ## Always
 
@@ -162,12 +162,12 @@ Load `verify-before-done`. You are the orchestrator, not the verifier:
 
 ## Never
 
-- Treat `ok: true` as landed+verified.
-- Let one Grok session build and verify the same item.
-- Feed Grok's transcript to a verifier or reviewer.
-- Run two turns against the same session at once.
+- Treat `ok: true` as landed+verified. Run [After it returns](#after-it-returns).
+- Let one Grok session build and verify the same item. Mint a separate verifier.
+- Feed Grok's transcript to a verifier or reviewer. Give them the ticket.
+- Run two turns against the same session at once. Wait, then resume.
 - Tighten or loosen the permission posture here without a new operator
-  order; it is recorded above with its date.
+  order; it is recorded above with its date. Ask the operator for one.
 
 ## Red flags
 
