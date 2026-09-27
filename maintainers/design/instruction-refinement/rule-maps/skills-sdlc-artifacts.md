@@ -38,3 +38,14 @@ person" does not occur; the other subjects do not occur in this file.
   (owner) says "Changelog line | ticket ID + land SHA", and
   `docs/sdlc/branches-and-lands.md#land-path` lands by local merge with
   no PR. The HLD and LLD area D3 name this change. No open MQ.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 38 | Monthly lands in "Ticket or `docs/monthly/`" → "`docs/monthly/`, or a Task once filed" | F7: matches owner `trunk-changelog-monthly.md#monthly` (a recurring note until the manager or operator files a Task) | L38 |
+| 40 | Row name "Ask the human" → "Ask the operator"; template path kept | F10: index `#roles` names the person in the loop **operator** | L40 |

@@ -45,3 +45,14 @@ real defect.
 ## Meaning questions
 
 None. Every route target holds the whole routed rule; no rule changes.
+
+## DER-344 (G51)
+
+Old = project-main 44d6842. No lines changed in `skills/ux-design/SKILL.md`.
+
+### Meaning questions
+
+- **MQ1** (L18–21, Iron law) F5 asked to route this to
+  `docs/sdlc/plan-trial-spec.md#ux`. Resolved from the text 2026-09-27:
+  not a duplicate (owner lacks builder); kept. The Iron law also stays
+  first (standard 7).

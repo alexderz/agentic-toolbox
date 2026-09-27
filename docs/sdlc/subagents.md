@@ -96,7 +96,7 @@ manager holds the bodies and the child needs them → **Pack**; else →
 | Mode | Prompt | Child does |
 | --- | --- | --- |
 | **Pack** | Comprehensive: ticket/LLD, the skill bodies it will need, and any MCP tool schemas it will call. Name the ids packed. Tell it **not** to reload those. | Work. Do not `read_file` the packed skills or re-fetch packed MCP schemas. |
-| **Point** | High-level task + which skill ids / MCP servers to load (or the host default: "read the matching `SKILL.md`"). | Load those itself. Still **at most one** language-family skill. |
+| **Point** | High-level task + which skill ids / MCP servers to load (or the host default: "read the matching `SKILL.md`"). | Load those itself. Still [**at most one** language-family skill](../../skills/language-router/SKILL.md#iron-law). |
 
 Typical pack mints: first gatherer with `discover-the-idea`; first
 refiner with `yagni`; contrarian with `yagni`; designer with
@@ -126,12 +126,11 @@ Never:
 | Worker | When |
 | --- | --- |
 | Remote agent | Remote repo / PR work |
-| Local CLI | Box-local gated builds. Grok Build: load `grok-acp` when the operator picks it |
+| Local CLI | Gated builds on the local machine. Grok Build: load `grok-acp` when the operator picks it |
 | Local mirror | Inbound copy of git. Not the design source of truth |
 
 **architect** adversarial-reviews other agents' tools when the work
 needs it. The other role jobs: [Roles](../SDLC.md#roles).
 
-Workers do not bypass **security**: [Roles](../SDLC.md#roles). A worker
-PR into this skills home still needs intake and a SHA-pin match:
-[Workers](../INTAKE.md#workers).
+Workers do not bypass **security**: [Roles](../SDLC.md#roles).
+Worker PR intake: [Workers](../INTAKE.md#workers).

@@ -7,7 +7,7 @@ description: use this when writing, reviewing, or auditing Go for exploitable is
 
 Rewrite of samber/cc-skills-golang `golang-security` @ `22c58a55`. **Not** a vendor paste. **SKILL only** — no `evals/`, no `scripts/`, no `references/`. Compatible with `security-hardening`: **LLM output is untrusted**; the system prompt is not a boundary.
 
-[`language-router`](../language-router/SKILL.md#map) picks one Go skill per turn: this skill, `golang-safety` or `golang-testing`. Separate PRs OK.
+[`language-router`](../language-router/SKILL.md#map) picks one Go skill per turn: this skill, `golang-safety` or `golang-testing`. Each Go concern may be its own item.
 
 ## Iron law
 

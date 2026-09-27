@@ -18,3 +18,13 @@ docs are not agent text.
   "official copy", "parent agent/session", "a person".
 - K7: every relative link and anchor resolves.
 - K10: added lines hold no hostnames, IPs, ports, paths or tokens.
+
+## DER-344 (G51)
+
+Wording fixes from the integrated check DER-339. Changed lines only.
+Old = project-main 44d6842; "Old L" = line there; "L" = line in the new
+file. No rule changes meaning.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 64 | Workers "Where": "PR / local box" → "A pull request, or your own machine" | F10: plain words for a people doc | L64 |
