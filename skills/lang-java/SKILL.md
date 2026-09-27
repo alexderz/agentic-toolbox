@@ -5,9 +5,8 @@ description: use this when writing, reviewing, or testing Java — *.java, pom.x
 
 # Java
 
-Language guide. No Spring / Jakarta religion. Compatible with
-`tdd`, `verify-before-done`, `pr-review`, `security-hardening`.
-No `scripts/`.
+Language guide. No Spring / Jakarta religion. No `scripts/`.
+Skills that load with this one: [`language-router` Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
