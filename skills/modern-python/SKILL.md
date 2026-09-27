@@ -8,7 +8,7 @@ description: use this when creating, configuring, or migrating a Python project 
 First-party. **MIT.** Id: `modern-python`. **SKILL.md only.** No `scripts/`.
 Not a vendor paste. Tool facts from the public uv, ruff, ty, and pytest docs.
 
-Load-with list and `lang-python` pointer: `language-router` [Family rules](../language-router/SKILL.md#family-rules), [Map](../language-router/SKILL.md#map).
+Load-with list and `lang-python` pointer: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Map](../language-router/SKILL.md#map).
 
 ## Iron law
 

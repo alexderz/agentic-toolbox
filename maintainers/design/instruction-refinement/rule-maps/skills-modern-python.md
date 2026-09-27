@@ -17,7 +17,7 @@ of their subjects occur in this file.
 | 1–4 | Frontmatter: name, description | kept verbatim | L1–4 |
 | 6 | Title | kept | L6 |
 | 8–10 | First-party, MIT, id, SKILL.md only, no `scripts/`, not a vendor paste, tool-fact sources | kept, rewrapped to two lines | L8–9 |
-| 12–13 | Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`; optional pointer `lang-python` | route (owner: `skills/language-router/SKILL.md#family-rules` load-with list; `#map` Python row `lang-python` → `modern-python`); one route line, no condition added | L11 |
+| 12–13 | Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`; optional pointer `lang-python` | route (owner: `skills/language-router/SKILL.md#load-with-list`, moved there by DER-318; `#map` Python row `lang-python` → `modern-python`); one route line, no condition added | L11 |
 | 15 | Heading "Iron law" | kept, still first | L13 |
 | 17–18 | `uv add` / `uv remove` change deps; `uv run` runs tools; do not activate a venv or hand-edit dependency lists | kept verbatim | L15–16 |
 | 20 | New work: Python 3.12+, uv, ruff, ty, pytest | kept; fragment → imperative "On new work, use …" | L18 |
