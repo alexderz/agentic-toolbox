@@ -16,11 +16,11 @@ order are unchanged.
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 1 | Title | kept | L1 |
-| 3 | Chat-first | dropped: duplicate; owner SKILL Procedure 5 (L66) | — |
+| 3 | Chat-first | dropped: duplicate; owner SKILL Procedure 5 (L67) | — |
 | 3 | Use this shape unless they asked for shorter | kept; this file owns the condition; "they" → "the buyer" | L3 |
 | 3 | Skip empty sections; do not pad | kept | L3 |
 | 3 | Tag source class | dropped: duplicate; owner review-skepticism L57 | — |
-| 3 | Ranges beat fake precision | dropped: duplicate; owner SKILL Voice (L73) | — |
+| 3 | Ranges beat fake precision | dropped: duplicate; owner SKILL Voice (L74) | — |
 | 5–7 | Title section and example | kept, unchanged | L5–7 |
 | 9–13 | The pick | kept, unchanged | L9–13 |
 | 15–17 | What you said you care about; job to be done | kept | L15–17 |
@@ -28,13 +28,13 @@ order are unchanged.
 | 19 | Must-haves, deal-breakers, budget band | kept | L19 |
 | 20 | Assumptions if they said go | kept; "they" → "the buyer" | L20 |
 | 22 | If weights changed mid-project, show the current ranking | kept | L22 |
-| 24–27 | How this market looks; tiers; current vs outgoing | kept; "dark horses" → "little-known contenders" (standard 8, as workflow L31) | L24–27 |
+| 24–27 | How this market looks; tiers; current vs outgoing | kept; "dark horses" → "little-known contenders" (standard 8, as workflow L34) | L24–27 |
 | 28 | Popular traps (if any) | kept; parenthesis → ", if any" | L28 |
 | 30–32 | Shortlist table: 4–8, exact SKU, their criteria, label list vs street, grades (see `workflow.md`), trap row | kept; "Columns = **their**" → "Columns: **the buyer's**"; "(see `workflow.md`)" → "as in" plus link | L30–32 |
 | 34–39 | Feedback that survived skepticism | kept, unchanged | L34–39 |
 | 41–44 | Money and logistics: price band, stock, deals; warranty, parts, service, returns | kept | L41–44 |
-| 45 | US retail default | route (owner: workflow L15); the bullet keeps "the market" | L45 |
-| 45 | Pickup vs ship if it matters | kept; "if it matters" → "if the purchase brief names it" (standard 2; MQ1) | L45 |
+| 45 | US retail default | route (owner: workflow L18); the bullet keeps "the market" | L45 |
+| 45 | Pickup vs ship if it matters | kept verbatim (MQ1) | L45 |
 | 47–50 | Decision rules | kept, unchanged | L47–50 |
 | 52 | Heading "Open questions" | kept | L52 |
 | 54 | Only what still blocks confidence; no 20-question dump | kept, one imperative sentence | L54 |
@@ -42,6 +42,6 @@ order are unchanged.
 ## Meaning questions
 
 - **MQ1** — Old L45 "pickup vs ship if it matters" is not checkable
-  (standard 2). Resolved from the text: pickup vs ship is one of the
-  purchase brief's constraints (`assets/brief-intake.md` L10), so it
-  matters when the purchase brief names it.
+  (standard 2); narrowing it to "if the purchase brief names it" would
+  change its meaning. Resolved at Review (DER-314): kept verbatim, so no
+  reading is chosen.

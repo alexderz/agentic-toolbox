@@ -31,10 +31,10 @@ and the citation format; SKILL routes both here.
 | 52 | If they conflict, say so; weight by this brief (performance-first vs keep-it-for-years buyer) | kept; "this brief" → "the purchase brief" | L52 |
 | 53 | Do not average the conflict into a fake composite score | kept; "Never", allowed action "report both sides" (from L52 "say so") | L53 |
 | 55 | Heading "Citation style by source class" | kept | L55 |
-| 57 | Tag the class in-line; keep citations short and checkable | kept; this file owns source-class tagging (SKILL Voice L71–72 routes here) | L57 |
-| 57 | Never invent a quote or a score | dropped: duplicate; owner SKILL Never bullet 4 (L93–94) | — |
+| 57 | Tag the class in-line; keep citations short and checkable | kept; this file owns source-class tagging (SKILL Voice L72–73 routes here) | L57 |
+| 57 | Never invent a quote or a score | dropped: duplicate; owner SKILL Never bullet 4 (L94–95) | — |
 | 59–67 | Citation table | kept, unchanged | L59–67 |
-| 69 | Thin evidence → say so | dropped: duplicate; owner SKILL Never bullet 4 (L93–94) | — |
+| 69 | Thin evidence → say so | dropped: duplicate; owner SKILL Never bullet 4 (L94–95) | — |
 | 69 | Marketplace stars, if mentioned: `[stars]` retailer, average, n, date, and polluted by default | kept, as if/then; "if mentioned at all" out of the parenthesis-like aside | L69 |
 
 ## Meaning questions

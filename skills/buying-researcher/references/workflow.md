@@ -1,6 +1,9 @@
 # Buying workflow
 
-These phases are this skill's map: frame, then survey, then refine by decision impact. If the chunk is on the board, keep one project per research track. Never mint a second project for the same track; use the track's existing project.
+These phases are this skill's map: frame, then survey, then refine by
+decision impact. If the chunk is on the board, keep one project per
+research track. Never mint a second project for the same track; use the
+track's existing project.
 
 | Phase | Name | Pass |
 | --- | --- | --- |

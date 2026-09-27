@@ -24,8 +24,8 @@ human to confirm.
 
 ## Intake
 
-Your first reply is intake, not research. The **purchase brief** is the
-intake record: the fields in step 2, in the form
+Your first reply is intake, not research. Intake fills the **purchase
+brief**, the record in the form
 [`assets/brief-intake.md`](assets/brief-intake.md).
 
 1. If `discover-the-idea` already produced a brief, do not re-interview.
@@ -51,7 +51,8 @@ intake record: the fields in step 2, in the form
 
 1. Finish [Intake](#intake).
 2. Run Phases 1–6 of [`references/workflow.md`](references/workflow.md)
-   in order. Phase 0 is Intake.
+   in order; repeat the Pass 2+ Refine phases as its table shows. Phase
+   0 is Intake.
 3. Weigh every source by
    [`references/review-skepticism.md`](references/review-skepticism.md).
 4. Write the guide in the shape of

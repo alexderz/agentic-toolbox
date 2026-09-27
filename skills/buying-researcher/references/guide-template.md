@@ -42,7 +42,7 @@ If weights changed mid-project, show the current ranking.
 
 - Street price band, stock, temporary deals
 - Warranty, parts, service, return policy
-- The market; pickup vs ship if the purchase brief names it
+- The market; pickup vs ship if it matters
 
 ## Decision rules
 
