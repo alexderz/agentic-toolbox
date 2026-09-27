@@ -19,8 +19,9 @@ is `lang-go`, `lang-python` or `lang-shell`; a pointer does not count as
 a load.
 
 - Load a second language skill only when the diff is genuinely
-  mixed-language.
-- Never load the catalog; read only the `SKILL.md` you chose.
+  mixed-language, or `shell-safety` when the turn includes shell.
+- Never load the catalog; read only the `SKILL.md` you chose and its
+  pointer.
 - Never remint an id that already exists, such as `golang-*`,
   `modern-python` or `shell-safety`; load the existing id.
 
@@ -119,7 +120,7 @@ so, and use the official docs only. Never create a pack for it.
 - Never add a second methodology router beside this repo's ids; route
   with this file.
 - Never paste official style guides into context "just in case"; read
-  the chosen `SKILL.md` only.
+  only the chosen `SKILL.md` and its pointer.
 
 ## Red flags
 

@@ -23,71 +23,71 @@ of their subjects occur in this file. K2 exempt (standard 9).
 | 6 | Heading "Language router" | kept | L6 |
 | 8–9 | Map; points at existing ids and the `lang-*` guides; no `scripts/` | kept; the three example ids move into the language-skill definition | L9–11, L15–17 |
 | 11 | Heading "Iron law" | kept, first | L13 |
-| 13–15 | At most one language-family skill; a second only for a genuinely mixed-language diff; never load the catalog; never remint an existing id | kept; "language-family skill" → one name, **language skill**, defined at first use (standard 3); each "never" names the allowed action (standard 7) | L15, L21–25 |
-| 17 | Heading "Algorithm" | kept; moved after Map, Family rules and Stubs so no step refers forward (standard 4) | L101 |
-| 19 | List files the turn reads or writes | kept | L105 |
-| 20 | Match the table; extensions and well-known filenames beat chat keywords | kept | L106–107 |
-| 21 | One language owns ≥80% → load that skill only | kept | L109–110 |
-| 22 | Two first-class languages (SQL + host, TSX + stylesheet, proto + hand-edited host) → load both | kept; parenthesis → "such as" examples (standard 8) (MQ7) | L111–113 |
-| 23 | Stub language → load nothing, official docs, do not invent a pack | kept, as step 4 routing to Stubs; the rule itself at Stubs | L108, L97–99 |
-| 24 | Read the chosen `SKILL.md`; stop routing; do not summarize the catalog | kept; "Do not" → "Never", allowed action beside it | L114–115 |
-| 26 | Heading "Map" | kept | L50 |
-| 28–29 | Table header | kept | L54–55 |
-| 30 | Go row: pointer `lang-go` → one of `golang-safety` / `golang-testing` / `golang-security` | kept, merged with `AGENTS.md` L199 (MQ4) | L56 |
-| 31 | Python row | kept, merged with `AGENTS.md` L200 | L57 |
-| 32 | Shell row | kept, merged with `AGENTS.md` L201 | L58 |
-| 33 | Rust row | kept | L59 |
-| 34 | JS/TS row | kept; `package.json` added from `AGENTS.md` L203 (MQ3) | L60 |
-| 35–51 | Rows C through Lua | kept verbatim (identical to `AGENTS.md` L204–220) | L61–77 |
-| 53 | `*.tsx` is `lang-js-ts` unless primarily markup or CSS | kept | L82–83 |
-| 55 | Heading "Family rules" | kept, as H3 under Map | L85 |
-| 57 | TypeScript wins over JavaScript | kept | L87–88 |
-| 58 | C++ wins over C; never both | kept, as if/then; "Never both" names `lang-c` | L89–90 |
-| 59 | Go: default safety; tests → testing; input/auth/SQL/files/exec/crypto → security; never all three | dropped: duplicate, merged into the Go row (owner: this file L56; "One of" covers "never all three") | L56 |
-| 60 | Frameworks are not language skills; do not invent one mid-session | kept; "Do not invent" → "Never create", allowed action beside it | L91–93 |
-| 61 | Process skills may load with the one language skill; load one of the three debug skills | kept, as the Load-with list (MQ2, MQ5) | L40–48 |
-| 62 | `discover-the-idea` gather-only, `buying-researcher` research-only, `ux-design` UX-only: no language skill | kept, as No-language turns rows (MQ6) | L27–37 |
-| 64 | Heading "Stubs (no body)" | kept as "Stubs"; "no body" into the text | L95 |
-| 66–67 | Stub list; say so; official docs only | kept; "load no language skill" and "never create a pack" from old L23 | L97–99 |
-| 69 | Heading "Never" | kept | L117 |
-| 71 | No second methodology router | kept, allowed action beside it | L119–120 |
-| 72 | No two debug skills in one turn | kept, in the Load-with list | L47–48 |
-| 73 | No remint of `golang-*`, `modern-python`, `shell-safety` | kept, in the iron law with the old L15 remint rule | L24–25 |
-| 74 | No language skill on README-only, git-only, gather/refine-only, research-only, UX-only, templates-only turns | kept, as No-language turns rows | L34, L36–38 |
-| 75 | No style guides in context "just in case" | kept, allowed action beside it | L121–122 |
-| 77 | Heading "Red flags" | kept; lead-in line added naming the action | L124, L126 |
-| 79–81 | Three red-flag thoughts | kept verbatim | L128–130 |
+| 13–15 | At most one language-family skill; a second only for a genuinely mixed-language diff; never load the catalog; never remint an existing id | kept; "language-family skill" → one name, **language skill**, defined at first use (standard 3); each "never" names the allowed action (standard 7) | L15, L21–26 |
+| 17 | Heading "Algorithm" | kept; moved after Map, Family rules and Stubs so no step refers forward (standard 4) | L102 |
+| 19 | List files the turn reads or writes | kept | L106 |
+| 20 | Match the table; extensions and well-known filenames beat chat keywords | kept | L107–108 |
+| 21 | One language owns ≥80% → load that skill only | kept | L110–111 |
+| 22 | Two first-class languages (SQL + host, TSX + stylesheet, proto + hand-edited host) → load both | kept; parenthesis → "such as" examples (standard 8) (MQ7) | L112–114 |
+| 23 | Stub language → load nothing, official docs, do not invent a pack | kept, as step 4 routing to Stubs; the rule itself at Stubs | L109, L98–100 |
+| 24 | Read the chosen `SKILL.md`; stop routing; do not summarize the catalog | kept; "Do not" → "Never", allowed action beside it | L115–116 |
+| 26 | Heading "Map" | kept | L51 |
+| 28–29 | Table header | kept | L55–56 |
+| 30 | Go row: pointer `lang-go` → one of `golang-safety` / `golang-testing` / `golang-security` | kept, merged with `AGENTS.md` L199 (MQ4) | L57 |
+| 31 | Python row | kept, merged with `AGENTS.md` L200 | L58 |
+| 32 | Shell row | kept, merged with `AGENTS.md` L201 | L59 |
+| 33 | Rust row | kept | L60 |
+| 34 | JS/TS row | kept; `package.json` added from `AGENTS.md` L203 (MQ3) | L61 |
+| 35–51 | Rows C through Lua | kept verbatim (identical to `AGENTS.md` L204–220) | L62–78 |
+| 53 | `*.tsx` is `lang-js-ts` unless primarily markup or CSS | kept | L83–84 |
+| 55 | Heading "Family rules" | kept, as H3 under Map | L86 |
+| 57 | TypeScript wins over JavaScript | kept | L88–89 |
+| 58 | C++ wins over C; never both | kept, as if/then; "Never both" names `lang-c` | L90–91 |
+| 59 | Go: default safety; tests → testing; input/auth/SQL/files/exec/crypto → security; never all three | dropped: duplicate, merged into the Go row (owner: this file L57; "One of" covers "never all three") | L57 |
+| 60 | Frameworks are not language skills; do not invent one mid-session | kept; "Do not invent" → "Never create", allowed action beside it | L92–94 |
+| 61 | Process skills may load with the one language skill; load one of the three debug skills | kept, as the Load-with list (MQ2, MQ5) | L41–49 |
+| 62 | `discover-the-idea` gather-only, `buying-researcher` research-only, `ux-design` UX-only: no language skill | kept, as No-language turns rows (MQ6) | L28–38 |
+| 64 | Heading "Stubs (no body)" | kept as "Stubs"; "no body" into the text | L96 |
+| 66–67 | Stub list; say so; official docs only | kept; "load no language skill" and "never create a pack" from old L23 | L98–100 |
+| 69 | Heading "Never" | kept | L118 |
+| 71 | No second methodology router | kept, allowed action beside it | L120–121 |
+| 72 | No two debug skills in one turn | kept, in the Load-with list | L48–49 |
+| 73 | No remint of `golang-*`, `modern-python`, `shell-safety` | kept, in the iron law with the old L15 remint rule | L25–26 |
+| 74 | No language skill on README-only, git-only, gather/refine-only, research-only, UX-only, templates-only turns | kept, as No-language turns rows | L35, L37–39 |
+| 75 | No style guides in context "just in case" | kept, allowed action beside it | L122–123 |
+| 77 | Heading "Red flags" | kept; lead-in line added naming the action | L125, L127 |
+| 79–81 | Three red-flag thoughts | kept verbatim | L129–131 |
 
 ## Old `AGENTS.md` (merged)
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 53 | Load-table Language row: code turn → at most one language skill; table below or `language-router` first if ambiguous; pointers do not count | route: the row stays in the root `AGENTS.md` load table (owner of "which skill loads when"); DER-308 makes it one route to this file. Rules kept here; "if ambiguous" changed to any code turn (MQ1) | L3, L8, L15–19 |
-| 57–60 | Process skills that may load with the one language skill (includes `sdlc-artifacts`); `shell-safety` when the turn includes shell | kept (MQ2) | L42–46 |
-| 60–62 | `discover-the-idea` gather-only, `buying-researcher` research-only: no language skill | kept | L34, L37 |
+| 57–60 | Process skills that may load with the one language skill (includes `sdlc-artifacts`); `shell-safety` when the turn includes shell | kept (MQ2); the `shell-safety` exception also named in the iron law | L22, L43–47 |
+| 60–62 | `discover-the-idea` gather-only, `buying-researcher` research-only: no language skill | kept | L35, L38 |
 | 175 | Heading "Language routing" | kept as this file (H1); DER-308 removes the section | L6 |
 | 177–178 | At most one; a second only for a truly mixed-language diff; never load the catalog | kept ("truly" = "genuinely", old router L14) | L15, L21–23 |
-| 179–181 | `tdd` / `verify-before-done` / `pr-review` / `security-hardening` / `yagni` / `debug` / `docs-google-style` / `tracker-sdlc` may load alongside | kept (MQ2) | L42–44 |
-| 182 | `sdlc-onboarding`: an onboarding turn loads no language skill | kept | L33 |
-| 183–184 | `discover-the-idea`: gather- and refine-only turns load no language skill | kept (MQ6) | L34 |
-| 184–185 | Incoming-item Brief (problem + fix vs removal) loads no language skill | kept; link to the item brief owner added | L35 |
-| 185–186 | `ux-design`: UX-only turns load no language skill | kept | L36 |
-| 186–187 | `buying-researcher`: research-only turns load no language skill | kept | L37 |
-| 187–188 | Load one of `debug` / `debug-pocock` / `debug-anthropic` | kept (MQ5) | L47–48 |
-| 190–191 | If `language-router` is installed and the table is ambiguous, load it first, then the one skill it names | changed per the Outcome: the router loads on any code turn (MQ1); "then the one skill it names" kept as step 7 | L3, L8, L114 |
-| 193–195 | Pointer ids exist so every identified language has a file; they do not count as a load; they route to the ids | kept | L17–19, L79–80 |
-| 197–198 | Table header | kept | L54–55 |
-| 199 | Go row: `golang-safety` default; `golang-testing` when writing tests; `golang-security` for input, auth, SQL, files, subprocesses, crypto; pick one; optional pointer | kept, merged with old router L30 (MQ4); "Optional" at L79–80 | L56 |
-| 200 | Python row, optional pointer | kept | L57 |
-| 201 | Shell row, optional pointer | kept | L58 |
-| 202 | Rust row | kept | L59 |
-| 203 | JS/TS row with `package.json` | kept (MQ3) | L60 |
-| 204–220 | Rows C through Lua | kept verbatim | L61–77 |
-| 222–223 | Stubs: no skill body, official docs only | kept | L97–99 |
-| 225–226 | Frameworks are not language skills; do not invent one mid-session | kept | L91–93 |
+| 179–181 | `tdd` / `verify-before-done` / `pr-review` / `security-hardening` / `yagni` / `debug` / `docs-google-style` / `tracker-sdlc` may load alongside | kept (MQ2) | L43–45 |
+| 182 | `sdlc-onboarding`: an onboarding turn loads no language skill | kept | L34 |
+| 183–184 | `discover-the-idea`: gather- and refine-only turns load no language skill | kept (MQ6) | L35 |
+| 184–185 | Incoming-item Brief (problem + fix vs removal) loads no language skill | kept; link to the item brief owner added | L36 |
+| 185–186 | `ux-design`: UX-only turns load no language skill | kept | L37 |
+| 186–187 | `buying-researcher`: research-only turns load no language skill | kept | L38 |
+| 187–188 | Load one of `debug` / `debug-pocock` / `debug-anthropic` | kept (MQ5) | L48–49 |
+| 190–191 | If `language-router` is installed and the table is ambiguous, load it first, then the one skill it names | changed per the Outcome: the router loads on any code turn (MQ1); "then the one skill it names" kept as step 7 | L3, L8, L115 |
+| 193–195 | Pointer ids exist so every identified language has a file; they do not count as a load; they route to the ids | kept | L17–19, L80–81 |
+| 197–198 | Table header | kept | L55–56 |
+| 199 | Go row: `golang-safety` default; `golang-testing` when writing tests; `golang-security` for input, auth, SQL, files, subprocesses, crypto; pick one; optional pointer | kept, merged with old router L30 (MQ4); "Optional" at L80–81 | L57 |
+| 200 | Python row, optional pointer | kept | L58 |
+| 201 | Shell row, optional pointer | kept | L59 |
+| 202 | Rust row | kept | L60 |
+| 203 | JS/TS row with `package.json` | kept (MQ3) | L61 |
+| 204–220 | Rows C through Lua | kept verbatim | L62–78 |
+| 222–223 | Stubs: no skill body, official docs only | kept | L98–100 |
+| 225–226 | Frameworks are not language skills; do not invent one mid-session | kept | L92–94 |
 
 New lines with no old line: L8 (defines **code turn** from `AGENTS.md`
-L53 "Writing or reviewing code"), L29, L52 (table lead-ins), L103–104
+L53 "Writing or reviewing code"), L30, L53 (table lead-ins), L104–105
 (step 1 applies No-language turns).
 
 ## Meaning questions
