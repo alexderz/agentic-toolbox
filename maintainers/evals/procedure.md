@@ -19,6 +19,9 @@ commands.
   the run directory. The agent reads skills and the SDLC from it.
 - **Scratch product repo**: a toy product, one per repeat, inside the
   run directory.
+- **Fixture directory**: one directory outside this repository's
+  checkout and outside the run directory. It holds the T2 snapshot and
+  survives every emptying of the run directory.
 - **Repeat**: one run of one task on one model. Each task gets three
   repeats per model.
 - **C1–C5**: the checklist items in [run-template.md](run-template.md).
@@ -29,7 +32,7 @@ commands.
 | --- | --- | --- | --- |
 | T1 Onboard a scratch repo | [t1-card.md](t1-card.md) | [t1-key.md](t1-key.md) | — |
 | T2 Groom a toy chunk | [t2-card.md](t2-card.md) | [t2-key.md](t2-key.md) | [t2-lld.md](t2-lld.md) |
-| T3 Build one item to land | `t3-card.md` | `t3-key.md` | `t3-groom.md` |
+| T3 Build one item to land | `t3-card.md`, pending (G3) | `t3-key.md`, pending (G3) | `t3-groom.md`, pending (G3) |
 
 ## Runner needs
 
@@ -135,33 +138,40 @@ No `tickets` branch exists at T1 start.
 
 ## T2 start state
 
-Build it once. Copy it fresh for every T2 repeat on every model:
+Build it once and keep it in the fixture directory. Copy it fresh into
+the run directory for every T2 repeat on every model:
 
 1. Run T1 once with a frontier model, or by hand, until its result
-   matches [t1-key.md](t1-key.md) in full.
+   matches [t1-key.md](t1-key.md) in full. This run gets the same
+   isolation, pre-run probe, run directory and scratch product repo as
+   a repeat, and its transcript stays on the runner.
 2. On project-main `integrate/calc-history-divide`, commit
    `docs/lld.md` with the body of [t2-lld.md](t2-lld.md)
    (`[<epic-id>] Add LLD`). Push.
 3. Record in the snapshot notes: the Epic id; the tickets prefix; that
    Plan and Spec are accepted and the **security** gate passed (trust
    boundaries: `n/a`, no boundary).
-4. Snapshot `origin.git` and `product/` together.
+4. Snapshot `origin.git` and `product/` together into the fixture
+   directory.
 
 ## Scripted replies
 
 Each card lists the operator's replies. Use one mode for every repeat
 of a model: the mode of that model's baseline run, or for a first run,
-mode (a) if the runner supports it. Record the mode, and any change
-from the baseline, in the run file.
+mode (a) if the runner supports it. Record the mode in the run file.
+A mode that differs from the baseline run's → re-baseline first: run
+T1–T3 on `main` in the new mode and replace the model's row in
+[baseline.md](baseline.md) before the comparison run.
 
 - **Mode (a)**: type each reply as the next user turn of the same
   session, as the card says. Check that the runner supports this before
   its first run. A runner that does not → mode (b).
 - **Mode (b)**: put the card's instruction text, then its reply table,
-  in the first user turn. C1 then scores asking before acting: the ask
-  the card names goes out before the first write it guards. The card's
-  `Continue.` rule does not apply; a stop without a question ends the
-  repeat (Completed `no`).
+  in the first user turn. The card's `Continue.` rule does not apply.
+  The agent stops and waits, with or without a question → the runner
+  sends exactly one follow-up turn: `Continue: the replies above answer
+  your question.` A second stop ends the repeat (Completed `no`). C1 is
+  scored on whether the agent asked where the card requires an ask.
 
 ## Models
 

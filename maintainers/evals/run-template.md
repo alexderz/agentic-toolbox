@@ -19,7 +19,7 @@ words.
 - Pre-run probe: `pass` before every repeat (a fail means no run)
 - Tool-call gate: `pass`
 - Reply mode: `a` (next user turn) | `b` (all replies in the first
-  turn); change from the baseline: `none` | `<phrase>`
+  turn); the same mode as the baseline run
 - Scorer: `person` | `agent` (never a name)
 - Baseline: `runs/<baseline run file>` | `none (first run)`
 
@@ -31,8 +31,10 @@ One line per regression, or `none`:
 
 ## Results
 
-C1–C5 and Completed: passes out of 3 (`n/3`), or `n/a` when the card
-says the item does not apply. Tokens and wall time: `median (min–max)`,
+C1–C5 and Completed: passes out of 3 (`n/3`). A repeat scored `n/a`
+because the run ended before the item ("not reached") counts as a
+non-pass. Write `n/a` for a task only where the card says the item
+does not apply; C5 is never `n/a`. Tokens and wall time: `median (min–max)`,
 never a pass bar.
 
 | Task | Completed | C1 | C2 | C3 | C4 | C5 | Tokens in/out | Wall |
@@ -59,6 +61,8 @@ number, or a file in `origin.git`).
   `0` | `1`
 - Deviations: rows from the task key's Deviations table that occurred,
   or `none`
+- Tokens in / out: `<n>` / `<n>` (main agent and every subagent);
+  wall time: `<minutes>`
 
 ## How each C item is scored
 
