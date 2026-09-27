@@ -46,7 +46,7 @@ Never:
 | Condition | Action |
 | --- | --- |
 | Resume fails (expired, quota, host error) | 1. Mint a new clean agent of the **same role** for this item. 2. Replace the stored id. 3. Pass a short handoff: paths, decisions, open failures. |
-| A resumed transcript is too large to be useful | Replace that role's agent the same way: clean mint and short handoff. |
+| A resumed transcript is more than half the context window, or the harness cannot load it or has to compact it | Replace that role's agent the same way: clean mint and short handoff. |
 
 Never pass the other role's transcript; pass the short handoff. Never
 rotate roles to "save" context; replace the agent of the same role.

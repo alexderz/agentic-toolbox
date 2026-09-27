@@ -46,7 +46,7 @@ rows marked **P**. **security** reads these rows at Review.
 | 1004–1005 | New builder or verifier minted each Build loop while the previous is resumable | kept; allowed action: resume it | Item agents, Never 4 |
 | 1006 | Parent is the yagni agent, builder, or verifier of that item | kept; "Parent" → "manager" (MQ1), "yagni agent" → "contrarian"; allowed action: mint a clean subagent for the role | Item agents, Never 5 |
 | 1008–1011 | Fallback: resume fails (expired, quota, host error) → mint a clean agent of the same role, replace the id, short handoff (paths, decisions, open failures), not the other role's transcript | kept; condition → action table, one action per step; the dash clause → its own Never sentence with the allowed action | Fallback row 1; Fallback last ¶ |
-| 1013–1015 | Overflow: resumed transcript too large to be useful → replace that role's agent the same way; do not rotate roles to save context | kept; condition wording unchanged (Note N1); "Do not" → "Never" with the allowed action | Fallback row 2; Fallback last ¶ |
+| 1013–1015 | Overflow: resumed transcript too large to be useful → replace that role's agent the same way; do not rotate roles to save context | kept; condition stated per MQ4, resolved by operator 2026-09-27 (Q4); "Do not" → "Never" with the allowed action | Fallback row 2; Fallback last ¶ |
 | 1017–1018 | Orchestrators that spawn in parallel mint one pair per item, not per loop; independent items get independent pairs | kept; "Orchestrators" → "A manager" (banned name); moved to Item agents | Item agents ¶ after the table |
 | 1020–1023 | Item grain: no gatherer, designer, UX reviewer for a no-screen incoming item; yagni agent at Brief; builder, verifier, reviewer as usual; security if a trust boundary moves | kept; moved to Step agents; "yagni agent" → "contrarian"; the fragment "Security if a trust boundary moves" → "Add **security** if a trust boundary moves" (actor and condition unchanged) | Step agents, last ¶ |
 | 1025–1026 | **P** Only the orchestrator writes to the tracker (see Hierarchy) | kept; "orchestrator" → "**manager**" (banned name); the old link, now `../SDLC.md#tracker` (C1), makes the line the route to the owner `docs/SDLC.md#tracker` | Tracker writes, L1 |
@@ -99,10 +99,14 @@ All resolved.
 - **MQ3** (old L970–972), resolved by the writing standard's Rule
   owners: the groom reviewer id is owned by `groom-step.md#names`;
   this file keeps a one-line route.
+- **MQ4** (old L1013), resolved by operator 2026-09-27 (Q4): "too
+  large to be useful" means more than half the context window, or the
+  harness cannot load it or has to compact it. Wording only; the
+  Fallback row states this condition.
 
 Notes, not MQs (one reading each; wording kept):
 
-- **N1** Old L1013 "too large to be useful" and old L1079 "when the
-  work needs it" are not checkable conditions (standard 2). Each has one
-  reading. A checkable threshold would change the rule, so the wording
-  stays; the operator may set one later.
+- **N1** Old L1079 "when the work needs it" is not a checkable
+  condition (standard 2). It has one reading. A checkable threshold
+  would change the rule, so the wording stays; the operator may set one
+  later.
