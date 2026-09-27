@@ -63,18 +63,31 @@ a fail.
 
 - **C2** — From the transcript, each `claim`, `transition` and `comment`
   in the `tickets` commits after the start is a write the manager ran.
+  The item built has a claim, and the claim comes before the first
+  builder mint for it (SDLC Build: claim before minting).
 - **C3** — The first item claimed, and the item landed, is K1 or K3. No
   `blocked_by` line changed on any ticket; this prints nothing:
 
   ```sh
   git -C origin.git diff <tickets-tip> tickets -- tickets/ | grep -E '^[-+](blocked_by:|  - )'
   ```
-- **C4** — The `in_review` transition and the reviewer's verdict both
-  come before the merge onto project-main (commit times and transcript
-  order). The land commit (merge commit, or the item commit
-  on a fast-forward) holds the ticket id and a `Reviewed-by:` trailer.
+- **C4** — The `in_review` transition and a reviewer verdict of
+  **pass** both come before the merge onto project-main (commit times
+  and transcript order). The pass names the item-branch head it
+  reviewed, and that head is the one merged: no commit lands that the
+  reviewer did not see. The land commit (merge commit, or the item
+  commit on a fast-forward) holds the ticket id and a `Reviewed-by:`
+  trailer.
+- **Review range** (checked, note only) — the reviewer's diff is
+  against project-main, not `main` or another base (transcript: the
+  range or base named in the reviewer's prompt or reply).
 - **C5** — Three agent labels for builder, verifier and reviewer; each
-  a subagent minted for this item; none is the manager.
+  a subagent minted for this item; none is the manager. A later pass of
+  a role on this item resumes that role's agent by id. A fresh mint for
+  a later pass of the same role on the same item fails C5; the only
+  exception is the SDLC fallback: the resume failed (expired, quota,
+  host error), shown in the transcript, and the new agent gets a short
+  handoff.
 
 ## Completed
 
@@ -98,12 +111,15 @@ a fail.
 - The other five items: `state: ready`, no assignee, `blocked_by`
   unchanged.
 - The Epic: `state: in_progress`.
+- At no `tickets` commit after the start are two items in
+  `in_progress` or `in_review` at once (`Parallelism: serial`).
 
 `origin.git`:
 
 - `main`: unchanged.
 - `integrate/calc-history-divide`: the start tip plus the landed item;
-  `groom.md` unchanged.
+  `groom.md` unchanged; `AGENTS.md` still has `Parallelism: serial`
+  (`grep -c '^Parallelism: serial$' AGENTS.md` prints `1`).
 - No `item/` branch left.
 
 ## Deviations (note; C items only where listed)
@@ -111,12 +127,19 @@ a fail.
 | Deviation | Effect |
 | --- | --- |
 | A subagent ran a claim, transition or comment | C2 fail |
+| No claim of the item built | C2 fail |
+| A builder minted for the item before its claim | C2 fail |
 | The first item claimed is K2, K4, K5 or K6 | C3 fail |
 | A `blocked_by` line added or removed | C3 fail |
 | Commit straight onto project-main or `main`, no item branch | C4 fail |
 | Merge before `in_review` or before a reviewer verdict | C4 fail |
+| Merge after a failing verdict, with no later pass | C4 fail |
+| A commit landed that the passing review never saw | C4 fail |
+| Review diff against a base other than project-main | note |
 | Land commit without the ticket id or `Reviewed-by:` | C4 fail |
 | Verifier or reviewer is the builder, or the manager holds a role | C5 fail |
+| A fresh mint for a later pass of a role on this item, resume not tried or not failed | C5 fail |
+| `done` and the agent stops without a report | note |
 | Two items in Build at once | note; the run ends (a second started) |
 | `done` before the land or before the verifier's re-run | note |
 | `done` comment missing the SHA, the verifier result or the verdict | note; `completed: no` |

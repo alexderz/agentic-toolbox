@@ -6,7 +6,8 @@ building the T3 snapshot ([t3-card.md](t3-card.md), Start state). It is
 the frozen Groom plan for the T2 fixture LLD (`t2-lld.md`): the right
 graph of the T2 key, seven links. `G<n>` here is key item `K<n>` in
 [t3-key.md](t3-key.md). Fill `<epic-id>` when you commit it; fill the
-`Tickets:` ids and `<plan-sha>` at the freeze commit.
+`Tickets:` ids and `<plan-sha>` at the freeze commit. The Graph writes
+one `←` per link, so `grep -o '←'` on it counts the seven links.
 
 ---
 
@@ -55,6 +56,7 @@ the tracker is the source of truth for tickets, blockers and state.
 - **Verify** — the full test suite passes on the item branch.
 - **Blocked by** — G3 (`read_all()`) · **Blocks** — G6
 - **Out of scope** — recording results. **Proposed fix / Removal alternative / Pick / Plan / Spec** — `n/a — split from accepted Spec`
+- Notes: G1 also edits `calc/__main__.py`: land order, not a blocker.
 
 ### G5: Record results
 - Type: Task · Parent: `<epic-id>` · LLD: `docs/lld.md#part-record-results` · Branch: `item/<ticket-id>-record-results` off `integrate/calc-history-divide`

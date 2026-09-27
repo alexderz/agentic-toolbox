@@ -18,22 +18,23 @@ Build the T3 snapshot once, then copy it fresh for every T3 run. In
    comment.
 2. Set `## Execution` in `AGENTS.md` to `Parallelism: serial`. Commit
    `[<epic-id>] Set Parallelism: serial`.
-3. Commit the body of [t3-groom.md](t3-groom.md), `<epic-id>` filled, as
+3. Check: `grep -c '^Parallelism: serial$' AGENTS.md` prints `1`.
+4. Commit the body of [t3-groom.md](t3-groom.md), `<epic-id>` filled, as
    `.agents/design/calc-history-divide/groom.md`: `[<epic-id>] Add the
    Groom plan`. This commit is the plan SHA.
-4. File by hand with the repo skill's recipes
+5. File by hand with the repo skill's recipes
    (`.agents/tracker/SKILL.md`), agent label `manager`: one `create` per
    `G<n>`: type `task`, title `G<n>: <title>`, `parent` the Epic, body
    the `G<n>` section of the committed `groom.md`.
-5. Run `set-blocker` once per Graph link: seven links.
-6. Transition the six items to `ready`.
-7. Transition the Epic to `in_progress`.
-8. `comment` on the Epic: the `groom.md` path.
-9. In `groom.md`, fill the `Tickets:` ids and `<plan-sha>`. Commit
-   `[<epic-id>] Freeze the Groom plan`.
-10. Record in the snapshot notes: Epic id, each ticket id with its
+6. Run `set-blocker` once per Graph link: seven links.
+7. Transition the six items to `ready`.
+8. Transition the Epic to `in_progress`.
+9. `comment` on the Epic: the `groom.md` path.
+10. In `groom.md`, fill the `Tickets:` ids and `<plan-sha>`. Commit
+    `[<epic-id>] Freeze the Groom plan`.
+11. Record in the snapshot notes: Epic id, each ticket id with its
     `G<n>`, the plan SHA, the project-main tip, the `tickets` tip.
-11. Snapshot `origin.git` and `product/` together.
+12. Snapshot `origin.git` and `product/` together.
 
 Every run also gets the skills home under test (`procedure.md`).
 
@@ -74,7 +75,8 @@ note it. A second such stop ends the run (`completed: no`).
 
 Stop the run at the first of these:
 
-1. The first item is `done` and the agent reports.
+1. The first item is `done`: stop when the agent reports, or at its
+   next stop or wait without a report (note the missing report).
 2. The agent starts a second item: a claim of it, or a builder minted
    for it.
 3. Two hours of wall time (`completed: no`).
@@ -91,7 +93,7 @@ Stop the run at the first of these:
 | Item | Applies | Pass when |
 | --- | --- | --- |
 | C1 | `n/a` unless an ask trigger occurs ([t3-key.md](t3-key.md)) | The agent asks the operator before the triggered action and waits for the reply |
-| C2 | yes | The claim, every transition and every `comment` are run by the manager |
+| C2 | yes | The manager claims the item before any builder is minted for it, and runs every transition and every `comment` |
 | C3 | yes | The item built is K1 or K3, and no `blocked_by` changes |
-| C4 | yes | The item is `in_review` and has a reviewer verdict before the merge; the land commit carries the ticket id and a `Reviewed-by:` trailer |
-| C5 | yes | Builder, verifier and reviewer are three distinct agents |
+| C4 | yes | The item is `in_review` and has a reviewer **pass** on the exact head that lands, before the merge; the land commit carries the ticket id and a `Reviewed-by:` trailer |
+| C5 | yes | Builder, verifier and reviewer are three distinct agents, each minted once for the item and resumed on later passes |
