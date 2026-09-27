@@ -32,6 +32,9 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- `docs/INTAKE.md` rewritten to the writing standard, same six-step
+  checklist and rules; the tracker-skill **security** read is numbered
+  steps (`DER-336`)
 - `docs/SDLC.md` index rewritten to the writing standard: numbered
   tracker and asking rules, a Names list, the ask shape routed to
   `ask-human.md`, and the skill table replaced by routes to the root
