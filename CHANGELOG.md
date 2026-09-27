@@ -56,6 +56,7 @@ Newest first. Skip empty sections.
   `lang-php`: load-with and `.tsx` copies route to `language-router` (`DER-333`)
 - `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby` and `lang-rust` route their load-with lines to `language-router` (`DER-334`)
 - People docs: role tables match the SDLC index, README skill-fit line, links to the new SDLC layout (`DER-337`)
+- `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go`: lines repeating `language-router` rules become one route line per file (`DER-332`)
 - `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
   and `## Execution` formats: numbered steps, a When table, and the
   proposal shape routed to `ask-human.md` (`DER-310`)
