@@ -15,11 +15,17 @@ of their subjects occur in this file.
 | 10 | "Pairs with `golang-testing` (race/fuzz proof) and `golang-safety` (…)" → one route to [`language-router`](../../../../skills/language-router/SKILL.md#map), which picks one Go skill per turn | Dedupe: which Go skill loads is a `language-router` rule. The scope split stays at old L119 ("Not this skill"); race proof stays at L39 and L50 | L10 |
 | 10 | "Do not install the samber pack." dropped | Dedupe: Never row old L71 keeps it; red flag old L149 also names it | — |
 | 10 | "Separate PRs OK." | kept verbatim | L10 |
+| 135 | Builder row "pairing `golang-testing` / `golang-safety`" → "loading the one Go skill `language-router` picks"; rest of row kept | Dedupe: "pairing" contradicted the L10 route (one Go skill per turn) | L135 |
 | 139 | "Workers do not bypass." → "Workers do not bypass **security**; see [Roles](../../../../docs/SDLC.md#roles)." | Defect: the sentence had no object. Owner `docs/SDLC.md#roles` says "They do not bypass **security**"; this line routes there | L139 |
 
-`SOURCES.md` row `golang-security`: Notes cell appends the LLD note
-`Wording edit DER-288, pins unchanged; security-cleared 2026-09-27.`
-SHA, Upstream, License cells and pins unchanged.
+`SOURCES.md` row `golang-security`, Notes cell only:
+
+| Old | New | Why |
+| --- | --- | --- |
+| "pairs with golang-testing / golang-safety" | "language-router picks it, golang-testing or golang-safety, one per turn." | Matches the L10 route |
+| — | appends `Wording edit DER-288, pins unchanged; security-cleared <YYYY-MM-DD>.` | LLD vendor-derived note |
+
+SHA, Upstream and License cells and pins unchanged.
 
 ## Meaning questions
 

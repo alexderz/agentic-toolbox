@@ -132,7 +132,7 @@ go test -fuzz=Fuzz
 | Role | Owns | Does not own |
 | --- | --- | --- |
 | **security** | This gate at LLD/PR for Go boundaries; skill intake | Writing product tests |
-| **builder** | Implementing behind Always; pairing `golang-testing` / `golang-safety` | Self-excepting “just this query” |
+| **builder** | Implementing behind Always; loading the one Go skill `language-router` picks | Self-excepting “just this query” |
 | **tester** | `-race` / SAST hooks when they appear | Skipping **security** because CI is green |
 | **manager** | After-act | Blessing a ship that skipped the gate |
 
