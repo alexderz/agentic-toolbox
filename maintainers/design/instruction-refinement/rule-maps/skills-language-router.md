@@ -162,3 +162,16 @@ L53 "Writing or reviewing code"), L30, L53 (table lead-ins), L104–105
   agents that skipped the pointer. "Tables" are test tables (`lang-go`
   PR checklist "Tables in `_test.go`"). No precedence added (MQ4);
   overlapping signals are backlog DER-347.
+
+## DER-290: `ui-craft` in the load-with list
+
+Old: `skills/language-router/SKILL.md` at project-main 88455d8, lines
+1–133. New: lines 1–134 (the router may grow, standard 9). Changed rows
+only (old L1–44 → L1–44 and old L46–133 → L47–134, unchanged).
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 45 | Load-with item 1 ends with `tracker-sdlc` | kept; `ui-craft` added. The list names process skills that may load beside the one language skill; a UI build is a code turn that maps to `lang-web-markup` or `lang-js-ts`. `ui-craft` is not a language skill, so the iron law's count is unchanged | L45–46 |
+
+DER-290 meaning questions: none. The list grows by one id; no rule
+changes meaning.

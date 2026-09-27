@@ -9,8 +9,8 @@ changes, and other tickets using this home. SDLC work is keyed by
 Git is the source of truth. A local or vendor mirror may follow. Do not
 treat a mirror as an independent write path for skill bodies.
 
-**License:** MIT ([LICENSE](LICENSE)). `skills/debug-anthropic/` is
-Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
+**License:** MIT ([LICENSE](LICENSE)). `skills/debug-anthropic/` and
+`skills/ui-craft/` are Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
 
 How the work gets done, in plain language (including a calculator
 walkthrough):
@@ -44,6 +44,7 @@ There is no plugin manifest yet. Natural install groups:
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
+| **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Upstream Impeccable instead is an operator choice, asked once per product repo, at the user's own risk |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 | **optional / empty** | `cursor-cloud-agents-when` | Placeholder. No `SKILL.md` yet |
 
@@ -111,6 +112,12 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `pr-lens` | Rewrite of coldteadotai/pr-lens (MIT). Local render + PR attach only; no canvas, no `analyze`. Pin in [SOURCES.md](SOURCES.md). Operator opt-in |
+
+### ui
+
+| Id | Ownership |
+| --- | --- |
+| `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
 
 ### languages
 

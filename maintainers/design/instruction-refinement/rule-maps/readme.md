@@ -18,3 +18,15 @@ docs are not agent text.
   "official copy", "parent agent/session", "a person".
 - K7: every relative link and anchor resolves.
 - K10: added lines hold no hostnames, IPs, ports, paths or tokens.
+
+## DER-290: `ui-craft` listing
+
+Light pass, changed lines only. Old = project-main 88455d8.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 12–13 | License line names `skills/ui-craft/` beside `skills/debug-anthropic/` as Apache-2.0 | `ui-craft` is a rewrite of Impeccable (Apache-2.0); `NOTICE` lists it | 12–13 |
+| — | Bundle row **ui**: `ui-craft`, builder rules beside `ux-design`; upstream is an operator choice per product repo | New skill; the Bundles table lists every bundle | 47 |
+| — | `### ui` ids table with the `ui-craft` row | Same shape as `### diagrams` | 115–120 |
+
+K7 and K10 rerun on the added lines: links resolve; K10 has no hits.

@@ -159,3 +159,15 @@ Resolved from the text:
   `branches-and-lands.md#branches` L9, L11–12 (trunk if none; no
   project-main for a lone incoming item), `build-review.md#review`
   L95–96 (diff vs trunk), `#land-path` L38 (local merge into trunk).
+
+## DER-290: `ui-craft` load row
+
+Old: `AGENTS.md` at project-main 88455d8, lines 1–74. New: lines 1–75
+(cap 100). Changed rows only; every other line is unchanged (old L1–58 →
+L1–58, old L59–74 → L60–75).
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| — | Load row **UI craft**: a builder implementing or reviewing UI code reads `skills/ui-craft/SKILL.md`, beside `ux-design`, not in its place; upstream instead is operator opt-in, asked in the skill | new: this file owns "which skill loads when" (writing standard, Rule owners); the ask rule lives in `skills/ui-craft/SKILL.md` (route). Source: operator decisions 2026-09-27, [intake note](../../ui-craft-intake/intake.md) | L59 |
+
+DER-290 meaning questions: none. One row added; no existing rule changes.
