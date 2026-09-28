@@ -7,6 +7,7 @@
   scan rule (HLD Q3). Items are filed at Groom.
 - Date: `2026-09-27`
 - Acceptance: Accepted by architect 2026-09-27; security CLEAR 2026-09-27; operator accepted 2026-09-28, including HLD Q5 (companion location in a `done` Task) and Q6 (seeded-leak test as a one-off Build check).
+- Amendments: [lld-amend-1.md](lld-amend-1.md) (2026-09-28): the Audience procedure moves to `skills/sdlc-onboarding/audience.md`; a `pr-lens` route. Where this file and the amendment differ, the amendment governs.
 
 Old text is project-main `integrate/instruction-refinement` at
 `2422ef4`. That includes DER-278, landed as `891f69a`. "L" cites a
@@ -20,9 +21,10 @@ chunk.
 
 | File | Owns after the change | Now | Cap | Budget |
 | --- | --- | --- | --- | --- |
-| `skills/security-hardening/SKILL.md`, new `## Disclosure` and its H3s `### Reading a push`, `### Before a repo goes public` | Lists A and B; how to read a push (range, binary files, grep pattern); what "published" means, where private context goes, a leaked credential, encryption on request, the floor-not-control line. The warning before or at a flip to public. | 100 | 250 | ≤175 |
+| `skills/security-hardening/SKILL.md`, new `## Disclosure` and its H3s `### Reading a push`, `### Before a repo goes public` | Lists A and B; how to read a push (range, binary files, grep pattern); what "published" means, where private context goes, a leaked credential, encryption on request, the floor-not-control line. The warning before or at a flip to public. | 100 | 250 | ≤195 (A1) |
 | `docs/sdlc/branches-and-lands.md`, new `## Before a push` | Who reads, when, outcome 1 (with the `shell-safety` citation) and outcome 2. One Durability route and one Never row. | 69 | 120 | ≤120 |
-| `skills/sdlc-onboarding/SKILL.md`, new `## Audience` | The `## Audience` lines; Check (offline and live), Discover (host read and probe), Propose, Write; where the companion location is stored. Also the public clause on the `tickets` bootstrap line and the narrowed host-name Never. | 200 | 250 | ≤248 |
+| `skills/sdlc-onboarding/SKILL.md`, `## Audience` route (A1) | The route to `audience.md`; the When row, Names, `description` clause, Propose step 6 public clause, narrowed host-name Never. | 200 | 250 | ≤220 |
+| `skills/sdlc-onboarding/audience.md` (new, A1) | The `## Audience` lines; Check, Discover, Probe, Propose, Write; where the companion location is stored. | — | none (new file) | ≤95 |
 | `skills/tracker-sdlc/adapters/local.md` | One Gotchas bullet: a public remote publishes every write. The recipe is unchanged (K5). | 200 | none (adapter) | ≤204 |
 | `AGENTS.md` (root) | `## Public repo`: this repo is public; the voice split; the ban routes to Disclosure. One load-table row, **Disclosure**. | 75 | 100 | ≤80 |
 | `maintainers/AGENTS.md` | This repo's `## Audience` record; the Where-notes-go bullet routes to Disclosure. | 50 | none (exempt) | ≤56 |
@@ -30,6 +32,8 @@ chunk.
 | `docs/sdlc/entry-brief-repo.md` | Route only: the Audience Check at the end of chunk Brief and at item Brief step 0.2, and the Repo step 1 visibility route. | 134 | 150 | ≤140 |
 | `docs/sdlc/conventions.md` | Route only: the `.agents/` ban line, edited in place. | 100 | 100 | 100 |
 | `maintainers/writing-standard.md` | Rule-owners rows. K10 becomes a one-line route. | 150 | 150 | 150 |
+| `skills/pr-lens/SKILL.md` (A2) | Route only: its label bullet routes the category list to Disclosure. Vendor-derived: change map. | 250 | 250 | 250 (4-line bullet replaced by 4 lines) |
+| `SOURCES.md` (A1, A2) | Notes on the `sdlc-onboarding` and `pr-lens` rows. | — | — | — |
 | `skills/sdlc-artifacts/templates/agents-stub.md` | One `- Push:` line. It is not a `**bold**` bullet, so K6 is unchanged. | 11 | — | 12 |
 | `maintainers/evals/t1-card.md`, `t1-key.md` | The Audience question and its expected answer. | 85, 95 | — | +4, +4 |
 | `maintainers/design/audience-disclosure/verify/seeded-leak.md` (new) | The seeded-diff scenarios S1–S7 and their pass bar. | — | — | — |
@@ -59,7 +63,7 @@ route adds no condition (writing standard 5).
 What may leave the machine. When the check runs and what to do on a hit:
 [Before a push](../../docs/sdlc/branches-and-lands.md#before-a-push).
 Whether a repo's pushes are public: `## Audience`
-([`sdlc-onboarding`](../sdlc-onboarding/SKILL.md#audience)).
+([`sdlc-onboarding`](../sdlc-onboarding/audience.md)).
 
 **List A — never commit, in any repo:** credentials (tokens, keys,
 passwords, credential-bearing URLs), `.env` files, logs, data dumps.
@@ -162,7 +166,7 @@ it runs the recipe. What to look for:
 list A always, and list B when `## Audience` says `Public remote: yes`.
 
 1. Read `## Audience` in the governing `AGENTS.md`. Absent → run the
-   [`sdlc-onboarding` Audience](../../skills/sdlc-onboarding/SKILL.md#audience)
+   [`sdlc-onboarding` Audience](../../skills/sdlc-onboarding/audience.md)
    area first.
 2. Read what the push adds:
    [Reading a push](../../skills/security-hardening/SKILL.md#reading-a-push).
@@ -211,6 +215,8 @@ mechanics live in B1 `### Reading a push`, so this file keeps only who,
 when, and the two outcomes.
 
 #### B3. `sdlc-onboarding` — `## Audience` (new, after `## Execution`, before `## Never`)
+
+Amended (A1): the `## Audience` block below lands in `skills/sdlc-onboarding/audience.md` as `## Check` … `## Write` plus `## Probe`; `SKILL.md` keeps a five-line route with the `#audience` anchor.
 
 Frontmatter `description`: after "…absent or its check fails;" add
 "and `## Audience` (whether pushes are public) at every chunk or item
@@ -385,7 +391,7 @@ and under [Disclosure](../skills/security-hardening/SKILL.md#disclosure)".
   5: "[Plan](#plan) steps 3–4".
 - `entry-brief-repo.md`, end of chunk Brief step 2 and item Brief step
   0.2, prepended: "Run the `sdlc-onboarding`
-  [Audience Check](../../skills/sdlc-onboarding/SKILL.md#audience)."
+  [Audience Check](../../skills/sdlc-onboarding/audience.md#check)."
   Repo step 1, appended: "Before an existing repo is made public:
   [Before a repo goes public](../../skills/security-hardening/SKILL.md#before-a-repo-goes-public)."
 - `conventions.md` L44: "names. No credentials, internal hostnames, or
@@ -398,7 +404,7 @@ and under [Disclosure](../skills/security-hardening/SKILL.md#disclosure)".
     `Pre-push read and its outcomes |
     docs/sdlc/branches-and-lands.md#before-a-push`; `## Audience
     record and companion location |
-    skills/sdlc-onboarding/SKILL.md#audience`.
+    skills/sdlc-onboarding/audience.md`.
   - K10 (4 lines) becomes one line: `- **K10 public text**: [Before a
     push](../docs/sdlc/branches-and-lands.md#before-a-push) on \`git
     diff main...\`, PR and tracker text.` Net 0 lines.
@@ -433,7 +439,7 @@ tree.
 | Id | Check | Pass |
 | --- | --- | --- |
 | V1 | Caps: `wc -l` on every file in the table | Each within Budget, and within Cap |
-| V2 | K7 links: every relative link and anchor in changed files, including `#disclosure`, `#reading-a-push`, `#before-a-repo-goes-public`, `#before-a-push`, `#audience`, `maintainers/AGENTS.md#audience` | All resolve |
+| V2 | K7 links: every relative link and anchor in changed files, including `#disclosure`, `#reading-a-push`, `#before-a-repo-goes-public`, `#before-a-push`, `#audience`, `sdlc-onboarding/audience.md#check` and `#probe`, `maintainers/AGENTS.md#audience` | All resolve |
 | V3 | Protected rules: `security-hardening` Never and Ask-first row counts; K5 `local.md` recipe; K6 `tracker-skill.md` | Counts equal old; no diff; no diff |
 | V4 | One owner: `grep -rnE 'internal host ?names\|hostnames or IPs\|Before each commit' AGENTS.md docs skills maintainers/AGENTS.md` | Hits only in `security-hardening` Disclosure. Other files route. |
 | V5 | Rule maps under `rule-maps/`, one per edited agent file | Every old rule kept or routed; no open MQ |
