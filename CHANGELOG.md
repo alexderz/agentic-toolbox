@@ -33,6 +33,9 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Trial proof-of-concept code stays in the repo: a frozen `poc/` folder beside the chunk's design records holds the note, the code and a `README.md`, and is never imported into product paths; Plan drafts and Trial files are pushed as written after a diff scan, and **security** reads `poc/` at Spec (`DER-278`)
+- Messages to the operator name a ticket as its ID plus a short slug that says what it is, such as `ABC-123-repo-tone-audience`, not the bare ID; the ask template shows the form (`DER-351`)
+- `ui-craft` offers a third answer, "neither", recorded in the product repo's `AGENTS.md`; the skill stops there, and `AGENTS.md` and `README.md` route to its ask instead of listing the options (`DER-352`)
 - Wording fixes from the integrated check: duplicate worker-intake, open-blocker and reviewer-resume copies now route to their owners; the Monthly row lands in `docs/monthly/` or a filed Task; plainer words replace "box-local", "local box", "Separate PRs OK" and "Ask the human" (`DER-344`)
 - Writing standard records three operator decisions: K1 treats the `tracker-sdlc` 150-line target as a goal and blocks only on a cap; K3 exempts the `tracker-sdlc` `(per orchestrator …)` comment shape as contract text; frontmatter descriptions are metadata. Stale links in the design records are now code spans or fixed paths (`DER-345`)
 - `language-router` owns two more rules: a proto-led change (proto at least 80%) with any hand-edited host code loads both skills; the Go row now lists the test-table, race, `goleak` and HTTP signals. `lang-go` and `lang-protobuf` keep only routes to it (`DER-346`)

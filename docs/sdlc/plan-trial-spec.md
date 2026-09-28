@@ -2,13 +2,15 @@
 
 ## Plan
 
-1. **architect** writes the HLD with `sdlc-artifacts` templates `hld.md`
-   and `track.md` / `chunk.md`.
-2. **architect** locks hierarchy, persistence, and worker rules in the
-   HLD.
-3. **architect** commits the HLD to git.
-4. **manager** posts the HLD path on the Epic with `tracker-sdlc`
-   `comment`.
+1. **architect** writes the HLD with `sdlc-artifacts` templates `hld.md` and `track.md` / `chunk.md`.
+2. **architect** locks hierarchy, persistence, and worker rules in the HLD.
+3. **architect** stages each Plan draft on project-main as it is written.
+4. Before each commit, **architect** scans every staged file, binary files included, for
+   credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, and
+   data dumps, and deletes each one it finds from the file.
+5. **architect** commits.
+6. **architect** pushes project-main.
+7. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
 
 **Item:** do not write a new HLD. Read the existing one. **manager**
 posts one verdict on the ticket with `tracker-sdlc` `comment`:
@@ -20,9 +22,8 @@ posts one verdict on the ticket with `tracker-sdlc` `comment`:
 | Changes shape: for example new parts, a new trust boundary, a new screen, several tickets | `escalate` to a chunk. Never edit the HLD quietly for a shape change. |
 | Has no HLD to align to | Ask the operator ([Asking the operator](../SDLC.md#asking-the-human)): stub or promote. |
 
-In this skills home, when the change is the process itself,
-`docs/ARCHITECTURE.md` and the SDLC ([`docs/SDLC.md`](../SDLC.md) and
-its step files) count as the plan.
+In this skills home, when the change is the process itself, `docs/ARCHITECTURE.md`
+and the SDLC ([`docs/SDLC.md`](../SDLC.md) and its step files) count as the plan.
 
 ### Comparables
 
@@ -36,20 +37,18 @@ If there are screens, **designer** looks too.
 4. If the confirmed brief has an options map, reuse it. Still write this page.
 5. Cite only the real examples. Never invent an "industry standard".
 
-Skip this page only if the operator waives look-around in writing
-([Asking the operator](../SDLC.md#asking-the-human)).
+Skip this page only if the operator waives look-around in writing ([Asking the operator](../SDLC.md#asking-the-human)).
 
 **Never**
 
-- Lock Plan shape without 2–4 real comparables, unless the operator
-  waived look-around in writing. Write the comparables page first.
+- Lock Plan shape without 2–4 real comparables, unless the operator waived look-around
+  in writing. Write the comparables page first.
 
 ### UX
 
-**designer** writes high-level UX and user stories in this same step
-(`ux-design`, templates `ux.md` / `user-story.md`). This is not the
-Spec. Do not make mockups here. If there is a screen, mockups are part
-of Spec.
+**designer** writes high-level UX and user stories in this same step (`ux-design`,
+templates `ux.md` / `user-story.md`). This is not the Spec. Do not make mockups here.
+If there is a screen, mockups are part of Spec.
 
 **Review loop.** UX work and mockups both pass this loop:
 
@@ -64,16 +63,26 @@ of Spec.
 
 **Never**
 
-- Treat designer or architect self-OK as the UX gate. Architect and
-  designer do not self-approve. The gate is step 4, after a different
-  agent's review.
-- Skip mockups for a screen without a written `UX verification not
-  required`. Make the mockups, or get that line from the operator.
+- Treat designer or architect self-OK as the UX gate. Architect and designer do not
+  self-approve. The gate is step 4, after a different agent's review.
+- Skip mockups for a screen without a written `UX verification not required`. Make the
+  mockups, or get that line from the operator.
 
 ## Trial
 
-The Trial is optional proof. Run it only if needed. Keep its evidence in
-git. Use template `poc.md`.
+The Trial is optional proof. Run it only if needed. Its note and code are a
+frozen record of a trial, not product code and not instructions to load. Never
+import or merge `poc/` into product paths; if the trial proves out, Build
+rebuilds it. If a pushed Plan or Trial file holds a secret, **security** removes
+it and has it rotated; that removal is the one edit a frozen `poc/` allows.
+
+1. **architect** makes `poc/` beside the chunk's design records, in the folder that
+   holds its HLD. In this skills home, that is `maintainers/design/<chunk-slug>/poc/`.
+2. **architect** writes `poc/poc.md` with template `poc.md`, and the trial code beside it.
+3. **architect** writes `poc/README.md`, which states the two rules above.
+4. **architect** links to sources and never copies vendored dependencies or build
+   output into `poc/`.
+5. **architect** commits and pushes each Trial file as it is written: [Plan](#plan) steps 3–6.
 
 **Item:** skip the Trial unless the chosen fix is itself uncertain.
 
@@ -86,8 +95,7 @@ Entry gate: run the offline `tracker-sdlc` setup check. If it fails, run
    trust-boundary section is required. If there is no trust boundary,
    write `n/a` and why.
 2. **architect** commits the LLD to git.
-3. **manager** posts the LLD path on the Epic with `tracker-sdlc`
-   `comment`.
+3. **manager** posts the LLD path on the Epic with `tracker-sdlc` `comment`.
 
 **Item:** align to the existing LLD the same way as in [Plan](#plan).
 Make a clarification in place. Escalate a shape change. **security**
@@ -107,12 +115,11 @@ No screen: write `n/a` and why. Do not invent pictures.
 
 ### Security gate
 
-1. Before Groom or Build, **security** reviews the LLD for trust
-   boundaries: authn/z, secrets, egress, data class, who may write what.
+1. Before Groom or Build, **security** reviews the LLD and any `poc/` for
+   trust boundaries: authn/z, secrets, egress, data class, who may write what.
 2. **architect** accepts the LLD, and **security** accepts it on trust
    boundaries.
-3. **operator** accepts the LLD after them
-   ([Asking the operator](../SDLC.md#asking-the-human)).
+3. **operator** accepts the LLD after them ([Asking the operator](../SDLC.md#asking-the-human)).
 4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:
@@ -137,6 +144,5 @@ surfaces in the same land as the change. The Build
 [definition of done](build-review.md#definition-of-done) includes docs
 current with the item.
 
-Skills, templates, and other technical docs use engineering words. Do
-not reuse the layperson analogies outside
-[How software gets built](../how-software-gets-built.md).
+Skills, templates, and other technical docs use engineering words. Do not reuse
+the layperson analogies outside [How software gets built](../how-software-gets-built.md).

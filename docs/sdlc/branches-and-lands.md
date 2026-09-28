@@ -48,7 +48,7 @@ No PRs. **manager** sets the land order; builders follow it.
 | Step | Rule |
 | --- | --- |
 | Review | An explicit SDLC gate ([Review](build-review.md#review)), not a PR |
-| Durability | Push the item branch while it is built and reviewed. Push project-main after each land. |
+| Durability | Push the item branch while it is built and reviewed. Push project-main after each land. Plan and Trial drafts are pushed as written: [Plan](plan-trial-spec.md#plan). |
 | Land | After Review, merge the item branch locally into its land target, one land at a time. Push. Delete the item branch. |
 | Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` and posts a `comment` citing the land SHA, the verifier result, and the reviewer verdict. |
 
