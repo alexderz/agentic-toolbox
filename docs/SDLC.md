@@ -105,6 +105,10 @@ The board layer is the grain. Do not add a fourth issue type.
 
 ## Asking the operator
 
+In any message to the operator, name a ticket as its ID plus a short
+slug that says what it is, taken from its item branch or a few words of
+its title, for example `ABC-123-repo-tone-audience`.
+
 A decision needs the operator, or someone the operator names in
 writing:
 
@@ -113,10 +117,7 @@ writing:
    [`ask-human.md`](../skills/sdlc-artifacts/templates/ask-human.md).
    Fill every part.
 3. Use everyday words. A project word (`HLD`, `LLD`, `project-main`,
-   `DoD`) → say what it means in the same sentence. In any message to
-   the operator, name a ticket as its ID plus a short slug that says
-   what it is, taken from its item branch or a few words of its title,
-   for example `ABC-123-repo-tone-audience`.
+   `DoD`) → say what it means in the same sentence.
 4. Give your recommendation and why. No good default → say so.
 5. Ask one question per message when you can. Several must go together
    → number them and say which set you recommend.

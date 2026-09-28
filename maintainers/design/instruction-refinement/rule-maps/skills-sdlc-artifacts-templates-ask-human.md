@@ -13,7 +13,7 @@ of their subjects occur in this file.
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
-| 1 | Opening line: need a decision before I continue | kept; adds the ticket as `<ticket-id>-<short-slug>`, the ID-plus-slug form of the owner `docs/SDLC.md#asking-the-human` step 3 (operator rule 2026-09-27). Same placeholder style as `task.md` Branch | L1 |
+| 1 | Opening line: need a decision before I continue | kept; adds the ticket as `<ticket-id>-<short-slug, if there is one>`, the ID-plus-slug form of the owner `docs/SDLC.md#asking-the-human` opening line (operator rule 2026-09-27). "if there is one" keeps an agent from inventing a ticket; same qualifier style as L12 `<option, if any>` | L1 |
 | 3–4 | **What I need**: the choice in everyday words | kept, unchanged | L3–4 |
 | 6–7 | **Why it matters** | kept, unchanged | L6–7 |
 | 9–12 | **Choices**, numbered options | kept, unchanged | L9–12 |
@@ -23,6 +23,6 @@ of their subjects occur in this file.
 ## Meaning questions
 
 - **MQ1** — must every ask name a ticket? Resolved from text: the owner
-  step 3 governs how a ticket is named when one is named; the
-  placeholder shows that form. The operator said no format is required
+  opening line governs how a ticket is named when one is named; the
+  placeholder shows that form and says "if there is one". The operator said no format is required
   word for word. No open MQ.
