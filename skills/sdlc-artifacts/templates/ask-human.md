@@ -1,4 +1,4 @@
-Need a decision from you before I continue.
+Need a decision from you on <ticket-id>-<short-slug> before I continue.
 
 **What I need**
 <the choice, in everyday words — not project jargon>

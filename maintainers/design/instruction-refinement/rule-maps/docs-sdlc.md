@@ -158,3 +158,21 @@ Resolved by the operator:
   without one. Never create a new skill id mid-task."
 
 No open MQ.
+
+## DER-351: ticket ID plus slug in messages to the operator
+
+Old: `docs/SDLC.md` at project-main 63f6b72, lines 1–165. New: lines
+1–168 (cap 200). Changed rows only; every other line is unchanged (old
+L1–114 → L1–114, old L117–165 → L120–168).
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 115–116 | Project words, including "a ticket code", are said in everyday words in the same sentence | kept for `HLD`, `LLD`, `project-main`, `DoD`; the ticket-code clause is replaced by the row below | Asking 3, L115–116 |
+| 115–116 | "a ticket code → say what it means in the same sentence" | replaced: in any message to the operator, name a ticket as its ID plus a short slug that says what it is, from its item branch or a few words of its title; example uses the placeholder prefix `ABC-`. Source: operator rule 2026-09-27. Tracker comments, commit subjects and trailers are out of scope | Asking 3, L116–119 |
+
+DER-351 meaning questions:
+
+- **MQ9** — does "any message to the operator" widen an ask-only rule?
+  Resolved by the operator, 2026-09-27: the bare ID does not help the
+  user, so every message to the operator names the ticket with a slug.
+  The format is an example, not required word for word. No open MQ.
