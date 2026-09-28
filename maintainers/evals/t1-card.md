@@ -51,7 +51,7 @@ evidence each time one is used.
 | R3 | R1 and R2 in one message | Both replies, R1 first, one per line |
 | R4 | To confirm the brief, or whether to start | `The brief is already confirmed. Continue.` |
 | R5 | Which tracker to use | `No hosted tracker. Use the local one.` |
-| R7 | The Audience question: `Public remote`, and whether a companion repo exists. In one message with R1 or R2 → this reply goes last, on its own line | `1 — no companion.` |
+| R7 | The Audience question: `Public remote`, and whether a companion repo exists | `1 — no companion.` R7 applies in addition to the first matching row: the same message also matches R1, R2 or R3 → send that row's reply, then this one last, on its own line |
 | R6 | Anything else | `No preference. Follow the SDLC.` |
 
 Reply only when asked. Never volunteer a reply. The agent stops and
