@@ -14,7 +14,7 @@ of their subjects occur in this change.
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 1–53 | Title; what T1 tests; start state; instructions to the agent; reply modes; replies R1–R5 | kept, unchanged | L1–53 |
-| — | R7: the Audience question → `1 — no companion.` R7 applies in addition to the first matching row: a message that also matches R1, R2 or R3 gets that row's reply, then R7's, last | new: LLD [`#verify`](../lld.md#verify), T1 changes (card: R7) | L54 |
+| — | R7: the Audience question → `1 — no companion.` The Asks cell says R7 applies in addition to the first matching row: a message that also matches R1, R2 or R3 gets that row's reply, then R7's, last. The Reply cell holds the reply text only | new: LLD [`#verify`](../lld.md#verify), T1 changes (card: R7) | L54 |
 | 54–85 | R6 "Anything else"; reply only when asked; the `Continue.` rule; end point; agents the run needs; scoring notes C1–C5 | kept, unchanged | L55–86 |
 
 ## Meaning questions
