@@ -204,8 +204,9 @@ write-up — not whether they personally like the colors. When those two
 agree, **you** look. Or you write that they should not wait for your OK.
 
 **Trial?** Optional. They might add 2 and 3 in a scratch pad to prove
-the math box works. If it does, they keep the note and throw the scratch
-away.
+the math box works. They keep the note and the scratch pad, filed with
+the plans and marked “trial only”. If it works, the builders make the
+real math box properly.
 
 **Recipe.** How files are laid out, how tests will prove each operation,
 what “divide by zero” must do. Safety looks: this calculator does not

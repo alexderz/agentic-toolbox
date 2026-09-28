@@ -109,3 +109,80 @@ L54–71; `#mockups` holds one route (L104); `#spec` holds none.
   operator. New L112–116 state that order; the process is unchanged.
 
 No open MQ.
+
+## DER-278
+
+Proof-of-concept code stays in the repo as a frozen record. Changed lines
+only. Old = project-main 88455d8; "Old L" = line there; "L" = line in
+the new file.
+
+| Old L | Rule | Disposition | L |
+| --- | --- | --- | --- |
+| 5–6 | **architect** writes the HLD with templates `hld.md`, `track.md` / `chunk.md` | kept; rewrapped to one line (cap) | L5 |
+| 7–8 | **architect** locks hierarchy, persistence, and worker rules in the HLD | kept; rewrapped to one line (cap) | L6 |
+| 9 | **architect** commits the HLD to git | changed (MQ8): stages each Plan draft on project-main as it is written | L7 |
+| — | Before each commit, scan every staged file, binary files included, for credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, data dumps; delete each hit from the file, since unstaging leaves it on disk | new (MQ8); this file owns it, no earlier owner | L8–10 (step 4) |
+| — | **architect** commits | new (MQ8); split from old L9 | L11 (step 5) |
+| — | **architect** pushes project-main | new (MQ8); `branches-and-lands.md#land-path` Durability routes here | L12 (step 6) |
+| 10–11 | **manager** posts the HLD path on the Epic | kept; renumbered step 7; rewrapped to one line | L13 |
+| 23–25 | This skills home: `docs/ARCHITECTURE.md` and the SDLC count as the plan | kept; rewrapped to two lines (cap) | L25–26 |
+| 39–40 | Skip the comparables page only if the operator waives look-around in writing | kept; rewrapped to one line (cap) | L40 |
+| 44–45 | Never: lock Plan shape without 2–4 real comparables | kept; rewrapped (cap) | L44–45 |
+| 49–52 | **designer** writes high-level UX and stories; not Spec; no mockups here | kept; rewrapped to three lines (cap) | L49–51 |
+| 67–71 | Never: self-OK as the UX gate; skip mockups without `UX verification not required` | kept; rewrapped to four lines (cap) | L66–69 |
+| 75–76 | Optional proof; only if needed; evidence in git; template `poc.md` | kept; "evidence in git" now covers the note and code in `poc/` (MQ9) | L73, L79–85 |
+| — | Note and code are a frozen record, not product code, not instructions to load; never import or merge `poc/` into product paths; Build rebuilds if the trial proves out | new (MQ9); this file owns it; allowed action beside the never | L73–76 |
+| — | A secret found in a pushed Plan or Trial file: **security** removes it and has it rotated; the one edit a frozen `poc/` allows | new (MQ12) | L76–77 |
+| — | **architect** makes `poc/` beside the chunk's design records, in the folder that holds its HLD; in this skills home `maintainers/design/<chunk-slug>/poc/` | new (MQ10); actor (MQ13) | L79–80 (step 1) |
+| — | **architect** writes `poc/poc.md` from template `poc.md`, trial code beside it | new; the template use is old L76; actor (MQ13) | L81 (step 2) |
+| — | **architect** writes `poc/README.md` stating the record rule and the secret rule | new (MQ9, MQ12); actor (MQ13) | L82 (step 3) |
+| — | Link to sources; never copy vendored dependencies or build output into `poc/` | new (MQ9); allowed action beside the never; actor (MQ13) | L83–84 (step 4) |
+| — | Commit and push each Trial file as written, per Plan steps 3–6 | new (MQ8); backward link, no second owner; actor (MQ13) | L85 (step 5) |
+| 78 | **Item:** skip unless the chosen fix is itself uncertain | kept, unchanged | L87 |
+| 89–90 | **manager** posts the LLD path on the Epic | kept; rewrapped to one line (cap) | L98 |
+| 110–111 | **security** reviews the LLD for trust boundaries | changed (MQ11): "the LLD and any `poc/`" | L118–119 |
+| 114–115 | **operator** accepts the LLD after them | kept; rewrapped to one line (cap) | L122 |
+| 140–142 | Engineering words; no layperson analogies outside How software gets built | kept; rewrapped to two lines (cap) | L147–148 |
+
+Length: 142 → 148 (cap 150). This file is a C1 move, so K2 does not apply.
+Every rewrap keeps the words; only line breaks move.
+
+### Meaning questions (DER-278)
+
+- **MQ8** — Old L9 committed the HLD with no push rule;
+  `branches-and-lands.md#land-path` pushed project-main only after each
+  land. Resolved by the operator, 2026-09-27: Plan drafts and Trial code
+  are committed and pushed as they are written, and the pushing agent
+  first scans for credentials, hosts or IPs, and data dumps. The Review
+  round of 2026-09-27 (security BLOCK) set the order: scan the staged
+  files, binary files included, before each commit, so no commit that is
+  later pushed holds a hit; the scan list adds personal data, local paths,
+  `.env` files and logs; a hit is deleted from the file, not unstaged.
+  That order and list: resolved by operator 2026-09-27. The architect is the pushing agent in Plan,
+  since Plan steps name only the architect as a writer.
+- **MQ9** — Old L75–76 kept evidence in git and was silent on code; the
+  people doc said to throw the scratch away. Resolved by the operator,
+  2026-09-27: keep the code in `poc/` with its own `README.md` (frozen
+  record, not product code, never imported or merged into product
+  paths, Build rebuilds, a record and not instructions); no vendored
+  dependencies or build output, link to sources.
+- **MQ10** — Where `poc/` lives. Resolved by the operator, 2026-09-27:
+  beside the chunk's design records, wherever those live; DER-271 decides
+  that place; this repo keeps `maintainers/design/<chunk>/poc/`; no new
+  `.agents/design/` default. "In the folder that holds its HLD" is from
+  the text: at Trial time the HLD is the only design record that must
+  exist (LLD and `groom.md` come later), and the old `sdlc-artifacts`
+  row put the PoC note "next to the HLD".
+- **MQ11** — Old L110–111 had **security** read only the LLD. Resolved
+  by the operator, 2026-09-27: **security** reads `poc/` at Spec.
+- **MQ12** — A frozen `poc/` and a secret found after a push conflict.
+  Resolved by operator 2026-09-27, on the security finding of the Review
+  round: **security** removes the secret and has it rotated; that removal
+  is the one edit a frozen `poc/` allows. Rotation, because git history keeps the pushed
+  commit.
+- **MQ13** — Old L75–76 named no actor for the Trial. Resolved from the
+  text: Trial sits between Plan and Spec, whose design writer is the
+  **architect** in every step, and standard 1 needs a role on each
+  step. No other role gains or loses work.
+
+No open MQ.

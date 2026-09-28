@@ -84,3 +84,16 @@ others (groom-review fixes, gate-reason examples, review-item verdicts,
   incoming-item "Never" bullet was merged into the table's lead line, and
   "merge one item, then the next" was dropped because "Only one item
   merges at a time" says it.
+
+## DER-278
+
+Changed lines only. Old = project-main 88455d8; "Old L" = line there;
+"L" = line in the new file.
+
+| Old L | Rule | Disposition | L |
+| --- | --- | --- | --- |
+| 51 | Durability: push the item branch while built and reviewed; push project-main after each land | kept; adds a route, in the same row: Plan and Trial drafts are pushed as written, owner `plan-trial-spec.md#plan` steps 3–6 | L51 |
+
+Length: 69 → 69 (cap 120). The route adds no condition here; the scan
+and the push order live in the owner. No MQ: the push-as-written rule is
+MQ8 in [docs-sdlc-plan-trial-spec.md](docs-sdlc-plan-trial-spec.md).

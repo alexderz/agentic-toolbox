@@ -49,3 +49,26 @@ file. No rule changes meaning.
 | --- | --- | --- | --- |
 | 38 | Monthly lands in "Ticket or `docs/monthly/`" → "`docs/monthly/`, or a Task once filed" | F7: matches owner `trunk-changelog-monthly.md#monthly` (a recurring note until the manager or operator files a Task) | L38 |
 | 40 | Row name "Ask the human" → "Ask the operator"; template path kept | F10: index `#roles` names the person in the loop **operator** | L40 |
+
+## DER-278
+
+Proof-of-concept code stays in the repo. Changed lines only. Old =
+project-main 88455d8; "Old L" = line there; "L" = line in the new file.
+First-party skill (`SOURCES.md`), so a full map, not a light pass. The
+template's rows are in
+[skills-sdlc-artifacts-templates-poc.md](skills-sdlc-artifacts-templates-poc.md).
+
+| Old L | Rule | Disposition | L |
+| --- | --- | --- | --- |
+| 30 | PoC lands in `docs/` next to the HLD | changed (MQ2): `poc/poc.md` beside the chunk's design records; route to owner `docs/sdlc/plan-trial-spec.md#trial` | L30 |
+
+Length: 72 → 72 (K2).
+
+### Meaning questions (DER-278)
+
+- **MQ2** — Where the PoC note lands. Resolved by the operator,
+  2026-09-27: beside the chunk's design records, wherever those live;
+  DER-271 decides that place. The owner is `plan-trial-spec.md#trial`;
+  the Map row routes to it and names no fixed folder.
+
+No open MQ.
