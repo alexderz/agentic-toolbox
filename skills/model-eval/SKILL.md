@@ -110,6 +110,86 @@ site-packages — `pip install -e` writes a `.pth` that every later run can see.
 An audit of 3,733 executed tool calls found no credential access and no sudo,
 but nothing had prevented either.
 
+## A broken check produces a plausible negative
+
+This is the failure mode that costs the most, because nothing errors. A
+broken grader does not crash -- it reports that the model failed, which is
+exactly what you half-expected, so you believe it and move on.
+
+Every one of these was found only by checking a result that looked normal:
+
+- A login shell (`bash -lc`) re-reads the profile and **replaces** the
+  container image's `PATH`. The toolchain disappears and every project
+  "does not build". Use `bash -c`.
+- `cmd | tail` exits with `tail`'s status, so a failing build reports
+  success. Set `pipefail` and check the real code.
+- A sourced library that does `set -euo pipefail` overrides the caller's
+  `set`. Combined with `pipefail`, a `grep` that finds nothing exits 1 and
+  kills the run -- and "found nothing" is usually a *result*, not an error.
+  It dies silently on exactly the cases worth recording.
+- A sourced library that already defines `RESULTS` makes
+  `RESULTS="${RESULTS:-default}"` a no-op, so output lands in another
+  cohort's directory. Capture the caller's value *before* sourcing.
+- Binary discovery that matches `target/release/deps/<name>-<hash>` picks a
+  test artifact. Launched as the server, it answers nothing.
+
+So: **verify the runner on one case before spending a matrix on it**, and
+classify harness faults with their own exit codes so they can never be
+recorded as model failures. Distinguish, in the recorded status, "the tool
+under test could not be reached", "it was reached and never used", and "it
+was used and the model still produced nothing". Collapsing those into one
+`ok` with a zero score hides three different findings.
+
+## Grade with a real client
+
+A hand-rolled grader drifts toward leniency, because you write it from the
+same assumptions as the thing you are grading.
+
+One cohort's grader accepted any response *containing* `serverInfo` as a
+successful handshake. A real client refused the same server: the response
+carried `"id": null`, so it could not be correlated to the request. The
+grader had certified a server that nothing could talk to.
+
+Check the protocol's actual requirements -- id correlation, required
+fields, error shape -- or drive the grading through a real client and let
+it refuse. Where both exist, run both and treat disagreement as a bug in
+the grader first.
+
+**Watch the version window.** Give models the newest specification and
+their output may be unusable by the tooling you own: the server answers
+with a version your client does not accept, both sides behave correctly,
+and nothing connects. Decide deliberately whether to document the version
+your client speaks, or bridge the gap with a shim that rewrites *only* the
+negotiated version and logs what was really advertised. A shim must never
+supply a field the server omitted -- that converts a genuine protocol
+violation into a pass.
+
+**Do not let the agent framework's permission layer double as the
+sandbox.** Headless runners often auto-deny every permission prompt. Then a
+model that reached for `/tmp` stalls while one that happened to pick the
+work directory succeeds, and you have measured which scratch path each
+model guessed. The container is the boundary; turn the prompt layer off
+inside it.
+
+## Checking claims made in prose
+
+When the artifact is a report rather than a program, the grader is a set of
+patterns, and patterns are where the bias hides.
+
+- **Match the domain's distinctions.** One grader scored "unavailable"
+  against `unavailable + unknown`. They are different states. The model
+  reported the correct narrower figure and was marked wrong *for being more
+  precise than the grader*.
+- **Order patterns by authority, not position.** A table cell is a
+  deliberate statement of a count; a number that merely appears near the
+  word somewhere in 13 KB of prose is not. Taking the first textual match
+  let a stray "16 button" override `| button | 21 |`.
+- **Run a negative control.** If you adjusted the grader until the output
+  scored well, corrupt a known-good artifact and confirm the grader still
+  catches it. Otherwise you have tuned it to pass.
+- **Record every check, not just the totals**, so a WRONG verdict can be
+  audited instead of trusted.
+
 ## Cohorts, not baselines
 
 An eval measures a **cohort**: these models, this harness, this day. That is the

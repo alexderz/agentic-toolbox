@@ -37,6 +37,15 @@ def find_manifest():
                        errors="replace").read()
             if "[package]" in txt:
                 return root
+            # A manifest that exists but is not a Cargo manifest is a real
+            # failure, and a different one from "wrote nothing". One model
+            # opened with [project] -- pyproject.toml's convention -- which
+            # cargo rejects outright. Say which it was.
+            globals()["_BAD_MANIFEST"] = (
+                os.path.relpath(os.path.join(root, "Cargo.toml"), APP)
+                + ": no [package] section (first section: "
+                + (next((l.strip() for l in txt.splitlines()
+                         if l.strip().startswith("[")), "none")) + ")")
     return None
 
 
@@ -114,8 +123,21 @@ def speak_mcp(binary, cwd, env):
     for m in msgs:
         r = m.get("result") or {}
         if "serverInfo" in r or "protocolVersion" in r:
-            out["initialize"] = True
-            out["server_name"] = (r.get("serverInfo") or {}).get("name")
+            # JSON-RPC requires the response to echo the request id. Accepting
+            # any message that merely CONTAINS serverInfo passes a server that
+            # replies with "id": null and then answers "Method not found" to
+            # the real initialize. A client cannot correlate that and refuses
+            # the connection. A grader must be at least as strict as a real
+            # client, or it certifies servers that nothing can talk to.
+            if m.get("id") == 1:
+                out["initialize"] = True
+                out["server_name"] = (r.get("serverInfo") or {}).get("name")
+            else:
+                out["initialize"] = False
+                out["init_error"] = (
+                    f"initialize result carried id={m.get('id')!r}, expected 1; "
+                    "response cannot be correlated to the request")
+            out["advertised_version"] = r.get("protocolVersion")
         if "tools" in r:
             tools = r["tools"] or []
             out["tools_list"] = len(tools)
@@ -153,7 +175,7 @@ def main():
            "build_error": None, "cargo_test": None}
     root = find_manifest()
     if not root:
-        res["note"] = "no Cargo.toml found"
+        res["note"] = globals().get("_BAD_MANIFEST") or "no Cargo.toml found"
         print(json.dumps(res)); return
     res["manifest"] = os.path.relpath(root, APP)
 
