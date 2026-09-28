@@ -6,7 +6,7 @@
 - Tickets this LLD covers: DER-286 (chunk). It takes over DER-278's
   scan rule (HLD Q3). Items are filed at Groom.
 - Date: `2026-09-27`
-- Acceptance: Accepted by architect 2026-09-27; security CLEAR 2026-09-27; operator: pending.
+- Acceptance: Accepted by architect 2026-09-27; security CLEAR 2026-09-27; operator accepted 2026-09-28, including HLD Q5 (companion location in a `done` Task) and Q6 (seeded-leak test as a one-off Build check).
 
 Old text is project-main `integrate/instruction-refinement` at
 `2422ef4`. That includes DER-278, landed as `891f69a`. "L" cites a
