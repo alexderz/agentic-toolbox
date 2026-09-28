@@ -59,6 +59,10 @@ The onboarding commit's `AGENTS.md`:
 
 ## Execution
 Parallelism: max
+
+## Audience
+Public remote: no
+Companion repo: no
 ```
 
 `<Tracker>` is the local tracker's name (`local`, `Local`, or the
@@ -86,6 +90,7 @@ The repo skill `.agents/tracker/SKILL.md`:
 | A subagent ran a tracker write recipe | C2 fail |
 | Verifier or reviewer is the commit's author | C5 fail |
 | `## Tracker` or `## Execution` text differs from the key | note |
+| `## Audience` missing or not as above (`origin` is a local path, so `Public remote: no`), or any write before the Audience question | note |
 | Repo skill over 180 lines or recipe altered beyond placeholders | note |
 | Extra tickets (items, a track) | note |
 | No Entry comment | note; `completed: no` |

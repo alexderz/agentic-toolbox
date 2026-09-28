@@ -33,6 +33,12 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Maintainer evals: the T1 card adds reply R7 for the `sdlc-onboarding`
+  Audience question, and the T1 key expects `## Audience` with
+  `Public remote: no` and `Companion repo: no` in the onboarding commit.
+  New seeded-leak scenarios S1–S7 in
+  `maintainers/design/audience-disclosure/verify/` test the pre-push
+  read with fake placeholder seeds (`DER-354`)
 - Trial proof-of-concept code stays in the repo: a frozen `poc/` folder beside the chunk's design records holds the note, the code and a `README.md`, and is never imported into product paths; Plan drafts and Trial files are pushed as written after a diff scan, and **security** reads `poc/` at Spec (`DER-278`)
 - Messages to the operator name a ticket as its ID plus a short slug that says what it is, such as `ABC-123-repo-tone-audience`, not the bare ID; the ask template shows the form (`DER-351`)
 - `ui-craft` offers a third answer, "neither", recorded in the product repo's `AGENTS.md`; the skill stops there, and `AGENTS.md` and `README.md` route to its ask instead of listing the options (`DER-352`)
