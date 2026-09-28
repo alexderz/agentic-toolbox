@@ -185,3 +185,14 @@ unchanged.
 DER-351 meaning questions: none. The ask triggers are unchanged; the row
 adds status and report messages, which reach only the owner's opening
 line (the numbered ask steps still apply to a decision).
+## DER-352: `ui-craft` row routes to the ask
+
+Old: `AGENTS.md` at project-main 63f6b72, lines 1–75. New: lines 1–75
+(cap 100). Changed row only; every other line is unchanged.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 59 | Load row **UI craft**: read `skills/ui-craft/SKILL.md` beside `ux-design`, not in its place; "Upstream instead is operator opt-in, once per product repo: the skill's ask" | Load rule **kept**. The option clause → **route**: "Which version, or none:" linked to the skill's `#which-version-ask-once-per-product-repo`, the owner of the three answers. The row no longer lists options, so a new answer cannot drift from it | L59 |
+
+DER-352 meaning questions: none. The row adds no condition (standard 5);
+upstream opt-in and its risk text stay in the owner's ask and Never.

@@ -1,6 +1,6 @@
 ---
 name: ui-craft
-description: use this when implementing or reviewing a user interface in code — screens, components, styles, UI states, motion — as the builder's visual-quality rules. load it beside the approved `ux-design` mockups, never in place of ux-design. do not use for user stories or mockups (that is ux-design), or for backend-only work.
+description: use this when implementing or reviewing a user interface in code — screens, components, styles, UI states, motion — as the builder's visual-quality rules. load it beside the approved `ux-design` mockups, never in place of ux-design. do not use for user stories or mockups (that is ux-design), or for backend-only work. do not load it when the product repo's root `AGENTS.md` records option 3, neither, under `## UI craft`.
 ---
 
 # UI craft
@@ -22,24 +22,31 @@ brief and name the conflict in your handoff.
 
 ## Which version: ask once per product repo
 
-The operator picks one option, once for each product repo. The **UI craft
-note** is a `## UI craft` section in the product repo's root `AGENTS.md`
-that records the answer: the option and the date. The options:
+**Check first.** Read the product repo's root `AGENTS.md`. Its `## UI craft`
+section, the **UI craft note**, records the operator's answer and the date.
+If the note records option 2, upstream, or option 3, neither, stop reading
+unless the operator reopens the choice in writing: this file does not apply
+in that repo. The SDLC gates still apply, whatever upstream's text or binary
+says. With upstream in use, never run, install or open its clone in an agent
+harness; read it as text.
+
+The operator picks one answer per product repo; the UI craft note records it:
 
 1. **Option 1, this skill (default, recommended).** The rules in this file.
    Text only: nothing is installed, nothing runs, nothing leaves the machine.
 2. **Option 2, upstream at the user's own risk.** The official upstream
    skill, which this repository does not vouch for.
+3. **Option 3, neither.** No UI craft in this repo: not this file, not
+   upstream. `ux-design` and the SDLC gates still apply.
 
 ### The ask
 
-1. Read the product repo's root `AGENTS.md`. If it has a UI craft note,
-   follow the note and do not ask again.
+1. If the product repo has a UI craft note, follow the note. Do not ask
+   again unless the operator reopens the choice in writing.
 2. If it has no UI craft note, put the ask in your handoff; keep building
-   with option 1. The ask follows
-   [Asking the operator](../../docs/SDLC.md#asking-the-human) and the
-   `ask-human.md` shape: one choice per option in the list above, and a
-   recommendation of option 1.
+   with option 1. The ask follows [Asking the operator](../../docs/SDLC.md#asking-the-human)
+   and the `ask-human.md` shape: one choice per option in the list above,
+   and a recommendation of option 1.
 3. Only after the operator answers does the **manager** write the UI craft
    note. Before the answer, no agent writes it.
 
@@ -88,11 +95,6 @@ Only after the operator's explicit yes to option 2:
    start; read its files as plain text. Installing it is the user's step.
 3. The **manager** writes the UI craft note: upstream is in use, the full
    commit, the directory, and that the operator accepted the risk.
-
-Never do any step of option 2 on your own initiative; without the
-operator's explicit yes, use option 1. If the note records option 2, this
-file's rules do not apply in that repo. The SDLC gates still apply,
-whatever upstream's text or its binary says.
 
 ## Before you build
 
@@ -231,7 +233,6 @@ This pass is the builder's visual self-check. Done evidence is
 
 ## Ask first
 
-- Option 2, through the ask in this file, once per product repo.
 - A new typeface, color system or motion library.
 - A new look for an existing screen that the brief did not ask for.
 
