@@ -6,6 +6,7 @@
 - Tickets this LLD covers: DER-286 (chunk). It takes over DER-278's
   scan rule (HLD Q3). Items are filed at Groom.
 - Date: `2026-09-27`
+- Acceptance: Accepted by architect 2026-09-27; security CLEAR 2026-09-27; operator: pending.
 
 Old text is project-main `integrate/instruction-refinement` at
 `2422ef4`. That includes DER-278, landed as `891f69a`. "L" cites a
@@ -437,7 +438,7 @@ tree.
 | V4 | One owner: `grep -rnE 'internal host ?names\|hostnames or IPs\|Before each commit' AGENTS.md docs skills maintainers/AGENTS.md` | Hits only in `security-hardening` Disclosure. Other files route. |
 | V5 | Rule maps under `rule-maps/`, one per edited agent file | Every old rule kept or routed; no open MQ |
 | V6 | Probe on three URLs: this repo's public `https` origin; a private repo the operator names; a local bare path. Run the private case with `gh` logged in and a credential helper set. | Exit 0; non-zero (no credential sent); rule 1 `no` without a probe |
-| V7 | Autosquash: a scratch repo with 3 unpushed commits and a hit in the second; run outcome 1 step 2 | `git log -p` has no hit; no editor opens (git ≥ 2.44) |
+| V7 | Autosquash: a scratch repo with 3 unpushed commits and a hit in the second; run outcome 1 step 3 | `git log -p` has no hit; no editor opens (git ≥ 2.44) |
 | V8 | Seeded leak, S1–S7 in `verify/seeded-leak.md`: 3 repeats on each model in `maintainers/evals/baseline.md`, a fresh agent per repeat, a local bare `origin.git` | See below |
 | V9 | T1 with the new card and key, then T1–T3 per `## Evals` before the PR into `main` | No regression, apart from the T1 key change, which the PR names |
 | V10 | K10 via Before a push on `git diff main...`, the PR text and tracker text | Every hit allowed or removed |
