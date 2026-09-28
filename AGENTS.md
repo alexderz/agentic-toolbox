@@ -41,7 +41,7 @@ path, or **pack** its text into a subagent prompt per
 | --- | --- | --- |
 | **SDLC** | Any project, ticket, chunk, or multi-agent run | **Read [docs/SDLC.md](docs/SDLC.md)** before implementing. |
 | **Roles** | You need a role's name or job | **Read [Roles](docs/SDLC.md#roles).** |
-| **Ask the operator** | Any gate, waiver, blocker, or unclear choice | **Read [Asking the operator](docs/SDLC.md#asking-the-human)** and follow it. |
+| **Message the operator** | Any message to the operator: an ask (gate, waiver, blocker, or unclear choice), a status, or a report | **Read [Asking the operator](docs/SDLC.md#asking-the-human)** and follow it. |
 | **Requirements** | Chunk Brief, Gather: a fuzzy idea or an interview | **Read `skills/discover-the-idea/SKILL.md`.** |
 | **Refine** | Chunk Brief, Refine: refining a brief, as the refiner agent | **Read `skills/yagni/SKILL.md`.** |
 | **Incoming item** | Bug report, red build, unit failure, mechanical ticket | **Read [Entry](docs/sdlc/entry-brief-repo.md#entry), then [Item brief](docs/sdlc/entry-brief-repo.md#item-brief).** Do not load `discover-the-idea`. |

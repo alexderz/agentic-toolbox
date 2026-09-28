@@ -171,3 +171,17 @@ L1–58, old L59–74 → L60–75).
 | — | Load row **UI craft**: a builder implementing or reviewing UI code reads `skills/ui-craft/SKILL.md`, beside `ux-design`, not in its place; upstream instead is operator opt-in, asked in the skill | new: this file owns "which skill loads when" (writing standard, Rule owners); the ask rule lives in `skills/ui-craft/SKILL.md` (route). Source: operator decisions 2026-09-27, [intake note](../../ui-craft-intake/intake.md) | L59 |
 
 DER-290 meaning questions: none. One row added; no existing rule changes.
+
+## DER-351: every message to the operator routes to Asking
+
+Old: `AGENTS.md` at project-main 63f6b72, lines 1–75. New: lines 1–75
+(cap 100; K2: no growth). Changed rows only; every other line is
+unchanged.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 44 | Row **Ask the operator**: any gate, waiver, blocker, or unclear choice → read Asking the operator | kept, edited in place; renamed **Message the operator**; When widened to any message to the operator: an ask (the same four triggers), a status, or a report; route unchanged (owner `docs/SDLC.md#asking-the-human`, whose opening line holds the ticket ID-plus-slug rule). Source: operator rule 2026-09-27; DER-351 review | L44 |
+
+DER-351 meaning questions: none. The ask triggers are unchanged; the row
+adds status and report messages, which reach only the owner's opening
+line (the numbered ask steps still apply to a decision).
