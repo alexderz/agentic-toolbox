@@ -55,6 +55,10 @@ is [security-intake.md](security-intake.md), copied as written.
   after the operator answers does the manager write the product repo's
   UI craft note (Review round 1). The options are a numbered list, so a
   third answer ("neither") can be added as one more item.
+- **Neither (DER-352):** option 3 added as that item. The note records it
+  like the other answers; the skill's first lines stop reading when the
+  note records option 2 or 3. `AGENTS.md` and `README.md` route to the
+  ask and no longer list the options. `language-router` is unchanged.
 - **`language-router`:** `ui-craft` joins load-with item 1. That list
   names the process skills that may load beside the one language skill;
   a UI build is a code turn with `lang-web-markup` or `lang-js-ts`, so

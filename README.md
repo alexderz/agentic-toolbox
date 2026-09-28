@@ -44,7 +44,7 @@ There is no plugin manifest yet. Natural install groups:
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
-| **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Upstream Impeccable instead is an operator choice, asked once per product repo, at the user's own risk |
+| **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 | **optional / empty** | `cursor-cloud-agents-when` | Placeholder. No `SKILL.md` yet |
 

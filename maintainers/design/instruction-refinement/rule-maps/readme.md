@@ -30,3 +30,13 @@ Light pass, changed lines only. Old = project-main 88455d8.
 | — | `### ui` ids table with the `ui-craft` row | Same shape as `### diagrams` | 116–121 |
 
 K7 and K10 rerun on the added lines: links resolve; K10 has no hits.
+
+## DER-352: `ui` bundle row routes to the ask
+
+Light pass, changed lines only. Old = project-main 63f6b72.
+
+| Old L | Change | Why | L |
+| --- | --- | --- | --- |
+| 47 | "Upstream Impeccable instead is an operator choice, asked once per product repo, at the user's own risk" → "Which version, or none, is asked once per product repo:" linked to the skill's ask | The skill owns the answers, now three with "neither"; the row routes instead of repeating a partial list | 47 |
+
+K7: the link and `#which-version-ask-once-per-product-repo` resolve. K10: no hits.

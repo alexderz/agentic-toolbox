@@ -171,3 +171,15 @@ L1–58, old L59–74 → L60–75).
 | — | Load row **UI craft**: a builder implementing or reviewing UI code reads `skills/ui-craft/SKILL.md`, beside `ux-design`, not in its place; upstream instead is operator opt-in, asked in the skill | new: this file owns "which skill loads when" (writing standard, Rule owners); the ask rule lives in `skills/ui-craft/SKILL.md` (route). Source: operator decisions 2026-09-27, [intake note](../../ui-craft-intake/intake.md) | L59 |
 
 DER-290 meaning questions: none. One row added; no existing rule changes.
+
+## DER-352: `ui-craft` row routes to the ask
+
+Old: `AGENTS.md` at project-main 63f6b72, lines 1–75. New: lines 1–75
+(cap 100). Changed row only; every other line is unchanged.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 59 | Load row **UI craft**: read `skills/ui-craft/SKILL.md` beside `ux-design`, not in its place; "Upstream instead is operator opt-in, once per product repo: the skill's ask" | Load rule **kept**. The option clause → **route**: "Which version, or none:" linked to the skill's `#which-version-ask-once-per-product-repo`, the owner of the three answers. The row no longer lists options, so a new answer cannot drift from it | L59 |
+
+DER-352 meaning questions: none. The row adds no condition (standard 5);
+upstream opt-in and its risk text stay in the owner's ask and Never.
