@@ -73,25 +73,34 @@ one row in its When table. Its lines:
 ## Audience
 
 Public remote: yes
-Companion repo: yes — location in the tracker
+Companion repo: yes — location in <ticket-id>
 ```
 
+The `Companion repo` line has three forms: `no`; `yes — location in
+<ticket-id>` when the tracker is private; `yes — location in local git
+config sdlc.companion` when the tracker is public (Q2). The LLD, B3,
+has the exact text.
+
 - `Public remote` is `yes` when any remote the SDLC pushes to is
-  publicly readable. Discover reads the host's visibility for each
-  push URL, for example `gh repo view --json visibility`. If no host
-  read works, it asks the operator. The LLD picks the host reads and
-  whether an anonymous `git ls-remote` probe is a fallback.
-- `Companion repo` is `yes` or `no`. The line never holds a location
+  publicly readable. Discover checks each push URL in order: a local
+  path means no; then an anonymous `git ls-remote` probe with no
+  credentials; then `gh repo view`. If none of them answers, it asks
+  the operator.
+- The `Companion repo` line never holds a URL or a name. It names only
+  where the location is kept: a tracker ticket id, or local git config
   (D4).
 - When: at the first tracker touch, with Tracker and Execution, in the
-  onboarding commit. At every chunk Brief the area re-checks: it reads
-  the host again and compares the answer with the file (Q1: item Brief
-  too).
-- A re-check that flips `no` → `yes` sends the flip warning before any
-  push. The warning says that all history, branches, tags and
-  `tickets` are now public, and that cleanup is an audit ticket
-  (DER-350 here). There is no automatic rewrite. It may point at a
-  history scan (comparables §2).
+  onboarding commit. The area re-checks at the end of every chunk
+  Brief and at the start of every item Brief: it reads the host again
+  and compares the answer with the file (Q1).
+- The warning (D2, Q4) fires before any agent changes a repo's
+  visibility to public, and when a re-check flips `no` → `yes`. It
+  stops pushes until the operator answers. It says that all history,
+  branches, tags and `tickets` are public or will be, and that cleanup
+  is an audit ticket (DER-350 here). There is no automatic rewrite.
+  The local tracker needs a fresh yes. `security-hardening` owns the
+  warning; onboarding owns the detection. That keeps `sdlc-onboarding`
+  under its 250-line cap.
 - In this repo the governing file is `maintainers/AGENTS.md`, so
   `## Audience` goes there.
 
@@ -116,8 +125,9 @@ only deliverables:
 **3. Private context (D4).** Private context goes to the tracker when
 the tracker is private (hosted). The optional private companion repo
 holds notes that do not fit in tickets. It is not a mirror or fork and
-never syncs code. Its location lives in the tracker. When the tracker
-is itself public (local, D8), see Q2.
+never syncs code. Its location lives in a `done` tracker Task (Q5).
+When the tracker is itself public (`local` on a public remote), the
+location lives in each clone's local git config (Q2).
 
 **4. Pre-push read (D6, D7).** Before every push to a public remote,
 the agent that pushes reads the outgoing range: file diffs, commit and
@@ -160,20 +170,20 @@ K5).
 | File | Owns after the change | Routes to |
 | --- | --- | --- |
 | Root `AGENTS.md` `## Public repo` | This repo is public. The voice split: deliverables are professional, agent context may be informal. One line: everything pushed follows the ban. | `security-hardening` for the ban |
-| `skills/security-hardening/SKILL.md` | The ban: its scope (everything sent to a public host), its categories, where private context goes, that the companion location is never pushed, encryption on request with its limits, rotation of a leaked credential. The read is a floor and the hook is **tester**'s. | `branches-and-lands` for when the read runs |
-| `skills/sdlc-onboarding/SKILL.md` `## Audience` | The `## Audience` lines; Check, Discover, Propose, Write; the When row and the chunk Brief re-check; the flip warning; the public clause on the `tickets` bootstrap line. The Never row narrows host names to public ones. | `security-hardening` for the categories |
+| `skills/security-hardening/SKILL.md` `## Disclosure` | List A (never commit) and list B (never send to a public host); what counts as published; where private context goes; the companion location never pushed; encryption on request with its limits; rotating a leaked credential; the warning in `### Before a repo goes public`. The read is a floor and the hook is **tester**'s. | `branches-and-lands` for when the read runs |
+| `skills/sdlc-onboarding/SKILL.md` `## Audience` | The `## Audience` lines; Check, Discover (probe), Propose, Write; the When row and the re-check at every Brief; where the companion location is stored; the public clause on the `tickets` bootstrap line. The Never row narrows host names to public ones. | `security-hardening` for the categories |
 | `docs/sdlc/branches-and-lands.md`, new `## Before a push` | The pre-push read: who, when (every push path to a public remote), what is read, the two outcomes. The Land path Durability row links here. | `security-hardening` for the categories |
 | `skills/tracker-sdlc/adapters/local.md` | A public-remote note: every write publishes; allowed only with onboarding's yes; the manager reads `D` before the recipe; no private context in tickets. Recipe unchanged. | `branches-and-lands`, `security-hardening` |
-| Route-only edits | `maintainers/AGENTS.md` (this repo's `## Audience`; the Where-notes-go bullet); `docs/sdlc/entry-brief-repo.md` (end of chunk Brief step 2, item Brief step 0.2); template `agents-stub.md` (one Audience line); `docs/sdlc/conventions.md` (the `.agents/` ban line); `docs/sdlc/plan-trial-spec.md` (DER-278 steps, Q3); `maintainers/writing-standard.md` (Rule-owners rows; K10 stays this repo's helper grep for the read). | the owners above |
+| Route-only edits | `maintainers/AGENTS.md` (this repo's `## Audience`; the Where-notes-go bullet); `docs/sdlc/entry-brief-repo.md` (end of chunk Brief step 2, item Brief step 0.2); template `agents-stub.md` (one Audience line); `docs/sdlc/conventions.md` (the `.agents/` ban line); `docs/sdlc/plan-trial-spec.md` (DER-278 steps, Q3); `maintainers/writing-standard.md` (Rule-owners rows; K10 becomes a one-line route to the read). | the owners above |
 
-**Overlap with DER-278** (`item/der-278-poc-code`, not landed). DER-278
+**Overlap with DER-278** (landed as `891f69a`). DER-278
 adds Plan step 4: "Before each commit, **architect** scans every staged
 file … for credentials, hostnames or IPs, personal data, local paths,
 `.env` files, logs, and data dumps." Steps 5–6 commit and push. The
 Trial adds: "If a pushed Plan or Trial file holds a secret,
 **security** removes it and has it rotated." That is a second category
-list and a second leak outcome, so two owners. The one-owner proposal
-(Q3):
+list and a second leak outcome, so two owners. The one-owner split, accepted by the operator on
+2026-09-27 (Q3):
 
 - `security-hardening` holds both lists. List A, never committed in
   any repo: credentials, `.env` files, logs, data dumps. List B, never
@@ -188,7 +198,10 @@ list and a second leak outcome, so two owners. The one-owner proposal
 - **Persistence**
   - Git: `## Audience` in the governing `AGENTS.md`, the skill and SDLC
     text above, and this folder.
-  - Tracker (private): private context and the companion's location.
+  - Tracker (private): private context and the companion's location,
+    kept in a `done` Task (Q5).
+  - Local git config `sdlc.companion`, per clone and never pushed: the
+    companion location when the tracker is public (Q2).
   - Companion repo (private, optional): notes that do not fit in
     tickets.
   - Nothing new in the tracker schema, and no new files in product
@@ -212,41 +225,49 @@ list and a second leak outcome, so two owners. The one-owner proposal
     Verify later).
 
 - **Open**
-  - Q1–Q4 below.
-  - LLD: the host reads per remote type and the anonymous probe; the
-    exact rewrite commands for unpushed commits (interactive git is
-    unavailable to agents); where in the tracker the companion's
-    location lives, per adapter.
+  - Q5 and Q6 below. The LLD ([lld.md](lld.md)) settles the host
+    reads, the probe, and the commands for rewriting unpushed commits.
 
 ## Operator questions
 
-❓ **Q1** — **Re-check at item Brief too?** The brief re-checks
-`## Audience` at each chunk Brief. A repo that only gets items would
-never re-check, so a flip goes unwarned.
-1. Chunk Brief only. 2. Chunk Brief and item Brief (one host read).
-➡️ 2: it costs one read and closes the item-only gap.
+Q1–Q4: the operator answered on 2026-09-27 and accepted every
+recommendation.
 
-❓ **Q2** — **Where does the companion's location live when the tracker
-is public** (local tracker, D8)? There, the tracker would publish it.
-1. The clone's local git config (`git config --local`). It is never
-pushed; the operator gives it once per clone. 2. Always ask the
-operator in the session. 3. Forbid a companion with a public tracker.
-➡️ 1: it is private and survives sessions. `## Audience` then says
-"location: local git config".
+- **Q1: resolved (operator, 2026-09-27).** The re-check runs at item
+  Brief too.
+- **Q2: resolved (operator, 2026-09-27).** When the tracker itself is
+  public, the companion location goes in each machine's local git
+  config.
+- **Q3: resolved (operator, 2026-09-27).** DER-278 landed as it was
+  (`891f69a`, project-main `2422ef4`). DER-286 takes over its scan
+  rule: the category lists go to `security-hardening`, and the timing
+  goes to `branches-and-lands`. DER-278's pre-commit scan becomes the
+  pre-push read. Its Trial secret line routes to outcome 2 (LLD, B7).
+- **Q4: resolved (operator, 2026-09-27).** Warn before a repo is made
+  public, not only after.
 
-❓ **Q3** — **One owner for the DER-278 scan?**
-1. As in [Overlap with DER-278](#rule-owners): lists in
-`security-hardening`, when and outcomes in `branches-and-lands`,
-DER-278's steps become a route. DER-278 lands first as it is, and
-DER-286 Build does the move. 2. The same split, but DER-278 is changed
-before it lands.
-➡️ 1: DER-278 is further along, and the move is one Build item here.
+Two new questions came up in Spec:
 
-❓ **Q4** — **Warn before an agent makes a repo public?** The brief
-warns only at the re-check, after the flip.
-1. No. 2. Yes: one line in the Repo step, with the same warning, before
-any visibility change the operator asks for.
-➡️ 2: the warning is worth more before the flip, and it is one line.
+❓ **Q5** — **Which tracker record holds the companion location?**
+`tracker-sdlc` has no document verb.
+1. A Task named `Companion repo location`, filed and moved to `done`.
+Its id goes in `## Audience`, and a new location goes in a comment on
+it. 2. A comment on each Epic. 3. Always ask the operator.
+➡️ 1: one stable id that every agent can read, and it never shows up
+as ready work.
+
+❓ **Q6** — **Seeded-leak eval: one-off or permanent?**
+1. A one-off check at Build (LLD V8), kept in this folder. 2. A new
+permanent eval task, T4, run on every PR into `main`.
+➡️ 1 now: T4 would add a third to the cost of every eval. The card is
+written so that it can become T4 later.
+
+## Trial
+
+No Trial. The rules are text, and the one real doubt is whether an
+agent stops a fake `build-01.internal` before the push. Only the landed
+text can answer that, so it is measured at Build (LLD V8), along with
+the probe (V6) and autosquash (V7).
 
 ## Optional
 
@@ -260,8 +281,7 @@ any visibility change the operator asks for.
   - A deny-list now: deferred with the hook.
   - Encryption by default: metadata leaks and access cannot be
     revoked.
-- **PoC questions** — none. No Trial: the shape is text rules, and the
-  seeded-diff eval proves them at Build.
+- **PoC questions** — none; see [Trial](#trial).
 - **Risks**
   - The author reads its own diff, and small models miss paraphrase.
     The tester hook is the real control.
