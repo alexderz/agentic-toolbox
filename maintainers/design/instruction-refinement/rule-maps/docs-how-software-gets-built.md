@@ -16,5 +16,5 @@ holds the byte match at project-main 88455d8 and needs, for each later
 commit, a `docs-google-style` read at Review named here (operator,
 2026-09-27: "never require anything word for word").
 
-`docs-google-style` read at Review: _the DER-278 reviewer records the
-verdict here._
+`docs-google-style` read at Review: PASS, reviewer read 2026-09-27:
+plain and accurate.

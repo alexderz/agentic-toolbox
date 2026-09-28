@@ -7,7 +7,7 @@
 3. **architect** stages each Plan draft on project-main as it is written.
 4. Before each commit, **architect** scans every staged file, binary files included, for
    credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, and
-   data dumps, and removes each one it finds from the stage.
+   data dumps, and deletes each one it finds from the file.
 5. **architect** commits.
 6. **architect** pushes project-main.
 7. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.

@@ -121,7 +121,7 @@ the new file.
 | 5–6 | **architect** writes the HLD with templates `hld.md`, `track.md` / `chunk.md` | kept; rewrapped to one line (cap) | L5 |
 | 7–8 | **architect** locks hierarchy, persistence, and worker rules in the HLD | kept; rewrapped to one line (cap) | L6 |
 | 9 | **architect** commits the HLD to git | changed (MQ8): stages each Plan draft on project-main as it is written | L7 |
-| — | Before each commit, scan every staged file, binary files included, for credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, data dumps; remove each hit from the stage | new (MQ8); this file owns it, no earlier owner | L8–10 (step 4) |
+| — | Before each commit, scan every staged file, binary files included, for credentials, hostnames or IPs, personal data, local paths, `.env` files, logs, data dumps; delete each hit from the file, since unstaging leaves it on disk | new (MQ8); this file owns it, no earlier owner | L8–10 (step 4) |
 | — | **architect** commits | new (MQ8); split from old L9 | L11 (step 5) |
 | — | **architect** pushes project-main | new (MQ8); `branches-and-lands.md#land-path` Durability routes here | L12 (step 6) |
 | 10–11 | **manager** posts the HLD path on the Epic | kept; renumbered step 7; rewrapped to one line | L13 |
@@ -157,7 +157,8 @@ Every rewrap keeps the words; only line breaks move.
   round of 2026-09-27 (security BLOCK) set the order: scan the staged
   files, binary files included, before each commit, so no commit that is
   later pushed holds a hit; the scan list adds personal data, local paths,
-  `.env` files and logs. The architect is the pushing agent in Plan,
+  `.env` files and logs; a hit is deleted from the file, not unstaged.
+  That order and list: resolved by operator 2026-09-27. The architect is the pushing agent in Plan,
   since Plan steps name only the architect as a writer.
 - **MQ9** — Old L75–76 kept evidence in git and was silent on code; the
   people doc said to throw the scratch away. Resolved by the operator,
@@ -175,9 +176,9 @@ Every rewrap keeps the words; only line breaks move.
 - **MQ11** — Old L110–111 had **security** read only the LLD. Resolved
   by the operator, 2026-09-27: **security** reads `poc/` at Spec.
 - **MQ12** — A frozen `poc/` and a secret found after a push conflict.
-  Resolved in the Review round of 2026-09-27 (security): **security**
-  removes the secret and has it rotated; that removal is the one edit a
-  frozen `poc/` allows. Rotation, because git history keeps the pushed
+  Resolved by operator 2026-09-27, on the security finding of the Review
+  round: **security** removes the secret and has it rotated; that removal
+  is the one edit a frozen `poc/` allows. Rotation, because git history keeps the pushed
   commit.
 - **MQ13** — Old L75–76 named no actor for the Trial. Resolved from the
   text: Trial sits between Plan and Spec, whose design writer is the
