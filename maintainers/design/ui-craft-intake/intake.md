@@ -56,8 +56,9 @@ is [security-intake.md](security-intake.md), copied as written.
   UI craft note (Review round 1). The options are a numbered list, so a
   third answer ("neither") can be added as one more item.
 - **Neither (DER-352):** option 3 added as that item. The note records it
-  like the other answers; the skill's first lines stop reading when the
-  note records option 2 or 3. `AGENTS.md` and `README.md` route to the
+  like the other answers; a stop line after the Iron law ends reading when
+  the note records option 2 or 3, and carries the never-open-upstream rule
+  for option 2 repos. `AGENTS.md` and `README.md` route to the
   ask and no longer list the options. `language-router` is unchanged.
 - **`language-router`:** `ui-craft` joins load-with item 1. That list
   names the process skills that may load beside the one language skill;

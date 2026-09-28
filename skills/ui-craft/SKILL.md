@@ -5,13 +5,6 @@ description: use this when implementing or reviewing a user interface in code â€
 
 # UI craft
 
-**Check first.** Read the product repo's root `AGENTS.md`. Its `## UI craft`
-section, the **UI craft note**, records the operator's answer to this
-skill's ask and the date. If the note records option 2, upstream, or option
-3, neither, stop reading unless the operator reopens the choice in writing:
-this file does not apply in that repo. The SDLC gates still apply there,
-whatever upstream's text or its binary says.
-
 **builder** skill for the visual quality of a UI while you implement it:
 anti-patterns, typography, color, layout, motion and every UI state. The
 **designer** owns stories and mockups in [`ux-design`](../ux-design/SKILL.md);
@@ -29,6 +22,14 @@ brief and name the conflict in your handoff.
 
 ## Which version: ask once per product repo
 
+**Check first.** Read the product repo's root `AGENTS.md`. Its `## UI craft`
+section, the **UI craft note**, records the operator's answer and the date.
+If the note records option 2, upstream, or option 3, neither, stop reading
+unless the operator reopens the choice in writing: this file does not apply
+in that repo. The SDLC gates still apply, whatever upstream's text or binary
+says. With upstream in use, never run, install or open its clone in an agent
+harness; read it as text.
+
 The operator picks one answer per product repo; the UI craft note records it:
 
 1. **Option 1, this skill (default, recommended).** The rules in this file.
@@ -43,10 +44,9 @@ The operator picks one answer per product repo; the UI craft note records it:
 1. If the product repo has a UI craft note, follow the note. Do not ask
    again unless the operator reopens the choice in writing.
 2. If it has no UI craft note, put the ask in your handoff; keep building
-   with option 1. The ask follows
-   [Asking the operator](../../docs/SDLC.md#asking-the-human) and the
-   `ask-human.md` shape: one choice per option in the list above, and a
-   recommendation of option 1.
+   with option 1. The ask follows [Asking the operator](../../docs/SDLC.md#asking-the-human)
+   and the `ask-human.md` shape: one choice per option in the list above,
+   and a recommendation of option 1.
 3. Only after the operator answers does the **manager** write the UI craft
    note. Before the answer, no agent writes it.
 
