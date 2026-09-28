@@ -1,16 +1,13 @@
 # Groom — Audience and disclosure for public repos
 
-DRAFT (pre-review)
-
-<!-- At freeze, replace the draft marker above with this sentence and
-delete this comment: Frozen record of the plan as reviewed at Groom on
-<YYYY-MM-DD>. Not live: the tracker is the source of truth for tickets,
-blockers and state. -->
+Frozen record of the plan as reviewed at Groom on 2026-09-28. Not
+live: the tracker is the source of truth for tickets, blockers and
+state.
 
 - Chunk: `DER-286` · LLD: [lld.md](lld.md) · Date: `2026-09-28`
-- Review: `<groom reviewer label>` — pass on `<date>` at `<SHA of the
-  reviewed draft commit>`; `pending` until filled at freeze
-- Tickets: `G1` = `<id>`, … (filled at freeze)
+- Review: `der286-groom-reviewer` — pass on `2026-09-28` at `d09f3b8`
+- Tickets: `G1` = `DER-353`, `G2` = `DER-355`, `G3` = `DER-356`,
+  `G4` = `DER-354`, `G5` = `DER-357`
 
 The LLD is accepted: architect and **security** on 2026-09-27, the
 operator on 2026-09-28, including Q5 and Q6. Every item takes its
