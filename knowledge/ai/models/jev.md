@@ -1,10 +1,15 @@
 # Jev (TypeSafe System One)
 
 - Source: `alexderz/grok-bot-perm` `docs/integrations/typesafe.md` @
-  `8b2cfffca35d938337f3af524187e6c998ee3e89`; live TypeSafe docs
-- Distilled: `2026-09-19`
+  `8b2cfffca35d938337f3af524187e6c998ee3e89`; live TypeSafe docs.
+  Related reading (not SoT): Archer Hume,
+  [Jev’s Architecture Unmasked](https://archerhume.com/posts/jevs-architecture-unmasked/?v=3)
+  (2026-09-17); X
+  [status/2100555442061820286](https://x.com/4rcherhume/status/2100555442061820286)
+- Distilled: `2026-09-28`
 - Live docs win: [docs.typesafe.ai](https://docs.typesafe.ai)
-  ([llms.txt](https://docs.typesafe.ai/llms.txt))
+  ([llms.txt](https://docs.typesafe.ai/llms.txt)). Hume’s essay does
+  not override those pages.
 
 ## What it is
 
@@ -17,7 +22,8 @@ parallel, and are independent. No generated prose to parse.
 ## When to read
 
 Calling Jev from an agent or app. Prefer this note plus live docs over
-reminting a TypeSafe skill in this home.
+reminting a TypeSafe skill in this home. For a probe-based guess at
+internals, see Related reading — live TypeSafe docs still win.
 
 ## Constraints
 
@@ -121,6 +127,11 @@ key). Keep credentials server-side.
 - Exact dashboard click-path for keys
 - Whether a given account is off the waitlist
 - Live numeric rate limits for a given account
+- Internal architecture, parameter count, and base model. TypeSafe
+  has not published those. Hume’s reconstruction is a probe
+  hypothesis, not a disclosure.
+- Whether Hume ships reconstruction weights. None were on Hugging
+  Face as of 2026-09-28.
 
 ## Do not
 
@@ -128,6 +139,37 @@ key). Keep credentials server-side.
   (`npx skills add …`). Point at live docs / cookbooks instead.
 - Remint this note as `skills/typesafe-ai/`.
 - Invent legal or telemetry claims beyond the cited pages.
+- Treat Hume’s essay as TypeSafe source of truth for the API,
+  architecture, or weights.
+
+## Related reading (speculative)
+
+[Archer Hume, *Jev’s Architecture Unmasked*](https://archerhume.com/posts/jevs-architecture-unmasked/?v=3)
+(2026-09-17, ~28 min; `?v=3`). Black-box probe reconstruction of
+hosted `jev-1.13.0` (~10,000 API calls in the author’s account),
+not TypeSafe’s published architecture. Live docs below remain the
+API contract. Open weights for a Hume reconstruction were promised
+on X (training takes time) and were **not** on Hugging Face as of
+2026-09-28. Same stance as Drex in
+[`jev-open-2026-09-27.md`](jev-open-2026-09-27.md): promised, not
+shipped.
+
+Author’s proposed picture (labeled by the essay as speculative
+where evidence is thin):
+
+- Causal transformer; sparse MoE is the **least certain** part
+- Shared-state KV prefix; isolated question branches that do not
+  attend to one another
+- Listwise option interaction before the choice
+- Direct probability readouts, not token generation
+- RLCD-style training of the predictive distribution
+- API `confidence` is arithmetic on that distribution (Choice:
+  how far `p_max` sits above uniform), not a second learned score
+
+Do not copy the essay’s schematic example probabilities as
+measurements of Jev. Local open-weight rows that cite this essay
+(for example Kev) implement a *Jev-style* interface; they are not
+hosted Jev.
 
 ## Live docs
 
