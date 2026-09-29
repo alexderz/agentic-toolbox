@@ -73,5 +73,5 @@ live vendor docs win. Pin the extract source.
 
 | Note | Upstream | SHA | License | Notes |
 | --- | --- | --- | --- | --- |
-| `knowledge/ai/models/jev.md` | `alexderz/grok-bot-perm` `docs/integrations/typesafe.md`; TypeSafe public docs | grok-bot-perm `8b2cfffca35d938337f3af524187e6c998ee3e89` | MIT | Jev / System One. Not a skill. Do not marketplace-install TypeSafe’s pack here. |
-| `knowledge/ai/models/jev-open-2026-09-27.md` | JevBench v1.4.2.2 (benchmarkheaven.com/jev-models; github.com/fstandhartinger/jevbench); Hugging Face cards listed in the note | snapshot 2026-09-27 | MIT | Dated snapshot of downloadable Jev-class weights. Not a skill. Live board wins. |
+| `knowledge/ai/models/jev.md` | `alexderz/grok-bot-perm` `docs/integrations/typesafe.md`; TypeSafe public docs; Archer Hume essay (related reading, not SoT) | grok-bot-perm `8b2cfffca35d938337f3af524187e6c998ee3e89`; essay 2026-09-17 | MIT | Jev / System One. Not a skill. Do not marketplace-install TypeSafe’s pack here. Hume reconstruction is speculative. |
+| `knowledge/ai/models/jev-open-2026-09-27.md` | JevBench v1.4.2.2 (benchmarkheaven.com/jev-models; github.com/fstandhartinger/jevbench); Hugging Face cards listed in the note; Steady_Alex X bookmarks 2026-09-28 | snapshot 2026-09-27; bookmark reconciliation 2026-09-28 | MIT | Dated snapshot of downloadable Jev-class weights. Not a skill. Live board wins. Bookmark pass enriches CLM links, Hume pointer, and adjacent taiga-s1; does not mint new JevBench ranks. |
