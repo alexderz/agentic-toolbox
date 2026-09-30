@@ -1103,7 +1103,7 @@ No marketplace install. No auto-update. See [INTAKE.md](INTAKE.md).
 | --- | --- | --- |
 | `tracker-sdlc` | manager (writes) / architect (reads) | Contract for all tracker reads/writes; loads the repo's `.agents/tracker/SKILL.md` |
 | `sdlc-onboarding` | manager / architect | First tracker touch and Spec gate failure; proposes, writes `## Tracker` and `## Execution` on confirm |
-| `cursor-cloud-agents-when` | architect | Empty dir until a first-party body |
+| `cursor-cloud-agents-when` | architect | When to choose Cursor Cloud Agent, the grok CLI, or Origin. Load the skill; do not paste it here |
 | `discover-the-idea` | architect | Brief Gather on a **chunk**. Load the skill; do not paste it here. Do not load on an incoming item |
 | `ux-design` | designer | Stories + high-level UX at Plan; mockups at Spec if there is a screen. Human gate |
 | `sdlc-artifacts` | architect / manager / designer | Templates for HLD/LLD/UX/tickets/changelog. Do not paste the SDLC into them |

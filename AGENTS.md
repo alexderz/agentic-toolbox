@@ -165,8 +165,7 @@ Language pack. Do not remint the Go / Python / Shell ids above.
 - `lang-powershell`
 - `lang-protobuf`
 
-First-party placeholders / empty dirs (no body claim until SHA +
-`SKILL.md` on `main`):
+When choosing Cursor Cloud Agent, the local grok CLI, or Origin:
 
 - `cursor-cloud-agents-when`
 
