@@ -126,6 +126,10 @@ Skill ids with `SKILL.md` (do not remint without a new **security** cut):
 - `tracker-sdlc`
 - `sdlc-onboarding`
 
+Loaded by path only (not routed): an operator points an agent at the file.
+
+- `host-config-pyinfra` (an agent that owns one Linux host codifies it with pyinfra and `just`)
+
 Research (not SDLC). **researcher** loads when relevant:
 
 - `buying-researcher`
