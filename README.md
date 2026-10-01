@@ -45,7 +45,7 @@ There is no plugin manifest yet. Natural install groups:
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
-| **optional / empty** | `cursor-cloud-agents-when` | Placeholder. No `SKILL.md` yet |
+| **optional** | `cursor-cloud-agents-when` | When choosing Cursor Cloud Agent, the local grok CLI, or Origin |
 
 `lang-go`, `lang-python`, and `lang-shell` are **pointers**. They do not
 count as a skill load. They route to `golang-*`, `modern-python`, and
@@ -122,11 +122,11 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | `modern-python` | First-party (MIT). uv / ruff / ty / pytest |
 | `lang-rust`, `lang-js-ts`, `lang-c`, `lang-cpp`, `lang-csharp`, `lang-java`, `lang-kotlin`, `lang-ruby`, `lang-php`, `lang-swift`, `lang-dart`, `lang-sql`, `lang-web-markup`, `lang-lua`, `lang-docker`, `lang-terraform`, `lang-makefile`, `lang-powershell`, `lang-protobuf` | First-party language guides |
 
-### optional / empty
+### optional
 
 | Id | Ownership |
 | --- | --- |
-| `cursor-cloud-agents-when` | First-party placeholder (Cursor-specific) |
+| `cursor-cloud-agents-when` | First-party. When to choose Cursor Cloud Agent, the local grok CLI, or Origin |
 
 ## Packages
 
