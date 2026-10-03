@@ -45,7 +45,7 @@ operator's call.
   variant tested rather than the best one. The gated row in
   `matrix-wave-a.tsv` is the setting that was measured.
 
-## Four rules that decide everything
+## Five rules that decide everything
 
 1. **Speed is set by how much of the model sits in VRAM.** Parameter count
    matters far less. Every model that fits on the GPU ran at 25 to 100 tok/s;
