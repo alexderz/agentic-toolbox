@@ -4,7 +4,7 @@
   Harness and raw results: `~/src/grok-bot-perm/model-bakeoff` on Pluto
   (`results-wave-a/REPORT.md`, `grades.tsv`, `matrix-wave-a.tsv`). Titan host
   config: `alexderz/house-infra` `hosts/titan/`.
-- Distilled: `2026-10-02`
+- Distilled: `2026-10-03`
 - Live docs win: the live `llama-swap.yaml` on Titan
   (`/home/alex.derzhi/ai/config/llama-swap.yaml`) and the bake-off report.
   When this note and a fresh measurement disagree, trust the measurement.
@@ -48,7 +48,7 @@ operator's call.
 ## Four rules that decide everything
 
 1. **Speed is set by how much of the model sits in VRAM.** Parameter count
-   matters far less. Every model that fits on the GPU ran at 25 to 60 tok/s;
+   matters far less. Every model that fits on the GPU ran at 25 to 100 tok/s;
    every model that pushes experts to system RAM ran at 3 to 10 tok/s,
    whatever its size. Pick a tier first, then a model.
 2. **A model with experts offloaded (`-ncmoe N`) must also have `-lm none`.**
@@ -67,34 +67,41 @@ operator's call.
    is there, and drop to q8_0 when q8_0 is what lets more layers stay on the
    GPU. On offloaded models, VRAM spent on KV is VRAM taken from experts:
    about 1,300 MiB per expert layer at IQ4_XS.
+5. **Fill the card.** Raise `-c` towards the model's native context until
+   VRAM is nearly full, then bring expert layers back with what is left.
+   Hybrid-attention models (Qwen3.6/3.8 MoE, Tiel) reach their full 262k this
+   way. `tools/fill_vram.py` in the bake-off repo does the search with real
+   loads; aim for 23.6 to 23.8 GB of 24.
 
 Pre-warm weights into the page cache before a timed run:
 `cat <model files> > /dev/null` on Titan.
 
-## Tier 1: fast, full GPU (25 to 60 tok/s)
+## Tier 1: fast, full GPU (25 to 100 tok/s)
 
 Default choice for interactive and agent work. All passed test 1 at 5/5
 except where noted.
 
 | Model (llama-swap id) | tok/s | Test 1 | Settings that were measured |
 | --- | --- | --- | --- |
+| `tiel-coder-35b` (UD-IQ4_XS, MoE 3B active) | **101** | 5/5, 55 tests | `-ngl 999 -c 262144 -ctk f16 -ctv f16`, 23.6 GB, nothing offloaded |
 | `qwen3.6-35b-a3b` (UD-Q4_K_M, MoE 3B active) | 57 | 5/5, 52 tests | `-ngl 999 -ncmoe 12 -c 131072 -ctk f16 -ctv f16 -lm none`, 19.8 GB |
 | `qwen3.8-27b` (UD-Q4_K_M, dense) | 33 | 5/5, 55 tests | `-ngl 999 -c 131072 -ctk q8_0 -ctv q8_0`, 20.7 GB |
 | `qwen3.6-27b` (Q4_K_M, dense) | 31 | 5/5, 65 tests | `-ngl 999 -c 131072 -ctk q8_0 -ctv q8_0`, 21.4 GB |
-| `q38-27b-cyber` (IQ4_XS, dense, uncensored) | 24 | 5/5 | `-ngl 999 -c 131072 -ctk q8_0 -ctv q8_0` |
-| `tiel-coder-35b` (UD-IQ4_XS, MoE) | not yet run | gated only | `-ngl 999 -ncmoe 8 -c 131072 -ctk f16 -ctv f16 -lm none`, 18.3 GB |
+| `q38-27b-cyber` (IQ4_XS, dense, uncensored) | 24 | 5/5, 39 tests | `-ngl 999 -c 131072 -ctk q8_0 -ctv q8_0` |
 
 Notes:
 
-- `qwen3.6-35b-a3b` is the fastest model that writes working code. It keeps
-  12 expert layers in RAM and still runs at 57 tok/s because only 3B
-  parameters are active per token.
+- `tiel-coder-35b` is the default: the fastest model that writes working
+  code, fully on the GPU at its native 262k context, 13 minutes for the
+  task. The Q6 builds (`tiel-coder-35b-q6`, `cyber-tiel-coder-35b`) must
+  leave 20 expert layers in RAM at 262k and run at 43 to 44 tok/s with no
+  better result; use IQ4_XS.
+- `qwen3.6-35b-a3b` was measured at 131k with 12 expert layers in RAM
+  (57 tok/s). It has not been re-tuned with the card filled.
 - The two dense 27B models are the steadiest full-GPU choices. The dense
   Qwen3.8 is the newer of the two.
 - `q38-27b-cyber` is the pick for security testing of our own code, where a
   stock model refuses.
-- `tiel-coder-35b` gated with 5.7 GB of VRAM unused, so `-ncmoe` can go lower
-  than 8. Test 1 is pending.
 - `qwen3-coder-30b-a3b` passed 5/5 at 24 tok/s with `-ncmoe 26`, but wrote
   thin code (7 subcommands, one failing test). The 35B-A3B above is better
   on every measure.
@@ -103,9 +110,11 @@ Fast and **not** recommended:
 
 | Model | tok/s | Why not |
 | --- | --- | --- |
-| `bonsai2-27b` / `bonsai2-27b-pq2` (ternary) | 41 / 47 | Invents APIs. Scored 2/5: no `/api/states` call, 16 of 20 subcommands made up. Fast, confident, wrong. |
-| `nemotron3-nano-30b` | 83 | 2/5, held pending a rerun |
-| `glm-4.7-flash` | 62 | 2/5, held pending a rerun |
+| `bonsai2-27b` / `bonsai2-27b-pq2` (ternary) | 41 / 47 | Invents APIs. 2/5, then 4/5 on a rerun at 254k: the core reads worked, but 11 of its 14 API paths do not exist. Fast, confident, wrong. |
+| `glm-4.7-flash` | 35 to 62 | 2/5 then 5/5 at 203k. Inconsistent; left a failing test. |
+| `devstral-small-2-24b` | 26 to 33 | 2/5 then 5/5 at 205k. Inconsistent; left a failing test. |
+| `nemotron3-nano-30b` | 83 to 91 | 2/5 twice. Quits within minutes. Excluded. |
+| `nanbeige4.2-3b` | 16 to 20 | 2/5 then 1/5. Excluded. |
 | `qwen3vl-8b` | 40 | 0/5: did not import, 16 undefined names |
 | `jan-nano-128k` | 48 | 1/5: wrote no files, tried to install its own harness |
 
@@ -117,7 +126,7 @@ multi-hour run for a task Tier 1 finishes in under an hour.
 | Model (llama-swap id) | tok/s | Test 1 | Settings that were measured |
 | --- | --- | --- | --- |
 | `qwen3.8-flash-next-unpruned` (GSQ-RCO IQ3_S) | 8.3 | 5/5, 89 tests | `-ngl 999 -ncmoe 42 -c 131072 -ctk f16 -ctv f16 -lm none` |
-| `swift15-flash-next` (GSQ-RCO IQ3_XXS) | 7.1 | 5/5, 90 tests | `-ngl 999 -ncmoe 42 -c 131072 -ctk f16 -ctv f16 -lm none`, 16.4 GB |
+| `swift15-flash-next` (GSQ-RCO IQ3_XXS) | 7.1 | 5/5, 96 tests | `-ngl 999 -ncmoe 42 -c 131072 -ctk f16 -ctv f16 -lm none`, 16.4 GB |
 | `orcarouter-fn-uncensored` (Flash-Next, uncensored) | 8.8 | 5/5, 54 tests | offloaded, f16 KV |
 | `qwen3.8-flash-next-coder` | 9.9 | 5/5, 24 tests | `-ngl 999 -ncmoe 26 -c 131072 -ctk f16 -ctv f16 -lm none`, 20.9 GB |
 | `nemotron3-super-120b` (UD-Q4_K_M) | 8.5 | 5/5, no tests written, 5 subcommands | `-ngl 999 -ncmoe 77 -c 131072 -ctk f16 -ctv f16 -lm none`, 20.5 GB |
@@ -129,6 +138,8 @@ multi-hour run for a task Tier 1 finishes in under an hour.
   (22.4 GB, 19 tok/s on a short prompt). Use 131,072 unless the task needs
   more; the freed VRAM keeps more experts on the GPU.
 - `glm-4.5-air` (3 tok/s at `-ncmoe 55`) is too slow to be worth it here.
+- `qwen3-235b-a22b` does not run: Q4_K_M is 132 GiB against 125 GB of RAM,
+  and offloaded models must load eagerly (rule 2).
 
 ### In between: Flash-Next on SGLang
 
@@ -157,9 +168,9 @@ for the image tag (`localhost/strata:v0.1.30-sm86` is built).
 ## Unknown
 
 - Whether Tier 1 rankings hold on tests 2 and 3.
-- Test 1 results for `tiel-coder-35b`, `tiel-coder-35b-q6`,
-  `cyber-tiel-coder-35b`, `qwen3-235b-a22b` (gating in progress).
-- Whether the five 2/5 models fail again on a rerun.
+- How the wave A models (run at 131k) score and run with the card filled.
+- Whether more context changes quality at all: batch 2 reruns changed both
+  context and run, so the two effects cannot be separated.
 - Quality cost of q8_0 KV against f16 on long contexts: not measured.
 
 ## Do not
