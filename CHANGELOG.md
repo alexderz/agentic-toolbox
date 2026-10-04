@@ -4,6 +4,15 @@ Newest first. Skip empty sections.
 
 ## Unreleased
 
+## instruction-refinement — 2026-10-04
+
+Epic `DER-288`: every agent instruction rewritten to one writing
+standard, so the skills and the SDLC work from small local models up
+to frontier models. Items that landed on the same project branch ride
+along: `DER-278`, `DER-290`, `DER-351`, `DER-352` and PR #9. The
+before-merge eval run (`DER-340`) was waived by the operator on
+2026-10-04 and runs after merge.
+
 ### Added
 
 - The `cursor-cloud-agents-when` skill: choose Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work, with a grok CLI fallback when Cursor credits run out (PR #9)
