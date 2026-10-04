@@ -107,3 +107,22 @@ none of their subjects occur in this file.
   sentence; same action, same order (run first, or install).
 
 All MQs resolved; none open.
+
+## PR #9: credit fallback exception
+
+Old: `skills/grok-acp/SKILL.md` at `pr-9-cursor-worker` 1946868, lines
+1–177. New: lines 1–178 (K1 cap 250). One line added after the Iron law's
+first rule; every other line is unchanged. K2: 178 > 177 at 7a11696; the
+added line routes to a rule the operator decided on 2026-10-04 (MQ4).
+K2 guards wording passes, and this is a new rule, so the manager
+accepted the one line of growth on 2026-10-04.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 19 | Iron law: the operator picks Grok; offloading is opt-in per ask | kept verbatim | L19 |
+| — | Exception: the credit-failure fallback in `cursor-cloud-agents-when#credit-degrade` is pre-approved; it covers only a failed Cloud Agent run (usage, credits, quota, billing) | new route; the owner is `cursor-cloud-agents-when` Credit degrade; adds no other condition | L20 |
+
+PR #9 meaning questions: MQ4 in
+[skills-cursor-cloud-agents-when.md](skills-cursor-cloud-agents-when.md),
+resolved by operator 2026-10-04. The protected rows (permission posture,
+labels, own-item limits) are untouched.
