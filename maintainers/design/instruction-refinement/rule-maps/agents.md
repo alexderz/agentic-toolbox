@@ -196,3 +196,15 @@ Old: `AGENTS.md` at project-main 63f6b72, lines 1–75. New: lines 1–75
 
 DER-352 meaning questions: none. The row adds no condition (standard 5);
 upstream opt-in and its risk text stay in the owner's ask and Never.
+
+## PR #9: `cursor-cloud-agents-when` load row
+
+Old: `AGENTS.md` at the integration branch, lines 1–75. New: lines 1–76
+(cap 100; K2: 76 ≤ 245). One row added; every other line is unchanged.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| — | Load row **Worker choice**: the operator offloads coding or heavy multi-step work to Cursor Cloud Agent or the grok CLI → read `skills/cursor-cloud-agents-when/SKILL.md`; operator opt-in | new: this file owns "which skill loads when"; same shape as the **Workers** row for `grok-acp` | L58 |
+
+PR #9 meaning questions: none here; the opt-in reading is MQ3 in
+[skills-cursor-cloud-agents-when.md](skills-cursor-cloud-agents-when.md).

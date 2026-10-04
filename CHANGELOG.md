@@ -6,6 +6,7 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- The `cursor-cloud-agents-when` skill: choose Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work, with a grok CLI fallback when Cursor credits run out (PR #9)
 - `ui-craft` skill: builder rules for the visual quality of a UI (anti-patterns, typography, color, layout, motion, every UI state, one verification pass), loaded beside `ux-design`. Topic-only rewrite of Impeccable (Apache-2.0); no scripts, hooks or network. Upstream is offered once per product repo as a second option at the user's own risk (`DER-290`)
 - `maintainers/writing-standard.md`: the writing standard for agent text
   (ten rules, banned names, rule owners, protected rules, rule-map
