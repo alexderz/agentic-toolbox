@@ -43,7 +43,7 @@ sentence → route to the tracker owner.
 | 33 | Windows or any host outside the workspace: off limits unless the operator approved | kept; route added to the owner, `security-hardening#never` | L36 |
 | 35 | Product GitHub repositories stay separate from the private SDLC repository | kept, imperative | L38–39 |
 | 37–41 | Prefer Cloud Agent: branch, pull request, or a land in the private SDLC repository on a connected remote repository; Cursor source control or a cloud VM | kept; one condition per bullet | L41–49 |
-| 43–45 | Usage, credits, quota, or billing failure: say so once, fall back to the grok CLI | kept; steps 1–2; the fallback is stated as pre-approved (MQ4) | L51–60 |
+| 43–45 | Usage, credits, quota, or billing failure: say so once, fall back to the grok CLI | kept; steps 1–2; step 1 names all four failure causes; the fallback is pre-approved only after that failure (MQ4) | L51–60 |
 | 45–48 | Remote pull request required: patch on this machine, then open or hand off from an approved host with credentials, or a branch-ready diff | kept; steps 3–4, condition stated in each | L61–65 |
 | 48–49 | grok CLI also unavailable: stop, report both blockers | kept; step 5 | L66 |
 | 49–50 | Never retry in a tight loop | kept; allowed action named | L68 |
@@ -79,8 +79,9 @@ sentence → route to the tracker owner.
   (PR #9 review), which states the same opt-in.
 - **MQ4** Old L43–45 "fall back to the grok CLI": does the fallback need
   a new operator opt-in, given `grok-acp`'s "the operator picks Grok"?
-  Resolved by operator 2026-10-04: the fallback is pre-approved. A
-  request to run a Cursor Cloud Agent approves the grok CLI fallback for
-  that same goal; the agent says once that credits ran out, then falls
-  back. New L53–55 and L59–60 state it; `grok-acp` carries a one-line
+  Resolved by operator 2026-10-04: the fallback is pre-approved. Scope,
+  per the PR #9 security read: only when the requested Cloud Agent run
+  fails on usage, credits, quota, or billing does that request approve
+  the grok CLI for the same goal; the agent says once what failed, then
+  falls back. Any other grok CLI use stays operator opt-in. New L53–55 and L59–60 state it; `grok-acp` carries a one-line
   exception that routes here (its rule map, PR #9 section).

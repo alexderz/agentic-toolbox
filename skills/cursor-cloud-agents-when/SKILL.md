@@ -50,13 +50,13 @@ Use Cursor Cloud Agent when any of these holds:
 
 ## Credit degrade
 
-The grok CLI fallback is pre-approved. A request to run a Cursor Cloud
-Agent also approves the grok CLI for that same goal. Fall back without a
-new ask.
+If a requested Cloud Agent run fails on usage, credits, quota, or
+billing, that request also approves the grok CLI for the same goal.
+Fall back without a new ask.
 
 If Cloud Agent fails because of usage, credits, quota, or billing:
 
-1. Say once that the credits ran out.
+1. Say once that Cloud Agent failed on usage, credits, quota, or billing.
 2. Fall back to the grok CLI for the same goal.
 3. If a remote pull request was required, produce the patch on this
    machine.

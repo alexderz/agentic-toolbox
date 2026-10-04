@@ -120,7 +120,7 @@ accepted the one line of growth on 2026-10-04.
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 19 | Iron law: the operator picks Grok; offloading is opt-in per ask | kept verbatim | L19 |
-| — | Exception: the credit fallback in `cursor-cloud-agents-when#credit-degrade` is pre-approved | new route; the owner is `cursor-cloud-agents-when` Credit degrade; adds no other condition | L20 |
+| — | Exception: the credit-failure fallback in `cursor-cloud-agents-when#credit-degrade` is pre-approved; it covers only a failed Cloud Agent run (usage, credits, quota, billing) | new route; the owner is `cursor-cloud-agents-when` Credit degrade; adds no other condition | L20 |
 
 PR #9 meaning questions: MQ4 in
 [skills-cursor-cloud-agents-when.md](skills-cursor-cloud-agents-when.md),
