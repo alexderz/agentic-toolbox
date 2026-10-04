@@ -11,7 +11,7 @@ standard, so the skills and the SDLC work from small local models up
 to frontier models. Items that landed on the same project branch ride
 along: `DER-278`, `DER-290`, `DER-351`, `DER-352` and PR #9. The
 before-merge eval run (`DER-340`) was waived by the operator on
-2026-10-04 and runs after merge.
+2026-10-04 and runs after merge. Trunk merge: PR #11.
 
 ### Added
 
