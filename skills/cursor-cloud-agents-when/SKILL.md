@@ -1,6 +1,6 @@
 ---
 name: cursor-cloud-agents-when
-description: use this when choosing Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work — Cloud Agent for a remote repo or pull request, the grok CLI for work on this machine under build quota, and the operator's private workspace for artifacts that live there. if Cursor credits are empty, degrade to the grok CLI. do not implement with a bot token.
+description: use this when choosing Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work — Cloud Agent for a remote repo or pull request, the grok CLI for work on this machine under build quota, and the operator's private SDLC repository for artifacts that live there. if Cursor credits are empty, degrade to the grok CLI. do not use on your own initiative, and do not implement with a bot token.
 ---
 
 # Cloud Agent vs grok CLI
@@ -31,12 +31,12 @@ into this repo still goes through intake:
 | Design, review, scratch work, or build-quota research on this machine | grok CLI |
 | A change that must land as a remote branch or pull request | Cursor Cloud Agent |
 | Greenfield work with no repository named | Cloud Agent `new_repo` |
-| SDLC artifacts that live in the operator's private workspace | That workspace, often through a Cloud Agent pull request |
+| SDLC artifacts that live in the operator's private SDLC repository | That repository, often through a Cloud Agent pull request |
 | Files that exist only on a host with no remote checkout | grok CLI or shell on that host |
 | Windows, or any host outside the workspace | Off limits unless the operator approved that host: [Never](../security-hardening/SKILL.md#never) |
 
-Keep product GitHub repositories separate from the operator's private
-workspace.
+Keep product GitHub repositories separate from the operator's private SDLC
+repository.
 
 ## Prefer Cloud Agent when
 
@@ -44,15 +44,19 @@ Use Cursor Cloud Agent when any of these holds:
 
 - The deliverable is a branch or a pull request on a connected remote
   repository.
-- The deliverable lands in the operator's private workspace through a
-  connected remote repository.
+- The deliverable lands in the operator's private SDLC repository,
+  connected as a remote repository.
 - The work needs Cursor source control or a cloud VM.
 
 ## Credit degrade
 
+The grok CLI fallback is pre-approved. A request to run a Cursor Cloud
+Agent also approves the grok CLI for that same goal. Fall back without a
+new ask.
+
 If Cloud Agent fails because of usage, credits, quota, or billing:
 
-1. Say so once.
+1. Say once that the credits ran out.
 2. Fall back to the grok CLI for the same goal.
 3. If a remote pull request was required, produce the patch on this
    machine.
@@ -80,7 +84,8 @@ If Cloud Agent fails because of usage, credits, quota, or billing:
    prompt.
 
 For the grok CLI, the run steps are in [`grok-acp`](../grok-acp/SKILL.md).
-Load it when the operator opts in to Grok Build over ACP.
+Load it when the operator opts in to Grok Build over ACP, or when Credit
+degrade falls back to the grok CLI.
 
 ## Roles
 

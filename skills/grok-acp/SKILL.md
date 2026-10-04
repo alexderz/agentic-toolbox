@@ -17,6 +17,7 @@ as the package README says. This skill directory is usually a symlink.
 ## Iron law
 
 **The operator picks Grok; you do not.** Offloading is opt-in per ask.
+Exception: the credit fallback in [cursor-cloud-agents-when](../cursor-cloud-agents-when/SKILL.md#credit-degrade) is pre-approved.
 **Grok's summary is a claim, not evidence.** Verify before you report.
 
 ## Permissions (operator order, 2026-09-21)
