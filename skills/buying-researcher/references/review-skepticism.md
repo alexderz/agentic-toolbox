@@ -1,6 +1,6 @@
 # Review skepticism
 
-Marketplace star averages are **manipulated until complaint patterns say otherwise**. Do not treat them as quality. Prefer source class over volume.
+Treat marketplace star averages as **manipulated until complaint patterns say otherwise**. Never treat them as quality; weigh source class over volume.
 
 ## Reliability (high → low)
 
@@ -20,7 +20,7 @@ Marketplace star averages are **manipulated until complaint patterns say otherwi
 - Brand-site testimonials and unsourced comparison charts
 - Single-video crownings with no method
 
-A weak source can still be a **signal** (price, SKU existence, talking points). It cannot be the reason you pick a winner.
+Use a weak source as a **signal** only: price, SKU existence, talking points. Never pick a winner because of it; base the pick on strong sources.
 
 ## Botting and incentive tells
 
@@ -35,26 +35,26 @@ Treat a review cluster as polluted when several of these show up:
 - Star count high, written-review rate tiny
 - Verified-purchase volume that jumps overnight after a deal
 
-One tell is not proof. A cluster is. Say “looks botted/affiliate” rather than inventing a fraud claim.
+One tell is not proof. A cluster is. Write “looks botted/affiliate”; never invent a fraud claim.
 
 ## How to read noisy owner feedback
 
 - Weight **tenure** and **specificity** over sentiment.
 - Cluster the same failure mode across independent posts; discount isolated rants and isolated raves.
-- “Love it!” with no model/date is near-zero.
-- Returns, warranty fights, and parts-outage threads outrank star text.
+- Give “Love it!” with no model/date near-zero weight.
+- Rank returns, warranty fights, and parts-outage threads above star text.
 - Separate “it works” from “it lasts” and “it is serviceable.”
 
 ## Conflict protocol (lab vs durability)
 
 - **Lab wins** on measured performance (noise, output, efficiency, safety).
 - **Long-ownership / technician wins** on reliability, service, and real-world wear.
-- If they conflict, **say so**. Weight by this brief: a performance-first buyer can take the lab; a keep-it-for-years buyer takes durability.
-- Do not average the conflict into a fake composite score.
+- If they conflict, **say so**. Weight by the purchase brief: a performance-first buyer can take the lab; a keep-it-for-years buyer takes durability.
+- Never average the conflict into a fake composite score; report both sides.
 
 ## Citation style by source class
 
-Tag the class in-line. Keep citations short and checkable. Never invent a quote or a score.
+Tag the class in-line. Keep citations short and checkable.
 
 | Class | Cite as |
 | --- | --- |
@@ -66,4 +66,4 @@ Tag the class in-line. Keep citations short and checkable. Never invent a quote 
 | Price / stock | `[price]` retailer, list vs street, date checked |
 | Affiliate / roundup | `[affiliate]` publisher — talking point only |
 
-Thin evidence → say so. Marketplace stars, if mentioned at all: `[stars]` retailer, average, n, date — and that they are polluted by default.
+If you mention marketplace stars at all, cite `[stars]` retailer, average, n, date, and say they are polluted by default.

@@ -3,7 +3,12 @@ This repository is MIT licensed (see LICENSE), except:
   skills/debug-anthropic/
 
 which is a rewrite of Anthropic material and is Apache-2.0
-(see skills/debug-anthropic/LICENSE and SOURCES.md).
+(see skills/debug-anthropic/LICENSE and SOURCES.md), and:
+
+  skills/ui-craft/
+
+which is a topic-only rewrite of Impeccable (pbakaus/impeccable) and is
+Apache-2.0 (see skills/ui-craft/LICENSE and SOURCES.md).
 
 Third-party MIT rewrites keep their upstream copyrights as pinned in
 SOURCES.md.

@@ -5,9 +5,8 @@ description: use this when writing or reviewing Makefile / GNUmakefile. thin ski
 
 # Make
 
-Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. No `scripts/`. The language being built
-still loads its own skill.
+No `scripts/`. The language being built still loads its own skill.
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 

@@ -5,7 +5,7 @@ description: use this when a test fails, a bug appears, or behavior is unexpecte
 
 # Debug (default)
 
-Rewrite of obra/superpowers `systematic-debugging` @ `b36e0829`. Compress, not a paste. **Default** debug skill. Alternatives in this repo: `debug-pocock` (tight loop first), `debug-anthropic` (short report). Load **one**.
+Rewrite of obra/superpowers `systematic-debugging` @ `b36e0829`. Compress, not a paste. Alternatives in this repo: `debug-pocock` (tight loop first), `debug-anthropic` (short report). Load **one**.
 
 Pairs with `tdd` (failing test for the cause) and `verify-before-done` (prove the fix). No `scripts/`.
 

@@ -41,9 +41,8 @@ authorize copying those upstream files.
 - A second process pack beside this repo’s ids — do not install.
 - `yagni` — first-party restraint; not a vendor intake item unless
   **security** pulls it.
-- Still-empty first-party ids (`tracker-sdlc`,
-  `cursor-cloud-agents-when`) — written here later; not vendor
-  cherry-picks.
+- `tracker-sdlc` and `cursor-cloud-agents-when` are first-party. They are
+  not vendor cherry-picks. Live pins are in [SOURCES.md](../SOURCES.md).
 
 ## Landed vs remaining (historical list)
 
@@ -52,5 +51,3 @@ Bodies already on `main` (do not remint without a new **security** cut):
 `security-hardening`, `tdd`, `verify-before-done`, `pr-review`,
 `shell-safety`, `modern-python`, `golang-testing`, plus later fills
 (`yagni`, `golang-safety`, `golang-security`, language pack).
-
-Still empty first-party ids: `tracker-sdlc`, `cursor-cloud-agents-when`.

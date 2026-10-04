@@ -5,8 +5,8 @@ description: use this when writing, reviewing, or testing C++ — *.cpp, *.cc, *
 
 # C++
 
-RAII and ownership, not a Core Guidelines dump. Compatible
-with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`. No `scripts/`.
+RAII and ownership, not a Core Guidelines dump. No `scripts/`.
+Process skills that may load with this one, and which skill loads for C and C++ files: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list), [Map](../language-router/SKILL.md#map).
 
 ## Iron law
 
@@ -91,7 +91,7 @@ ctest --output-on-failure
 - Bare `new`/`delete`. Manual lock/unlock.
 - `using namespace std` in a header.
 - Unchecked C-style casts.
-- Treating C++ as "C with classes" (load `lang-c` for `.c` files).
+- Treating C++ as "C with classes".
 
 ## Red flags
 

@@ -5,9 +5,8 @@ description: use this when writing, reviewing, or migrating SQL — *.sql, schem
 
 # SQL
 
-Parameterize or do not ship. Compatible with `tdd`,
-`verify-before-done`, `pr-review`, `security-hardening`,
-and the host language skill. No `scripts/`.
+Parameterize or do not ship. No `scripts/`.
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list). SQL beside its host language: [Algorithm](../language-router/SKILL.md#algorithm).
 
 ## Iron law
 

@@ -1,37 +1,65 @@
 ---
 name: language-router
-description: use this when the files in play could match more than one language skill, when the language is unclear, or before writing code in a language that is not already loaded — pick at most one language-family skill. do not use for docs-only, git-only, or planning-only turns.
+description: use this on any turn that writes or reviews code. it owns the language map, the process skills that may load with the one language skill, and the turns that load no language skill; pick at most one language skill. do not use for docs-only, git-only, or planning-only turns.
 ---
 
 # Language router
 
-Map. Points at existing ids (`golang-safety`, `modern-python`,
-`shell-safety`) and the `lang-*` guides in this pack. No `scripts/`.
+Load this skill on every **code turn**: a turn that writes or reviews
+code. This file owns three rules: the language map, the load-with list
+and the no-language turns. It routes to existing ids and to the `lang-*`
+guides in this pack. It has no `scripts/`.
 
 ## Iron law
 
-**Load at most one language-family skill per turn.** A second only when
-the diff is genuinely mixed-language. Never load the catalog. Never
-remint an id that already exists.
+**Load at most one language skill per turn.** A **language skill** is
+`golang-safety`, `golang-testing`, `golang-security`, `modern-python`,
+`shell-safety`, or a `lang-*` skill other than a pointer. A **pointer**
+is `lang-go`, `lang-python` or `lang-shell`; a pointer does not count as
+a load.
 
-## Algorithm
+- Load a second language skill only when the diff is genuinely
+  mixed-language, or `shell-safety` when the turn includes shell.
+- Never load the catalog; read only the `SKILL.md` you chose and its
+  pointer.
+- Never remint an id that already exists, such as `golang-*`,
+  `modern-python` or `shell-safety`; load the existing id.
 
-1. List files this turn will read or write.
-2. Match the table. Extension and well-known filenames beat chat keywords.
-3. If one language owns ≥80% of the change, load that skill only.
-4. If two languages are first-class (SQL + host, TSX + stylesheet, proto + hand-edited host), load both.
-5. Stub language → load nothing, use official docs, do not invent a pack.
-6. Read the chosen `SKILL.md`. Stop routing. Do not summarize the catalog.
+## No-language turns
+
+A turn in this table loads no language skill.
+
+| Turn | Language skill |
+| --- | --- |
+| Onboarding turn (`sdlc-onboarding`) | none |
+| Gather-only or refine-only turn (`discover-the-idea`) | none |
+| Incoming-item Brief: problem, then fix vs removal ([Item brief](../../docs/sdlc/entry-brief-repo.md#item-brief)) | none |
+| UX-only turn (`ux-design`) | none |
+| Research-only turn (`buying-researcher`) | none |
+| README-only, docs-only, git-only, planning-only or templates-only turn | none |
+
+## Load-with list
+
+1. These process skills may load with the one language skill: `tdd`,
+   `verify-before-done`, `pr-review`, `security-hardening`, `yagni`,
+   `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`,
+   `ui-craft`.
+2. If the turn includes shell, `shell-safety` may also load with the
+   one language skill.
+3. When a debug skill loads, load **one** of `debug`, `debug-pocock` or
+   `debug-anthropic`. Never load two of them in one turn.
 
 ## Map
 
+Match files to a row. The Load column names the language skill.
+
 | Files / signals | Load |
 | --- | --- |
-| `*.go`, `go.mod` | `lang-go` (pointer; does not count as a load) → **one** of `golang-safety` / `golang-testing` / `golang-security` |
-| `*.py`, `pyproject.toml`, `uv.lock` | `lang-python` (pointer; does not count) → `modern-python` |
-| `*.sh`, `*.bash`, shebang sh/bash, agent shell | `lang-shell` (pointer; does not count) → `shell-safety` |
+| `*.go`, `go.mod` | **One** of: `golang-safety` by default; `golang-testing` when writing or changing tests or test tables, or when the change touches races or `goleak`; `golang-security` when the change touches input, auth, HTTP, SQL, files, subprocesses, or crypto. Pointer: `lang-go`. |
+| `*.py`, `pyproject.toml`, `uv.lock` | `modern-python`. Pointer: `lang-python`. |
+| `*.sh`, `*.bash`, shebang sh/bash, agent shell | `shell-safety`. Pointer: `lang-shell`. |
 | `*.rs`, `Cargo.toml` | `lang-rust` |
-| `*.ts`, `*.tsx`, `*.js`, `*.mjs`, `*.cjs`, `tsconfig.json` | `lang-js-ts` |
+| `*.ts`, `*.tsx`, `*.js`, `*.mjs`, `*.cjs`, `tsconfig.json`, `package.json` | `lang-js-ts` |
 | `*.c`, `*.h` and no C++ files | `lang-c` |
 | `*.cpp`, `*.cc`, `*.cxx`, `*.hpp` | `lang-cpp` |
 | `*.cs`, `*.csproj`, `*.sln` | `lang-csharp` |
@@ -50,31 +78,56 @@ remint an id that already exists.
 | `*.proto` | `lang-protobuf` |
 | `*.lua` | `lang-lua` |
 
-`*.tsx` is `lang-js-ts`, not `lang-web-markup`, unless the change is primarily markup or CSS.
+Pointers exist so every identified language has a file. Reading a
+pointer is optional; it routes to the language skill in its row.
 
-## Family rules
+`*.tsx` loads `lang-js-ts`, not `lang-web-markup`, unless the change is
+primarily markup or CSS.
 
-- TypeScript wins over JavaScript when `tsconfig.json` or `*.ts`/`*.tsx` exists.
-- C++ wins over C when any `.cpp`/`.hpp` is in the change. Never both.
-- Go: default `golang-safety`. Tests → `golang-testing`. Input/auth/SQL/files/exec/crypto → `golang-security`. Never all three.
-- Frameworks (React, Spring, Rails, FastAPI, Flutter) are not language skills. Do not invent one mid-session.
-- Process skills (`tdd`, `verify-before-done`, `pr-review`, `security-hardening`, `yagni`, `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`) may load with the one language skill. Load **one** of `debug` / `debug-pocock` / `debug-anthropic`.
-- `discover-the-idea` is gather-only. `buying-researcher` is research-only. `ux-design` is UX-only. No language skill on those turns.
+### Family rules
 
-## Stubs (no body)
+- TypeScript wins over JavaScript when `tsconfig.json` or a `*.ts` or
+  `*.tsx` file exists.
+- If any `.cpp` or `.hpp` file is in the change, load `lang-cpp`. Never
+  load `lang-c` beside it.
+- React, Spring, Rails, FastAPI and Flutter are frameworks, not language
+  skills. Never create a framework skill mid-session; load the language
+  skill its files map to.
 
-Elixir, Scala, Haskell, Zig, Solidity, Perl, Objective-C, R, Assembly.
-Say so. Official docs only.
+## Stubs
+
+Elixir, Scala, Haskell, Zig, Solidity, Perl, Objective-C, R and Assembly
+have no skill body. For a stub language, load no language skill, say
+so, and use the official docs only. Never create a pack for it.
+
+## Algorithm
+
+1. If the turn is a no-language turn, load no language skill. Stop
+   routing.
+2. List the files this turn will read or write.
+3. Match each file to a Map row. Extensions and well-known file names
+   beat chat keywords.
+4. If a file's language is a stub, follow Stubs for it.
+5. If `*.proto` files own ≥80% of the change and any hand-edited host
+   code changed, load `lang-protobuf` and the host language skill.
+   Otherwise, if one language owns ≥80% of the change, load that
+   language skill only.
+6. If two languages are first-class in the change, such as SQL and its
+   host language, TSX and a stylesheet, or proto and hand-edited host
+   code, load both.
+7. Read the chosen `SKILL.md`. Stop routing. Never summarize the
+   catalog; name only the skill you load.
 
 ## Never
 
-- A second methodology router beside this repo’s ids.
-- Two debug skills in one turn (`debug` + `debug-pocock` / `debug-anthropic`).
-- Remint `golang-*`, `modern-python`, or `shell-safety` under a new id.
-- Language skills on README-only, git-only, gather/refine-only, research-only, UX-only, or templates-only turns.
-- Dumping official style guides into context "just in case."
+- Never add a second methodology router beside this repo's ids; route
+  with this file.
+- Never paste official style guides into context "just in case"; read
+  only the chosen `SKILL.md` and its pointer.
 
 ## Red flags
+
+If you think one of these, stop and reread the iron law:
 
 - "Load Go testing and safety and security to be thorough"
 - "Polyglot repo, load every matching skill"

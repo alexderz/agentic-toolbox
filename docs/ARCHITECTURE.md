@@ -17,12 +17,12 @@ SHA-pinned, intake-scanned, and loadable by id.
    and knowledge distillations (`knowledge/<domain>/<kind>/`).
 2. Thin **AGENTS.md** on product repos naming skill **ids** only (no body
    paste). Optional shared layout: `CHANGELOG.md`, `docs/hld.md`,
-   `docs/lld.md` (see SDLC Conventions). Shapes:
-   `skills/sdlc-artifacts/templates/`.
+   `docs/lld.md` ([Product repo layout](sdlc/conventions.md#product-repo-layout)).
+   Shapes: `skills/sdlc-artifacts/templates/`.
 3. Role split: architect design, designer UX/stories/mockups, builder
    ship, tester CI, security intake/gates, manager board. Human accepts
-   UX unless they waive.
-4. Named SDLC steps (see [SDLC.md](SDLC.md)): **Entry** classifies
+   UX unless they waive it.
+4. Named SDLC steps (see [Steps](SDLC.md#steps)): **Entry** classifies
    chunk vs item. **Chunk** Brief is Gather ↔ Refine
    (`discover-the-idea`; do not copy that skill) then write Plan and
    Spec. **Incoming item** Brief is problem + fix vs a `yagni` removal;
@@ -61,20 +61,20 @@ flowchart LR
 | --- | --- | --- |
 | Skills home | First-party `SKILL.md` + pins; distillations under `knowledge/`; optional MIT packages under `packages/` | this repo |
 | Project contract | Commands + skill ids | Root `AGENTS.md` per product repo |
-| Workers | Implement via remote agent or local CLI | PR / local box |
+| Workers | Implement via remote agent or local CLI | A pull request, or your own machine |
 | Board | Track / Epic / Task·Bug via `tracker-sdlc` + the repo's tracker skill | Any supported tracker (Linear, Jira, Asana, Trello) or a local `tickets` branch |
 
 ## Roles
 
-| Role | Boundary |
+| Role | Job |
 | --- | --- |
-| architect | HLD/LLD, ship shape, adversarial review |
-| designer | Stories, high-level UX, Spec mockups when there is a screen |
-| builder | Implement behind Always |
-| tester | fmt/lint/CI green, PR watch |
-| security | Intake, Always/Ask/Never, scanners |
-| manager | After-act; land path; does not bless ships |
-| operator | HITL, vuln severity, extra-host exceptions |
+| **architect** | Design, HLD/LLD, adversarial review of approach |
+| **designer** | User stories, high-level UX, Spec mockups when there is a screen |
+| **builder** | Implement and ship |
+| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
+| **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
 ## Risks
 
