@@ -5,9 +5,8 @@ description: use this when writing or reviewing HTML or CSS — *.html, *.htm, *
 
 # HTML / CSS
 
-One skill for markup and style. Compatible with `tdd`,
-`verify-before-done`, `pr-review`, `security-hardening`. No
-`scripts/`. May be the second skill next to `lang-js-ts`. Cap is still 2.
+One skill for markup and style. No `scripts/`.
+Process skills that **may** load with this one: [load-with list](../language-router/SKILL.md#load-with-list). When a second language skill may load: [iron law](../language-router/SKILL.md#iron-law), [Algorithm](../language-router/SKILL.md#algorithm).
 
 ## Iron law
 

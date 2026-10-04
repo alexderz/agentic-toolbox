@@ -6,6 +6,17 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- `ui-craft` skill: builder rules for the visual quality of a UI (anti-patterns, typography, color, layout, motion, every UI state, one verification pass), loaded beside `ux-design`. Topic-only rewrite of Impeccable (Apache-2.0); no scripts, hooks or network. Upstream is offered once per product repo as a second option at the user's own risk (`DER-290`)
+- `maintainers/writing-standard.md`: the writing standard for agent text
+  (ten rules, banned names, rule owners, protected rules, rule-map
+  format, checks K1–K10), routed from `maintainers/AGENTS.md` (`DER-291`)
+- Maintainer eval step: `maintainers/AGENTS.md` `## Evals` (a PR into
+  `main` that changes agent text gets T1–T3 runs, three repeats per
+  model, regressions first) and `maintainers/evals/` (procedure, T1 and
+  T2 cards, keys and fixture, run template, baseline) (`DER-292`)
+- Maintainer eval task T3 in `maintainers/evals/`: build one item of a
+  groomed toy chunk to landed+verified; task card, answer key and the
+  frozen Groom fixture (`DER-293`)
 - `groom.md` template in `sdlc-artifacts`: the Groom plan, reviewed
   before any ticket is filed, then frozen (`DER-275`)
 - `sdlc-onboarding` Execution area: asks for and records the Build
@@ -22,6 +33,103 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Trial proof-of-concept code stays in the repo: a frozen `poc/` folder beside the chunk's design records holds the note, the code and a `README.md`, and is never imported into product paths; Plan drafts and Trial files are pushed as written after a diff scan, and **security** reads `poc/` at Spec (`DER-278`)
+- Messages to the operator name a ticket as its ID plus a short slug that says what it is, such as `ABC-123-repo-tone-audience`, not the bare ID; the ask template shows the form (`DER-351`)
+- `ui-craft` offers a third answer, "neither", recorded in the product repo's `AGENTS.md`; the skill stops there, and `AGENTS.md` and `README.md` route to its ask instead of listing the options (`DER-352`)
+- Wording fixes from the integrated check: duplicate worker-intake, open-blocker and reviewer-resume copies now route to their owners; the Monthly row lands in `docs/monthly/` or a filed Task; plainer words replace "box-local", "local box", "Separate PRs OK" and "Ask the human" (`DER-344`)
+- Writing standard records three operator decisions: K1 treats the `tracker-sdlc` 150-line target as a goal and blocks only on a cap; K3 exempts the `tracker-sdlc` `(per orchestrator …)` comment shape as contract text; frontmatter descriptions are metadata. Stale links in the design records are now code spans or fixed paths (`DER-345`)
+- `language-router` owns two more rules: a proto-led change (proto at least 80%) with any hand-edited host code loads both skills; the Go row now lists the test-table, race, `goleak` and HTTP signals. `lang-go` and `lang-protobuf` keep only routes to it (`DER-346`)
+- `discover-the-idea` rewritten to the writing standard, same gather loop (`DER-312`)
+- `tdd` skill: light wording pass, same teaching; Ask first names the operator and routes to the SDLC ask rule (`DER-319`)
+- `pr-review`: section links fixed, the distinct-reviewer rule routed to
+  `docs/sdlc/subagents.md#item-agents`; pins unchanged (`DER-320`)
+- `debug` skill: light wording pass (duplicate "default" line dropped); `SOURCES.md` note records it, pins unchanged (`DER-321`)
+- `debug-pocock` light pass: duplicate lines dropped, Iron law states its
+  run-once step as an instruction; pins unchanged (`DER-322`)
+- `debug-anthropic` skill: light wording pass; the Fix step now says to name the fix's side effects; pins unchanged (`DER-323`)
+- `docs-google-style` light pass: one punctuation fix, one apostrophe
+  fix, and the duplicate `## Source` section dropped; pins unchanged (`DER-324`)
+- `shell-safety` light pass, same Always, Ask first and Never rules: the **security** gate names Review, not PR, and the workers rule routes to the SDLC index (`DER-325`)
+- `verify-before-done` light pass: the verifier and landed+verified rules route to their SDLC owners, and "HITL" reads "operator in the loop"; pins unchanged (`DER-326`)
+- `golang-testing`: light pass; the duplicate pin and samber-pack lines dropped, load-with and workers-bypass rules routed to their owners; `SOURCES.md` note added (`DER-327`)
+- `golang-security` light pass: one `language-router` route replaces the
+  pairing line; the workers line names **security** (`DER-328`)
+- `golang-safety`: Go-skill choice routes to `language-router`; typed-nil
+  example compiles; nil-map `cap` row fixed (`DER-329`)
+- `pr-lens` light pass: one duplicate clause dropped from the
+  description and one upstream name made consistent; CLI pin and
+  local-only limits unchanged (`DER-330`)
+- `ux-design` light pass: the approver is named the operator, and the review loop routes to `docs/sdlc/plan-trial-spec.md#ux` (`DER-331`)
+- `lang-java`, `lang-js-ts`, `lang-kotlin`, `lang-lua`, `lang-makefile`,
+  `lang-php`: load-with and `.tsx` copies route to `language-router` (`DER-333`)
+- `lang-powershell`, `lang-protobuf`, `lang-python`, `lang-ruby` and `lang-rust` route their load-with lines to `language-router` (`DER-334`)
+- People docs: role tables match the SDLC index, README skill-fit line, links to the new SDLC layout (`DER-337`)
+- `lang-c`, `lang-cpp`, `lang-csharp`, `lang-dart`, `lang-docker`, `lang-go`: lines repeating `language-router` rules become one route line per file (`DER-332`)
+- `lang-shell`, `lang-sql`, `lang-swift`, `lang-terraform` and `lang-web-markup` replace their copies of the `language-router` load-with and one-language-skill rules with one route line each; language advice unchanged (`DER-335`)
+- Root `AGENTS.md` is routing only: a load table, the public-repo rule, and routes to the SDLC, `language-router`, `SOURCES.md` and intake (`DER-308`)
+- `sdlc-onboarding` rewritten to the writing standard, same `## Tracker`
+  and `## Execution` formats: numbered steps, a When table, and the
+  proposal shape routed to `ask-human.md` (`DER-310`)
+- `sdlc-artifacts` and its `changelog.md` template cite the land SHA, not
+  a merge SHA or a PR; the tracker-writer line routes to the SDLC index
+  `#tracker`; the AGENTS stub names `## Tracker` (`DER-311`)
+- `yagni` skill rewritten to the writing standard, same rules (`DER-313`)
+- `buying-researcher` skill and its references rewritten to the writing standard, same research method: one owner per rule, a numbered procedure, and a Never list with allowed actions (`DER-314`)
+- `grok-acp` skill rewritten to the writing standard: "manager" replaces
+  "orchestrator", each Never rule names the allowed action, and branch
+  source and fallback route to their SDLC owners; permission posture,
+  labels and own-item limits unchanged (`DER-315`)
+- `security-hardening` rewritten to the writing standard, same rules:
+  Ask first as numbered steps, Never and Ask first rows unchanged, and
+  the workers, intake and Monthly rules routed to their owners (`DER-316`)
+- `language-router` owns the language map (merged from `AGENTS.md`), the
+  load-with list and the no-language turns, and loads on any code turn
+  (`DER-318`)
+- `docs/INTAKE.md` rewritten to the writing standard, same six-step
+  checklist and rules; the tracker-skill **security** read is numbered
+  steps (`DER-336`)
+- Tracker-sdlc HLD fixes the two stale lines DER-271 names: signing follows git config; a chunk's onboarding lands as its own reviewed item before Plan (`DER-338`).
+- `modern-python` rewritten to the writing standard, same rules; the
+  load-with list routes to `language-router` (`DER-317`)
+- `tracker-sdlc` rewritten to the writing standard: the writer rule routes to
+  the SDLC index; contract and claim steps unchanged (`DER-309`)
+- `docs/SDLC.md` index rewritten to the writing standard: numbered
+  tracker and asking rules, a Names list, the ask shape routed to
+  `ask-human.md`, and the skill table replaced by routes to the root
+  `AGENTS.md` load table and `SOURCES.md` (`DER-299`)
+- SDLC conventions (`docs/sdlc/conventions.md`) rewritten to the writing
+  standard, same rules: the item `done` rule routes to the land path, the
+  old Stage-number rule sits with the in-flight map, and "this file" names
+  the SDLC again (`DER-307`)
+- `docs/sdlc/plan-trial-spec.md` to the writing standard: numbered Plan
+  and Spec steps, an item verdict table, the UX review loop and operator
+  acceptance owned once in `#ux`, a route to `#monthly` for "Monthly is
+  not the security gate", and the process-change plan names the SDLC and
+  its step files (`DER-301`)
+- `docs/sdlc/groom-step.md` rewritten to the writing standard; owns the groom reviewer id (`DER-302`)
+- `docs/sdlc/build-review.md` follows the writing standard: numbered steps and a Parallelism table; copies of the branch, subagent, land, worker-security and Monthly rules become one-line links to their owners; it owns "notify only when landed and verified" (`DER-303`)
+- `docs/sdlc/trunk-changelog-monthly.md` rewritten to the writing
+  standard: numbered Trunk steps, a Changelog condition table, and
+  Monthly as the one owner of "Monthly is not the security gate"
+  (`DER-304`)
+- `docs/sdlc/branches-and-lands.md` rewritten to the writing standard:
+  one name for the land target, the land-commit trailer rule without its
+  "(an operator-confirmed rule)" note, and each Never rule paired with
+  what to do instead; rules and gates unchanged (`DER-305`)
+- `docs/sdlc/subagents.md` rewritten to the writing standard: the
+  manager packs a child's prompt when it holds the skill bodies and the
+  child needs them, else points; Never rules name the allowed action;
+  the groom reviewer id, role jobs and worker security rules route to
+  their owners (`DER-306`)
+- `docs/sdlc/entry-brief-repo.md` follows the writing standard: Entry
+  and item Brief step 4 as condition tables, end of chunk Brief as
+  numbered steps, and one-line routes to the owners of the AFK pick,
+  step-agent ids, branch sources, designs in git and the item-path
+  Never; rules unchanged (`DER-300`)
+- `docs/SDLC.md` moves, text unchanged, into an index, step files under
+  `docs/sdlc/`, and a people doc, `docs/how-software-gets-built.md`; the
+  index adds How to read and a Read column, and links follow the move
+  (`DER-298`)
 - Maintainer notes move under `maintainers/` (design records, planning
   notes, this repo's `## Tracker` and tracker skill) with their own
   entry point, `maintainers/AGENTS.md`; the root `AGENTS.md` routing

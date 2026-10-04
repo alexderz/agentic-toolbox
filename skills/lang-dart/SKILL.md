@@ -5,9 +5,8 @@ description: use this when writing, reviewing, or testing Dart — *.dart, pubsp
 
 # Dart
 
-Language, not a Flutter pack. Compatible with `tdd`,
-`verify-before-done`, `pr-review`, `security-hardening`. No
-`scripts/`.
+Language, not a Flutter pack. No `scripts/`.
+Process skills that may load with this one: `language-router` [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 

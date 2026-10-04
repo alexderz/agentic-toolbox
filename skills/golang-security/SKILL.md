@@ -7,7 +7,7 @@ description: use this when writing, reviewing, or auditing Go for exploitable is
 
 Rewrite of samber/cc-skills-golang `golang-security` @ `22c58a55`. **Not** a vendor paste. **SKILL only** — no `evals/`, no `scripts/`, no `references/`. Compatible with `security-hardening`: **LLM output is untrusted**; the system prompt is not a boundary.
 
-Pairs with `golang-testing` (race/fuzz proof) and `golang-safety` (non-exploitable panics / slice aliasing). Separate PRs OK. Do not install the samber pack.
+[`language-router`](../language-router/SKILL.md#map) picks one Go skill per turn: this skill, `golang-safety` or `golang-testing`. Each Go concern may be its own item.
 
 ## Iron law
 
@@ -132,11 +132,11 @@ go test -fuzz=Fuzz
 | Role | Owns | Does not own |
 | --- | --- | --- |
 | **security** | This gate at LLD/PR for Go boundaries; skill intake | Writing product tests |
-| **builder** | Implementing behind Always; pairing `golang-testing` / `golang-safety` | Self-excepting “just this query” |
+| **builder** | Implementing behind Always; loading the one Go skill `language-router` picks | Self-excepting “just this query” |
 | **tester** | `-race` / SAST hooks when they appear | Skipping **security** because CI is green |
 | **manager** | After-act | Blessing a ship that skipped the gate |
 
-Workers do not bypass. A green `gofmt` is not a **security** clear.
+Workers do not bypass **security**; see [Roles](../../docs/SDLC.md#roles). A green `gofmt` is not a **security** clear.
 
 ## Red flags
 

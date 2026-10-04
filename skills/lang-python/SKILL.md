@@ -6,16 +6,12 @@ description: use this when the change is Python and you need the toolchain point
 # Python (router)
 
 **This id routes.** Load `modern-python`. Do not remint uv/ruff/ty/pytest
-advice. Compatible with `tdd`, `verify-before-done`, `pr-review`,
-`security-hardening`. No `scripts/`. `modern-python` is first-party MIT.
+advice. No `scripts/`. `modern-python` is first-party MIT.
+Python row and the process skills that may load with it: `language-router` [Map](../language-router/SKILL.md#map), [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
 **`modern-python` is the Python skill.** Do not invent a parallel guide.
-
-## Load
-
-`modern-python` only. Then stop.
 
 ## Combined verify (after modern-python)
 

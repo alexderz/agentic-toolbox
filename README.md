@@ -9,30 +9,30 @@ changes, and other tickets using this home. SDLC work is keyed by
 Git is the source of truth. A local or vendor mirror may follow. Do not
 treat a mirror as an independent write path for skill bodies.
 
-**License:** MIT ([LICENSE](LICENSE)). `skills/debug-anthropic/` is
-Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
+**License:** MIT ([LICENSE](LICENSE)). `skills/debug-anthropic/` and
+`skills/ui-craft/` are Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
 
 How the work gets done, in plain language (including a calculator
 walkthrough):
-[docs/SDLC.md](docs/SDLC.md#how-software-gets-built).
+[docs/how-software-gets-built.md](docs/how-software-gets-built.md).
 
 ## Roles
 
 | Role | Job |
 | --- | --- |
 | **architect** | Design, HLD/LLD, adversarial review of approach |
-| **designer** | User stories, high-level UX, mockups when there is a screen |
+| **designer** | User stories, high-level UX, Spec mockups when there is a screen |
 | **builder** | Implement and ship |
-| **tester** | Mechanical CI, hooks, cleanup |
-| **security** | Security gates across the SDLC, including skill intake |
-| **manager** | Process and SDLC after-act. Does not bless ships |
-| **operator** | Human in the loop: exceptions, vuln severity, extra hosts |
+| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
+| **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
+| **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |
 
-Improvise beyond predefinition when the work needs it. Do not remint a
-skill that already lives here.
+If no listed skill fits the task, do the work without one. Never create
+a new skill id mid-task. Do not remint a skill that already lives here.
 
 PRs welcome. Maintainer: [alexderz](https://github.com/alexderz). See
-[CONTRIBUTING.md](CONTRIBUTING.md).
+[CONTRIBUTING.md](CONTRIBUTING.md). Internal work skips PRs: it lands by local merge.
 
 ## Bundles
 
@@ -44,6 +44,7 @@ There is no plugin manifest yet. Natural install groups:
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp` | Operator opt-in. Offload a build to the local Grok CLI over ACP. Needs the `grok-acp` package on `PATH` |
 | **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
+| **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 | **optional** | `cursor-cloud-agents-when` | When choosing Cursor Cloud Agent, the local grok CLI, or Origin |
 
@@ -111,6 +112,12 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `pr-lens` | Rewrite of coldteadotai/pr-lens (MIT). Local render + PR attach only; no canvas, no `analyze`. Pin in [SOURCES.md](SOURCES.md). Operator opt-in |
+
+### ui
+
+| Id | Ownership |
+| --- | --- |
+| `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
 
 ### languages
 

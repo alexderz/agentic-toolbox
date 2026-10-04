@@ -28,7 +28,7 @@ this. Clarity beats house style; if you deviate, stay consistent. No
 - **Must (API / public comments):** Every public type, member, param,
   return, exception. First sentence unique. Present-tense verb.
 - **Never:** Unshipped features. `please` in steps. `simply` / `just` /
-  `easy` / `quickly`. `click here`. `e.g.` / `i.e.` `&` for *and*.
+  `easy` / `quickly`. `click here`. `e.g.` / `i.e.`. `&` for *and*.
 - **Never:** Inflect code (`GET`ting, `close`ing). Directional UI
   (`above`, `left-hand`). Skip heading levels. Links in headings. Real
   PII in examples. Images of text or terminal.
@@ -66,9 +66,5 @@ the API rules above.
 
 ## Drop
 
-Google product names, consoles, legal/brand, word-list dump. Don’t copy
+Google product names, consoles, legal/brand, word-list dump. Don't copy
 the guide entry-by-entry.
-
-## Source
-
-https://developers.google.com/style — distill, not a verbatim paste.

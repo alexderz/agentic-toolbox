@@ -5,22 +5,18 @@ description: use this when the change is Go but it is unclear which Go skill to 
 
 # Go (router)
 
-**This id routes.** Do not remint Go advice. Load **one** existing Go skill.
-Compatible with `tdd`, `verify-before-done`, `pr-review`, `security-hardening`. No `scripts/`.
+**This id routes.** Do not remint Go advice. No `scripts/`.
+At most one language skill per turn, and the process skills that may load with it: `language-router` [Iron law](../language-router/SKILL.md#iron-law), [Load-with list](../language-router/SKILL.md#load-with-list).
 
 ## Iron law
 
-**Pick one Go skill. Never load all three. Never write a parallel Go guide.**
+**Never write a parallel Go guide.**
 
 ## Load
 
-| Situation | Load |
-| --- | --- |
-| Default write or review of `*.go` | `golang-safety` |
-| Adding or changing tests, tables, race, goleak | `golang-testing` |
-| Input, auth, SQL, files, subprocesses, crypto, HTTP | `golang-security` |
+Which Go skill loads: the Go row in `language-router` [Map](../language-router/SKILL.md#map).
 
-Then stop. Apply that skill. Pair process skills as they already say.
+Then stop. Apply that skill.
 
 ## Combined verify (after the chosen skill)
 
@@ -44,4 +40,3 @@ Add `staticcheck` / `errcheck` when **tester** already wired them. Read the outp
 
 - A new `lang-go` body that copies samber or Effective Go into this repo.
 - `npx` / marketplace install of `samber/cc-skills-golang`.
-- Loading `golang-safety` + `golang-testing` + `golang-security` in one turn.

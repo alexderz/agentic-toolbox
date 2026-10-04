@@ -27,17 +27,17 @@ and why.** Do not invent a parallel outline.
 | Comparables | Plan | `templates/comparables.md` | `docs/comparables.md` or `docs/<slug>/comparables.md` |
 | UX / journeys | Plan | `templates/ux.md` | `docs/ux.md` or `docs/<slug>/ux.md` |
 | User story | Plan | `templates/user-story.md` | `docs/stories/` or the board |
-| PoC | Trial | `templates/poc.md` | `docs/` next to the HLD |
+| PoC | Trial | `templates/poc.md` | `poc/poc.md` beside the chunk's design records: [Trial](../../docs/sdlc/plan-trial-spec.md#trial) |
 | LLD | Spec | `templates/lld.md` | `docs/lld.md` or `docs/<slug>/lld.md` |
 | Mockups | Spec | `templates/mockup.md` | `docs/mockups/` (or `n/a`) |
 | Decision | any | `templates/decision.md` | `docs/decisions/<slug>.md` |
 | Task | Groom | `templates/task.md` | Board issue, label Task |
 | Bug | Groom | `templates/bug.md` | Board issue, label Bug |
 | Changelog | Build / Changelog | `templates/changelog.md` | repo-root `CHANGELOG.md` |
-| PR / land | Review | `templates/pr.md` | PR body or merge message |
-| Monthly | Monthly | `templates/monthly.md` | Ticket or `docs/monthly/` |
+| PR / land | Review | `templates/pr.md` | PR body or land commit message |
+| Monthly | Monthly | `templates/monthly.md` | `docs/monthly/`, or a Task once filed |
 | Human doc | Spec+ | `templates/human-doc.md` | `docs/` how-to (Google style) |
-| Ask the human | any gate | `templates/ask-human.md` | The message to the person — not a git file |
+| Ask the operator | any gate | `templates/ask-human.md` | The message to the operator — not a git file |
 | AGENTS stub | Repo | `templates/agents-stub.md` | product-repo `AGENTS.md` |
 | Repo tracker skill | Brief (onboarding) | `templates/tracker-skill.md` | product-repo `.agents/tracker/SKILL.md` |
 
@@ -45,11 +45,11 @@ and why.** Do not invent a parallel outline.
 
 - Copy the file. Delete unused *optional* sections. Keep required ones.
 - Link the layer above and below (track → chunk → item; HLD → LLD →
-  ticket). Changelog line cites ticket + land SHA or PR.
-- Tracker: the orchestrator files a ticket body with `tracker-sdlc`
-  `create`, and posts later fields or a design's git path with
-  `comment` (no edit verb); set blockers with set-blocker, not only as
-  text.
+  ticket). A changelog line cites the ticket ID and the land SHA.
+- Tracker: only the manager writes it: [Tracker](../../docs/SDLC.md#tracker).
+  The manager files a ticket body with `tracker-sdlc` `create`, posts later
+  fields or a design's git path with `comment` (no edit verb), and sets
+  blockers with set-blocker, not only as text.
 - Dates ISO-8601. Slugs lowercase hyphen.
 
 ## Ask first

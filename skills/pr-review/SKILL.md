@@ -12,20 +12,15 @@ Rewrite. Process from obra/superpowers `requesting-code-review` @ `b36e0829`. Du
 Aligns with SDLC **Review**: review **before the item lands on
 project-main** (or trunk if there is no project-main). Review is an
 explicit gate: internal lands are local merges with no PR, and that
-does not skip it; PRs are only for outside or remote workers. The
-reviewer is **not** the builder. First review of this item: mint a **clean** reviewer with crafted inputs (ticket/LLD/spec,
-SHAs vs the land target, standards). Later rounds on the **same item**:
-**resume that reviewer**. Do not mint a new reviewer each round. Never
-give it the builder’s transcript. See
-[docs/SDLC.md](../../docs/SDLC.md) (Project-main, Subagents per work
-item).
+does not skip it; PRs are only for outside or remote workers. See
+[Review](../../docs/sdlc/build-review.md#review) and
+[Project-main](../../docs/sdlc/branches-and-lands.md#project-main).
+Builder, verifier and reviewer are distinct; mint, then resume:
+[Item agents](../../docs/sdlc/subagents.md#item-agents).
 
 ## Iron law
 
 **No land on project-main (or trunk) on builder self-review alone.**
-First review is a clean reviewer with crafted inputs — never the
-builder’s chat history as the reviewer’s memory. Later reviews of this
-item resume that reviewer.
 
 ## Always
 
@@ -36,13 +31,13 @@ item resume that reviewer.
 2. **Craft context only (first launch).** Description, ticket/LLD/spec
    link, base/head SHAs, standards sources (`AGENTS.md`,
    `CODING_STANDARDS.md`, CONTRIBUTING). Not the builder transcript.
-   **Later rounds:** resume the same reviewer; send the new range and
-   what changed — do not re-paste the spec.
+   **Later rounds:** resume the same reviewer and send the new range; see
+   [Item agents](../../docs/sdlc/subagents.md#item-agents).
 3. **Two axes, separate:**
    - **Standards** — repo conventions + judgement smells (see baseline). Documented repo rules override smells.
    - **Spec** — ticket/LLD/acceptance: missing, wrong, or scope creep. Quote the requirement.
 4. **Report both axes** under `## Standards` and `## Spec`. Do not merge or rerank across axes.
-5. **Act:** Critical/Important before merge; Minor can follow. Push back
+5. **Act:** Critical/Important before land; Minor can follow. Push back
    with reasoning if the reviewer is wrong.
 6. **Reviewer stays read-only.** Do not spawn nested reviewers. Do not
    write, merge, or “just fix it” from the review skill.

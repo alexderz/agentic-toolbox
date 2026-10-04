@@ -7,7 +7,7 @@ description: use this when writing or reviewing Go for nil panics, typed-nil int
 
 Rewrite of samber/cc-skills-golang `golang-safety` @ `22c58a55`. **Not** a vendor paste. **Not** an `npx` / marketplace pack. **SKILL.md only** — no `evals/`, no `scripts/`, no `references/`. Id: `golang-safety`.
 
-**security CLEAR (conditional):** SKILL only. Safety is *our* bugs. Attackers belong in `golang-security` (separate PR) and `security-hardening`. Proof belongs in `golang-testing` (separate PR) and `tdd`.
+**security CLEAR (conditional):** SKILL only. Safety is *our* bugs.
 
 ## Iron law
 
@@ -23,7 +23,7 @@ Did not initialize it, bound-check it, or copy it? Treat it as a latent panic or
 | Nil, slices/maps, numbers, defer, zero values | Injection, crypto, secrets, path traversal → `golang-security` / `security-hardening` |
 | Stopping the next crash | Debugging a crash already in hand |
 
-Pair, do not merge the three Go skills into one body. Attackers stay in `golang-security`; proof stays in `golang-testing`.
+Do not merge `golang-testing`, `golang-security` and `golang-safety` into one body. Which Go skill loads, and what loads with it: [`language-router`](../language-router/SKILL.md#map).
 
 ## Always
 
@@ -77,9 +77,8 @@ An interface is nil only when **type and value** are both nil.
 
 ```go
 func handler(ok bool) http.Handler {
-    var h *MyHandler
     if !ok {
-        return nil // not h — *MyHandler(nil) boxed is != nil
+        return nil // return plain nil; a nil *MyHandler in an interface is != nil
     }
     return &MyHandler{}
 }
@@ -89,7 +88,7 @@ func handler(ok bool) http.Handler {
 
 | | Index | Write | Len/cap | Range |
 | --- | --- | --- | --- | --- |
-| Map | zero | **panic** | 0 | 0 |
+| Map | zero | **panic** | `len` 0; no `cap` | 0 |
 | Slice | **panic** | **panic** | 0 | 0 |
 | Chan | block | block | 0 | block |
 
