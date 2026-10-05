@@ -4,7 +4,7 @@
   Harness and raw results: `~/src/grok-bot-perm/model-bakeoff` on Pluto
   (`results-wave-a/REPORT.md`, `grades.tsv`, `matrix-wave-a.tsv`). Titan host
   config: `alexderz/house-infra` `hosts/titan/`.
-- Distilled: `2026-10-03`
+- Distilled: `2026-10-05`
 - Live docs win: the live `llama-swap.yaml` on Titan
   (`/home/alex.derzhi/ai/config/llama-swap.yaml`) and the bake-off report.
   When this note and a fresh measurement disagree, trust the measurement.
@@ -44,6 +44,40 @@ operator's call.
 - The bake-off edits `llama-swap.yaml` live. Its entries can carry the last
   variant tested rather than the best one. The gated row in
   `matrix-wave-a.tsv` is the setting that was measured.
+
+## What to run (2026-10-05, after test 2)
+
+Test 2 (build a Rust MCP server that a real client can drive) is the test that
+separates models. Results, one run each:
+
+| use | setup (llama-swap id) | test 2 | speed |
+|---|---|---|---|
+| **default agent model** | `qwen3.8-27b-vllm` (vLLM / HyperQwen, MTP, 150k) | full pass, 67 tests, 39 min | ~70 tok/s over a run |
+| **smartest, one session** | `flashnext` (Flash-Next EXL3 on SGLang) | full pass, **12 tools**, 115 tests, 124 min | 36 tok/s over a run |
+| uncensored / security | `qwen3.8-27b-uncensored-vllm` with presence_penalty 1.5 | full pass, 45 tests, 80 min | 61 tok/s |
+| long context (240k) | `qwen3.8-27b-vllm-240k` (KVarN cache) | full pass | about half the 150k speed |
+| fast but thin | Gemma 4 31B / 26B-A4B | full pass with only 3 tools | 45-90 tok/s |
+
+Engine rules learned:
+
+- **vLLM for models that fit the GPU** (2-4x llama.cpp on agent work: prefix
+  cache, MTP drafting, batching). **llama.cpp for models whose experts must sit
+  in RAM.** **SGLang `flashnext` for Flash-Next, single session only** (it
+  crashed under several sessions).
+- Flash-Next on llama.cpp (~7 tok/s) cannot finish test 2 in 3 hours. Strata
+  (31-37 tok/s) is the pending route for the fine-tunes.
+- Speculative decoding only pays when the model is GPU-resident: DFlash2 lifted
+  OrcaSAQ-2-Cyber 46 -> 77 tok/s; MTP on GLM-4.5-Air (experts in RAM) did nothing.
+- Gemma 4 needs `enable_thinking`; its template defaults it off.
+
+Client settings that matter (OpenCode, any engine):
+
+- Give the client the model's context limit **minus ~10%**, or it overflows
+  (it decides to compact from the previous turn's size).
+- Use a thinking budget (24k, and always at least ~6k under the reply cap).
+  It stops runaway thinking; it does not stop output loops.
+- OpenCode sends no sampling settings; the server's defaults decide. llama.cpp
+  takes them from the GGUF and falls back to `min_p 0.05`.
 
 ## Five rules that decide everything
 
