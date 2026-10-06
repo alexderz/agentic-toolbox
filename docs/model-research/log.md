@@ -1,0 +1,34 @@
+# Research log
+
+Dated findings and decisions, newest first. Results also land in the model
+cards; this log keeps the reasoning.
+
+## 2026-10-06
+
+- Mistral Large 4 (1.05T total, 49B active) does not fit: about 260 GB even
+  at roughly 2 bits per weight. Card added so it isn't researched again.
+- Started an uncensored round: ThinkingCap-27B Heretic (new), and 8-hour
+  long-horizon test-2 runs for Flash-Next Heretic2, Flash-Next Abliterated
+  s1.5, and Qwen3.8-27B Cyber. ThinkingCap test 1: 5/5, 54 tests, 31 tok/s,
+  on par with stock Qwen3.8-27B on llama.cpp.
+- The small-window vLLM setups (57-64k) finished: about 35-40% faster
+  decode than the 150k setup, but each failed one test. With the Pi agent,
+  the 57k setup compacted 8 times instead of 55.
+
+## 2026-10-05
+
+- llama.cpp 0.6 is 2.5-4x faster than 0.4 on Qwen3.8-Flash-Next with
+  experts in RAM. On it, the Orcarouter uncensored Flash-Next passed test 2
+  for the first time (8-hour cap, long-horizon sampling).
+- Strata passes test 2 with Flash-Next and Swift 1.5. The 1.6-bit coder
+  failed twice.
+- Kolibri-1 (patched llama.cpp) is not competitive on these tests.
+- An independent verifier subagent did not change OrcaSAQ's result: the
+  run that passed never wrote the bug that sank the earlier run.
+
+## 2026-10-04
+
+- vLLM with MTP drafts at 150k became the default for Qwen3.8-27B.
+- SGLang Flash-Next built the best server of all runs.
+- Added the context margin and thinking budget to every engine.
+- Dropped GLM-4.7-Flash and GLM-4.5-Air.
