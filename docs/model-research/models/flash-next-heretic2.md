@@ -1,6 +1,6 @@
 # Flash-Next Heretic2
 
-**Status:** Tested · Uncensored
+**Status:** Recommended · Uncensored
 
 | | |
 | --- | --- |
@@ -14,7 +14,7 @@ Flash-Next with refusals removed by Heretic's automated abliteration. Vision-cap
 
 ## Verdict
 
-Test 1 passed (5/5) at 8.7 tok/s on llama.cpp 0.4. A long-horizon test-2 run on llama.cpp 0.6 is queued.
+Smartest uncensored model so far. On llama.cpp 0.6 with long-horizon settings it passed test 2 (7 tools, 18 tests) in 120 minutes at 14.6 tok/s: about twice as fast as the Orcarouter fine-tune on the same engine, with a similar result. Test 1 passed (5/5) on llama.cpp 0.4.
 
 ## Variants we ran
 
@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Flash-Next Heretic2 · llama.cpp, experts in RAM | llama.cpp 0.4 | IQ4XS-NGQ4 | 128k | 42 | 8.7 |
-| Flash-Next Heretic2 · llama.cpp 0.6, experts in RAM | llama.cpp 0.6 | IQ4XS-NGQ4 | not run yet | | |
+| Flash-Next Heretic2 · llama.cpp 0.6, experts in RAM | llama.cpp 0.6 | IQ4XS-NGQ4 | 256k | 40 | 14.6 |
 
 ## Results
 
@@ -32,5 +32,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 25 | 8.7 | 123 | 128k | 42 | llama.cpp 0.4 | 12 subcommands |
+| 2 | pass | 7 tools | 18 | 14.6 | 120 | 256k | 40 | llama.cpp 0.6 | Flash-Next Heretic2 on llama.cpp 0.6 (-ncmoe 40, 262k, -fit off), long-horizon settings (8 h cap): FULL PASS, 7 tools, 18 tests, 120 min, 14.6 tok/s over the run (twice the orcarouter run on the same engine), 0 compactions, ended on its own |
 
 _Generated from the bake-off results on 2026-10-06._

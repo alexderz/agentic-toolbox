@@ -5,6 +5,9 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Flash-Next Heretic2 passed the 8-hour long-horizon test 2 on llama.cpp 0.6:
+  7 tools, 18 tests, 120 minutes, 14.6 tok/s. Twice as fast as the
+  Orcarouter fine-tune for a similar result: new smartest uncensored pick.
 - ThinkingCap-27B Heretic passed test 2: 8 tools, 30 tests, 52 minutes,
   25 tok/s, fully on the GPU on llama.cpp 0.6. The most tools of any
   uncensored 27B so far. Marked recommended.
