@@ -5,6 +5,9 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- ThinkingCap-27B Heretic passed test 2: 8 tools, 30 tests, 52 minutes,
+  25 tok/s, fully on the GPU on llama.cpp 0.6. The most tools of any
+  uncensored 27B so far. Marked recommended.
 - Mistral Large 4 (1.05T total, 49B active) does not fit: about 260 GB even
   at roughly 2 bits per weight. Card added so it isn't researched again.
 - Started an uncensored round: ThinkingCap-27B Heretic (new), and 8-hour
