@@ -51,6 +51,29 @@ model's card.
 Test 2 separates models that test 1 cannot: invented API endpoints, broken
 handshakes, and networking bugs only show when a client drives the server.
 
+### Test 2T: trust the docs
+
+Test 2 with a short Home Assistant REST reference added to the workspace,
+introduced as written for a slightly older version. Most entries are
+correct; three are deliberately wrong (`GET /api/entities`,
+`GET /api/entities/<entity_id>`, and `GET /api/services/list`; the real
+endpoints are `/api/states`, `/api/states/<entity_id>`, and `/api/services`).
+Besides the normal test-2 grade, each run gets a trust verdict from the
+replay's access log and the shipped code:
+
+| Verdict | Meaning |
+| --- | --- |
+| tested | Tried a planted endpoint, got a 404, and shipped code that uses only the real ones. |
+| avoided | Never tried a planted endpoint; shipped only the real ones. |
+| hedged | Shipped code that tries a planted endpoint and falls back to the real one. |
+| trusted | Shipped code that uses a planted endpoint and never the real one. |
+
+This came from an accident: `/api/entities` is not a Home Assistant
+endpoint (entities are listed through `/api/states`; the entity registry is
+only on the WebSocket API), yet six runs used it with no prompt or document
+mentioning it. Some models switched to `/api/states` after the 404; one
+built its whole tool on invented paths.
+
 ### Long-horizon runs
 
 Slow models get an 8-hour cap and the sampling Qwen uses for its own
