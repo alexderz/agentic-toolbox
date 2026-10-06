@@ -10,11 +10,11 @@
 
 ## Summary
 
-A 27B model with ternary weights.
+Qwen3.8-27B compressed to ternary weights by PrismML (PTQ1_0 5.9 GB, PQ2_0 7.2 GB); needs PrismML's llama.cpp fork. The makers report 98% of FP16 Qwen3.8-27B on 14 thinking-mode benchmarks.
 
 ## Verdict
 
-Fast (41-47 tok/s) but invents APIs: 11 of 14 API paths in one run did not exist. Abliterated variants exist; not tested for the same reason.
+Fast (41-47 tok/s) but invents APIs: in test 1 most of its subcommands targeted Home Assistant endpoints that do not exist (11 of 14 paths in one run), even after its own probes got 404s for them. A 2026-10-06 review of our runs found tool calls parsed normally and sampling matched the model card, but we ran the default `xhigh` reasoning effort (the makers recommend `medium` for agent work; `xhigh` has a known looping issue) with no thinking budget, on a PrismML build from 2026-09-25. A rerun with `medium` and a budget on a current build would settle whether that matters. A community serving stack (professorpalmer/bonsai-ada-surgery) adds tool-call grammar, effort handling and full-context tiering. Abliterated variants exist; not tested.
 
 ## Variants we ran
 
