@@ -45,7 +45,7 @@ operator's call.
   variant tested rather than the best one. The gated row in
   `matrix-wave-a.tsv` is the setting that was measured.
 
-## What to run (2026-10-05, after test 2)
+## What to run (2026-10-06, after test 2)
 
 Test 2 (build a Rust MCP server that a real client can drive) is the test that
 separates models. Results, one run each:
@@ -57,6 +57,9 @@ separates models. Results, one run each:
 | uncensored / security | `qwen3.8-27b-uncensored-vllm` with presence_penalty 1.5 | full pass, 45 tests, 80 min | 61 tok/s |
 | long context (240k) | `qwen3.8-27b-vllm-240k` (KVarN cache) | full pass | about half the 150k speed |
 | fast but thin | Gemma 4 31B / 26B-A4B | full pass with only 3 tools | 45-90 tok/s |
+| smartest, Strata engine | `strata-flash-next` / `strata-swift15` (Strata v0.1.39) | full pass, 10 tools, 46 / 63 tests, 96 / 130 min | 21-24 tok/s over a run (30-45 decode) |
+| uncensored, smartest base | `lcpp6-orcarouter-fn-uncensored` (llama.cpp v0.6.0, long-horizon settings) | full pass, 8 tools, 13 tests, 191 min | 7.6 tok/s over a run |
+| security, fast | `orcasaq2-cyber-27b` (llama.cpp + DFlash2) with a verifier-subagent prompt | full pass, 7 tools, 49 tests, 34 min | ~80 tok/s |
 
 Engine rules learned:
 
@@ -64,8 +67,23 @@ Engine rules learned:
   cache, MTP drafting, batching). **llama.cpp for models whose experts must sit
   in RAM.** **SGLang `flashnext` for Flash-Next, single session only** (it
   crashed under several sessions).
-- Flash-Next on llama.cpp (~7 tok/s) cannot finish test 2 in 3 hours. Strata
-  (31-37 tok/s) is the pending route for the fine-tunes.
+- Flash-Next on llama.cpp 0.4.x (~7 tok/s) cannot finish test 2 in 3 hours.
+  **llama.cpp v0.6.0 is 2.5-4x faster on Flash-Next** (unpruned: 2.2 -> 8.9 tok/s
+  decode, prefill 136 -> 569 on a short probe) and the uncensored fine-tune then
+  finished test 2 in 3 h 11 min. In a real agent run it averaged far less than the
+  probe suggested (5.5 tok/s early, 6-71 per request later); measure on the workload.
+- **Strata** (v0.1.39) runs the Flash-Next family at 30-45 tok/s decode with an
+  expert cache in VRAM. Set `reasoning_budget_tokens` in its config (off by default:
+  the IQ1_M coder looped without it) and `allowed_hosts` for the name the proxy uses
+  (its DNS-rebinding guard returns 403 otherwise).
+- **v0.6.0 auto-fit** (`--fit on`, default) keeps 1 GiB spare and aborts when `-ngl`
+  is set; pass `-fit off` with hand-set offload or every tuning load fails.
+- **MTP on a dense 27B** (v0.6.0, `--spec-type draft-mtp`, heads in the GGUF):
+  q38-27b-cyber 45 -> 82 tok/s; the extra VRAM cost the long context.
+- Container entries in llama-swap (Strata, a second llama.cpp image) survive a
+  llama-swap restart: stop them before restarting, or the orphan holds the GPU.
+- Kolibri-1 (78B, 3.5B active, patched llama.cpp): thin on both tests, ~19 tok/s;
+  not competitive here.
 - Speculative decoding only pays when the model is GPU-resident: DFlash2 lifted
   OrcaSAQ-2-Cyber 46 -> 77 tok/s; MTP on GLM-4.5-Air (experts in RAM) did nothing.
 - Gemma 4 needs `enable_thinking`; its template defaults it off.
@@ -78,6 +96,12 @@ Client settings that matter (OpenCode, any engine):
   It stops runaway thinking; it does not stop output loops.
 - OpenCode sends no sampling settings; the server's defaults decide. llama.cpp
   takes them from the GGUF and falls back to `min_p 0.05`.
+- Small windows (57-64k, the fast DFlash2 vLLM profiles) decode 35-40% faster but
+  OpenCode compacts constantly (55 times in one test 1). The Pi agent coped better
+  (8 compactions, 84 tests on the same profile) once given a thinking budget and a
+  margined context window. Use 150k with OpenCode for real work.
+- Run-to-run variance is large: OrcaSAQ wrote a port-dropping HTTP client once and
+  a correct one the next time; a verifier subagent found nothing to fix. n=1 per row.
 
 ## Five rules that decide everything
 
@@ -197,7 +221,8 @@ for the image tag (`localhost/strata:v0.1.30-sm86` is built).
 - tok/s is decode throughput averaged over the whole agent run, from event
   timestamps. It includes prompt processing and is lower than a short-prompt
   benchmark.
-- Tests 2 (build an MCP server) and 3 (use one) have not run yet.
+- Test 2 (build a Rust MCP server, graded by driving it as a real client) has run;
+  results are in "What to run". Test 3 (use an MCP server) has not run yet.
 
 ## Unknown
 
