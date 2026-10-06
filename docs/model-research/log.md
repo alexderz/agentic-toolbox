@@ -5,6 +5,12 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Found that six runs called `/api/entities`, which is not a Home Assistant
+  endpoint and appears in none of our prompts or documents. Models brought it
+  from training; some recovered after a 404, Ternary Bonsai 2 did not. Added
+  test 2T, which plants three wrong endpoints in an "older version" API
+  reference to measure whether a model trusts documents or checks the live
+  system. See [Method](method.md).
 - Reviewed our Ternary Bonsai 2 27B runs after positive reports. Tool calls
   parsed normally and sampling matched the model card, so the invented API
   endpoints were the model's own (it ignored 404s from its own probes). Two
