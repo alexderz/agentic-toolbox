@@ -5,6 +5,12 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Reviewed our Ternary Bonsai 2 27B runs after positive reports. Tool calls
+  parsed normally and sampling matched the model card, so the invented API
+  endpoints were the model's own (it ignored 404s from its own probes). Two
+  settings were not the makers' recommendation: default `xhigh` reasoning
+  effort instead of `medium`, and no thinking budget. A rerun on a current
+  PrismML build with both is cheap and would settle it.
 - Flash-Next Abliterated s1.5 passed the 8-hour long-horizon test 2 on
   llama.cpp 0.6: 6 tools, 19 tests, 120 minutes, 10.4 tok/s. All three
   uncensored Flash-Next variants now pass test 2 on 0.6; Heretic2 stays the
