@@ -5,6 +5,10 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Flash-Next Abliterated s1.5 passed the 8-hour long-horizon test 2 on
+  llama.cpp 0.6: 6 tools, 19 tests, 120 minutes, 10.4 tok/s. All three
+  uncensored Flash-Next variants now pass test 2 on 0.6; Heretic2 stays the
+  pick (one more tool, 40% faster).
 - Flash-Next Heretic2 passed the 8-hour long-horizon test 2 on llama.cpp 0.6:
   7 tools, 18 tests, 120 minutes, 14.6 tok/s. Twice as fast as the
   Orcarouter fine-tune for a similar result: new smartest uncensored pick.
