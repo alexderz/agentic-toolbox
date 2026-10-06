@@ -45,6 +45,7 @@ software, through the same coding tests as every other model.
 | [Qwen3.8-27B](models/qwen3.8-27b.md) | Qwen3.8 27B | Recommended |  | Dense, 27B |
 | [Qwen3.8-27B Uncensored (Aggressive, AWQ)](models/qwen3.8-27b-uncensored-aggressive.md) | Qwen3.8 27B | Recommended | yes | Dense, 27B |
 | [ThinkingCap Qwen3.8-27B Uncensored Heretic](models/thinkingcap-27b-heretic.md) | Qwen3.8 27B | Recommended | yes | Dense, 27B |
+| [Flash-Next Heretic2](models/flash-next-heretic2.md) | Qwen3.8 Flash-Next | Recommended | yes | MoE, 125B total / 6B active |
 | [Orcarouter Flash-Next Uncensored](models/orcarouter-flash-next-uncensored.md) | Qwen3.8 Flash-Next | Recommended | yes | MoE, 125B total / 6B active |
 | [Qwen3.8-Flash-Next](models/qwen3.8-flash-next.md) | Qwen3.8 Flash-Next | Recommended |  | MoE, 125B total / 6B active (+51B n-gram embedding, 4B MTP) |
 | [Swift 1.5 Flash-Next (pruned)](models/swift-1.5-flash-next.md) | Qwen3.8 Flash-Next | Recommended |  | MoE, pruned Flash-Next |
@@ -53,7 +54,6 @@ software, through the same coding tests as every other model.
 | [OrcaSAQ-2-Cyber-27B](models/orcasaq-2-cyber-27b.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Qwen3.8-27B Cyber (abliterated)](models/qwen3.8-27b-cyber.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Flash-Next Abliterated s1.5](models/flash-next-abliterated-s15.md) | Qwen3.8 Flash-Next | Tested | yes | MoE, 125B total / 6B active |
-| [Flash-Next Heretic2](models/flash-next-heretic2.md) | Qwen3.8 Flash-Next | Tested | yes | MoE, 125B total / 6B active |
 | [Cyber-Tiel-Coder-35B-A3B](models/cyber-tiel-coder-35b.md) | Tiel Coder 35B | Tested | yes | MoE, 35B / 3B active |
 | [Tiel-Coder-35B-A3B](models/tiel-coder-35b.md) | Tiel Coder 35B | Tested |  | MoE, 35B / 3B active |
 | [Nemotron 3.5 Lightning 30B-A3B](models/nemotron-3.5-lightning-30b.md) | Nemotron | Downloaded, not tested yet |  | Hybrid Mamba MoE, 30B / 3B active |

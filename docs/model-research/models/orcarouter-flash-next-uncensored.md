@@ -14,7 +14,7 @@ An uncensored fine-tune of Flash-Next, IQ4_XS, with a separate MTP draft file. R
 
 ## Verdict
 
-Smartest uncensored model so far: test-2 full pass on llama.cpp 0.6 with long-horizon settings (8 tools, 13 tests, 191 min). Slow: 7.6 tok/s over the run. On llama.cpp 0.4 it ran out of time.
+Test-2 full pass on llama.cpp 0.6 with long-horizon settings (8 tools, 13 tests, 191 min), but slow: 7.6 tok/s over the run. Flash-Next Heretic2 reached a similar result in about two thirds of the time. On llama.cpp 0.4 it ran out of time.
 
 ## Variants we ran
 
