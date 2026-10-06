@@ -21,6 +21,9 @@ server and how many passing tests it produced. For how the tests work, see
 [OrcaSAQ-2-Cyber-27B](models/orcasaq-2-cyber-27b.md) is faster than the
 uncensored pick (77-86 tok/s with a draft model) but less consistent: one of
 its two test-2 runs shipped a broken HTTP client.
+[ThinkingCap-27B Heretic](models/thinkingcap-27b-heretic.md) built the most
+complete uncensored 27B server so far (8 tools, 30 tests, 52 minutes) at
+25-31 tok/s on llama.cpp: pick it when completeness matters more than speed.
 
 ## By family
 
