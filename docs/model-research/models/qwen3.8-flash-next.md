@@ -37,6 +37,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 89 | 8.3 | 79 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 14 subcommands |
 | 2 | pass | 12 tools | 115 | 36.4 | 124 | 27/52 | 9.0 | 200k | – | SGLang | SGLang EXL3, single session, 6h cap: finished on its own in 124 min; most tools of any model; 215 steps, no runaway; 36 tok/s over the run |
 | 2 | pass | 9 tools | 0 | 6.9 | 165 | 8/13 | 12.8 | – | – | llama.cpp 0.4 | hit 3h cap mid-work (writing e2e tests); server already full pass; no runaway, 6.9 tok/s |
-| 2 | pass | 10 tools | 46 | 24.4 | 96 | 22/50 | 0.3 | 256k | – | Strata | Strata v0.1.39, Flash-Next unpruned IQ3_S, 262k int8 KV, MTP 4: full pass, 96 min, 24.4 tok/s over the run (30-41 decode per request), 1 compaction, 116 steps, clean stop |
+| 2 | pass | 10 tools | 46 | 24.4 | 96 | 22/50 | 7.1 | 256k | – | Strata | Strata v0.1.39, Flash-Next unpruned IQ3_S, 262k int8 KV, MTP 4: full pass, 96 min, 24.4 tok/s over the run (30-41 decode per request), 1 compaction, 116 steps, clean stop |
 
 _Generated from the bake-off results on 2026-10-06._
