@@ -26,11 +26,11 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 ## Results
 
-Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. One run per row. See [Method](../method.md).
+Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. *Failed builds* and *errors per 1k lines* show how hard the model fought the compiler on the way. One run per row. See [Method](../method.md).
 
-| Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 0 | 18.9 | 29 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | 4 subcommands |
-| 2 | partial | 3 tools | 5 | 19.6 | 36 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | Kolibri-1 Q8_0 (llama.cpp v0.6.0 + kolibri1 patch, -ncmoe 39, 262k): PARTIAL, verified by hand: implements only server/discover, answers the required legacy initialize with -32601 Method not found; 3 tools, a real tool call works, 5 tests; thin: 253 lines in one file, 36 min … |
+| Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 0 | 18.9 | 29 | 0 | 0.0 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | 4 subcommands |
+| 2 | partial | 3 tools | 5 | 19.6 | 36 | 10/18 | 185.8 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | Kolibri-1 Q8_0 (llama.cpp v0.6.0 + kolibri1 patch, -ncmoe 39, 262k): PARTIAL, verified by hand: implements only server/discover, answers the required legacy initialize with -32601 Method not found; 3 tools, a real tool call works, 5 tests; thin: 253 lines in one file, 36 min … |
 
 _Generated from the bake-off results on 2026-10-06._

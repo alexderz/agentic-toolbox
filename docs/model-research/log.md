@@ -5,6 +5,11 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Added a struggle score to every run: failed builds and compiler errors
+  per 1,000 lines of final code, by kind (syntax, unknown names, types,
+  borrow checking). Early spread on test 2: ThinkingCap 6, SGLang Flash-Next 9,
+  Qwen3.8-27B on vLLM 19, Swift 1.5 27, Heretic2 46, the stuck Qwen3.8-27B
+  Cyber MTP run 89 (58 syntax errors), Kolibri 186.
 - Qwen3.8-27B Cyber with its own MTP heads on llama.cpp 0.6 decodes about
   72 tok/s (was 30-45), but both test-2 runs with it got stuck: a loop on a
   mistyped call to an invented endpoint under long-horizon sampling, then 23

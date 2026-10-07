@@ -27,11 +27,11 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 ## Results
 
-Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. One run per row. See [Method](../method.md).
+Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. *Failed builds* and *errors per 1k lines* show how hard the model fought the compiler on the way. One run per row. See [Method](../method.md).
 
-| Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 53 | 44.3 | 14 | 256k | 20 | llama.cpp 0.4 | 6 subcommands |
-| 2 | pass | 6 tools | 35 | 24.5 | 82 | 256k | 20 | llama.cpp 0.4 |  |
+| Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 53 | 44.3 | 14 | 1 py | 0.8 | 256k | 20 | llama.cpp 0.4 | 6 subcommands |
+| 2 | pass | 6 tools | 35 | 24.5 | 82 | 16/28 | 0.6 | 256k | 20 | llama.cpp 0.4 |  |
 
 _Generated from the bake-off results on 2026-10-06._

@@ -51,6 +51,26 @@ model's card.
 Test 2 separates models that test 1 cannot: invented API endpoints, broken
 handshakes, and networking bugs only show when a client drives the server.
 
+### Struggle: how hard the model fought the compiler
+
+Every run also gets a struggle score, read from the transcript: each build
+and every Python run the agent made, with its output.
+
+- **Failed builds:** Rust builds (`cargo build`, `check`, `test`, `run`) that
+  failed, out of all builds. Python runs count outputs with a traceback.
+- **Errors:** the compiler's own count (`due to N previous errors`, which
+  survives when the agent trims the output), classified where visible as
+  syntax, unknown names (functions, methods, fields, and imports that don't
+  exist), types, borrow checking, or other. Python errors split the same way:
+  syntax, unknown names (`NameError`, `AttributeError`, missing modules), and
+  types.
+- **Errors per 1,000 lines** of the final code, so large and small projects
+  compare fairly.
+
+A model that writes clean code from the start scores low; a model that
+brute-forces its way past the compiler scores high, even when it ends with a
+pass. It is a separate axis from pass or fail.
+
 ### Test 2T: trust the docs
 
 Test 2 with a short Home Assistant REST reference added to the workspace,

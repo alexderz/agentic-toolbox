@@ -26,12 +26,12 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 ## Results
 
-Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. One run per row. See [Method](../method.md).
+Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. *Failed builds* and *errors per 1k lines* show how hard the model fought the compiler on the way. One run per row. See [Method](../method.md).
 
-| Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 39 | 23.9 | 52 | 128k | – | llama.cpp 0.4 | 5 subcommands |
-| 2 | fail | 0 tools | – | 27.3 | 35 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
-| 2 | pass | 7 tools | 21 | 8.1 | 173 | – | – | llama.cpp 0.4 | hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |
+| Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 39 | 23.9 | 52 | 2 py | 2.1 | 128k | – | llama.cpp 0.4 | 5 subcommands |
+| 2 | fail | 0 tools | – | 27.3 | 35 | 15/21 | 34.2 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
+| 2 | pass | 7 tools | 21 | 8.1 | 173 | 27/79 | 121.1 | – | – | llama.cpp 0.4 | hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |
 
 _Generated from the bake-off results on 2026-10-06._
