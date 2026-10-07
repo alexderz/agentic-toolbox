@@ -14,7 +14,7 @@ An abliterated Qwen3.8-27B aimed at security work, IQ4_XS GGUF with the MTP draf
 
 ## Verdict
 
-Passes both tests on llama.cpp but slowly at long context (8-24 tok/s). On llama.cpp 0.6 its MTP heads lift decode from 45 to 82 tok/s on a short probe, but that setup did not load at long context yet. A long-horizon test-2 run is queued.
+Passed both tests on llama.cpp 0.4 without drafting, but slowly at long context (8-24 tok/s). With its own MTP heads on llama.cpp 0.6 (144k context) it decodes about 72 tok/s, but both MTP runs of test 2 got stuck: one looped on a mistyped call to an invented endpoint under long-horizon sampling, the other failed the same build 23 times on a bracket it could not find. Not recommended with MTP until that is understood.
 
 ## Variants we ran
 

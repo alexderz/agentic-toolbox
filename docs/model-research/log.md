@@ -5,6 +5,11 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Qwen3.8-27B Cyber with its own MTP heads on llama.cpp 0.6 decodes about
+  72 tok/s (was 30-45), but both test-2 runs with it got stuck: a loop on a
+  mistyped call to an invented endpoint under long-horizon sampling, then 23
+  identical failed builds on a bracket it could not find under default
+  sampling. Its earlier passes were on llama.cpp 0.4 without drafting.
 - Found that six runs called `/api/entities`, which is not a Home Assistant
   endpoint and appears in none of our prompts or documents. Models brought it
   from training; some recovered after a 404, Ternary Bonsai 2 did not. Added
