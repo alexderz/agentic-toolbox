@@ -5,6 +5,12 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-07
 
+- The bake-off moved to a new host. Its first run there, Qwen3.8-27B on vLLM,
+  passed test 1 (5/5, 123 tests, 22 subcommands, 64 tok/s). About 6 of the 22
+  subcommands call Home Assistant endpoints that do not exist, and test 1's
+  checks do not catch that, so invented API surface is not only a Bonsai
+  problem. A test 1 check that runs every subcommand and counts 404s is on
+  the list.
 - EmbeddingGemma 2 (Google, 740M, Apache 2.0) fits easily, but its
   `gemma-embedding2` architecture landed in llama.cpp the day after our
   v0.6.0 build (PR 30054) and in vLLM after 0.31.0. Not downloaded; revisit
