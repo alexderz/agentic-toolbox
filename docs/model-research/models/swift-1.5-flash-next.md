@@ -35,4 +35,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 10 tools | 63 | 21.4 | 130 | 21/38 | 18.2 | 256k | – | Strata | Strata v0.1.39, swift15 IQ3_XXS (rerun after PLE fix), NO thinking budget: full pass, 130 min, 21.4 tok/s over the run (40-45 decode), 147 steps, clean stop; 1 compaction whose summary looped in thinking to 32k and came out empty, the agent stopped cleanly right after |
 | 2 | fail | 0 tools | – | 6.9 | 151 | 8/8 | 9.6 | – | – | llama.cpp 0.4 | does not build (Cargo.toml lib path missing); hit 3h cap while still writing the project after long spec/fixture study; no runaway, 6.9 tok/s |
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._

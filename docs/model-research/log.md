@@ -3,6 +3,12 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-07
+
+- Test 2T: Qwen3.8-Flash-Next on SGLang tested and gave the best 2T run
+  so far: 10 tools, 94 tests, 47 min, 6 compiler errors per 1,000 lines.
+  It hit planted paths, got 404s, and shipped only real endpoints.
+
 ## 2026-10-06
 
 - Test 2T: ThinkingCap tested. It hit planted paths, got 404s, and shipped

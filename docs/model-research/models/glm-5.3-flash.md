@@ -16,4 +16,4 @@ GLM's hybrid linear/sparse-attention MoE, supported by llama.cpp 0.6.
 
 The smallest quants (87-112 GB, REAP-50 pruned 67-92 GB) only fit with most experts in RAM; 18B active would run around 3 tok/s. Too slow for agent work.
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._

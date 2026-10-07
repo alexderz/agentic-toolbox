@@ -16,4 +16,4 @@ Small Qwen.
 
 509 lines across 2 files, none of which compiled.
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._

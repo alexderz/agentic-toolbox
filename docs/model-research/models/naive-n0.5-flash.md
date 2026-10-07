@@ -16,4 +16,4 @@
 
 No GGUF in any repo when checked (2026-09-28), and too large for the rig.
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._
