@@ -45,21 +45,53 @@ operator's call.
   variant tested rather than the best one. The gated row in
   `matrix-wave-a.tsv` is the setting that was measured.
 
-## What to run (2026-10-06, after test 2)
+## What to run (2026-10-07, after test 2 and 2T)
 
 Test 2 (build a Rust MCP server that a real client can drive) is the test that
-separates models. Results, one run each:
+separates models. Results, one run each. Test counts were regraded on 2026-10-07: the grader
+had counted only the first `cargo test` target, so most were too low.
+
+Results:
 
 | use | setup (llama-swap id) | test 2 | speed |
 |---|---|---|---|
-| **default agent model** | `qwen3.8-27b-vllm` (vLLM / HyperQwen, MTP, 150k) | full pass, 67 tests, 39 min | ~70 tok/s over a run |
-| **smartest, one session** | `flashnext` (Flash-Next EXL3 on SGLang) | full pass, **12 tools**, 115 tests, 124 min | 36 tok/s over a run |
-| uncensored / security | `qwen3.8-27b-uncensored-vllm` with presence_penalty 1.5 | full pass, 45 tests, 80 min | 61 tok/s |
+| **default agent model** | `qwen3.8-27b-vllm` (vLLM / HyperQwen, MTP, 150k) | full pass, 73 tests, 39 min | ~70 tok/s over a run |
+| **smartest, one session** | `flashnext` (Flash-Next EXL3 on SGLang) | full pass, **12 tools**, 155 tests, 124 min | 36 tok/s over a run |
+| uncensored / security | `qwen3.8-27b-uncensored-vllm` with presence_penalty 1.5 | full pass, 66 tests, 80 min | 61 tok/s |
 | long context (240k) | `qwen3.8-27b-vllm-240k` (KVarN cache) | full pass | about half the 150k speed |
 | fast but thin | Gemma 4 31B / 26B-A4B | full pass with only 3 tools | 45-90 tok/s |
-| smartest, Strata engine | `strata-flash-next` / `strata-swift15` (Strata v0.1.39) | full pass, 10 tools, 46 / 63 tests, 96 / 130 min | 21-24 tok/s over a run (30-45 decode) |
-| uncensored, smartest base | `lcpp6-orcarouter-fn-uncensored` (llama.cpp v0.6.0, long-horizon settings) | full pass, 8 tools, 13 tests, 191 min | 7.6 tok/s over a run |
-| security, fast | `orcasaq2-cyber-27b` (llama.cpp + DFlash2) with a verifier-subagent prompt | full pass, 7 tools, 49 tests, 34 min | ~80 tok/s |
+| smartest, Strata engine | `strata-flash-next` / `strata-swift15` (Strata v0.1.39) | full pass, 10 tools, 104 / 114 tests, 96 / 130 min | 21-24 tok/s over a run (30-45 decode) |
+| uncensored, smartest base | `lcpp6-orcarouter-fn-uncensored` (llama.cpp v0.6.0, long-horizon settings) | full pass, 8 tools, 54 tests, 191 min, fewest compiler errors of the big uncensored runs | 7.6 tok/s over a run |
+| uncensored, faster big model | `lcpp6-flashnext-heretic2` (llama.cpp v0.6.0, long-horizon settings) | full pass, 7 tools, 33 tests, 120 min | 14.6 tok/s over a run |
+| uncensored 27B, most tools | `lcpp6-thinkingcap-27b-heretic` (llama.cpp v0.6.0, 196k, full GPU) | full pass, 8 tools, 56 tests, 52 min; fewest compiler errors of any run | 25 tok/s |
+| security, fast | `orcasaq2-cyber-27b` (llama.cpp + DFlash2) with a verifier-subagent prompt | full pass, 7 tools, 51 tests, 34 min | ~80 tok/s |
+
+Test 2T (same task, plus REST notes "for a slightly older Home Assistant" with
+three planted wrong endpoints). Did the model test the docs or trust them?
+
+- **Tested** (hit a planted path, got 404, shipped only real endpoints):
+  Qwen3.8-27B on vLLM, ThinkingCap, Flash-Next on SGLang (10 tools, 94 tests:
+  the best 2T run).
+- **Hedged** (ships the planted path and the real one): Qwen3.8-27B Uncensored
+  (planted first, real as fallback), OrcaSAQ (real first, planted as a fallback
+  "for a newer HA").
+- **Trusted**: Gemma 4 26B-A4B on vLLM, which never called the API and quit
+  after 3 minutes with code that does not build.
+- Without planted docs, six earlier runs invented `/api/entities` on their own
+  (it is not a Home Assistant REST endpoint).
+
+Struggle (failed builds and compiler errors per 1,000 lines of final code)
+separates models the pass/fail grade does not: ThinkingCap 4.5, Flash-Next on
+SGLang 6, OrcaSAQ 12, Orcarouter 13, Heretic2 28, Qwen3.8-27B Uncensored 42,
+Kolibri 186.
+
+- **MTP drafting on q38-27b-cyber** decoded 72 tok/s but both long test-2 runs
+  got stuck (a 126-call loop with long-horizon sampling; 23 identical failed
+  builds with default sampling). The same model passed without drafting on
+  llama.cpp 0.4. Fast and stuck is worse than slow and finished.
+- **Strata pins about 40 GB of host RAM at start.** A Strata start right after
+  another large model failed 13 times in a row ("Cannot map memory"). Make sure
+  the previous model's container is gone before starting it.
 
 Engine rules learned:
 
