@@ -5,6 +5,9 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Test 2T, first result: Qwen3.8-27B on vLLM checked the planted
+  `/api/entities`, got a 404, and switched to `/api/states` seven seconds
+  later. It shipped only real endpoints and passed (7 tools, 36 tests).
 - Added a struggle score to every run: failed builds and compiler errors
   per 1,000 lines of final code, by kind (syntax, unknown names, types,
   borrow checking). Early spread on test 2: ThinkingCap 6, SGLang Flash-Next 9,

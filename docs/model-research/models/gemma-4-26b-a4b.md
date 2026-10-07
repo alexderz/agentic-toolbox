@@ -36,7 +36,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 0 | 140.8 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 2 subcommands |
 | 1 | pass | 5/5 checks | 6 | 117.3 | 2 | 0 | 0.0 | 256k | – | vLLM | 8 subcommands |
 | 2 | pass | 3 tools | 2 | 118.4 | 3 | 6/8 | 16.8 | 256k | – | llama.cpp 0.4 |  |
-| 2 | partial | 3 tools | 6 | 89.6 | 10 | 14/16 | 0.0 | 256k | – | llama.cpp 0.4 | baseline without MTP: list_entities requests a path outside /api (replay: 404 'only /api paths are served') |
+| 2 | partial | 3 tools | 6 | 89.6 | 10 | 14/16 | 53.3 | 256k | – | llama.cpp 0.4 | baseline without MTP: list_entities requests a path outside /api (replay: 404 'only /api paths are served') |
 | 2 | fail | 0 tools | – | 152.7 | 7 | 6/6 | 34.2 | 256k | – | llama.cpp 0.4 | does not build (E0599); run ended on a 32,000-token output step with no text after cargo test -- runaway generation; thinking ON |
 | 2 | fail | 0 tools | – | 106.1 | 12 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | does not build (E0119); 2 runaway steps, both DEGENERATE LOOPS INSIDE TOOL-CALL ARGUMENTS ("at_the_end_of_the_file..." x157, "server_side_side_wrapper(" x764), not thinking: the 24k thinking budget cannot catch it. Gemma 26B llama.cpp, temp 1.0 min_p 0 |
 | 2 | pass | 3 tools | 0 | 91.4 | 4 | 4/9 | 8.0 | 256k | – | vLLM |  |
