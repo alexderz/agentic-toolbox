@@ -31,6 +31,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 65 | 30.7 | 20 | 1 py | 0.6 | 128k | – | llama.cpp 0.4 | 7 subcommands |
-| 2 | partial | 7 tools | 22 | 24.5 | 23 | 7/17 | 20.3 | 192k | – | llama.cpp 0.4 | no initialize method (-32601 Method not found); tools/list and calls work without it, but no client gets past the handshake; replies to notifications |
+| 2 | partial | 7 tools | 22 | 24.5 | 23 | 6/16 | 19.6 | 192k | – | llama.cpp 0.4 | no initialize method (-32601 Method not found); tools/list and calls work without it, but no client gets past the handshake; replies to notifications |
 
 _Generated from the bake-off results on 2026-10-06._
