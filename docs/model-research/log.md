@@ -5,6 +5,16 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Test 2T: ThinkingCap tested. It hit planted paths, got 404s, and shipped
+  only `/api/states` and `/api/services` (8 tools, 8 tests, 90 min).
+- Test 2T: OrcaSAQ hedged the other way round. It ships the real
+  `/api/states` first and keeps the planted `/api/entities` as a fallback
+  "for a newer Home Assistant", with tests for that fallback (9 tools, 59 tests).
+- Grader fix: the test-2 grader read only the first `test result` line of
+  `cargo test`, so a crate whose lib target has no tests scored 0. It now
+  sums every target; older runs are being regraded.
+- Struggle score fix: rerunning a failed build with no edit in between
+  (only a different `tail` or `grep`) now counts once.
 - Test 2T: Qwen3.8-27B Uncensored hedged. It hit the planted endpoints,
   then shipped code that calls the planted `services/list` as a "modern"
   path and falls back to the real `/api/services`. It passed with 68 tests.
