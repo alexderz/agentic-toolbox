@@ -5,6 +5,15 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-07
 
+- Test 2T, last result: Gemma 4 26B-A4B on vLLM trusted the planted docs.
+  Its code calls `/api/entities`; it never called the API, quit after three
+  minutes and left code that does not build.
+- Regraded every test-2 run after the grader fix: 21 of 46 test counts were
+  too low (Flash-Next on SGLang 115 -> 155, Orcarouter 13 -> 54, Heretic2
+  18 -> 33). With the corrected counts the Orcarouter fine-tune is the
+  smartest uncensored setup; Heretic2 stays as the faster one.
+- Strata did not start for test 2T (the engine exits while locking about
+  40 GB of host RAM). Its 2T result is still open.
 - Test 2T: Qwen3.8-Flash-Next on SGLang tested and gave the best 2T run
   so far: 10 tools, 94 tests, 47 min, 6 compiler errors per 1,000 lines.
   It hit planted paths, got 404s, and shipped only real endpoints.

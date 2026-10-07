@@ -14,7 +14,7 @@ An expert-pruned Flash-Next, GSQ-RCO IQ3_XXS. Smaller, so more of it stays on th
 
 ## Verdict
 
-On Strata: test-2 full pass, 10 tools, 63 tests, 130 min. On llama.cpp 0.4 it ran out of time.
+On Strata: test-2 full pass, 10 tools, 114 tests, 130 min. On llama.cpp 0.4 it ran out of time.
 
 ## Variants we ran
 
@@ -32,7 +32,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 96 | 7.1 | 161 | 4 py | 2.0 | 128k | 42 | llama.cpp 0.4 | 16 subcommands |
-| 2 | pass | 10 tools | 63 | 21.4 | 130 | 21/38 | 18.2 | 256k | – | Strata | Strata v0.1.39, swift15 IQ3_XXS (rerun after PLE fix), NO thinking budget: full pass, 130 min, 21.4 tok/s over the run (40-45 decode), 147 steps, clean stop; 1 compaction whose summary looped in thinking to 32k and came out empty, the agent stopped cleanly right after |
+| 2 | pass | 10 tools | 114 | 21.4 | 130 | 21/38 | 18.2 | 256k | – | Strata | [tests regraded 2026-10-07: 63/0 -> 114/0, grader now sums every cargo test target] Strata v0.1.39, swift15 IQ3_XXS (rerun after PLE fix), NO thinking budget: full pass, 130 min, 21.4 tok/s over the run (40-45 decode), 147 steps, clean stop; 1 compaction whose summary looped in … |
 | 2 | fail | 0 tools | – | 6.9 | 151 | 8/8 | 9.6 | – | – | llama.cpp 0.4 | does not build (Cargo.toml lib path missing); hit 3h cap while still writing the project after long spec/fixture study; no runaway, 6.9 tok/s |
 
 _Generated from the bake-off results on 2026-10-07._

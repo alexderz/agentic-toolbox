@@ -14,7 +14,7 @@ An uncensored fine-tune of Flash-Next, IQ4_XS, with a separate MTP draft file. R
 
 ## Verdict
 
-Test-2 full pass on llama.cpp 0.6 with long-horizon settings (8 tools, 13 tests, 191 min), but slow: 7.6 tok/s over the run. Flash-Next Heretic2 reached a similar result in about two thirds of the time. On llama.cpp 0.4 it ran out of time.
+Test-2 full pass on llama.cpp 0.6 with long-horizon settings (8 tools, 54 tests, 191 min), but slow: 7.6 tok/s over the run. Smartest uncensored model on the corrected test counts (2026-10-07 regrade): more tools and tests and half the compiler errors per 1,000 lines of Heretic2. Heretic2 is twice as fast. On llama.cpp 0.4 it ran out of time.
 
 ## Variants we ran
 
@@ -32,7 +32,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 54 | 8.8 | 104 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 13 subcommands |
-| 2 | pass | 8 tools | 13 | 7.6 | 191 | 9/22 | 13.2 | 256k | 40 | llama.cpp 0.6 | orcarouter Flash-Next uncensored on llama.cpp v0.6.0 (lcpp6, -ncmoe 40, 262k, -fit off), long-horizon settings (temp 1.0/top-p 0.95/top-k 20, 26k budget, 8 h cap): FULL PASS, 191 min, 7.6 tok/s over the run (6-71 per request), 90 steps, 0 compactions, ended on its own; the … |
+| 2 | pass | 8 tools | 54 | 7.6 | 191 | 9/22 | 13.2 | 256k | 40 | llama.cpp 0.6 | [tests regraded 2026-10-07: 13/0 -> 54/0, grader now sums every cargo test target] orcarouter Flash-Next uncensored on llama.cpp v0.6.0 (lcpp6, -ncmoe 40, 262k, -fit off), long-horizon settings (temp 1.0/top-p 0.95/top-k 20, 26k budget, 8 h cap): FULL PASS, 191 min, 7.6 tok/s … |
 | 2 | fail | 0 tools | – | 7.4 | 155 | 0 | 0.0 | – | – | llama.cpp 0.4 | does not build (lib path in Cargo.toml not written yet); hit 3h cap mid-project; no runaway, 7.4 tok/s |
 
 _Generated from the bake-off results on 2026-10-07._
