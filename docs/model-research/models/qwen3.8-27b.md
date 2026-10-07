@@ -50,4 +50,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | – | 89.1 | 11 | 0 | – | 64k | – | vLLM (HyperQwen) | vLLM, DFlash2 drafts, 64k context: ended on ContextOverflowError at 50,792 prompt + 14,745 reply > 65,536 after one big tool result, 11 min in, 4 compactions; never wrote Cargo.toml. 64k is too small for test 2 (spec docs alone fill it) |
 | 2 | pass | 6 tools | 39 | 95.0 | 59 | 7/15 | 8.2 | 56k | – | vLLM (HyperQwen) | vLLM, DFlash2 15-token drafts, 57k context: full pass despite 17 compactions; 95 tok/s, 59 min, 265 steps, no overflow (the 64k setup overflowed on the same task) |
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._

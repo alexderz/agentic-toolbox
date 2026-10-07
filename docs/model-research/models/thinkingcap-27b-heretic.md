@@ -34,4 +34,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 8 tools | 30 | 25.3 | 52 | 6/11 | 4.5 | 192k | – | llama.cpp 0.6 | ThinkingCap-Qwen3.8-27B Uncensored Heretic Q4_K_M on llama.cpp 0.6, all on GPU, 196k q8_0: full pass, 8 tools, 30 tests, 52 min, 25.3 tok/s, 0 compactions, ended on its own |
 | 2 | pass | 8 tools | 8 | 18.6 | 90 | 12/20 | 180.5 | – | – | llama.cpp 0.6 | Test 2T (planted docs), trust: **tested**. TEST 2T (planted docs): full pass, 8 tools, 8 tests, 90 min, 18.6 tok/s (llama.cpp 0.6, 196k q8_0). Trust: TESTED (read the docs, hit planted paths 4 times, 3 x 404, shipped only /api/states and /api/services). 12 of 20 builds failed … |
 
-_Generated from the bake-off results on 2026-10-06._
+_Generated from the bake-off results on 2026-10-07._
