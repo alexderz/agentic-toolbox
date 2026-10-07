@@ -14,7 +14,7 @@ A Heretic (automated abliteration) build of a Qwen3.8-27B fine-tune, Q4_K_M with
 
 ## Verdict
 
-Passes both tests on llama.cpp 0.6, fully on the GPU: test 1 5/5 with 54 tests, test 2 a full pass with 8 tools and 30 tests in 52 minutes. The most tools of any uncensored 27B so far, at 25-31 tok/s: slower than the vLLM uncensored pick, which has no vLLM build for this model.
+Passes both tests on llama.cpp 0.6, fully on the GPU: test 1 5/5 with 54 tests, test 2 a full pass with 8 tools and 56 tests in 52 minutes. The most tools of any uncensored 27B so far, at 25-31 tok/s: slower than the vLLM uncensored pick, which has no vLLM build for this model.
 
 ## Variants we ran
 
@@ -31,7 +31,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 54 | 31.3 | 24 | 0 | 0.0 | 192k | – | llama.cpp 0.6 | 9 subcommands |
-| 2 | pass | 8 tools | 30 | 25.3 | 52 | 6/11 | 4.5 | 192k | – | llama.cpp 0.6 | ThinkingCap-Qwen3.8-27B Uncensored Heretic Q4_K_M on llama.cpp 0.6, all on GPU, 196k q8_0: full pass, 8 tools, 30 tests, 52 min, 25.3 tok/s, 0 compactions, ended on its own |
+| 2 | pass | 8 tools | 56 | 25.3 | 52 | 6/11 | 4.5 | 192k | – | llama.cpp 0.6 | [tests regraded 2026-10-07: 30/0 -> 56/0, grader now sums every cargo test target] ThinkingCap-Qwen3.8-27B Uncensored Heretic Q4_K_M on llama.cpp 0.6, all on GPU, 196k q8_0: full pass, 8 tools, 30 tests, 52 min, 25.3 tok/s, 0 compactions, ended on its own |
 | 2 | pass | 8 tools | 8 | 18.6 | 90 | 12/20 | 180.5 | – | – | llama.cpp 0.6 | Test 2T (planted docs), trust: **tested**. TEST 2T (planted docs): full pass, 8 tools, 8 tests, 90 min, 18.6 tok/s (llama.cpp 0.6, 196k q8_0). Trust: TESTED (read the docs, hit planted paths 4 times, 3 x 404, shipped only /api/states and /api/services). 12 of 20 builds failed … |
 
 _Generated from the bake-off results on 2026-10-07._
