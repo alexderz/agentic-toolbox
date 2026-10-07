@@ -14,7 +14,7 @@ Qwen3.8-27B compressed to ternary weights by PrismML (PTQ1_0 5.9 GB, PQ2_0 7.2 G
 
 ## Verdict
 
-Fast (41-47 tok/s) but invents APIs: in test 1 most of its subcommands targeted Home Assistant endpoints that do not exist (11 of 14 paths in one run), even after its own probes got 404s for them. A 2026-10-06 review of our runs found tool calls parsed normally and sampling matched the model card, but we ran the default `xhigh` reasoning effort (the makers recommend `medium` for agent work; `xhigh` has a known looping issue) with no thinking budget, on a PrismML build from 2026-09-25. A rerun with `medium` and a budget on a current build would settle whether that matters. A community serving stack (professorpalmer/bonsai-ada-surgery) adds tool-call grammar, effort handling and full-context tiering. Abliterated variants exist; not tested.
+Fast (41-47 tok/s) but invents APIs: in test 1 most of its subcommands targeted Home Assistant endpoints that do not exist (11 of 14 paths in one run), even after its own probes got 404s for them. A 2026-10-06 review of our runs found tool calls parsed normally and sampling matched the model card, but we ran the default `xhigh` reasoning effort (the makers recommend `medium` for agent work; `xhigh` has a known looping issue) with no thinking budget, on a PrismML build from 2026-09-25. Rerun 2026-10-07 with the makers' settings (PrismML build 2026-10-05, PQ2_0, `medium`, 24k budget, model-card sampling): test 1 scored 5/5 with 94 tests at 50.8 tok/s (old runs 2/5 and 4/5), but 7 of its 11 subcommands still call Home Assistant endpoints that do not exist (`/api/entities`, `/api/entity_count`, `/api/system_state`, `/api/scheduler`, `/api/config/users`, `/api/version`, `/api/history/data`), and it kept `/api/entities` after a 404. The settings fixed reliability, not the invented API surface. Test 2 pending. A community serving stack (professorpalmer/bonsai-ada-surgery) adds tool-call grammar, effort handling and full-context tiering. Abliterated variants exist; not tested.
 
 ## Variants we ran
 
@@ -24,6 +24,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | --- | --- | --- | --- | --- | --- |
 | Bonsai 2 27B (ternary) | llama.cpp 0.4 | ternary | 128k | – | 40.8 |
 | Bonsai 2 27B PQ2 | llama.cpp 0.4 | PQ2 | 248k | – | 47.5 |
+| Bonsai 2 27B PQ2 · PrismML fork 2026-10-05, effort medium, 24k budget | PrismML llama.cpp | PQ2 | 248k | – | 50.8 |
 
 ## Results
 
@@ -34,5 +35,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | fail | 2/5 checks | 68 | 40.8 | 42 | 4 py | 1.9 | 128k | – | llama.cpp 0.4 | 20 subcommands |
 | 1 | fail | 2/5 checks | 46 | 46.5 | 57 | 5 py | 3.4 | 128k | – | llama.cpp 0.4 | 14 subcommands |
 | 1 | partial | 4/5 checks | 75 | 47.5 | 36 | 4 py | 2.7 | 248k | – | llama.cpp 0.4 | 17 subcommands |
+| 1 | pass | 5/5 checks | 94 | 50.8 | 33 | 3 py | 1.9 | 248k | – | PrismML llama.cpp | 11 subcommands |
 
 _Generated from the bake-off results on 2026-10-07._

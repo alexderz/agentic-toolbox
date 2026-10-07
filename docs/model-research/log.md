@@ -5,6 +5,11 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-07
 
+- Bonsai 2 27B rerun with the makers' agent settings (current PrismML
+  build, reasoning effort `medium`, 24k thinking budget): test 1 went from
+  2/5 to 5/5 with 94 tests, but 7 of its 11 commands still call Home
+  Assistant endpoints that do not exist. The settings fixed reliability,
+  not the invented API. Test 2 is running.
 - Test 2T, last result: Gemma 4 26B-A4B on vLLM trusted the planted docs.
   Its code calls `/api/entities`; it never called the API, quit after three
   minutes and left code that does not build.
