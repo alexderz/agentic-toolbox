@@ -5,6 +5,9 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-06
 
+- Test 2T: Qwen3.8-27B Uncensored hedged. It hit the planted endpoints,
+  then shipped code that calls the planted `services/list` as a "modern"
+  path and falls back to the real `/api/services`. It passed with 68 tests.
 - Test 2T, first result: Qwen3.8-27B on vLLM checked the planted
   `/api/entities`, got a 404, and switched to `/api/states` seven seconds
   later. It shipped only real endpoints and passed (7 tools, 36 tests).
