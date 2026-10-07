@@ -5,6 +5,11 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-07
 
+- EmbeddingGemma 2 (Google, 740M, Apache 2.0) fits easily, but its
+  `gemma-embedding2` architecture landed in llama.cpp the day after our
+  v0.6.0 build (PR 30054) and in vLLM after 0.31.0. Not downloaded; revisit
+  with the next llama.cpp release. New status label: "Needs an engine
+  update".
 - Bonsai 2 27B rerun with the makers' agent settings (current PrismML
   build, reasoning effort `medium`, 24k thinking budget): test 1 went from
   2/5 to 5/5 with 94 tests, but 7 of its 11 commands still call Home

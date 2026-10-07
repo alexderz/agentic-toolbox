@@ -30,6 +30,7 @@ see [Method](method.md).
 | Downloaded, not tested yet | Weights are on the NAS; no graded run yet. |
 | Dropped | Ran and failed, or was clearly worse than an alternative. |
 | Does not fit | Checked and cannot run on this machine as released. |
+| Needs an engine update | Fits, but no engine we run supports its architecture yet. |
 | Watching (no weights yet) | Announced; no public weights to test. |
 
 A model marked **Uncensored** has refusals removed (fine-tuned, abliterated,
@@ -81,6 +82,7 @@ software, through the same coding tests as every other model.
 | [Qwen3-235B-A22B](models/qwen3-235b-a22b.md) | Qwen3.6 | Does not fit |  | MoE, 235B / 22B active |
 | [Flash-Next Sushi 2.6bpw](models/flash-next-sushi.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, EXL3 experts |
 | [Qwen3.8-Flash-Next NVFP4 (Red Hat)](models/flash-next-nvfp4.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, FP4 experts |
+| [EmbeddingGemma 2](models/embeddinggemma-2.md) | Embedding | Needs an engine update |  | Multimodal embedding encoder, 740M (text-only path 270M), 768 dims, 8k context |
 | [Liquid d1](models/liquid-d1.md) | Decision | Watching (no weights yet) |  | Decision model with vision |
 | [Reflection Beam 501B](models/reflection-beam.md) | Other | Watching (no weights yet) |  | MoE, 501B / 23B active, 1M context |
 | [Reka Rho-1](models/reka-rho-1.md) | Other | Watching (no weights yet) |  | 19B omni (text, image, video, actions) |
