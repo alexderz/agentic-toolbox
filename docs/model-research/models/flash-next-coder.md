@@ -27,12 +27,12 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 ## Results
 
-Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. One run per row. See [Method](../method.md).
+Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. *Failed builds* and *errors per 1k lines* show how hard the model fought the compiler on the way. One run per row. See [Method](../method.md).
 
-| Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 24 | 9.9 | 44 | 128k | 26 | llama.cpp 0.4 | 7 subcommands |
-| 2 | fail | 0 tools | – | 25.9 | 37 | 256k | – | Strata | Strata coder IQ1_M, NO thinking budget (Strata default off): 46 steps, 39 min, then a thinking LOOP ("Hmm, real Rust: String::from_utf8?" repeated) filled the 32k reply; no files written. Rerun with budget queued (wb-strata-coder-tb) |
-| 2 | fail | 0 tools | – | 20.4 | 219 | 256k | – | Strata | Strata coder IQ1_M with the 24k budget (rerun): FAIL verified by hand: a library crate only (lib.rs + 5 modules, 1,242 lines), no main.rs or [[bin]], so no server to start; 118 steps, 219 min, 20.4 tok/s, 1 compaction, no thinking loop (the budget fixed that); ended on its own |
+| Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 24 | 9.9 | 44 | 1 py | 1.3 | 128k | 26 | llama.cpp 0.4 | 7 subcommands |
+| 2 | fail | 0 tools | – | 25.9 | 37 | 14/18 | – | 256k | – | Strata | Strata coder IQ1_M, NO thinking budget (Strata default off): 46 steps, 39 min, then a thinking LOOP ("Hmm, real Rust: String::from_utf8?" repeated) filled the 32k reply; no files written. Rerun with budget queued (wb-strata-coder-tb) |
+| 2 | fail | 0 tools | – | 20.4 | 219 | 15/21 | 190.8 | 256k | – | Strata | Strata coder IQ1_M with the 24k budget (rerun): FAIL verified by hand: a library crate only (lib.rs + 5 modules, 1,242 lines), no main.rs or [[bin]], so no server to start; 118 steps, 219 min, 20.4 tok/s, 1 compaction, no thinking loop (the budget fixed that); ended on its own |
 
 _Generated from the bake-off results on 2026-10-06._

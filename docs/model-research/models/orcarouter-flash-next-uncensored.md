@@ -27,12 +27,12 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 ## Results
 
-Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. One run per row. See [Method](../method.md).
+Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds a Rust MCP server and is graded by connecting to it as a client; *tools* is how many tools a client sees. *Failed builds* and *errors per 1k lines* show how hard the model fought the compiler on the way. One run per row. See [Method](../method.md).
 
-| Test | Result | Score | Own tests | tok/s | Minutes | Context | Expert layers in RAM | Engine | Notes |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 54 | 8.8 | 104 | 128k | 42 | llama.cpp 0.4 | 13 subcommands |
-| 2 | pass | 8 tools | 13 | 7.6 | 191 | 256k | 40 | llama.cpp 0.6 | orcarouter Flash-Next uncensored on llama.cpp v0.6.0 (lcpp6, -ncmoe 40, 262k, -fit off), long-horizon settings (temp 1.0/top-p 0.95/top-k 20, 26k budget, 8 h cap): FULL PASS, 191 min, 7.6 tok/s over the run (6-71 per request), 90 steps, 0 compactions, ended on its own; the … |
-| 2 | fail | 0 tools | – | 7.4 | 155 | – | – | llama.cpp 0.4 | does not build (lib path in Cargo.toml not written yet); hit 3h cap mid-project; no runaway, 7.4 tok/s |
+| Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 54 | 8.8 | 104 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 13 subcommands |
+| 2 | pass | 8 tools | 13 | 7.6 | 191 | 10/23 | 14.0 | 256k | 40 | llama.cpp 0.6 | orcarouter Flash-Next uncensored on llama.cpp v0.6.0 (lcpp6, -ncmoe 40, 262k, -fit off), long-horizon settings (temp 1.0/top-p 0.95/top-k 20, 26k budget, 8 h cap): FULL PASS, 191 min, 7.6 tok/s over the run (6-71 per request), 90 steps, 0 compactions, ended on its own; the … |
+| 2 | fail | 0 tools | – | 7.4 | 155 | 0 | 0.0 | – | – | llama.cpp 0.4 | does not build (lib path in Cargo.toml not written yet); hit 3h cap mid-project; no runaway, 7.4 tok/s |
 
 _Generated from the bake-off results on 2026-10-06._
