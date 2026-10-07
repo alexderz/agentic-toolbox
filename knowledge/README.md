@@ -54,6 +54,7 @@ Every note:
 | Note | Path |
 | --- | --- |
 | Jev (TypeSafe System One) | [`ai/models/jev.md`](ai/models/jev.md) |
+| Titan local model tiers | [`ai/practices/titan-local-model-tiers.md`](ai/practices/titan-local-model-tiers.md) |
 | Open Jev-class models (2026-09-27 snapshot; bookmark pass 2026-09-28) | [`ai/models/jev-open-2026-09-27.md`](ai/models/jev-open-2026-09-27.md) |
 
 ## Never
