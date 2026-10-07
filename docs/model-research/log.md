@@ -14,7 +14,10 @@ cards; this log keeps the reasoning.
   build, reasoning effort `medium`, 24k thinking budget): test 1 went from
   2/5 to 5/5 with 94 tests, but 7 of its 11 commands still call Home
   Assistant endpoints that do not exist. The settings fixed reliability,
-  not the invented API. Test 2 is running.
+  not the invented API. Test 2 was a partial pass: it builds, lists 3
+  tools and passes 32 tests, but its `tools/call` expects an invented
+  `toolName` field instead of the spec's `name`, so no standard client can
+  call a tool, and two of its tools call the nonexistent `/api/entities`.
 - Test 2T, last result: Gemma 4 26B-A4B on vLLM trusted the planted docs.
   Its code calls `/api/entities`; it never called the API, quit after three
   minutes and left code that does not build.
