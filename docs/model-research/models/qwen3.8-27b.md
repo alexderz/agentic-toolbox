@@ -36,6 +36,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 55 | 32.9 | 25 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 8 subcommands |
 | 1 | pass | 5/5 checks | 89 | 70.5 | 27 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 13 subcommands |
+| 1 | pass | 5/5 checks | 123 | 64.3 | 37 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 22 subcommands |
 | 1 | pass | 5/5 checks | 80 | 56.5 | 23 | 0 | 0.0 | 240k | – | vLLM (HyperQwen) | 8 subcommands |
 | 1 | pass | 5/5 checks | 78 | 97.4 | 15 | 5 py | 3.6 | 64k | – | vLLM (HyperQwen) | 11 subcommands |
 | 1 | fail | 0/5 checks | – | 96.1 | 7 | 0 | 0.0 | 64k | – | vLLM (HyperQwen) | Pi agent. |
