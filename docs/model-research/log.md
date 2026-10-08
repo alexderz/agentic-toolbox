@@ -5,6 +5,25 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-07
 
+- Test 3 is in: the model gets an MCP server's source and a probe subagent
+  whose only tools are that server's, must get 14 facts through the probe,
+  check them against the REST API, and fix the server if it is wrong (3G: a
+  known-good server; 3O: the model's own from test 2). Eight runs across
+  Qwen3.8-27B (vLLM), Flash-Next (Strata with two batch slots), Orcarouter
+  Flash-Next and ThinkingCap Heretic: every run got all 14 facts and scored
+  12/12 on the transcript rubric, so the test does not yet separate these
+  models. Speed does (9 to 46 minutes), and so does how deep each one looked.
+- Every 3O run found and fixed a real defect in its own server: a missing
+  services tool, "unknown" counted as "unavailable", arrays in
+  `structuredContent` (the MCP schema types it as an object, and strict
+  clients reject the whole reply), and facts that only lived in
+  `structuredContent`, which OpenCode does not pass to the model.
+- One 3G run (Flash-Next) found a defect in the known-good server too: it
+  read only `target.entity_id`, while current Home Assistant publishes
+  `target.entity`.
+- Strata needs `"parallel": 2` with `--batch-mtp` for multi-agent work;
+  SGLang's EXL3 build serves one session at a time and was not used.
+
 - The bake-off moved to a new host. Its first run there, Qwen3.8-27B on vLLM,
   passed test 1 (5/5, 123 tests, 22 subcommands, 64 tok/s). About 6 of the 22
   subcommands call Home Assistant endpoints that do not exist, and test 1's
