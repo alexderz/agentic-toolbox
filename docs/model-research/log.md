@@ -12,6 +12,11 @@ cards; this log keeps the reasoning.
   evicted experts in RAM, parse GLM's own tool-call format) plus a local SSD
   copy of the weights brought it to about 17-19 tok/s with no disk reads in
   steady state. Test 1 then passed 5/5 with 44 tests in 71 minutes.
+- GLM-5.3-Flash on Maya also passed test 2 (7 tools, 66 tests) but needed 322
+  of its 360 minutes at about 14 tok/s over the run: the slowest model to pass
+  both tests. Next up is the Huihui abliterated build (UD-IQ1_S) on the same
+  engine; a second GPU, which turns on Maya's MTP drafting, is what would make
+  GLM-5.3-Flash practical here.
 - Grader fix: test 1's read check could not walk into an argparse command
   group whose subcommands hide behind a custom label (`ACTION ...`) or carry
   aliases (`list (ls)`). Regrading the 14 runs that had no read credit moved
