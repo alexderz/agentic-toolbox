@@ -16,4 +16,4 @@ Announced open-weight MoE.
 
 No weights yet. At 501B it would not fit as released; recheck for pruned builds.
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

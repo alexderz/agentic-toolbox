@@ -38,4 +38,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 94 | 50.8 | 33 | 3 py | 1.9 | 248k | – | PrismML llama.cpp | 11 subcommands |
 | 2 | partial | 3 tools | 32 | 48.1 | 153 | 33/59 | 64.9 | 248k | – | PrismML llama.cpp | TEST 2: PARTIAL, tools/call fails. Builds, initialize ok, 3 tools (get_config, list_entities, get_entity), 32 tests pass. Verified by hand: tools/call returns -32602 'Missing required field toolName' (it invented a toolName param instead of the spec's name), so no standard … |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

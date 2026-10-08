@@ -50,6 +50,7 @@ software, through the same coding tests as every other model.
 | [Orcarouter Flash-Next Uncensored](models/orcarouter-flash-next-uncensored.md) | Qwen3.8 Flash-Next | Recommended | yes | MoE, 125B total / 6B active |
 | [Qwen3.8-Flash-Next](models/qwen3.8-flash-next.md) | Qwen3.8 Flash-Next | Recommended |  | MoE, 125B total / 6B active (+51B n-gram embedding, 4B MTP) |
 | [Swift 1.5 Flash-Next (pruned)](models/swift-1.5-flash-next.md) | Qwen3.8 Flash-Next | Recommended |  | MoE, pruned Flash-Next |
+| [GLM-5.3-Flash](models/glm-5.3-flash.md) | GLM | Tested |  | MoE, 320B / 18B active, multimodal |
 | [Gemma 4 26B-A4B](models/gemma-4-26b-a4b.md) | Gemma 4 | Tested |  | MoE, 26B / 4B active |
 | [Gemma 4 31B](models/gemma-4-31b.md) | Gemma 4 | Tested |  | Dense, 31B |
 | [OrcaSAQ-2-Cyber-27B](models/orcasaq-2-cyber-27b.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
@@ -76,7 +77,6 @@ software, through the same coding tests as every other model.
 | [Qwen3.6-35B-A3B](models/qwen3.6-35b-a3b.md) | Qwen3.6 | Dropped |  | MoE, 35B / 3B active |
 | [Qwen3.8-Flash-Next Coder (1.6-bit)](models/flash-next-coder.md) | Qwen3.8 Flash-Next | Dropped |  | MoE, 125B total / 6B active |
 | [GLM-5.3 (full) abliterated builds](models/glm-5.3-abliterated-full.md) | GLM | Does not fit | yes | Full GLM-5.3 |
-| [GLM-5.3-Flash](models/glm-5.3-flash.md) | GLM | Does not fit |  | MoE, 320B / 18B active, multimodal |
 | [Mistral Large 4](models/mistral-large-4.md) | Other | Does not fit |  | MoE, 1.05T total / 49B active, 1M context, vision |
 | [Naive N0.5 Flash](models/naive-n0.5-flash.md) | Other | Does not fit |  | MoE, 309B / 15.5B active |
 | [Qwen3-235B-A22B](models/qwen3-235b-a22b.md) | Qwen3.6 | Does not fit |  | MoE, 235B / 22B active |

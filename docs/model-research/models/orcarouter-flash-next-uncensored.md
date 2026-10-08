@@ -44,4 +44,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 8.4 | 12 | One probe session with the eight questions in plain terms ("entities, of any kind, whose state is unavailable"), asking for raw tool output, the tool and arguments used, and failures said explicitly; the probe answered in 10 calls and cross-checked counts itself. Built REST … |
 | 3O | 14/14 | 3 | fixed: 8 tools, 55 tests pass | 12/12 | 5.8 | 46 | First probe: nine plain questions asking for exact raw tool output or the exact error and the tool used. list_services came back as a client validation error ("expected record, received array" on structuredContent); it checked the MCP schema, confirmed structuredContent must be … |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

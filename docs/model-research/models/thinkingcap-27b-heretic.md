@@ -43,4 +43,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | no | 12/12 | 19.8 | 9 | Read the whole source, built REST ground truth (caught and fixed a bug in its own script), then two probes in parallel, each a short list of exact tool calls with exact arguments, the one field to report per call, "ABSENT" markers for missing attributes and verbatim errors. … |
 | 3O | 14/14 | 2 | fixed: 8 tools, 58 tests pass | 12/12 | 24.7 | 15 | Baseline probe named its own tools and asked for the text and the structured value per call, errors verbatim. Found that temperature, HVAC mode and lock service names lived only in structuredContent, which OpenCode does not pass to the probe, so they were unreachable through … |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

@@ -3,6 +3,20 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-08
+
+- GLM-5.3-Flash now runs on titan through Project Maya (a Strata-derived
+  engine). Out of the box it decoded about 4 tok/s: the RAM tier only held
+  experts that were not already in VRAM, so every VRAM eviction meant a
+  re-read over NFS. Three small patches (all experts eligible for RAM, keep
+  evicted experts in RAM, parse GLM's own tool-call format) plus a local SSD
+  copy of the weights brought it to about 17-19 tok/s with no disk reads in
+  steady state. Test 1 then passed 5/5 with 44 tests in 71 minutes.
+- Grader fix: test 1's read check could not walk into an argparse command
+  group whose subcommands hide behind a custom label (`ACTION ...`) or carry
+  aliases (`list (ls)`). Regrading the 14 runs that had no read credit moved
+  Devstral Small 2 from 2/5 to 5/5; no other run changed.
+
 ## 2026-10-07
 
 - Test 3 is in: the model gets an MCP server's source and a probe subagent
