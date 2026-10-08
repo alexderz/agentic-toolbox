@@ -5,6 +5,11 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-08
 
+- Huihui's abliterated GLM-5.3-Flash at 1 bit (UD-IQ1_S) failed both tests on
+  Maya: it fell into repetition ("-0-0-0..." until the token limit) and never
+  wrote a working program. Maya-S at 2 bits on the same engine passed both, so
+  1-bit quants of this model are not usable for agent work. The Orcarouter
+  uncensored Q2_K is next.
 - GLM-5.3-Flash now runs on titan through Project Maya (a Strata-derived
   engine). Out of the box it decoded about 4 tok/s: the RAM tier only held
   experts that were not already in VRAM, so every VRAM eviction meant a
