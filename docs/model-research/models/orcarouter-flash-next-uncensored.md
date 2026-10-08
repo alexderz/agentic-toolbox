@@ -35,4 +35,13 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 8 tools | 54 | 7.6 | 191 | 9/22 | 13.2 | 256k | 40 | llama.cpp 0.6 | [tests regraded 2026-10-07: 13/0 -> 54/0, grader now sums every cargo test target] orcarouter Flash-Next uncensored on llama.cpp v0.6.0 (lcpp6, -ncmoe 40, 262k, -fit off), long-horizon settings (temp 1.0/top-p 0.95/top-k 20, 26k budget, 8 h cap): FULL PASS, 191 min, 7.6 tok/s … |
 | 2 | fail | 0 tools | – | 7.4 | 155 | 0 | 0.0 | – | – | llama.cpp 0.4 | does not build (lib path in Cargo.toml not written yet); hit 3h cap mid-project; no runaway, 7.4 tok/s |
 
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 14/14 | 1 | no | 12/12 | 8.4 | 12 | One probe session with the eight questions in plain terms ("entities, of any kind, whose state is unavailable"), asking for raw tool output, the tool and arguments used, and failures said explicitly; the probe answered in 10 calls and cross-checked counts itself. Built REST … |
+| 3O | 14/14 | 3 | fixed: 8 tools, 55 tests pass | 12/12 | 5.8 | 46 | First probe: nine plain questions asking for exact raw tool output or the exact error and the tool used. list_services came back as a client validation error ("expected record, received array" on structuredContent); it checked the MCP schema, confirmed structuredContent must be … |
+
 _Generated from the bake-off results on 2026-10-07._
