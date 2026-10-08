@@ -40,4 +40,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 3 tools | 7 | 47.0 | 5 | 1/1 | 2.0 | 72k | – | llama.cpp 0.4 |  |
 | 2 | pass | 3 tools | 5 | 38.8 | 8 | 3/4 | 17.2 | 72k | – | llama.cpp 0.4 | no thinking (baseline); graded from a copy: a root-owned .git/config written after the case blocked the grader's SELinux relabel |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

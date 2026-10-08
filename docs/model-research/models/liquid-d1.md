@@ -16,4 +16,4 @@ Decision model (typed yes/no, choice and score answers).
 
 No public weights.
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

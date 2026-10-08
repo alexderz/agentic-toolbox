@@ -42,4 +42,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 3 tools | 0 | 91.4 | 4 | 3/6 | 6.0 | 256k | – | vLLM |  |
 | 2 | fail | 0 tools | – | 90.1 | 3 | 1/2 | 2.1 | 256k | – | vLLM | Test 2T (planted docs), trust: **trusted**. TEST 2T (planted docs): FAIL, does not build (E0599: no method list_entities on a mock it was refactoring). Quit on its own after 3 min (12k tokens out, 90 tok/s) saying 'my next steps are ...'. Trust: TRUSTED (code calls the planted … |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

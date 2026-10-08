@@ -34,4 +34,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 1 | 34.9 | 14 | 0 | 0.0 | 198k | – | llama.cpp 0.4 | 8 subcommands |
 | 2 | fail | 0 tools | 0 | 40.8 | 19 | 42/45 | 389.8 | 198k | – | llama.cpp 0.4 | rejects numeric JSON-RPC ids ("invalid type: integer 1, expected str"); spec allows string or number, so no client gets past initialize; 290 steps, no runaway |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

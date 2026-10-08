@@ -33,4 +33,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 52 | 57.2 | 10 | 0 | 0.0 | 128k | 12 | llama.cpp 0.4 | 9 subcommands |
 | 2 | fail | 0 tools | 26 | 55.4 | 12 | 10/16 | 21.8 | 256k | 9 | llama.cpp 0.4 | answers but wraps initialize and tools/list in tool-result shape (content/structuredContent), no top-level serverInfo/protocolVersion/tools; replies to a notification with id "null". 14 tools behind the wrapper |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

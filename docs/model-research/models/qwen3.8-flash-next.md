@@ -51,4 +51,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | fixed: 12 tools, 155 tests pass | 12/12 | 20.0 | 21 | One probe session with eight numbered calls naming exact arguments and fields, "quote the error text exactly and continue"; built REST ground truth with jq first and diffed every fact. Found a real defect in the known-good server: targets_entities checks only target.entity_id … |
 | 3O | 14/14 | 3 | fixed: 10 tools, 106 tests pass | 12/12 | 18.1 | 17 | Three probe sessions: an eight-question brief with method notes (paginate, cross-check counts, quote errors), a verbatim cross-check through resources and tools, and a re-check after the fix. Found that its own ha_overview counted 'unknown' entities as 'unavailable'; split the … |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._

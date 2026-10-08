@@ -33,4 +33,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | – | 3.1 | 94 | 0 | 0.0 | 128k | 55 | llama.cpp 0.4 | 5 subcommands |
 | 2 | partial | 3 tools | 10 | 6.0 | 102 | 12/17 | 73.4 | 128k | 43 | llama.cpp 0.4 | [tests regraded 2026-10-07: 0/0 -> 10/0, grader now sums every cargo test target] no initialize method (-32601 Unknown method: initialize); also sends result:null with error; 103 steps, no runaway, 6.0 tok/s |
 
-_Generated from the bake-off results on 2026-10-07._
+_Generated from the bake-off results on 2026-10-08._
