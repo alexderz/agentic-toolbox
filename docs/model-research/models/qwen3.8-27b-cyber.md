@@ -34,4 +34,12 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | – | 27.3 | 35 | 12/18 | 24.3 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
 | 2 | pass | 7 tools | 22 | 8.1 | 173 | 24/72 | 86.5 | – | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 21/0 -> 22/1, grader now sums every cargo test target] hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |
 
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 0/14 | 3 | no | – | 19.4 | 105 | Not scored: stopped by hand at 105 min (operator saw the loop). A probe session repeated the identical ha_list_entities {"limit":30,"state":"unavailable"} call 32+ times while writing "Let me actually pass 300" (audit: 13 runs of identical calls, longest 52); no facts.json. … |
+
 _Generated from the bake-off results on 2026-10-09._
