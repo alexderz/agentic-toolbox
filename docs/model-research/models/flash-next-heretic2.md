@@ -34,4 +34,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 25 | 8.7 | 123 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 12 subcommands |
 | 2 | pass | 7 tools | 33 | 14.6 | 120 | 14/22 | 28.3 | 256k | 40 | llama.cpp 0.6 | [tests regraded 2026-10-07: 18/0 -> 33/0, grader now sums every cargo test target] Flash-Next Heretic2 on llama.cpp 0.6 (-ncmoe 40, 262k, -fit off), long-horizon settings (8 h cap): FULL PASS, 7 tools, 18 tests, 120 min, 14.6 tok/s over the run (twice the orcarouter run on the … |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

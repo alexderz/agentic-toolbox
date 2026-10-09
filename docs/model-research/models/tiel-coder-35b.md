@@ -36,4 +36,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 9 tools | 37 | 82.0 | 32 | 16/23 | 215.8 | 256k | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 8/0 -> 37/0, grader now sums every cargo test target] list_entities hits invented /api/entities; also invents /api/states/<id>/history and /api/config/device_registry; /api/states works |
 | 2 | pass | 5 tools | 28 | 38.8 | 37 | 7/18 | 16.6 | 256k | 20 | llama.cpp 0.4 |  |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

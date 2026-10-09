@@ -16,4 +16,4 @@ Newer Nemotron with an MTP draft head. Q4_0 (17.6 GB) fits the GPU; Q8_0 needs a
 
 Not tested yet. Start with test 1: the previous Nano was weak.
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

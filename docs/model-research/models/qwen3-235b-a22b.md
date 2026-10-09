@@ -16,4 +16,4 @@ Large Qwen MoE.
 
 Q4_K_M is 132 GiB against 125 GB RAM, and offloaded experts must load eagerly. An early run at a smaller fit produced 146 lines in 37 minutes.
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

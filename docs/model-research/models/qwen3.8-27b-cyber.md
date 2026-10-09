@@ -34,4 +34,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | – | 27.3 | 35 | 12/18 | 24.3 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
 | 2 | pass | 7 tools | 22 | 8.1 | 173 | 24/72 | 86.5 | – | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 21/0 -> 22/1, grader now sums every cargo test target] hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

@@ -16,4 +16,4 @@ Research preview.
 
 No public weights. 19B would fit if released.
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

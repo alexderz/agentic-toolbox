@@ -33,4 +33,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | fail | 2/5 checks | 0 | 83.3 | 2 | 0 | 0.0 | 128k | 10 | llama.cpp 0.4 | 3 subcommands |
 | 1 | fail | 2/5 checks | 0 | 90.7 | 2 | 0 | 0.0 | 416k | 9 | llama.cpp 0.4 | 2 subcommands |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._
