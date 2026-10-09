@@ -20,6 +20,8 @@ see [Method](method.md).
   card, and each row is one run.
 - For engine choice and settings, see [Engines](engines.md).
 - For dated findings and decisions, see the [Research log](log.md).
+- For a creative-writing comparison (a short story and the model's own edit), see the
+  [Story test](story-test/README.md).
 
 ## Status labels
 

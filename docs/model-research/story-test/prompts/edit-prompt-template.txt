@@ -1,0 +1,15 @@
+You are the editor of your own short story. Some time ago you wrote the draft below from the brief that follows. Now revise it.
+
+=== ORIGINAL BRIEF AND OUTLINE ===
+{draft-prompt.txt, verbatim}
+=== END OF BRIEF ===
+
+=== YOUR DRAFT ===
+{the model's own draft, verbatim}
+=== END OF DRAFT ===
+
+Editing instructions:
+- The draft is about {draft word count, rounded to 100} words, well short of the brief. Revise and expand it to about 5,000 words, following the outline's proportions (build-up about 30%, rising tension about 20%, conflict about 35%, resolution about 15%).
+- The combat section must be the longest part of the story: vivid, physical and tactical. Show layers of ICE breached and re-sealed, decoys and false trails, the military icebreaker eating through the ice, the black ICE, and Calliope's choice not to kill.
+- Fix repetition, flat or vague passages, and anything that drifts from the outline. Keep what works, and keep the title, the characters and the voice.
+- Keep your planning brief. Then output only the final revised story with its title, and nothing else: no notes, no commentary, no list of changes.
