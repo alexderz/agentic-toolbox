@@ -35,9 +35,11 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 0 | 39.5 | 5 | 0 | 0.0 | 72k | – | llama.cpp 0.4 | 3 subcommands |
 | 1 | pass | 5/5 checks | 9 | 30.6 | 3 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 5 subcommands |
 | 1 | pass | 5/5 checks | 10 | 53.4 | 2 | 0 | 0.0 | 72k | – | llama.cpp 0.4 | 4 subcommands |
+| 1 | pass | 5/5 checks | 12 | 51.4 | 3 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 2 subcommands |
 | 2 | partial | 3 tools | 4 | 50.3 | 12 | 4/5 | 15.4 | 128k | – | llama.cpp 0.4 | no initialize method (-32601 Method not found: initialize), reply also lacks "jsonrpc"; tools/list and calls work without it but no client gets past the handshake |
 | 2 | pass | 3 tools | 5 | 43.8 | 4 | 3/4 | 6.2 | 128k | – | llama.cpp 0.4 |  |
 | 2 | pass | 3 tools | 7 | 47.0 | 5 | 1/1 | 2.0 | 72k | – | llama.cpp 0.4 |  |
 | 2 | pass | 3 tools | 5 | 38.8 | 8 | 3/4 | 17.2 | 72k | – | llama.cpp 0.4 | no thinking (baseline); graded from a copy: a root-owned .git/config written after the case blocked the grader's SELinux relabel |
+| 2 | pass | 4 tools | 5 | 39.7 | 4 | 0/3 | 0.0 | 128k | – | llama.cpp 0.4 |  |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

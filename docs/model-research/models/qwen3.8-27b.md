@@ -60,4 +60,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 49.5 | 15 | One probe session, nine numbered calls with exact arguments and fields, errors reported verbatim; built REST ground truth first, then checked the probe against REST and the shim wire log ("the probe is an LLM and could have hallucinated"); trusted the known-good server after a … |
 | 3O | 14/14 | 2 | fixed: 6 tools, 80 tests pass | 12/12 | 51.2 | 13 | Own server (5 tools) answered every fact it could correctly but had no services tool; built REST ground truth, found the gap, added ha_list_services, extended tests to 79, rebuilt; fixed server grades builds, 6 tools, 80 tests. First probe after the rebuild saw the old 5 tools … |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._

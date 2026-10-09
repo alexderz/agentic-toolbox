@@ -37,4 +37,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 8 tools | 51 | 53.5 | 76 | 11/16 | 14.1 | 104k | – | llama.cpp 0.4 + DFlash2 | [tests regraded 2026-10-07: 49/0 -> 51/0, grader now sums every cargo test target] rerun with budget inside the cap: no runaway, 144 steps, 76 min, 53.5 tok/s. Builds, initialize OK, 8 tools, 49 tests; tool calls fail on a MODEL BUG: hand-rolled HTTP client resolves hostnames … |
 | 2 | pass | 7 tools | 51 | 48.1 | 34 | 10/15 | 12.5 | 88k | – | llama.cpp 0.4 + DFlash2 | [tests regraded 2026-10-07: 49/0 -> 51/0, grader now sums every cargo test target] OrcaSAQ + mandatory independent verifier subagent (90k, budget 12.4k): full pass, 34 min, 3 compactions, 1 verifier pass (34/34, nothing to fix); the port bug never occurred: std TcpStream instead … |
 
-_Generated from the bake-off results on 2026-10-08._
+_Generated from the bake-off results on 2026-10-09._
