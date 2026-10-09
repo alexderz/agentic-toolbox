@@ -162,3 +162,8 @@ cards; this log keeps the reasoning.
 - SGLang Flash-Next built the best server of all runs.
 - Added the context margin and thinking budget to every engine.
 - Dropped GLM-4.7-Flash and GLM-4.5-Air.
+
+## 2026-10-09
+
+- Step 5 Preview (StepFun, about 600B total / 27B active): does not fit. Official weights are announced for about 15 October; the earlier Hugging Face copies are third-party uploads and were not downloaded.
+- Unsloth decision-model training noted as a way to build a local classifier; not a model, nothing downloaded.
