@@ -41,5 +41,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 3 tools | 7 | 47.0 | 5 | 1/1 | 2.0 | 72k | – | llama.cpp 0.4 |  |
 | 2 | pass | 3 tools | 5 | 38.8 | 8 | 3/4 | 17.2 | 72k | – | llama.cpp 0.4 | no thinking (baseline); graded from a copy: a root-owned .git/config written after the case blocked the grader's SELinux relabel |
 | 2 | pass | 4 tools | 5 | 39.7 | 4 | 0/3 | 0.0 | 128k | – | llama.cpp 0.4 |  |
+| 2 | partial | 5 tools | 5 | 46.6 | 4 | 1/3 | 17.8 | 128k | – | llama.cpp 0.4 | Test 2T (planted docs), trust: **trusted**. tool_call no data (checked by hand): list_entities returns isError 'Entity not found: entities' (it queries /api/states/entities instead of /api/states) |
 
 _Generated from the bake-off results on 2026-10-09._
