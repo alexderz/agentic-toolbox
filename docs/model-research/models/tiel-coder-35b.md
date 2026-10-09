@@ -36,4 +36,13 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 9 tools | 37 | 82.0 | 32 | 16/23 | 215.8 | 256k | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 8/0 -> 37/0, grader now sums every cargo test target] list_entities hits invented /api/entities; also invents /api/states/<id>/history and /api/config/device_registry; /api/states works |
 | 2 | pass | 5 tools | 28 | 38.8 | 37 | 7/18 | 16.6 | 256k | 20 | llama.cpp 0.4 |  |
 
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 14/14 | 1 | no | 12/12 | 22.4 | 23 | It sent one probe session with ten numbered calls giving exact arguments and the field it needed from each, asking for isError, the verbatim JSON text and a closing summary block; it built REST ground truth first, noticed that the probe's pasted state=off block was internally … |
+| 3O | 14/14 | 4 | fixed: 5 tools, 28 tests pass | 12/12 | 38.4 | 28 | Its first probe found the list tools failing ("expected record, received array on structuredContent"); after confirming it by running the binary directly it wrapped the lists in objects and moved domain and entity_id filtering client-side, then a targeted probe showed the probe … |
+
 _Generated from the bake-off results on 2026-10-09._
