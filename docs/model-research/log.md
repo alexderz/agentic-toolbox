@@ -6,8 +6,10 @@ cards; this log keeps the reasoning.
 ## 2026-10-08
 
 - New [story test](story-test/README.md): each model writes a Neuromancer-style short story from a fixed
-  brief, then edits its own draft. OrcaSAQ-2 Cyber 27B ran first (2,931 words, then 3,812 after its edit, both under
-  the 5,000 asked for); Qwen3.8 27B and the Orcarouter Flash-Next fine-tune follow.
+  brief, then edits its own draft. OrcaSAQ-2 Cyber 27B, Qwen3.8 27B and the Orcarouter Flash-Next fine-tune ran it.
+  Orcarouter wrote the best story (the longest and the best fight, at about 15-19 tok/s); none reached 5,000 words, and
+  none really revised its own draft (they inserted passages or, in Qwen's case, reprinted the draft). Thinking needs a
+  cap: uncapped, Qwen spent all 20,000 tokens planning.
 - Huihui's abliterated GLM-5.3-Flash at 1 bit (UD-IQ1_S) failed both tests on
   Maya: it fell into repetition ("-0-0-0..." until the token limit) and never
   wrote a working program. Maya-S at 2 bits on the same engine passed both, so
