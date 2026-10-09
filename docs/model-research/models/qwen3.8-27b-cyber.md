@@ -23,6 +23,8 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3.8-27B Cyber (abliterated) · llama.cpp, all on GPU | llama.cpp 0.4 | IQ4_XS | 128k | – | 23.9 |
+| Qwen3.8-27B Cyber (abliterated) Q6_K · llama.cpp 0.6, layers split by --fit, recommended sampling | llama.cpp 0.6 | Q6_K | not run yet | | |
+| Qwen3.8-27B Cyber (abliterated) Q8_0 · llama.cpp 0.6, layers split by --fit, recommended sampling | llama.cpp 0.6 | Q8_0 | not run yet | | |
 
 ## Results
 
