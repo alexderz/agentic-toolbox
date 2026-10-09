@@ -81,6 +81,7 @@ software, through the same coding tests as every other model.
 | [GLM-5.3 (full) abliterated builds](models/glm-5.3-abliterated-full.md) | GLM | Does not fit | yes | Full GLM-5.3 |
 | [Mistral Large 4](models/mistral-large-4.md) | Other | Does not fit |  | MoE, 1.05T total / 49B active, 1M context, vision |
 | [Naive N0.5 Flash](models/naive-n0.5-flash.md) | Other | Does not fit |  | MoE, 309B / 15.5B active |
+| [Step 5 Preview](models/step-5-preview.md) | Other | Does not fit |  | Sparse MoE, about 600B total / 27B active, 1M context, text, image and video input |
 | [Qwen3-235B-A22B](models/qwen3-235b-a22b.md) | Qwen3.6 | Does not fit |  | MoE, 235B / 22B active |
 | [Flash-Next Sushi 2.6bpw](models/flash-next-sushi.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, EXL3 experts |
 | [Qwen3.8-Flash-Next NVFP4 (Red Hat)](models/flash-next-nvfp4.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, FP4 experts |
