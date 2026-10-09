@@ -37,4 +37,13 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 8 tools | 51 | 53.5 | 76 | 11/16 | 14.1 | 104k | – | llama.cpp 0.4 + DFlash2 | [tests regraded 2026-10-07: 49/0 -> 51/0, grader now sums every cargo test target] rerun with budget inside the cap: no runaway, 144 steps, 76 min, 53.5 tok/s. Builds, initialize OK, 8 tools, 49 tests; tool calls fail on a MODEL BUG: hand-rolled HTTP client resolves hostnames … |
 | 2 | pass | 7 tools | 51 | 48.1 | 34 | 10/15 | 12.5 | 88k | – | llama.cpp 0.4 + DFlash2 | [tests regraded 2026-10-07: 49/0 -> 51/0, grader now sums every cargo test target] OrcaSAQ + mandatory independent verifier subagent (90k, budget 12.4k): full pass, 34 min, 3 compactions, 1 verifier pass (34/34, nothing to fix); the port bug never occurred: std TcpStream instead … |
 
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 0/14 | 2 | no | 12/12 | 42.7 | 16 | It sent one probe session with the eight questions in plain terms, asking for the exact tool calls, the raw values and the exact error text; it built REST ground truth in Python, matched all 14 facts, and then read the source. It suspected that only_available filters UI-hidden … |
+| 3O | 14/14 | 1 | no | 12/12 | 45.5 | 8 | It built REST ground truth and read its own six-file server before sending one probe session: ten numbered calls with exact tool names, arguments and the field to report, errors to be quoted, and a summary table at the end. All 14 facts matched, a fresh REST pull confirmed them … |
+
 _Generated from the bake-off results on 2026-10-09._

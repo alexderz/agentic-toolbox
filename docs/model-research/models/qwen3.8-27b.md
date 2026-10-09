@@ -58,6 +58,8 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 3G | 14/14 | 1 | no | 12/12 | 49.5 | 15 | One probe session, nine numbered calls with exact arguments and fields, errors reported verbatim; built REST ground truth first, then checked the probe against REST and the shim wire log ("the probe is an LLM and could have hallucinated"); trusted the known-good server after a … |
+| 3G | 14/14 | 1 | no | 12/12 | 21.8 | 16 | It read the whole source and built REST ground truth before one probe session with eight numbered calls giving exact arguments and fields; the probe corrected its brief's wrong definition of total_entities. It checked the probe's calls against the shim log, confirmed the … |
 | 3O | 14/14 | 2 | fixed: 6 tools, 80 tests pass | 12/12 | 51.2 | 13 | Own server (5 tools) answered every fact it could correctly but had no services tool; built REST ground truth, found the gap, added ha_list_services, extended tests to 79, rebuilt; fixed server grades builds, 6 tools, 80 tests. First probe after the rebuild saw the old 5 tools … |
+| 3O | 14/14 | 4 | fixed: 8 tools, 84 tests pass | 12/12 | 19.6 | 15 | Its first probe matched all 14 facts; it then checked the numbers against the raw server replies in the shim log and sent a cross-check probe, which found ha_events failing ("expected record, received array"). It wrapped the array in {count, events}, updated the end-to-end test … |
 
 _Generated from the bake-off results on 2026-10-09._
