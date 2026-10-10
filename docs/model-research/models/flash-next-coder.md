@@ -35,4 +35,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | – | 25.9 | 37 | 11/15 | – | 256k | – | Strata | Strata coder IQ1_M, NO thinking budget (Strata default off): 46 steps, 39 min, then a thinking LOOP ("Hmm, real Rust: String::from_utf8?" repeated) filled the 32k reply; no files written. Rerun with budget queued (wb-strata-coder-tb) |
 | 2 | fail | 0 tools | – | 20.4 | 219 | 15/21 | 190.8 | 256k | – | Strata | Strata coder IQ1_M with the 24k budget (rerun): FAIL verified by hand: a library crate only (lib.rs + 5 modules, 1,242 lines), no main.rs or [[bin]], so no server to start; 118 steps, 219 min, 20.4 tok/s, 1 compaction, no thinking loop (the budget fixed that); ended on its own |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

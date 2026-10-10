@@ -45,4 +45,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 22.4 | 23 | It sent one probe session with ten numbered calls giving exact arguments and the field it needed from each, asking for isError, the verbatim JSON text and a closing summary block; it built REST ground truth first, noticed that the probe's pasted state=off block was internally … |
 | 3O | 14/14 | 4 | fixed: 5 tools, 28 tests pass | 12/12 | 38.4 | 28 | Its first probe found the list tools failing ("expected record, received array on structuredContent"); after confirming it by running the binary directly it wrapped the lists in objects and moved domain and entity_id filtering client-side, then a targeted probe showed the probe … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

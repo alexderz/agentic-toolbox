@@ -62,4 +62,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 2 | fixed: 6 tools, 80 tests pass | 12/12 | 51.2 | 13 | Own server (5 tools) answered every fact it could correctly but had no services tool; built REST ground truth, found the gap, added ha_list_services, extended tests to 79, rebuilt; fixed server grades builds, 6 tools, 80 tests. First probe after the rebuild saw the old 5 tools … |
 | 3O | 14/14 | 4 | fixed: 8 tools, 84 tests pass | 12/12 | 19.6 | 15 | Its first probe matched all 14 facts; it then checked the numbers against the raw server replies in the shim log and sent a cross-check probe, which found ha_events failing ("expected record, received array"). It wrapped the array in {count, events}, updated the end-to-end test … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

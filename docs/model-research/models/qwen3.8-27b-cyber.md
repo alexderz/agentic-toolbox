@@ -45,4 +45,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 3G | 0/14 | 3 | no | – | 19.4 | 105 | Not scored: stopped by hand at 105 min (operator saw the loop). A probe session repeated the identical ha_list_entities {"limit":30,"state":"unavailable"} call 32+ times while writing "Let me actually pass 300" (audit: 13 runs of identical calls, longest 52); no facts.json. … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

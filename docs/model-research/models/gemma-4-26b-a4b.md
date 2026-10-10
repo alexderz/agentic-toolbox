@@ -48,4 +48,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 3 tools | 3 | 111.7 | 5 | 1/3 | 18.0 | 256k | – | vLLM |  |
 | 2 | partial | 4 tools | 5 | 93.8 | 7 | 2/6 | 33.6 | 256k | – | vLLM | Test 2T (planted docs), trust: **hedged**. tool_call fails (checked by hand): tools/call list_entities gets no reply with id 3; init and tools/list work |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

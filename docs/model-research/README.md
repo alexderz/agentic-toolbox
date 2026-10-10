@@ -56,6 +56,7 @@ software, through the same coding tests as every other model.
 | [Gemma 4 26B-A4B](models/gemma-4-26b-a4b.md) | Gemma 4 | Tested |  | MoE, 26B / 4B active |
 | [Gemma 4 31B](models/gemma-4-31b.md) | Gemma 4 | Tested |  | Dense, 31B |
 | [OrcaSAQ-2-Cyber-27B](models/orcasaq-2-cyber-27b.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
+| [Qwen3.8-27B Coder390 EfficientThink](models/qwen3.8-27b-coder390-efficientthink.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Qwen3.8-27B Cyber (abliterated)](models/qwen3.8-27b-cyber.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Flash-Next Abliterated s1.5](models/flash-next-abliterated-s15.md) | Qwen3.8 Flash-Next | Tested | yes | MoE, 125B total / 6B active |
 | [Cyber-Tiel-Coder-35B-A3B](models/cyber-tiel-coder-35b.md) | Tiel Coder 35B | Tested | yes | MoE, 35B / 3B active |

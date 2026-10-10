@@ -16,4 +16,4 @@ Abliterated full-size GLM-5.3.
 
 2.1 TiB of weights, gated. Far beyond the rig.
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

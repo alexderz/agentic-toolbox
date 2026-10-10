@@ -33,4 +33,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 44 | 13.9 | 71 | 9 py | 7.3 | – | – | Maya 1.3 (patched) | 9 subcommands |
 | 2 | pass | 7 tools | 66 | 13.9 | 322 | 5/30 | 9.2 | – | – | Maya 1.3 (patched) | TEST 2 on Project Maya v1.3.0 + bakeoff patches (image -p3, RAM_ALL, DRAIN_SERVE, GLM tool calls), Maya-S IQ2_XXS from titan's local SSD: full pass, 7 tools, 66 tests, 322 min (cap 360), 13.9 tok/s over the run (17-22 live), 285 steps, 2,835 lines of Rust, no compaction, no … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._
