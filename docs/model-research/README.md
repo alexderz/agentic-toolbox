@@ -61,6 +61,7 @@ software, through the same coding tests as every other model.
 | [Flash-Next Abliterated s1.5](models/flash-next-abliterated-s15.md) | Qwen3.8 Flash-Next | Tested | yes | MoE, 125B total / 6B active |
 | [Cyber-Tiel-Coder-35B-A3B](models/cyber-tiel-coder-35b.md) | Tiel Coder 35B | Tested | yes | MoE, 35B / 3B active |
 | [Tiel-Coder-35B-A3B](models/tiel-coder-35b.md) | Tiel Coder 35B | Tested |  | MoE, 35B / 3B active |
+| [Qwen-Image-2.1-Turbo](models/qwen-image-2.1-turbo.md) | Image generation | Downloaded, not tested yet |  | 7B image generation and editing model, 8-step distilled checkpoint |
 | [Nemotron 3.5 Lightning 30B-A3B](models/nemotron-3.5-lightning-30b.md) | Nemotron | Downloaded, not tested yet |  | Hybrid Mamba MoE, 30B / 3B active |
 | [GLM-4.5-Air](models/glm-4.5-air.md) | GLM | Dropped |  | MoE, 106B / 12B active |
 | [GLM-4.7-Flash](models/glm-4.7-flash.md) | GLM | Dropped |  | MoE |
@@ -87,9 +88,11 @@ software, through the same coding tests as every other model.
 | [Flash-Next Sushi 2.6bpw](models/flash-next-sushi.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, EXL3 experts |
 | [Qwen3.8-Flash-Next NVFP4 (Red Hat)](models/flash-next-nvfp4.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, FP4 experts |
 | [EmbeddingGemma 2](models/embeddinggemma-2.md) | Embedding | Needs an engine update |  | Multimodal embedding encoder, 740M (text-only path 270M), 768 dims, 8k context |
+| [Mirai S (Qwen3.8-27B-S experimental)](models/mirai-s-27b.md) | Qwen3.8 27B | Needs an engine update |  | Dense 27B compressed to about 8 GB, with a 3.4 GB speculator model |
 | [Liquid d1](models/liquid-d1.md) | Decision | Watching (no weights yet) |  | Decision model with vision |
 | [Reflection Beam 501B](models/reflection-beam.md) | Other | Watching (no weights yet) |  | MoE, 501B / 23B active, 1M context |
 | [Reka Rho-1](models/reka-rho-1.md) | Other | Watching (no weights yet) |  | 19B omni (text, image, video, actions) |
+| [Samsung LittleBit](models/samsung-littlebit.md) | Other | Watching (no weights yet) |  | Compression method, 0.1 to 1.0 bits per weight |
 
 <!-- INDEX:END -->
 

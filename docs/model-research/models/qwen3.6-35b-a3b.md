@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3.6-35B-A3B · llama.cpp, some experts in RAM | llama.cpp 0.4 | UD-Q4_K_M | 128k | 12 | 57.2 |
+| Qwen3.6-35B-A3B Q6 · llama.cpp 0.6, 18 expert layers in RAM, 131k, coding sampling (temperature 0.6) | llama.cpp 0.6 | UD-Q6_K_XL | not run yet | | |
 
 ## Results
 

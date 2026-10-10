@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3.8-27B Cyber (abliterated) · llama.cpp, all on GPU | llama.cpp 0.4 | IQ4_XS | 128k | – | 23.9 |
+| Qwen3.8-27B Cyber (abliterated) IQ4_XS · llama.cpp 0.6, MTP drafts | llama.cpp 0.6 | IQ4_XS | – | – | 40.1 |
 | Qwen3.8-27B Cyber (abliterated) Q5_K_M · llama.cpp 0.6, all on GPU at 80k, recommended sampling | llama.cpp 0.6 | Q5_K_M | – | – | 22.1 |
 
 ## Results
@@ -33,6 +34,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 24 | 22.1 | 169 | 13 py | 16.0 | – | – | llama.cpp 0.6 | 12 subcommands |
 | 1 | pass | 5/5 checks | 39 | 23.9 | 52 | 2 py | 2.1 | 128k | – | llama.cpp 0.4 | 5 subcommands |
+| 2 | fail | 0 tools | – | 40.1 | 83 | 36/39 | 48.6 | – | – | llama.cpp 0.6 | Qwen3.8-27B Cyber + MTP n3 (llama.cpp 0.6, 144k), model default sampling: STOPPED after 83 min with no progress for 60 min: code frozen at 1,049 lines, 23 identical failed builds on an unclosed delimiter it could not locate, 579 reads of lib.rs. 40 tok/s over the run. The … |
 | 2 | fail | 0 tools | 1 | 27.6 | 180 | 24/582 | 104.9 | – | – | llama.cpp 0.6 | checked by hand: the server refuses to start because its own URL check allows plain http:// only for <host> or localhost (src/ha.rs:82), so the given http://<host> fails; looped 100x on one sed+cargo command in its last hour; timed out at 3h |
 | 2 | fail | 0 tools | – | 27.3 | 35 | 12/18 | 24.3 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
 | 2 | pass | 7 tools | 22 | 8.1 | 173 | 24/72 | 86.5 | – | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 21/0 -> 22/1, grader now sums every cargo test target] hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |

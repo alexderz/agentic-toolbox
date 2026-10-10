@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Nanbeige 4.2 3B | llama.cpp 0.4 | Q8 | 128k | – | 19.6 |
+| Nanbeige 4.2 3B · llama.cpp 0.6, agent sampling (temperature 1.0), thinking budget | llama.cpp 0.6 | Q8 | not run yet | | |
 
 ## Results
 

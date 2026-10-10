@@ -23,6 +23,8 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Tiel-Coder-35B 4-bit · llama.cpp, all on GPU, 262k context | llama.cpp 0.4 | UD-IQ4_XS | 256k | – | 100.8 |
+| Tiel-Coder-35B 4-bit · llama.cpp 0.6, all on GPU, 262k, author's coding sampling (temperature 0.6) | llama.cpp 0.6 | UD-IQ4_XS | not run yet | | |
+| Tiel-Coder-35B Q4_K_XL · llama.cpp 0.6, 6 expert layers in RAM, 131k, temperature 0.6 | llama.cpp 0.6 | UD-Q4_K_XL | not run yet | | |
 | Tiel-Coder-35B 6-bit · llama.cpp, 20 expert layers in RAM | llama.cpp 0.4 | Q6_K_XL | 256k | 20 | 42.8 |
 
 ## Results

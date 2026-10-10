@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | GLM-4.7-Flash | llama.cpp 0.4 | Q4 | 198k | – | 34.9 |
+| GLM-4.7-Flash · llama.cpp 0.6, coding sampling (temperature 0.7), thinking kept between steps | llama.cpp 0.6 | Q4_K_M | not run yet | | |
 
 ## Results
 
