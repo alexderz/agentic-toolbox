@@ -14,7 +14,7 @@ The smartest model we can run. Too large for the card, so most experts live in s
 
 ## Verdict
 
-Smartest overall. On SGLang (EXL3 3-bit, GPU expert cache) it built the best server of every run: 12 tools, 155 tests. Strata also passes test 2. SGLang is single-session only.
+Smartest overall. On SGLang (EXL3 3-bit, GPU expert cache) it built the best server of every run: 12 tools, 155 tests. Strata also passes test 2. SGLang is single-session only. In test 3 it scored 12/12 on both the known-good server and its own: clear probe briefs, every fact checked against the API, and on its own server a deliberate second probe to rule out a made-up first report. Both runs took about an hour, over a third of it waiting for first tokens, and both reports overstate how thoroughly it compared the lists.
 
 ## Variants we ran
 
@@ -49,6 +49,8 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- |
 | 3G | 14/14 | 2 | fixed: 12 tools, 155 tests pass | 12/12 | 20.0 | 21 | One probe session with eight numbered calls naming exact arguments and fields, "quote the error text exactly and continue"; built REST ground truth with jq first and diffed every fact. Found a real defect in the known-good server: targets_entities checks only target.entity_id … |
+| 3G | 14/14 | 1 | no | 12/12 | 3.4 | 56 | One probe session with eight numbered questions in plain terms (state "exactly unavailable", any domain), full entity lists for verification and errors with tool, arguments and exact message; the probe hit the 24,000-character text clip on the 124-row reply and worked around it … |
 | 3O | 14/14 | 3 | fixed: 10 tools, 106 tests pass | 12/12 | 18.1 | 17 | Three probe sessions: an eight-question brief with method notes (paginate, cross-check counts, quote errors), a verbatim cross-check through resources and tools, and a re-check after the fix. Found that its own ha_overview counted 'unknown' entities as 'unavailable'; split the … |
+| 3O | 14/14 | 2 | no | 12/12 | 3.0 | 59 | Two probe sessions: eight numbered facts in plain terms (state "unavailable" in ANY domain, tool used, raw output, counted entity IDs, errors with their text), then a deliberate nine-call re-check with exact arguments to rule out a made-up first report; all 37 calls are in the … |
 
 _Generated from the bake-off results on 2026-10-10._
