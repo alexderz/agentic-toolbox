@@ -33,4 +33,12 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 44 | 13.9 | 71 | 9 py | 7.3 | – | – | Maya 1.3 (patched) | 9 subcommands |
 | 2 | pass | 7 tools | 66 | 13.9 | 322 | 5/30 | 9.2 | – | – | Maya 1.3 (patched) | TEST 2 on Project Maya v1.3.0 + bakeoff patches (image -p3, RAM_ALL, DRAIN_SERVE, GLM tool calls), Maya-S IQ2_XXS from titan's local SSD: full pass, 7 tools, 66 tests, 322 min (cap 360), 13.9 tok/s over the run (17-22 live), 285 steps, 2,835 lines of Rust, no compaction, no … |
 
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 0/14 | 3 | no | 11/12 | 11.3 | 171 | Killed at the 3-hour cap with no facts.json. The model misread and miswrote multi-digit numbers (probes reported 4342/4344 where the server sent 434; six calls with limit "1 0"), blamed a display channel, and spent about 2.3 hours on letter-encoding workarounds, four compactions … |
+
 _Generated from the bake-off results on 2026-10-10._

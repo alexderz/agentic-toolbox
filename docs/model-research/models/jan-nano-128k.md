@@ -30,6 +30,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | fail | 1/5 checks | – | 47.9 | 1 | 0 | – | 128k | – | llama.cpp 0.4 |  |
+| 1 | fail | 0/5 checks | – | 47.9 | 1 | 0 | – | 128k | – | llama.cpp 0.4 |  |
 
 _Generated from the bake-off results on 2026-10-10._

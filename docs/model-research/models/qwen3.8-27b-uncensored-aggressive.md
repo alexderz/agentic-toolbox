@@ -30,7 +30,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | fail | 1/5 checks | – | 89.3 | 7 | 1 py | – | 146k | – | vLLM (HyperQwen) |  |
+| 1 | fail | 0/5 checks | – | 89.3 | 7 | 1 py | – | 146k | – | vLLM (HyperQwen) |  |
 | 1 | pass | 5/5 checks | 158 | 67.8 | 59 | 2 py | 0.7 | 146k | – | vLLM (HyperQwen) | 11 subcommands |
 | 1 | pass | 5/5 checks | 137 | 64.2 | 44 | 2 py | 0.8 | 146k | – | vLLM (HyperQwen) | 9 subcommands |
 | 2 | pass | 7 tools | 53 | 60.8 | 60 | 6/20 | 7.7 | 146k | – | vLLM (HyperQwen) | [tests regraded 2026-10-07: 41/0 -> 53/0, grader now sums every cargo test target] no budget (baseline for -tb/-pp); 138k reasoning tokens over 192 steps, no runaway |
