@@ -14,7 +14,7 @@ Google's dense Gemma 4.
 
 ## Verdict
 
-Fast and finishes in minutes, but thin: 3 tools on test 2. Needs enable_thinking (its template defaults it off).
+Fast and finishes in minutes, but thin: 3 tools on test 2. Needs enable_thinking (its template defaults it off). Test 3 (2026-10-10, 5 and 9 minutes): on the known-good server it delegated cleanly, confirmed every fact against the API and trusted the server (rubric 10/12); on its own server it declared the server fully verified on 12 of 14 facts without probing again (7/12). Both facts files have correct values in the wrong layout, because a compaction dropped the format the prompt asked for, so the automatic grade is 0/14 on both.
 
 ## Variants we ran
 
@@ -42,5 +42,14 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 3 tools | 5 | 38.8 | 8 | 3/4 | 17.2 | 72k | – | llama.cpp 0.4 | no thinking (baseline); graded from a copy: a root-owned .git/config written after the case blocked the grader's SELinux relabel |
 | 2 | pass | 4 tools | 5 | 39.7 | 4 | 0/3 | 0.0 | 128k | – | llama.cpp 0.4 |  |
 | 2 | partial | 5 tools | 5 | 46.6 | 4 | 1/3 | 17.8 | 128k | – | llama.cpp 0.4 | Test 2T (planted docs), trust: **trusted**. tool_call no data (checked by hand): list_entities returns isError 'Entity not found: entities' (it queries /api/states/entities instead of /api/states) |
+
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 0/14 | 1 | no | 10/12 | 26.9 | 4 | One probe returned all eight groups of facts and the agent confirmed each against the API, so trusting the server followed from the evidence. The values in the facts file are correct but in its own nested layout without the verdict fields: a compaction just before writing … |
+| 3O | 0/14 | 1 | no | 7/12 | 18.7 | 8 | The probe needed 54 per-entity calls and could not get the unavailable total or the lock services (a 58 KB reply was cut off). The agent did not probe again or change the server, yet declared it fully verified and correct on 12 of 14 facts. The facts file is a flat custom … |
 
 _Generated from the bake-off results on 2026-10-10._

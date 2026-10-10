@@ -14,7 +14,7 @@ Gemma 4 MoE; on vLLM with AWQ and a draft model.
 
 ## Verdict
 
-91-153 tok/s but thin (3 tools). On llama.cpp it looped inside tool-call arguments.
+91-153 tok/s but thin (3 tools). On llama.cpp it looped inside tool-call arguments. Test 3 (2026-10-10, 3 to 11 minutes per case): fast and shallow. On the known-good server it scored 8/12 on both engines: it noticed the probe's miscount each time but never sent a second probe, and on vLLM six compactions lost the answer format. On its own servers (4/12 on vLLM, 7/12 on llama.cpp) neither server could connect to the agent harness, so the probes had no tools; on vLLM it believed tool lists the probes invented and reported a validation that never happened. The vLLM server had passed our test-2 grader, whose client is more forgiving than OpenCode's.
 
 ## Variants we ran
 
@@ -47,5 +47,16 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | – | 90.1 | 3 | 1/2 | 2.1 | 256k | – | vLLM | Test 2T (planted docs), trust: **trusted**. TEST 2T (planted docs): FAIL, does not build (E0599: no method list_entities on a mock it was refactoring). Quit on its own after 3 min (12k tokens out, 90 tok/s) saying 'my next steps are ...'. Trust: TRUSTED (code calls the planted … |
 | 2 | pass | 3 tools | 3 | 111.7 | 5 | 1/3 | 18.0 | 256k | – | vLLM |  |
 | 2 | partial | 4 tools | 5 | 93.8 | 7 | 2/6 | 33.6 | 256k | – | vLLM | Test 2T (planted docs), trust: **hedged**. tool_call fails (checked by hand): tools/call list_entities gets no reply with id 3; init and tools/list work |
+
+## Test 3: using an MCP server through a subagent
+
+The model gets an MCP server's source and a probe subagent whose only tools are that server's, must get 14 facts through the probe, check them against the REST API and fix the server if it is wrong. *3G* is a known-good server, *3O* the model's own from test 2. The rubric (out of 12) scores how it briefed and checked the probe.
+
+| Server | Facts | Probes | Changed the server | Rubric | tok/s | Minutes | Notes |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| 3G | 0/14 | 2 | no | 8/12 | 18.4 | 9 | One probe made all 10 calls and miscounted the lights (37 off and 11 unavailable against 38 and 10). The agent caught the mismatch, but its follow-up ran the server binary directly through an explore sub-agent, not a probe. Trusting the server was right. Six compactions dropped … |
+| 3G | 13/14 | 1 | no | 8/12 | 77.0 | 3 | One probe made seven calls and stopped at the first page of lights, reporting 2 on. The agent checked every fact on the API, read the server source and correctly blamed the probe's paging, but did not ask again. Its verdict of not correct contradicts its own report; the grader … |
+| 3O | 0/14 | 14 | fixed: 3 tools, 3 tests pass | 4/12 | 98.3 | 10 | The model's own server never connected to the agent harness (the client closed after the handshake), so 13 probe sessions had no tools; two of them invented tool lists, which the agent believed. It renamed its tools with a prefix on that basis and reported the server validated … |
+| 3O | 0/14 | 12 | fixed: 4 tools, 4 tests pass | 7/12 | 50.6 | 9 | The model's own server never connected to the agent harness (a handshake defect already recorded in test 2), so 12 probe sessions had no tools and wrote tool calls as plain text. The agent took the facts from the API, added a tool that did not address the cause, and did not … |
 
 _Generated from the bake-off results on 2026-10-10._
