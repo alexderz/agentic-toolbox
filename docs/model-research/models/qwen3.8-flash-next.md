@@ -26,6 +26,8 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Flash-Next (unpruned) · llama.cpp 0.6, experts in RAM | llama.cpp 0.6 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · Strata, GPU expert cache, 262k context | Strata | GSQ-RCO IQ3_S | 256k | – | 30.2 |
 | Flash-Next · Strata, two batch slots (multi-agent), 262k context | Strata | GSQ-RCO IQ3_S | test 3 only | – | 20.0 |
+| Flash-Next · Strata 0.1.42, GPU expert cache, 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
+| Flash-Next · Strata 0.1.42 with the 0.1.41 routing (tail skip off), 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · SGLang, EXL3 3-bit, GPU expert cache | SGLang | EXL3 3.05 bpw | 200k | – | 44.7 |
 
 ## Results
