@@ -14,7 +14,7 @@ An abliterated Qwen3.8-27B aimed at security work, IQ4_XS GGUF with the MTP draf
 
 ## Verdict
 
-Passed both tests on llama.cpp 0.4 without drafting, but slowly at long context (8-24 tok/s). With its own MTP heads on llama.cpp 0.6 (144k context) it decodes about 72 tok/s, but both MTP runs of test 2 got stuck: one looped on a mistyped call to an invented endpoint under long-horizon sampling, the other failed the same build 23 times on a bracket it could not find. Not recommended with MTP until that is understood.
+Passed both tests on llama.cpp 0.4 without drafting, but slowly at long context (8-24 tok/s). With its own MTP heads on llama.cpp 0.6 (144k context) it decodes about 72 tok/s, but both MTP runs of test 2 got stuck: one looped on a mistyped call to an invented endpoint under long-horizon sampling, the other failed the same build 23 times on a bracket it could not find. Not recommended with MTP until that is understood. A test-3 run looped too (one call repeated 32 times). The author's own Q5_K_M, run with the recommended sampling and OpenCode's loop guard, passed test 1 5/5 (12 subcommands, 24 tests) but spent its last hour re-reading the same eleven lines of its test file 62 times, varied just enough to slip past the guard. The Q6_K and Q8_0 do not fit on a 24 GB card.
 
 ## Variants we ran
 
@@ -23,8 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3.8-27B Cyber (abliterated) · llama.cpp, all on GPU | llama.cpp 0.4 | IQ4_XS | 128k | – | 23.9 |
-| Qwen3.8-27B Cyber (abliterated) Q6_K · llama.cpp 0.6, layers split by --fit, recommended sampling | llama.cpp 0.6 | Q6_K | not run yet | | |
-| Qwen3.8-27B Cyber (abliterated) Q8_0 · llama.cpp 0.6, layers split by --fit, recommended sampling | llama.cpp 0.6 | Q8_0 | not run yet | | |
+| Qwen3.8-27B Cyber (abliterated) Q5_K_M · llama.cpp 0.6, all on GPU at 80k, recommended sampling | llama.cpp 0.6 | Q5_K_M | – | – | 22.1 |
 
 ## Results
 
@@ -32,6 +31,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | pass | 5/5 checks | 24 | 22.1 | 169 | 13 py | 16.0 | – | – | llama.cpp 0.6 | 12 subcommands |
 | 1 | pass | 5/5 checks | 39 | 23.9 | 52 | 2 py | 2.1 | 128k | – | llama.cpp 0.4 | 5 subcommands |
 | 2 | fail | 0 tools | – | 27.3 | 35 | 12/18 | 24.3 | – | – | llama.cpp 0.4 | not graded: OpenCode harness hang 54 min in; rerun queued |
 | 2 | pass | 7 tools | 22 | 8.1 | 173 | 24/72 | 86.5 | – | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 21/0 -> 22/1, grader now sums every cargo test target] hit 3h cap while still refining tests; server full pass; 203 steps no runaway; slow (8.1 tok/s over the run at 229k q8_0, dense 27B on llama.cpp) |
