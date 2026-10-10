@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Nemotron 3 Nano 30B | llama.cpp 0.4 | Q4 | 416k | 9 | 90.7 |
+| Nemotron 3 Nano 30B · llama.cpp 0.6, tool-calling sampling (temperature 0.6), thinking budget | llama.cpp 0.6 | Q4_K_M | not run yet | | |
 
 ## Results
 

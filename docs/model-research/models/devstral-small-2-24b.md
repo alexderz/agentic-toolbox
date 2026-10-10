@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Devstral Small 2 24B | llama.cpp 0.4 | Q4 | 200k | – | 33.1 |
+| Devstral Small 2 24B Q5_K_M · llama.cpp 0.6, 70k, Mistral sampling (temperature 0.15) and template | llama.cpp 0.6 | Q5_K_M | not run yet | | |
 
 ## Results
 

@@ -23,6 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3-VL-8B | llama.cpp 0.4 | Q4_K_M | 128k | – | 39.5 |
+| Qwen3-VL-8B Q8 · llama.cpp 0.6, makers' sampling with presence penalty 1.5 | llama.cpp 0.6 | Q8_0 | not run yet | | |
 
 ## Results
 

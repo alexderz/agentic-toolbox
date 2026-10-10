@@ -167,3 +167,10 @@ cards; this log keeps the reasoning.
 
 - Step 5 Preview (StepFun, about 600B total / 27B active): does not fit. Official weights are announced for about 15 October; the earlier Hugging Face copies are third-party uploads and were not downloaded.
 - Unsloth decision-model training noted as a way to build a local classifier; not a model, nothing downloaded.
+
+## 2026-10-10
+
+- Qwen-Image-2.1-Turbo (the 8-step checkpoint of Qwen-Image 2.1): downloaded, official folder plus a Q8 GGUF of the transformer. Same architecture as Qwen-Image 2.1, so the same image setups apply. Not run yet.
+- Mirai S (Qwen3.8-27B compressed to about 8 GB with a speculator): needs its own engine (Mirai's vLLM build or a llama.cpp fork). Not downloaded.
+- Samsung LittleBit (sub-1-bit compression): code only, no checkpoints, non-commercial licence. On the watch list.
+- TensorFold "Living Weights" (a served model that writes learned facts into its own weights) and Helix Foundry (a local data workspace): tools, not models. Nothing to test.
