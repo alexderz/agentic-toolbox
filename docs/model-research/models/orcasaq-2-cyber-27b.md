@@ -46,4 +46,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 0/14 | 2 | no | 12/12 | 42.7 | 16 | It sent one probe session with the eight questions in plain terms, asking for the exact tool calls, the raw values and the exact error text; it built REST ground truth in Python, matched all 14 facts, and then read the source. It suspected that only_available filters UI-hidden … |
 | 3O | 14/14 | 1 | no | 12/12 | 45.5 | 8 | It built REST ground truth and read its own six-file server before sending one probe session: ten numbered calls with exact tool names, arguments and the field to report, errors to be quoted, and a summary table at the end. All 14 facts matched, a fresh REST pull confirmed them … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

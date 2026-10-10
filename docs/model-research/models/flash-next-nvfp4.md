@@ -16,4 +16,4 @@ NVFP4 checkpoint for vLLM.
 
 NVFP4 needs a Blackwell GPU; the RTX 3090 cannot run it.
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

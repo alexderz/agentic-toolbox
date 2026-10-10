@@ -47,4 +47,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | fixed: 12 tools, 155 tests pass | 10/12 | 47.4 | 18 | One probe session with twelve numbered calls giving exact arguments and the fields to copy verbatim; it built REST ground truth and all 14 facts matched, then re-probed after its change. It did not find the targets_entities defect, although its own probe output showed … |
 | 3O | 14/14 | 4 | no | 12/12 | 42.3 | 11 | It measured the /api/states payload (94 KB) and split the probe work into one metadata session and three parallel per-domain scans, each returning a fixed JSON shape with verbatim errors; its own list_entities has no state filter, so the probe counted "unavailable" rows itself. … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

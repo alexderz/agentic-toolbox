@@ -41,4 +41,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 4 tools | 27 | 73.3 | 39 | 22/35 | 111.1 | – | – | llama.cpp-ada-ternary bonsai-q8-product (5251968) | tool_call no data (checked by hand): ha_list_entities calls the nonexistent /api/entities (6 uses in the code) and gets 404 from the replay; init and tools/list work; same invented endpoint as the earlier Bonsai PQ2 runs |
 | 2 | partial | 3 tools | 32 | 48.1 | 153 | 33/59 | 64.9 | 248k | – | PrismML llama.cpp | TEST 2: PARTIAL, tools/call fails. Builds, initialize ok, 3 tools (get_config, list_entities, get_entity), 32 tests pass. Verified by hand: tools/call returns -32602 'Missing required field toolName' (it invented a toolName param instead of the spec's name), so no standard … |
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._

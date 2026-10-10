@@ -16,4 +16,4 @@ Google's embedding model on Gemma 4: text, code, images, video and audio in one 
 
 Fits easily, but neither engine we run knows its architecture yet: llama.cpp added it after v0.6.0 (PR 30054, 2026-10-06) and vLLM after 0.31.0. Revisit with the next llama.cpp release. Activations need bf16 or f32, not f16.
 
-_Generated from the bake-off results on 2026-10-09._
+_Generated from the bake-off results on 2026-10-10._
