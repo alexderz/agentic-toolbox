@@ -32,7 +32,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 11 | 38.5 | 3 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 3 subcommands |
-| 1 | pass | 5/5 checks | 0 | 39.5 | 5 | 0 | 0.0 | 72k | – | llama.cpp 0.4 | 3 subcommands |
+| 1 | pass | 5/5 checks | 11 | 39.5 | 5 | 0 | 0.0 | 72k | – | llama.cpp 0.4 | 3 subcommands |
 | 1 | pass | 5/5 checks | 9 | 30.6 | 3 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 5 subcommands |
 | 1 | pass | 5/5 checks | 10 | 53.4 | 2 | 0 | 0.0 | 72k | – | llama.cpp 0.4 | 4 subcommands |
 | 1 | pass | 5/5 checks | 12 | 51.4 | 3 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 2 subcommands |

@@ -31,10 +31,10 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 0 | 99.7 | 2 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 4 subcommands |
+| 1 | pass | 5/5 checks | 7 | 99.7 | 2 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 4 subcommands |
 | 1 | pass | 5/5 checks | 7 | 112.0 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 3 subcommands |
-| 1 | pass | 5/5 checks | 0 | 140.8 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 2 subcommands |
-| 1 | pass | 5/5 checks | 0 | 108.1 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 3 subcommands |
+| 1 | pass | 5/5 checks | 8 | 140.8 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 2 subcommands |
+| 1 | pass | 5/5 checks | 9 | 108.1 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 3 subcommands |
 | 1 | pass | 5/5 checks | 6 | 117.3 | 2 | 0 | 0.0 | 256k | – | vLLM | 8 subcommands |
 | 1 | fail | 1/5 checks | 6 | 90.0 | 2 | 0 | 0.0 | 256k | – | vLLM | 3 subcommands |
 | 2 | pass | 3 tools | 2 | 118.4 | 3 | 4/6 | 9.6 | 256k | – | llama.cpp 0.4 |  |

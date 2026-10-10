@@ -30,7 +30,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | pass | 5/5 checks | 0 | 18.9 | 29 | 0 | 0.0 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | 4 subcommands |
+| 1 | pass | 5/5 checks | 5 | 18.9 | 29 | 0 | 0.0 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | 4 subcommands |
 | 2 | partial | 3 tools | 5 | 19.6 | 36 | 7/15 | 114.6 | 256k | 39 | llama.cpp 0.6 + Kolibri patch | Kolibri-1 Q8_0 (llama.cpp v0.6.0 + kolibri1 patch, -ncmoe 39, 262k): PARTIAL, verified by hand: implements only server/discover, answers the required legacy initialize with -32601 Method not found; 3 tools, a real tool call works, 5 tests; thin: 253 lines in one file, 36 min … |
 
 _Generated from the bake-off results on 2026-10-10._

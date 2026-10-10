@@ -14,7 +14,7 @@ Mistral's coding model.
 
 ## Verdict
 
-Inconsistent: 2/5, then 5/5 with a failing test.
+Inconsistent: 2/5, then 4/5 with 13 of its 17 tests passing. In the second run the single-entity lookup is wrong for every id: it prints the first entity in the list and exits 0, so a made-up id looks like a success (the first grading missed this and recorded 5/5; corrected by the regrade of 2026-10-10).
 
 ## Variants we ran
 
@@ -32,6 +32,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 38 | 25.6 | 15 | 1 py | 0.9 | 100k | – | llama.cpp 0.4 | 6 subcommands |
-| 1 | pass | 5/5 checks | 0 | 33.1 | 11 | 2 py | 3.0 | 200k | – | llama.cpp 0.4 | 7 subcommands |
+| 1 | partial | 4/5 checks | 13 | 33.1 | 11 | 2 py | 3.0 | 200k | – | llama.cpp 0.4 | 7 subcommands |
 
 _Generated from the bake-off results on 2026-10-10._

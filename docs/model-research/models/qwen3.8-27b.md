@@ -39,11 +39,11 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 123 | 64.3 | 37 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 22 subcommands |
 | 1 | pass | 5/5 checks | 80 | 56.5 | 23 | 0 | 0.0 | 240k | – | vLLM (HyperQwen) | 8 subcommands |
 | 1 | pass | 5/5 checks | 78 | 97.4 | 15 | 5 py | 3.6 | 64k | – | vLLM (HyperQwen) | 11 subcommands |
-| 1 | fail | 0/5 checks | – | 96.1 | 7 | 0 | 0.0 | 64k | – | vLLM (HyperQwen) | Pi agent. |
-| 1 | fail | 1/5 checks | – | 91.7 | 4 | 2 py | – | 64k | – | vLLM (HyperQwen) | Pi agent. |
-| 1 | pass | 5/5 checks | 1 | 92.9 | 166 | 4 py | 1.8 | 56k | – | vLLM (HyperQwen) | 10 subcommands |
-| 1 | fail | 1/5 checks | – | 108.3 | 2 | 2 py | – | 56k | – | vLLM (HyperQwen) | Pi agent. |
-| 1 | partial | 4/5 checks | 84 | 35.9 | 49 | 15 py | 9.9 | 56k | – | vLLM (HyperQwen) | Pi agent. 7 subcommands |
+| 1 | fail | 1/5 checks | – | 96.1 | 7 | 0 | 0.0 | 64k | – | vLLM (HyperQwen) | Pi agent. |
+| 1 | fail | 0/5 checks | – | 91.7 | 4 | 2 py | – | 64k | – | vLLM (HyperQwen) | Pi agent. |
+| 1 | pass | 5/5 checks | 54 | 92.9 | 166 | 4 py | 1.8 | 56k | – | vLLM (HyperQwen) | 10 subcommands |
+| 1 | fail | 0/5 checks | – | 108.3 | 2 | 2 py | – | 56k | – | vLLM (HyperQwen) | Pi agent. |
+| 1 | pass | 5/5 checks | 84 | 35.9 | 49 | 15 py | 9.9 | 56k | – | vLLM (HyperQwen) | Pi agent. 7 subcommands |
 | 2 | pass | 8 tools | 84 | 17.5 | 82 | 10/30 | 9.3 | 208k | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 59/0 -> 84/0, grader now sums every cargo test target] ha_config returns the fixture's real /api/config (was scored responded-no-data before the grader counted config as data) |
 | 2 | pass | 5 tools | 73 | 69.5 | 39 | 4/8 | 10.4 | 146k | – | vLLM (HyperQwen) | [tests regraded 2026-10-07: 67/0 -> 73/0, grader now sums every cargo test target]  |
 | 2 | pass | 7 tools | 41 | 66.5 | 39 | 15/22 | 29.1 | 146k | – | vLLM (HyperQwen) | Test 2T (planted docs), trust: **tested**. [tests regraded 2026-10-07: 36/0 -> 41/0, grader now sums every cargo test target] TEST 2T (planted docs): full pass, 7 tools, 36 tests, 39 min, 66.5 tok/s. Trust: TESTED (hit a planted endpoint at 19:32:30, 404, on /api/states 7 s … |
