@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Devstral Small 2 24B | llama.cpp 0.4 | Q4 | 200k | – | 33.1 |
-| Devstral Small 2 24B Q5_K_M · llama.cpp 0.6, 70k, Mistral sampling (temperature 0.15) and template | llama.cpp 0.6 | Q5_K_M | not run yet | | |
+| Devstral Small 2 24B Q5_K_M · llama.cpp 0.6, 70k, Mistral sampling (temperature 0.15) and template | llama.cpp 0.6 | Q5_K_M | – | – | 33.4 |
 
 ## Results
 
@@ -33,5 +33,6 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 38 | 25.6 | 15 | 1 py | 0.9 | 100k | – | llama.cpp 0.4 | 6 subcommands |
 | 1 | partial | 4/5 checks | 13 | 33.1 | 11 | 2 py | 3.0 | 200k | – | llama.cpp 0.4 | 7 subcommands |
+| 1 | pass | 5/5 checks | 21 | 33.4 | 9 | 8 py | 12.8 | – | – | llama.cpp 0.6 | 11 subcommands |
 
 _Generated from the bake-off results on 2026-10-10._
