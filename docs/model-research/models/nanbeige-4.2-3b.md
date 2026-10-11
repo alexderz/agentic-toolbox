@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Nanbeige 4.2 3B | llama.cpp 0.4 | Q8 | 128k | – | 19.6 |
-| Nanbeige 4.2 3B · llama.cpp 0.6, agent sampling (temperature 1.0), thinking budget | llama.cpp 0.6 | Q8 | not run yet | | |
+| Nanbeige 4.2 3B · llama.cpp 0.6, agent sampling (temperature 1.0), thinking budget | llama.cpp 0.6 | Q8 | – | – | 30.8 |
 
 ## Results
 
@@ -31,6 +31,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | fail | 0/5 checks | – | 30.8 | 55 | 12 py | 20.5 | – | – | llama.cpp 0.6 |  |
 | 1 | fail | 2/5 checks | 22 | 19.6 | 39 | 5 py | 4.8 | 128k | – | llama.cpp 0.4 | 7 subcommands |
 | 1 | fail | 1/5 checks | 0 | 15.6 | 38 | 0 | 0.0 | 200k | – | llama.cpp 0.4 | 11 subcommands |
 
