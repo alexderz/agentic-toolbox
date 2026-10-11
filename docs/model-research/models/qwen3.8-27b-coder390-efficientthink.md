@@ -42,4 +42,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 6/14 | 2 | no | 11/12 | 26.3 | 13 | One well-specified brief and two small follow-ups, then every answer compared with the API; trusting the server followed from that, though it never examined the one field that is really wrong. All 14 values are correct in both sections, but under nested keys: the first of three … |
 | 3O | 1/14 | 1 | no | 7/12 | 20.8 | 29 | One sprawling brief cost 87 calls and three probe compactions, and the probe's report garbled the totals. The model traced that to the probe by reading the harness's traffic log and running the server directly, but never probed again. It called its server correct although it has … |
 
-_Generated from the bake-off results on 2026-10-10._
+_Generated from the bake-off results on 2026-10-11._

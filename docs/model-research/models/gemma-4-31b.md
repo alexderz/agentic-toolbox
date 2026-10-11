@@ -52,4 +52,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 0/14 | 1 | no | 10/12 | 26.9 | 4 | One probe returned all eight groups of facts and the agent confirmed each against the API, so trusting the server followed from the evidence. The values in the facts file are correct but in its own nested layout without the verdict fields: a compaction just before writing … |
 | 3O | 0/14 | 1 | no | 7/12 | 18.7 | 8 | The probe needed 54 per-entity calls and could not get the unavailable total or the lock services (a 58 KB reply was cut off). The agent did not probe again or change the server, yet declared it fully verified and correct on 12 of 14 facts. The facts file is a flat custom … |
 
-_Generated from the bake-off results on 2026-10-10._
+_Generated from the bake-off results on 2026-10-11._

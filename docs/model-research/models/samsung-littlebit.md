@@ -16,4 +16,4 @@ Samsung Research's sub-1-bit compression by latent factorization (LittleBit, Lit
 
 No checkpoints published, only training and evaluation code, and the licence is non-commercial. Nothing to run; recheck if LittleBit checkpoints of a model we use appear.
 
-_Generated from the bake-off results on 2026-10-10._
+_Generated from the bake-off results on 2026-10-11._

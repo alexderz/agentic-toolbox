@@ -59,4 +59,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 0/14 | 14 | fixed: 3 tools, 3 tests pass | 4/12 | 98.3 | 10 | The model's own server never connected to the agent harness (the client closed after the handshake), so 13 probe sessions had no tools; two of them invented tool lists, which the agent believed. It renamed its tools with a prefix on that basis and reported the server validated … |
 | 3O | 0/14 | 12 | fixed: 4 tools, 4 tests pass | 7/12 | 50.6 | 9 | The model's own server never connected to the agent harness (a handshake defect already recorded in test 2), so 12 probe sessions had no tools and wrote tool calls as plain text. The agent took the facts from the API, added a tool that did not address the cause, and did not … |
 
-_Generated from the bake-off results on 2026-10-10._
+_Generated from the bake-off results on 2026-10-11._
