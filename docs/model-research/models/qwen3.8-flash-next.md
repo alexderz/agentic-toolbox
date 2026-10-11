@@ -29,6 +29,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Flash-Next · Strata 0.1.42, GPU expert cache, 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | – | – | 19.2 |
 | Flash-Next · Strata 0.1.42 with the 0.1.41 routing (tail skip off), 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | – | – | 22.4 |
 | Flash-Next · Strata 0.1.42, settings probe | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
+| Flash-Next · Strata 0.1.42, old PCIe share, 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · SGLang, EXL3 3-bit, GPU expert cache | SGLang | EXL3 3.05 bpw | 200k | – | 44.7 |
 | Flash-Next · SGLang fork phase-d-main, EXL3 3-bit, GPU expert cache | sglang sglang-exl3-phase-d-main | EXL3 3.05 bpw | – | – | 25.3 |
 

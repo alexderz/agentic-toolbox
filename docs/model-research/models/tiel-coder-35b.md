@@ -24,7 +24,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | --- | --- | --- | --- | --- | --- |
 | Tiel-Coder-35B 4-bit · llama.cpp, all on GPU, 262k context | llama.cpp 0.4 | UD-IQ4_XS | 256k | – | 100.8 |
 | Tiel-Coder-35B 4-bit · llama.cpp 0.6, all on GPU, 262k, author's coding sampling (temperature 0.6) | llama.cpp 0.6 | UD-IQ4_XS | – | – | 99.0 |
-| Tiel-Coder-35B Q4_K_XL · llama.cpp 0.6, 6 expert layers in RAM, 131k, temperature 0.6 | llama.cpp 0.6 | UD-Q4_K_XL | – | – | 78.6 |
+| Tiel-Coder-35B Q4_K_XL · llama.cpp 0.6, 6 expert layers in RAM, 131k, temperature 0.6 | llama.cpp 0.6 | UD-Q4_K_XL | – | – | 81.4 |
 | Tiel-Coder-35B 6-bit · llama.cpp, 20 expert layers in RAM | llama.cpp 0.4 | Q6_K_XL | 256k | 20 | 42.8 |
 
 ## Results
@@ -34,6 +34,8 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 41 | 76.7 | 24 | 6 py | 4.6 | – | – | llama.cpp 0.6 | 10 subcommands |
+| 1 | pass | 5/5 checks | 34 | 78.1 | 9 | 0 | 0.0 | – | – | llama.cpp 0.6 | 15 subcommands |
+| 1 | pass | 5/5 checks | 38 | 81.4 | 9 | 3 py | 2.2 | – | – | llama.cpp 0.6 | 8 subcommands |
 | 1 | pass | 5/5 checks | 50 | 99.0 | 13 | 5 py | 4.3 | – | – | llama.cpp 0.6 | 15 subcommands |
 | 1 | pass | 5/5 checks | 55 | 100.8 | 13 | 5 py | 2.8 | 256k | – | llama.cpp 0.4 | 10 subcommands |
 | 1 | pass | 5/5 checks | 39 | 42.8 | 25 | 4 py | 3.4 | 256k | 20 | llama.cpp 0.4 | 8 subcommands |
