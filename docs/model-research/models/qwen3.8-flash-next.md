@@ -55,4 +55,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 3 | fixed: 10 tools, 106 tests pass | 12/12 | 18.1 | 17 | Three probe sessions: an eight-question brief with method notes (paginate, cross-check counts, quote errors), a verbatim cross-check through resources and tools, and a re-check after the fix. Found that its own ha_overview counted 'unknown' entities as 'unavailable'; split the … |
 | 3O | 14/14 | 2 | no | 12/12 | 3.0 | 59 | Two probe sessions: eight numbered facts in plain terms (state "unavailable" in ANY domain, tool used, raw output, counted entity IDs, errors with their text), then a deliberate nine-call re-check with exact arguments to rule out a made-up first report; all 37 calls are in the … |
 
-_Generated from the bake-off results on 2026-10-10._
+_Generated from the bake-off results on 2026-10-11._
