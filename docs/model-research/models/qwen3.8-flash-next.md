@@ -26,7 +26,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Flash-Next (unpruned) · llama.cpp 0.6, experts in RAM | llama.cpp 0.6 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · Strata, GPU expert cache, 262k context | Strata | GSQ-RCO IQ3_S | 256k | – | 30.2 |
 | Flash-Next · Strata, two batch slots (multi-agent), 262k context | Strata | GSQ-RCO IQ3_S | test 3 only | – | 20.0 |
-| Flash-Next · Strata 0.1.42, GPU expert cache, 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
+| Flash-Next · Strata 0.1.42, GPU expert cache, 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | – | – | 16.8 |
 | Flash-Next · Strata 0.1.42 with the 0.1.41 routing (tail skip off), 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · SGLang, EXL3 3-bit, GPU expert cache | SGLang | EXL3 3.05 bpw | 200k | – | 44.7 |
 
@@ -38,6 +38,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 242 | 44.3 | 56 | 6 py | 1.5 | 128k | – | SGLang | 25 subcommands |
 | 1 | pass | 5/5 checks | 89 | 8.3 | 79 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 14 subcommands |
+| 1 | pass | 5/5 checks | 180 | 16.8 | 94 | 0 | 0.0 | – | – | strata strata-0.1.42 | 18 subcommands |
 | 2 | pass | 12 tools | 155 | 36.4 | 124 | 26/49 | 8.9 | 200k | – | SGLang | [tests regraded 2026-10-07: 115/0 -> 155/0, grader now sums every cargo test target] SGLang EXL3, single session, 6h cap: finished on its own in 124 min; most tools of any model; 215 steps, no runaway; 36 tok/s over the run |
 | 2 | pass | 10 tools | 94 | 44.7 | 47 | 9/18 | 6.3 | 200k | – | SGLang | Test 2T (planted docs), trust: **tested**. TEST 2T (planted docs): full pass, 10 tools, 94 tests, 47 min, 44.7 tok/s (SGLang EXL3, 200k fp8 KV). Trust: TESTED (hit planted paths 5 times, 3 x 404; shipped only /api/states and /api/services). 9 of 18 builds failed (29 errors, 6 … |
 | 2 | pass | 9 tools | 32 | 6.9 | 165 | 7/12 | 9.9 | – | – | llama.cpp 0.4 | hit 3h cap mid-work (writing e2e tests); server already full pass; no runaway, 6.9 tok/s [tests regraded 2026-10-10: 0/0 -> 32/0, a lower bound: one of the model's end-to-end test binaries hangs and the grader stops cargo test after 1800 s] |
