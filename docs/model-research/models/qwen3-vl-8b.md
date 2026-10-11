@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3-VL-8B | llama.cpp 0.4 | Q4_K_M | 128k | – | 39.5 |
-| Qwen3-VL-8B Q8 · llama.cpp 0.6, makers' sampling with presence penalty 1.5 | llama.cpp 0.6 | Q8_0 | not run yet | | |
+| Qwen3-VL-8B Q8 · llama.cpp 0.6, makers' sampling with presence penalty 1.5 | llama.cpp 0.6 | Q8_0 | – | – | 40.7 |
 
 ## Results
 
@@ -31,6 +31,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | fail | 2/5 checks | 0 | 40.7 | 180 | 222 py | 418.1 | – | – | llama.cpp 0.6 | 7 subcommands |
 | 1 | fail | 0/5 checks | – | 39.5 | 65 | 0 | 0.0 | 128k | – | llama.cpp 0.4 |  |
 
 _Generated from the bake-off results on 2026-10-11._
