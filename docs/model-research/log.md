@@ -9,6 +9,30 @@ cards; this log keeps the reasoning.
   Transformers code and has no requants yet. The [DFlash2 draft for ExLlamaV3](models/qwen3.8-27b-dflash2-exl3.md)
   is a serving path for Qwen3.8-27B that needs an ExLlamaV3 server. [Qwen 4](models/qwen4.md) is a rumour without
   weights.
+- Retry wave: nine models that had failed earlier, rerun on llama.cpp 0.6 with researched sampling and less compressed weights.
+  [Tiel Coder 35B](models/tiel-coder-35b.md) turned out to be a sampling problem: at temperature 0.6 the 4-bit file
+  that had called an invented endpoint passes both tests, and the Q4_K_XL build passes test 2 in 27 minutes at
+  78.6 tok/s with real endpoints only. [Devstral Small 2](models/devstral-small-2-24b.md),
+  [Qwen3.6-35B-A3B](models/qwen3.6-35b-a3b.md) and [GLM-4.7-Flash](models/glm-4.7-flash.md) now pass test 1 and
+  still fail test 2 on the MCP handshake: all three wrote `initialize` with snake_case fields. None of them sent a
+  request to Home Assistant during its run, but that alone does not explain it: three passing runs sent none
+  either. Nemotron 3 Nano, Nemotron 3.5 Lightning, Nanbeige 4.2, Qwen3-VL 8B and MiMo v2.6 did not pass test 1.
+- Strata 0.1.42 runs [Qwen3.8-Flash-Next](models/qwen3.8-flash-next.md) through both tests (test 1 5/5 twice; test
+  2 a full pass with 9 tools and 72 tests in 98 minutes), but slower over the run than 0.1.39 (19.2 against 24.4
+  tok/s). A settings probe, repeated with a warm-up and in both orders, found one setting that matters: going back
+  to the older PCIe share about doubled decode speed on long answers (95 against 48 tok/s) and read large prompts
+  1.7 times faster. The first probe could not rank the settings because its opening run was a cold start: the same
+  prompt was read at 44 tok/s cold and 1,269 warm.
+- A newer SGLang build for Flash-Next handles several sessions at once (11 of 11 checks in a multi-session probe;
+  the older build crashed under several) and passed test 1 5/5 at 25.3 tok/s. Its test 2 is not run yet.
+- Test 3 now also gives the task as a file in the work folder, because models that compacted their conversation
+  lost the required answer layout, and the grader credits a right value written in another layout. Four earlier
+  runs gained; the cards show both counts.
+- Harness finding: the coding agent's file search tools (glob and grep) have failed inside our test sandbox since
+  the first runs, because the agent image lacks ripgrep. 57 of 181 runs asked for them and got an error, and the
+  models fell back to shell commands. Every model had the same handicap, so the rankings hold, but turn counts are
+  inflated. Not fixed yet.
+- The test queue is finished for now.
 
 ## 2026-10-08
 
