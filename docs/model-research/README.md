@@ -87,9 +87,12 @@ software, through the same coding tests as every other model.
 | [Qwen3-235B-A22B](models/qwen3-235b-a22b.md) | Qwen3.6 | Does not fit |  | MoE, 235B / 22B active |
 | [Flash-Next Sushi 2.6bpw](models/flash-next-sushi.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, EXL3 experts |
 | [Qwen3.8-Flash-Next NVFP4 (Red Hat)](models/flash-next-nvfp4.md) | Qwen3.8 Flash-Next | Does not fit |  | MoE, FP4 experts |
+| [Decision 3.0 (d3 family)](models/decision-3.0.md) | Decision | Needs an engine update |  | Decision models with vision and video input, 0.6B to 26B, built on Qwen3.5 and Qwen3.8-27B |
 | [EmbeddingGemma 2](models/embeddinggemma-2.md) | Embedding | Needs an engine update |  | Multimodal embedding encoder, 740M (text-only path 270M), 768 dims, 8k context |
 | [Mirai S (Qwen3.8-27B-S experimental)](models/mirai-s-27b.md) | Qwen3.8 27B | Needs an engine update |  | Dense 27B compressed to about 8 GB, with a 3.4 GB speculator model |
+| [Qwen3.8-27B DFlash2 draft for ExLlamaV3](models/qwen3.8-27b-dflash2-exl3.md) | Qwen3.8 27B | Needs an engine update |  | DFlash2 draft model for Qwen3.8-27B, EXL3 5.0 bpw, 1.4 GB |
 | [Liquid d1](models/liquid-d1.md) | Decision | Watching (no weights yet) |  | Decision model with vision |
+| [Qwen 4 (rumoured: Max, Plus, Flash, 27B)](models/qwen4.md) | Other | Watching (no weights yet) |  | Unknown; a 27B tier is rumoured |
 | [Reflection Beam 501B](models/reflection-beam.md) | Other | Watching (no weights yet) |  | MoE, 501B / 23B active, 1M context |
 | [Reka Rho-1](models/reka-rho-1.md) | Other | Watching (no weights yet) |  | 19B omni (text, image, video, actions) |
 | [Samsung LittleBit](models/samsung-littlebit.md) | Other | Watching (no weights yet) |  | Compression method, 0.1 to 1.0 bits per weight |

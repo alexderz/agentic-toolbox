@@ -3,6 +3,13 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-11
+
+- Looked at three new items, none downloaded. [Decision 3.0](models/decision-3.0.md) loads through its own
+  Transformers code and has no requants yet. The [DFlash2 draft for ExLlamaV3](models/qwen3.8-27b-dflash2-exl3.md)
+  is a serving path for Qwen3.8-27B that needs an ExLlamaV3 server. [Qwen 4](models/qwen4.md) is a rumour without
+  weights.
+
 ## 2026-10-08
 
 - New [story test](story-test/README.md): each model writes a Neuromancer-style short story from a fixed
