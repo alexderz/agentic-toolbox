@@ -81,6 +81,7 @@ software, through the same coding tests as every other model.
 | [Qwen3.6-35B-A3B](models/qwen3.6-35b-a3b.md) | Qwen3.6 | Dropped |  | MoE, 35B / 3B active |
 | [Qwen3.8-Flash-Next Coder (1.6-bit)](models/flash-next-coder.md) | Qwen3.8 Flash-Next | Dropped |  | MoE, 125B total / 6B active |
 | [GLM-5.3 (full) abliterated builds](models/glm-5.3-abliterated-full.md) | GLM | Does not fit | yes | Full GLM-5.3 |
+| [DeepSeek V4.1 Flash Uncensored](models/deepseek-v4.1-flash-uncensored.md) | Other | Does not fit | yes | MoE, 552B, vision, 1M context |
 | [Mistral Large 4](models/mistral-large-4.md) | Other | Does not fit |  | MoE, 1.05T total / 49B active, 1M context, vision |
 | [Naive N0.5 Flash](models/naive-n0.5-flash.md) | Other | Does not fit |  | MoE, 309B / 15.5B active |
 | [Step 5 Preview](models/step-5-preview.md) | Other | Does not fit |  | Sparse MoE, about 600B total / 27B active, 1M context, text, image and video input |
