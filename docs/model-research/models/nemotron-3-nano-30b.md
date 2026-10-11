@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Nemotron 3 Nano 30B | llama.cpp 0.4 | Q4 | 416k | 9 | 90.7 |
-| Nemotron 3 Nano 30B · llama.cpp 0.6, tool-calling sampling (temperature 0.6), thinking budget | llama.cpp 0.6 | Q4_K_M | not run yet | | |
+| Nemotron 3 Nano 30B · llama.cpp 0.6, tool-calling sampling (temperature 0.6), thinking budget | llama.cpp 0.6 | Q4_K_M | – | – | 73.4 |
 
 ## Results
 
@@ -31,6 +31,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| 1 | fail | 1/5 checks | 0 | 73.4 | 1 | 0 | 0.0 | – | – | llama.cpp 0.6 | 5 subcommands |
 | 1 | fail | 2/5 checks | 0 | 83.3 | 2 | 0 | 0.0 | 128k | 10 | llama.cpp 0.4 | 3 subcommands |
 | 1 | fail | 2/5 checks | 0 | 90.7 | 2 | 0 | 0.0 | 416k | 9 | llama.cpp 0.4 | 2 subcommands |
 
