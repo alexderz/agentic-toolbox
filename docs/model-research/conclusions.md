@@ -25,17 +25,23 @@ its two test-2 runs shipped a broken HTTP client.
 complete uncensored 27B server so far (8 tools, 56 tests, 52 minutes) at
 25-31 tok/s on llama.cpp: pick it when completeness matters more than speed.
 
+[Tiel Coder 35B](models/tiel-coder-35b.md) at Q4_K_XL is a candidate for
+fastest competent: with the author's coding sampling (temperature 0.6) it
+passed test 1 in 24 minutes and test 2 in 27 minutes (5 tools, 22 tests) at
+77-79 tok/s. That is one run each, with fewer tests than Qwen3.8-27B wrote,
+so it has not replaced the pick.
+
 ## By family
 
 | Family | Smartest | Fastest competent | Notes |
 | --- | --- | --- | --- |
 | Qwen3.8 27B | vLLM, MTP drafts, 150k | the same | llama.cpp on the same weights scored the same and ran 2-4x slower. |
-| Qwen3.8 Flash-Next | SGLang, EXL3 3-bit | Swift 1.5 (pruned) on Strata | Uncensored: Orcarouter on llama.cpp 0.6, or Heretic2 for twice the speed. Only llama.cpp runs the uncensored variants; 0.6 is 2.5-4x faster than 0.4 on them. |
-| Tiel Coder 35B | Cyber-Tiel-Coder 6-bit | Tiel-Coder 4-bit, all on GPU (101 tok/s on test 1) | The 4-bit test-2 server called an invented endpoint; the 6-bit builds passed. |
+| Qwen3.8 Flash-Next | SGLang, EXL3 3-bit | Swift 1.5 (pruned) on Strata | Uncensored: Orcarouter on llama.cpp 0.6, or Heretic2 for twice the speed. Only llama.cpp runs the uncensored variants; 0.6 is 2.5-4x faster than 0.4 on them. Strata 0.1.42 passes both tests; see [Engines](engines.md) for the setting it needs. |
+| Tiel Coder 35B | Cyber-Tiel-Coder 6-bit | Tiel-Coder Q4_K_XL, 6 expert layers in RAM (77-79 tok/s on both tests) | Run it at temperature 0.6. At that setting both 4-bit builds pass test 2; an earlier 4-bit run with other sampling called an invented endpoint. All on GPU, the IQ4_XS build reaches 99-101 tok/s on test 1. |
 | Gemma 4 | 31B | 26B-A4B on vLLM | Fast but thin: 3 tools on test 2. |
 | Qwen3.6 | 27B | none passed test 2 | Superseded by Qwen3.8. |
 | Kolibri | Kolibri-1 | none passed test 2 | Thin on both tests. |
-| GLM, Nemotron, others | none | none | See their cards. |
+| GLM, Nemotron, others | none | none | GLM-5.3-Flash passes both tests on Maya, at about 14 tok/s. GLM-4.7-Flash, Devstral Small 2 and Qwen3.6-35B fail the test-2 handshake even with their makers' sampling. See their cards. |
 
 ## Rules we learned
 
@@ -54,4 +60,20 @@ complete uncensored 27B server so far (8 tools, 56 tests, 52 minutes) at
    compacts constantly; 150k with OpenCode is the working minimum. The Pi
    agent copes better with a small window.
 7. **Runs vary a lot.** The same model and settings can pass and fail on
-   different runs. Treat one result as a sample.
+   different runs. Treat one result as a sample. Speed varies too: a cold
+   first request read a prompt at 44 tok/s that the warm engine read at
+   1,269, so warm up and measure twice before ranking settings.
+8. **Serve the maker's recommended sampling.** Tiel Coder's test-2 server
+   stopped calling an invented endpoint at its author's temperature 0.6
+   (its test-1 tools still invent a few), and Ternary Bonsai
+   degenerated into repeated tokens without its card's settings. Coding
+   agents often send no sampling at all, so set it on the server. It is not
+   a cure-all: three models still failed the test-2 handshake with it.
+9. **Tell the agent the context the server really serves.** Gemma on vLLM
+   was given a 262k limit for a server with 73k and quit within minutes;
+   those earlier results were our error, and with the right limit it passes.
+10. **Turn on the agent's loop guard, and do not rely on it alone.**
+    OpenCode asks before repeating an identical call, and a headless run
+    approves that silently; set `doom_loop` to deny. Qwen3.8-27B Cyber still
+    looped by varying its calls slightly. A thinking budget stops runaway
+    thinking, not output loops.

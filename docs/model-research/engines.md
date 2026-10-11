@@ -38,6 +38,7 @@ system RAM.
 | `-ncmoe N` with `-lm none` | Experts of `N` layers in RAM, loaded eagerly. Without `-lm none` the first request page-faults the weights and stalls. |
 | `-fit off` (0.6) | The automatic fit keeps 1 GiB spare and aborts when `-ngl` is set by hand. |
 | `--reasoning-budget` | Caps thinking; set it inside the reply cap. |
+| `--chat-template-kwargs '{"enable_thinking":true}'` | Gemma-style templates think only when asked. |
 | `--spec-type draft-mtp` | MTP drafting for models that ship MTP layers (0.6). |
 
 ### llama.cpp 0.6 against 0.4
@@ -72,6 +73,14 @@ cache in VRAM: 30-45 tok/s decode, 21-24 tok/s over a whole run.
   and the 1.6-bit coder looped without it.
 - Add the host name your proxy uses to `allowed_hosts`. Its DNS-rebinding
   guard returns 403 to any other name.
+- On 0.1.42, set `STRATA_PCIE_FRAC_DEFAULT=old`. With the release default,
+  long answers decoded at about 48 tok/s and large prompts were read at
+  about 1,200 tok/s; with the older PCIe share, 95 and 2,000 (two rounds in
+  opposite orders after a warm-up). Turning tail skip off helps decode as
+  much but not reading; turning the prefill CPU share off reads fastest and
+  decodes slowest.
+- Warm it up before timing anything. The first request after a start is
+  many times slower.
 
 ## Running engines as containers behind a router
 

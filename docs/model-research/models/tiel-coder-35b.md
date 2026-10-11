@@ -14,7 +14,7 @@ Small-active coder MoE. At IQ4_XS it fits entirely on the GPU at 262k context; t
 
 ## Verdict
 
-The fastest model that writes working test-1 code (101 tok/s). Its 4-bit test-2 server called an invented endpoint; the 6-bit build passed test 2.
+The fastest model that writes working test-1 code (101 tok/s). Its 4-bit test-2 server called an invented endpoint; the 6-bit build passed test 2. Retried 2026-10-11 with the author's coding sampling (temperature 0.6): the same 4-bit file passed both tests (test 2 at 40.8 tok/s in 72 minutes), and the Q4_K_XL build with 6 expert layers in RAM passed both at 77-79 tok/s (test 2 in 27 minutes), each with real endpoints only in test 2. The sampling was the problem, not the weights.
 
 ## Variants we ran
 
