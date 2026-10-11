@@ -30,7 +30,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Flash-Next · Strata 0.1.42 with the 0.1.41 routing (tail skip off), 262k context | strata strata-0.1.42 | GSQ-RCO IQ3_S | – | – | 22.4 |
 | Flash-Next · Strata 0.1.42, settings probe | strata strata-0.1.42 | GSQ-RCO IQ3_S | not run yet | | |
 | Flash-Next · SGLang, EXL3 3-bit, GPU expert cache | SGLang | EXL3 3.05 bpw | 200k | – | 44.7 |
-| Flash-Next · SGLang fork phase-d-main, EXL3 3-bit, GPU expert cache | sglang sglang-exl3-phase-d-main | EXL3 3.05 bpw | not run yet | | |
+| Flash-Next · SGLang fork phase-d-main, EXL3 3-bit, GPU expert cache | sglang sglang-exl3-phase-d-main | EXL3 3.05 bpw | – | – | 25.3 |
 
 ## Results
 
@@ -39,6 +39,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | Test | Result | Score | Own tests | tok/s | Minutes | Failed builds | Errors per 1k lines | Context | Expert layers in RAM | Engine | Notes |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 242 | 44.3 | 56 | 6 py | 1.5 | 128k | – | SGLang | 25 subcommands |
+| 1 | pass | 5/5 checks | 100 | 25.3 | 50 | 0 | 0.0 | – | – | sglang sglang-exl3-phase-d-main | 14 subcommands |
 | 1 | pass | 5/5 checks | 89 | 8.3 | 79 | 0 | 0.0 | 128k | 42 | llama.cpp 0.4 | 14 subcommands |
 | 1 | pass | 5/5 checks | 180 | 16.8 | 94 | 0 | 0.0 | – | – | strata strata-0.1.42 | 18 subcommands |
 | 1 | pass | 5/5 checks | 99 | 22.4 | 62 | 1 py | 0.4 | – | – | strata strata-0.1.42 | 14 subcommands |
