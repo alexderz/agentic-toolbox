@@ -36,10 +36,13 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 41 | 76.7 | 24 | 6 py | 4.6 | – | – | llama.cpp 0.6 | 10 subcommands |
 | 1 | pass | 5/5 checks | 34 | 78.1 | 9 | 0 | 0.0 | – | – | llama.cpp 0.6 | 15 subcommands |
 | 1 | pass | 5/5 checks | 38 | 81.4 | 9 | 3 py | 2.2 | – | – | llama.cpp 0.6 | 8 subcommands |
+| 1 | partial | 4/5 checks | 77 | 69.3 | 22 | 3 py | 1.7 | – | – | llama.cpp 0.6 | 9 subcommands |
 | 1 | pass | 5/5 checks | 50 | 99.0 | 13 | 5 py | 4.3 | – | – | llama.cpp 0.6 | 15 subcommands |
 | 1 | pass | 5/5 checks | 55 | 100.8 | 13 | 5 py | 2.8 | 256k | – | llama.cpp 0.4 | 10 subcommands |
 | 1 | pass | 5/5 checks | 39 | 42.8 | 25 | 4 py | 3.4 | 256k | 20 | llama.cpp 0.4 | 8 subcommands |
 | 2 | pass | 5 tools | 22 | 78.6 | 27 | 11/28 | 25.6 | – | – | llama.cpp 0.6 | retry batch 1, Tiel Coder 35B-A3B UD-Q4_K_XL at temperature 0.6, 6 expert layers in RAM, 131k: full pass, 5 tools, real endpoints only, 27 min, 184 turns, 78.6 tok/s, 21,598 MiB, 5 compactions, clean stop |
+| 2 | pass | 6 tools | 29 | 81.4 | 14 | 10/12 | 34.8 | – | – | llama.cpp 0.6 | Tiel Coder focus wave, run 2 of test 2 (repeat, same setup as wb-retry-tiel-q4kxl): full pass, 6 tools, real endpoints only (/api/states, /api/states/<id>, /api/config, /api/services, /api/logbook, /api/events), 14 min, 117 turns, 81.4 tok/s, 21,618 MiB, 2 compactions, clean … |
+| 2 | partial | 4 tools | 30 | 69.2 | 20 | 14/22 | 55.7 | – | – | llama.cpp 0.6 | Tiel Coder focus wave, run 3 of test 2 (repeat): builds, handshake ok, 4 tools listed, but every tools/call fails with Unknown tool: (empty name). Checked by hand in src/main.rs handle_tools_call: it reads the tool name from params.toolName, MCP sends params.name, and its own … |
 | 2 | pass | 6 tools | 17 | 40.8 | 72 | 19/84 | 32.8 | – | – | llama.cpp 0.6 | retry batch 1, Tiel Coder 35B-A3B UD-IQ4_XS at temperature 0.6 and min-p 0, all on GPU, 262k: full pass, 6 tools, real endpoints only, 72 min, 242 turns, 40.8 tok/s, 22,480 MiB, 1 compaction, clean stop. The first run of these weights (wb-tiel-coder-35b) returned no data from an … |
 | 2 | partial | 9 tools | 37 | 82.0 | 32 | 16/23 | 215.8 | 256k | – | llama.cpp 0.4 | [tests regraded 2026-10-07: 8/0 -> 37/0, grader now sums every cargo test target] list_entities hits invented /api/entities; also invents /api/states/<id>/history and /api/config/device_registry; /api/states works |
 | 2 | pass | 5 tools | 28 | 38.8 | 37 | 7/18 | 16.6 | 256k | 20 | llama.cpp 0.4 |  |
