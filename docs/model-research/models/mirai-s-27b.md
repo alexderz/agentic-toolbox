@@ -16,4 +16,4 @@ Mirai's compressed Qwen3.8-27B for consumer GPUs: about 8 GB of weights plus a s
 
 Not downloaded. It ships in Mirai's own formats (a patched vLLM and the uzu runtime) and a community llama.cpp fork serves it; none of the engines we run loads it. Worth a container of its own if the small footprint matters, in the same way as the Bonsai ada build.
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._

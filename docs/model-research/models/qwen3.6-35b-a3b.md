@@ -36,4 +36,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | partial | 9 tools | 9 | 36.2 | 17 | 9/12 | 44.8 | – | – | llama.cpp 0.6 | checked by hand: initialize answers with snake_case keys (protocol_version, server_info, capabilities nested twice), so a client finds no protocolVersion or serverInfo; every tool gets 404 because the client joins HA_URL with paths that lack /api (states, config, services … |
 | 2 | fail | 0 tools | 26 | 55.4 | 12 | 10/16 | 21.8 | 256k | 9 | llama.cpp 0.4 | answers but wraps initialize and tools/list in tool-result shape (content/structuredContent), no top-level serverInfo/protocolVersion/tools; replies to a notification with id "null". 14 tools behind the wrapper |
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._

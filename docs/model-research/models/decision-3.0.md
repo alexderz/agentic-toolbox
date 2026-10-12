@@ -16,4 +16,4 @@ The multimodal follow-up to Decision 2.0: text or JSON plus optional images and 
 
 Not downloaded. The models load through their own Transformers code and server, which none of the engines we run can serve, and there are no GGUF or other requants yet. The five smaller sizes would fit a 24 GB card as released; the flagship needs a 4-bit build. The benchmark ranking is the authors' own claim.
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._
