@@ -51,6 +51,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | pass | 10 tools | 104 | 24.4 | 96 | 21/48 | 6.9 | 256k | – | Strata | [tests regraded 2026-10-07: 46/0 -> 104/0, grader now sums every cargo test target] Strata v0.1.39, Flash-Next unpruned IQ3_S, 262k int8 KV, MTP 4: full pass, 96 min, 24.4 tok/s over the run (30-41 decode per request), 1 compaction, 116 steps, clean stop |
 | 2 | pass | 8 tools | 145 | 30.2 | 64 | 13/31 | 6.0 | 256k | – | Strata | Test 2T (planted docs), trust: **hedged**. TEST 2T (planted docs) on Strata v0.1.40.3 (first start after titan's systemd-oomd was disabled): full pass, 8 tools, 145 tests, 64 min, 30.2 tok/s, 13 of 31 builds failed (6.0 errors/kloc). Trust: HEDGED, real first (hit planted paths … |
 | 2 | pass | 9 tools | 72 | 19.2 | 98 | 13/31 | 11.7 | – | – | strata strata-0.1.42 | Strata v0.1.42 with release defaults, Flash-Next unpruned IQ3_S, 262k int8 KV, MTP 4: full pass, 98 min, 19.2 tok/s over the run, 132 turns, 23,768 MiB, clean stop. The 0.1.39 run was 96 min at 24.4 tok/s with 10 tools. |
+| 2 | pass | 9 tools | 77 | 30.1 | 61 | 12/22 | 15.1 | – | – | strata strata-0.1.42 | Strata v0.1.42 Flash-Next, old PCIe share only, 262k int8 KV, MTP 4, 24k budget: full pass, 9 tools, 77 tests, 61 min, 30.1 tok/s, 115 turns, 23,768 MiB, 1 compaction, clean stop. The default-share run was a full pass with 9 tools, 72 tests, 98 min, 19.2 tok/s. No length stop. … |
 
 ## Test 3: using an MCP server through a subagent
 
