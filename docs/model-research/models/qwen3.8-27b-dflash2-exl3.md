@@ -16,4 +16,4 @@ A draft model for speculative decoding of Qwen3.8-27B on ExLlamaV3, which suppor
 
 Not downloaded. It is a serving path for a model we already run, not a new model: we use DFlash2 drafts on llama.cpp and have no ExLlamaV3 server for the 27B. Worth a container of its own only to compare speed against the vLLM setup with MTP drafts.
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._

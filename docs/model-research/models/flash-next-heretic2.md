@@ -43,4 +43,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 5.5 | 19 | One probe session with eight numbered calls naming exact arguments and fields, the tool's own matched/returned/next_cursor plus the probe's own tally, a list_domains cross-check and errors quoted verbatim; then built REST ground truth in one curl and Python pass and matched all … |
 | 3O | 5/14 | 2 | fixed: 7 tools, 33 tests pass | 8/12 | 10.3 | 44 | Two probe sessions with good numbered briefs (exact definitions, errors quoted verbatim, final 14-fact table) and a full REST ground truth. Its own server returns data only in structuredContent with a one-line text summary, so the probe saw just "434 entities", "light: 52 … |
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._

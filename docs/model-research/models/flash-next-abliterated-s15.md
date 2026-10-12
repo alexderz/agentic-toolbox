@@ -43,4 +43,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 6.2 | 20 | It built REST ground truth first, then sent one probe session with eight numbered calls giving exact arguments and the fields to report raw, pagination to the end, state-filter cross-checks and errors quoted; all 14 facts matched, a second REST pull confirmed them, and it … |
 | 3O | 14/14 | 1 | fixed: 6 tools, 20 tests pass | 8/12 | 3.5 | 127 | Five briefs resumed in one probe session (hence 1 counted session), 93 of 128 minutes spent in the probe hand-counting 434 entities at 3.5 tok/s; built REST ground truth first and chased every mismatch (123 and 113 vs 124 unavailable, 7 vs 3 lock services), also by driving the … |
 
-_Generated from the bake-off results on 2026-10-11._
+_Generated from the bake-off results on 2026-10-12._
