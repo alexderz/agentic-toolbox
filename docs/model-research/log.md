@@ -3,6 +3,16 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-12
+
+- Looked at four models that fit a 24 GB card but need an engine we do not run. None downloaded.
+  [PersonaPlex-7B](models/personaplex-7b.md) is a gated 16 GB full-duplex speech model; its 4-bit GGUF loads only in moshi.cpp.
+  [BitNet b1.58 2B4T](models/bitnet-b1.58-2b-4t.md) is a 1.1 GB ternary chat model for bitnet.cpp.
+  [BitNet embeddings](models/bitnet-embeddings.md) (0.6B and 270M) use those same kernels.
+  [VibeVoice-ASR-BitNet](models/vibevoice-asr-bitnet.md) is a 1.6 GB speech recognizer for VibeASR.cpp, aimed at AVX2 CPUs.
+- Rechecked the abliterated DeepSeek V4.1 Flash. Still nothing near 135 GB; the smallest build seen today is about 190 GB.
+- A third-party GLM-5.3-Flash IQ2_XXS is 81 GB. Not pulled: the author points at an unmerged llama.cpp change, and the Maya quant of the same model is already tested.
+
 ## 2026-10-11
 
 - Looked at three new items, none downloaded. [Decision 3.0](models/decision-3.0.md) loads through its own
