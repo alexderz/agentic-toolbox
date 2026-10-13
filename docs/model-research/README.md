@@ -91,6 +91,7 @@ software, through the same coding tests as every other model.
 | [Decision 3.0 (d3 family)](models/decision-3.0.md) | Decision | Needs an engine update |  | Decision models with vision and video input, 0.6B to 26B, built on Qwen3.5 and Qwen3.8-27B |
 | [BitNet embeddings (0.6B and 270M)](models/bitnet-embeddings.md) | Embedding | Needs an engine update |  | BitNet text embeddings, 0.6B (1024 dims) and 270M (640 dims), 32k context |
 | [EmbeddingGemma 2](models/embeddinggemma-2.md) | Embedding | Needs an engine update |  | Multimodal embedding encoder, 740M (text-only path 270M), 768 dims, 8k context |
+| [MiniCPM-V 4.7](models/minicpm-v-4.7.md) | MiniCPM-V | Needs an engine update |  | Vision-language. 1.55B dense (qwen35) and 35.3B MoE (qwen35moe, 256 experts, 8 active); projector minicpmv4_7 |
 | [BitNet b1.58 2B4T](models/bitnet-b1.58-2b-4t.md) | Other | Needs an engine update |  | Dense, 2.4B, ternary weights |
 | [Mirai S (Qwen3.8-27B-S experimental)](models/mirai-s-27b.md) | Qwen3.8 27B | Needs an engine update |  | Dense 27B compressed to about 8 GB, with a 3.4 GB speculator model |
 | [Qwen3.8-27B DFlash2 draft for ExLlamaV3](models/qwen3.8-27b-dflash2-exl3.md) | Qwen3.8 27B | Needs an engine update |  | DFlash2 draft model for Qwen3.8-27B, EXL3 5.0 bpw, 1.4 GB |
