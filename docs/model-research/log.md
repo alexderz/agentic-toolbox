@@ -3,6 +3,11 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-13
+
+- MiniCPM-V 4.7 (OpenBMB, Apache-2.0), released 2026-10-12: a 1.55B dense vision-language model and a 35.3B MoE (8 of 256 experts). Official GGUF is public and not gated. The 1B Q8_0 file is 1.01 GiB plus a 1.03 GiB projector and fits a 24 GB card. The 35B Q4_K_M file is 19.71 GiB plus a 1.04 GiB projector (20.8 GiB), so only a short context fits on the card; Q8_0 is 34.37 GiB and fits with experts in RAM.
+- Not downloaded. The language files are qwen35 and qwen35moe, which llama.cpp 0.6 already loads, but vision projector type minicpmv4_7 was added on 2026-10-10 (PR 29416), after the v0.6.0 image (build 11429, 2026-10-05). Current llama.cpp master has it; today's release tag is b11588.
+
 ## 2026-10-12
 
 - Looked at four models that fit a 24 GB card but need an engine we do not run. None downloaded.
