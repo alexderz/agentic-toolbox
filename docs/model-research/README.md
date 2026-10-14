@@ -55,6 +55,7 @@ software, through the same coding tests as every other model.
 | [GLM-5.3-Flash](models/glm-5.3-flash.md) | GLM | Tested |  | MoE, 320B / 18B active, multimodal |
 | [Gemma 4 26B-A4B](models/gemma-4-26b-a4b.md) | Gemma 4 | Tested |  | MoE, 26B / 4B active |
 | [Gemma 4 31B](models/gemma-4-31b.md) | Gemma 4 | Tested |  | Dense, 31B |
+| [LFM2.5-24B-A2B](models/lfm2.5-24b-a2b.md) | LFM | Tested |  | Hybrid MoE, 24.0B total / 2.45B active, 64 experts top-4, 131k context |
 | [OrcaSAQ-2-Cyber-27B](models/orcasaq-2-cyber-27b.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Qwen3.8-27B Coder390 EfficientThink](models/qwen3.8-27b-coder390-efficientthink.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
 | [Qwen3.8-27B Cyber (abliterated)](models/qwen3.8-27b-cyber.md) | Qwen3.8 27B | Tested | yes | Dense, 27B |
@@ -102,6 +103,7 @@ software, through the same coding tests as every other model.
 | [Reflection Beam 501B](models/reflection-beam.md) | Other | Watching (no weights yet) |  | MoE, 501B / 23B active, 1M context |
 | [Reka Rho-1](models/reka-rho-1.md) | Other | Watching (no weights yet) |  | 19B omni (text, image, video, actions) |
 | [Samsung LittleBit](models/samsung-littlebit.md) | Other | Watching (no weights yet) |  | Compression method, 0.1 to 1.0 bits per weight |
+| [ScaleDown constrained decoding models](models/scaledown-cdm.md) | Other | Watching (no weights yet) |  | Task-specific models, hosted, claimed 1M-token context |
 
 <!-- INDEX:END -->
 

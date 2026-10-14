@@ -5,6 +5,10 @@ cards; this log keeps the reasoning.
 
 ## 2026-10-14
 
+- Iris: [LFM2.5-24B-A2B](models/lfm2.5-24b-a2b.md) was already on disk (Q4_K_M 13.53 GiB and Q6_K 18.34 GiB; both fit a 24 GB card). Test 1 on llama.cpp 0.6 is partial, 4 of 5, at 157.6 tok/s for Q4_K_M, and a fail, 2 of 5, at 176.2 tok/s for Q6_K. Test 2 has not been run.
+- [ScaleDown constrained decoding models](models/scaledown-cdm.md) are a hosted API. No public weights and no release date, so nothing was downloaded.
+- DigUp is a macOS app that runs EmbeddingGemma 2. That model still needs a llama.cpp newer than v0.6.0, so nothing new was downloaded.
+
 - Test 6 added: a one-shot voxel pagoda in three.js, no agent, graded from offline renders (see method). It
   separates the fast long-context setups that all passed the speed bar: Tiel-Coder-35B-A3B wrote the best scenes
   (three pages at 10 of 10 and one at 8 in eight samples) but fails all-or-nothing (four zeros); Gemma-4-26B-A4B answers in about 27 seconds with plainer

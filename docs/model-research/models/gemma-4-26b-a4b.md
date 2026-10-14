@@ -22,7 +22,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
-| Gemma 4 26B-A4B · llama.cpp, all on GPU, 262k context | llama.cpp 0.4 | Q4 | 256k | – | 164.5 |
+| Gemma 4 26B-A4B · llama.cpp, all on GPU, 262k context | llama.cpp 0.4 | Q4 | – | – | 166.7 |
 | Gemma 4 26B-A4B · vLLM, AWQ, draft model | vLLM | AWQ | 256k | – | 117.3 |
 
 ## Results
@@ -35,6 +35,10 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 7 | 112.0 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 3 subcommands |
 | 1 | pass | 5/5 checks | 8 | 140.8 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 2 subcommands |
 | 1 | pass | 5/5 checks | 9 | 108.1 | 1 | 0 | 0.0 | 256k | – | llama.cpp 0.4 | 3 subcommands |
+| 1 | pass | 5/5 checks | 9 | 166.7 | 5 | 0 | 0.0 | – | – | llama.cpp 0.4 |  |
+| 1 | partial | 3/5 checks | 8 | 143.1 | 2 | 0 | 0.0 | – | – | llama.cpp 0.4 | 2 subcommands |
+| 1 | pass | 5/5 checks | 6 | 124.5 | 2 | 1 py | 1.8 | – | – | llama.cpp 0.4 | 5 subcommands |
+| 1 | partial | 4/5 checks | 5 | 101.8 | 1 | 0 | 0.0 | – | – | llama.cpp 0.4 | 4 subcommands |
 | 1 | pass | 5/5 checks | 6 | 117.3 | 2 | 0 | 0.0 | 256k | – | vLLM | 8 subcommands |
 | 1 | fail | 1/5 checks | 6 | 90.0 | 2 | 0 | 0.0 | 256k | – | vLLM | 3 subcommands |
 | 2 | pass | 3 tools | 2 | 118.4 | 3 | 4/6 | 9.6 | 256k | – | llama.cpp 0.4 |  |
