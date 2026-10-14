@@ -100,6 +100,16 @@ Slow models get an 8-hour cap and the sampling Qwen uses for its own
 long-horizon coding evaluation: temperature 1.0, top-p 0.95, top-k 20,
 min-p 0, and a 26k-token thinking budget.
 
+### Test 6: a one-shot voxel scene
+
+A single request, no agent and no tools: write one HTML page with three.js that shows a voxel Japanese
+pagoda (five storeys, upturned eaves, a spire) on a stone platform with cherry trees, a pond and a torii,
+an orbiting camera, falling petals and shadows. The reply cap is 32,000 tokens and counts thinking. The
+page is rendered offline (Chromium without network, three.js served from a pinned local copy) and graded
+from three frames, the console and the file, 0 to 2 points each for: does it draw, voxels, the pagoda,
+the setting, and life. A blank page or a reply cut off by the cap scores 0. It measures quick creative
+code, not agent work; two or three samples per setup so far, with runs to five per setup under way.
+
 ## Settings
 
 Every model ran at its own best fit on the card, found by real loads:

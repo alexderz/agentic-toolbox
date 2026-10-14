@@ -37,4 +37,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 2 | fail | 0 tools | 0 | 40.8 | 19 | 42/45 | 389.8 | 198k | – | llama.cpp 0.4 | rejects numeric JSON-RPC ids ("invalid type: integer 1, expected str"); spec allows string or number, so no client gets past initialize; 290 steps, no runaway |
 | 2 | partial | 7 tools | 2 | 44.1 | 15 | 10/16 | 49.0 | – | – | llama.cpp 0.6 | checked by hand: retry batch 1, GLM-4.7-Flash at Z.ai's coding sampling (temperature 0.7, top-p 1.0). initialize is never answered: its params struct wants snake_case keys (protocol_version, client_info, client_capabilities: src/main.rs:83-87) and a failed parse is logged and … |
 
-_Generated from the bake-off results on 2026-10-12._
+_Generated from the bake-off results on 2026-10-14._
