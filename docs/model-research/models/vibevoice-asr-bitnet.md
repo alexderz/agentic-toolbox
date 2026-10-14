@@ -16,4 +16,4 @@ A compressed speech-recognition model aimed at real-time CPU inference. The quan
 
 Not downloaded. It fits, and the maker's numbers are for CPUs with AVX2, but it runs only in VibeASR.cpp. We have no speech server.
 
-_Generated from the bake-off results on 2026-10-12._
+_Generated from the bake-off results on 2026-10-14._

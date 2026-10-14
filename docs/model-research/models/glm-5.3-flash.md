@@ -42,4 +42,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 0/14 | 3 | no | 11/12 | 11.3 | 171 | Killed at the 3-hour cap with no facts.json. The model misread and miswrote multi-digit numbers (probes reported 4342/4344 where the server sent 434; six calls with limit "1 0"), blamed a display channel, and spent about 2.3 hours on letter-encoding workarounds, four compactions … |
 | 3O | 0/14 | 4 | fixed: 7 tools, 68 tests pass | 11/12 | 8.0 | 153 | Killed at the 3-hour cap with neither output file. The first probe failed on every call because the server rejected the client's older handshake; the model traced it in a traffic log, added support, rebuilt, and a re-probe matched the API on 13 of 14 facts. The same number fault … |
 
-_Generated from the bake-off results on 2026-10-12._
+_Generated from the bake-off results on 2026-10-14._

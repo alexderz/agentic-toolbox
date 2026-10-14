@@ -82,6 +82,35 @@ cache in VRAM: 30-45 tok/s decode, 21-24 tok/s over a whole run.
 - Warm it up before timing anything. The first request after a start is
   many times slower.
 
+## ExLlamaV3 (TabbyAPI)
+
+ExLlamaV3 1.6.1 behind TabbyAPI runs Qwen3.8-27B from EXL3 4.00 bpw weights, unpatched, with the model's own
+MTP head or with the DFlash2 drafter. Short prompts, thinking off, temperature 0, three rounds on the 3090
+at a 16k window (2026-10-13; the no-drafting row is one round):
+
+| Setup | Code | Prose | Structured | Window that fits, 8-bit cache |
+| --- | --- | --- | --- | --- |
+| DFlash2 drafter | 158 tok/s | 73 | 181 | 98k |
+| Own MTP head | 116 tok/s | 70 | 128 | 196k |
+| No drafting | 42 tok/s | 42 | 42 | – |
+
+Served at a 196k window with MTP (a later run) it is slower than vLLM with MTP at 150k on every point we
+measured (115 against 127 tok/s on
+short code, 72 against 85 at 141k of context, and it reads prompts at about the same 650-740 tok/s). Its
+advantage is the larger window at 8 bits. Set `reasoning_budget_tokens` in the model section; TabbyAPI
+reads any config key from `TABBY_<SECTION>_<KEY>` environment variables, so one config file serves several
+windows and drafting modes.
+
+## TensorFold
+
+TensorFold 0.6.6 (the Python engine) with the DFlash2 drafter was the fastest writer we have measured for
+Qwen3.8-27B on the 3090: 167-170 tok/s on short code, 81-84 on prose, 209-211 on structured output, against
+158 / 73 / 181 for ExLlamaV3 with the same drafter (in the side-by-side sitting 170 / 84 / 211, ahead by 7 %,
+15 % and 17 %). It needed a local patch to run below compute capability
+8.9, keeps the cache in bf16 only (42k window with the default memory reserve, 73k at the edge), and its
+Python line is frozen upstream. The maintained engine is the native one, which supports the RTX 30 series
+for other model families so far. Not in use here.
+
 ## Running engines as containers behind a router
 
 When an engine runs as a container behind llama-swap, restarting

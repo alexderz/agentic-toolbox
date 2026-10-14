@@ -16,4 +16,4 @@ The accelerated checkpoint of Qwen-Image 2.1: text-to-image and natural-language
 
 Downloaded, not run yet. Same architecture as Qwen-Image 2.1, so it uses the same ComfyUI and stable-diffusion.cpp setups; the GGUF fits a 24 GB card with the text encoder in RAM. To be compared with the full-schedule model on the same prompts.
 
-_Generated from the bake-off results on 2026-10-12._
+_Generated from the bake-off results on 2026-10-14._

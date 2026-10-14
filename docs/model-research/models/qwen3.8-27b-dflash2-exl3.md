@@ -14,6 +14,6 @@ A draft model for speculative decoding of Qwen3.8-27B on ExLlamaV3, which suppor
 
 ## Verdict
 
-Not downloaded. It is a serving path for a model we already run, not a new model: we use DFlash2 drafts on llama.cpp and have no ExLlamaV3 server for the 27B. Worth a container of its own only to compare speed against the vLLM setup with MTP drafts.
+Not downloaded, and not needed: we built an ExLlamaV3 server and paired turboderp's EXL3 4.00 bpw weights with z-lab's own DFlash2 drafter (2026-10-13): 158 tok/s on short code against 116 with the model's MTP head, at a 98k window with an 8-bit cache. Both setups are on the Qwen3.8-27B card. This 5.0 bpw requant of the drafter would only matter if the z-lab drafter stopped fitting.
 
-_Generated from the bake-off results on 2026-10-12._
+_Generated from the bake-off results on 2026-10-14._

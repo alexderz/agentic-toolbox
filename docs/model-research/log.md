@@ -3,6 +3,20 @@
 Dated findings and decisions, newest first. Results also land in the model
 cards; this log keeps the reasoning.
 
+## 2026-10-14
+
+- Test 6 added: a one-shot voxel pagoda in three.js, no agent, graded from offline renders (see method). It
+  separates the fast long-context setups that all passed the speed bar: Tiel-Coder-35B-A3B wrote the best scenes
+  (three pages at 10 of 10 and one at 8 in eight samples) but fails all-or-nothing (four zeros); Gemma-4-26B-A4B answers in about 27 seconds with plainer
+  pages (7 and 9, one script error).
+- Qwen3.8-27B on vLLM with thinking on has not finished a page in five tries (one with a 64k cap, three with a
+  24,000-token thinking budget): it plans the whole scene while thinking. On ExLlamaV3, whose setups cap thinking, the same model drew four pages of six (7, 9, 9, 10). With
+  DFlash2 drafting it drew all three, one of them at 10 of 10. Both ExLlamaV3 setups stay: MTP at 196k, DFlash2 at 98k.
+- Tiel-Coder-35B-A3B (llama.cpp 0.6, 262k) and Gemma-4-26B-A4B (on trial) joined the daily drivers.
+- TensorFold: the Python engine (0.6.x) is frozen upstream and the native engine does not yet run Qwen3.8-27B on
+  the RTX 30 series. Parked; TensorFold was 7-17 % faster than the ExLlamaV3 DFlash2 setup
+  side by side on this card.
+
 ## 2026-10-13
 
 - MiniCPM-V 4.7 (OpenBMB, Apache-2.0), released 2026-10-12: a 1.55B dense vision-language model and a 35.3B MoE (8 of 256 experts). Official GGUF is public and not gated. The 1B Q8_0 file is 1.01 GiB plus a 1.03 GiB projector and fits a 24 GB card. The 35B Q4_K_M file is 19.71 GiB plus a 1.04 GiB projector (20.8 GiB), so only a short context fits on the card; Q8_0 is 34.37 GiB and fits with experts in RAM.
