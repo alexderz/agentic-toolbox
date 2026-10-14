@@ -23,7 +23,7 @@ Each variant is one engine and settings combination. Context and expert offload 
 | Variant | Engine | Quantization | Context | Expert layers in RAM | Best tok/s over a run |
 | --- | --- | --- | --- | --- | --- |
 | Qwen3.8-27B · llama.cpp, all on GPU | llama.cpp 0.4 | UD-Q4_K_M | 128k | – | 32.9 |
-| Qwen3.8-27B · vLLM, MTP drafts, 150k context | vLLM (HyperQwen) | HyperQwen 4-bit, FP8 KV | 146k | – | 70.5 |
+| Qwen3.8-27B · vLLM, MTP drafts, 150k context | vLLM (HyperQwen) | HyperQwen 4-bit, FP8 KV | 146k | – | 75.9 |
 | Qwen3.8-27B · vLLM, DFlash2 drafts, 240k context, 4/2-bit KV | vLLM (HyperQwen) | HyperQwen 4-bit, KVarN KV | 240k | – | 56.5 |
 | Qwen3.8-27B · vLLM, DFlash2 drafts, 64k context | vLLM (HyperQwen) | HyperQwen 4-bit, FP8 KV | 64k | – | 97.4 |
 | Qwen3.8-27B · vLLM, DFlash2 15-token drafts, 57k context | vLLM (HyperQwen) | HyperQwen 4-bit, FP8 KV | 56k | – | 95.0 |
@@ -39,6 +39,9 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 55 | 32.9 | 25 | 0 | 0.0 | 128k | – | llama.cpp 0.4 | 8 subcommands |
 | 1 | pass | 5/5 checks | 89 | 70.5 | 27 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 13 subcommands |
 | 1 | pass | 5/5 checks | 123 | 64.3 | 37 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 22 subcommands |
+| 1 | pass | 5/5 checks | 67 | 70.4 | 52 | 13 py | 4.8 | 146k | – | vLLM (HyperQwen) | 8 subcommands |
+| 1 | pass | 5/5 checks | 68 | 73.4 | 16 | 0 | 0.0 | 146k | – | vLLM (HyperQwen) | 5 subcommands |
+| 1 | pass | 5/5 checks | 114 | 75.9 | 25 | 1 py | 0.5 | 146k | – | vLLM (HyperQwen) | 8 subcommands |
 | 1 | pass | 5/5 checks | 80 | 56.5 | 23 | 0 | 0.0 | 240k | – | vLLM (HyperQwen) | 8 subcommands |
 | 1 | pass | 5/5 checks | 78 | 97.4 | 15 | 5 py | 3.6 | 64k | – | vLLM (HyperQwen) | 11 subcommands |
 | 1 | fail | 1/5 checks | – | 96.1 | 7 | 0 | 0.0 | 64k | – | vLLM (HyperQwen) | Pi agent. |
