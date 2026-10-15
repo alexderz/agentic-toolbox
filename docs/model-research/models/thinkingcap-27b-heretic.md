@@ -7,6 +7,7 @@
 | Family | Qwen3.8 27B |
 | Source | OS-Software/ThinkingCap-Qwen3.8-27B-Uncensored-Heretic (mradermacher GGUF) |
 | Architecture | Dense, 27B |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,20 @@ A Heretic (automated abliteration) build of a Qwen3.8-27B fine-tune, Q4_K_M with
 ## Verdict
 
 Passes both tests on llama.cpp 0.6, fully on the GPU: test 1 5/5 with 54 tests, test 2 a full pass with 8 tools and 56 tests in 52 minutes. The most tools of any uncensored 27B so far, at 25-31 tok/s: slower than the vLLM uncensored pick, which has no vLLM build for this model.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| ThinkingCap-27B Heretic | yes (head) | qwen3vl_merger Q8_0 | 0.63 GB | 922 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| ThinkingCap-27B Heretic · llama.cpp 0.6, all on GPU + vision | CPU (--no-mmproj-offload) | ~0 GB (est.); 0.6 GB head + buffers in system RAM; 7.5 s per screenshot request | 922 (measured) | planned, not configured yet |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -43,4 +58,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | no | 12/12 | 19.8 | 9 | Read the whole source, built REST ground truth (caught and fixed a bug in its own script), then two probes in parallel, each a short list of exact tool calls with exact arguments, the one field to report per call, "ABSENT" markers for missing attributes and verbatim errors. … |
 | 3O | 14/14 | 2 | fixed: 8 tools, 58 tests pass | 12/12 | 24.7 | 15 | Baseline probe named its own tools and asked for the text and the structured value per call, errors verbatim. Found that temperature, HVAC mode and lock service names lived only in structuredContent, which OpenCode does not pass to the probe, so they were unreachable through … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

@@ -7,6 +7,7 @@
 | Family | Qwen3.8 Flash-Next |
 | Source | Qwen/Qwen3.8-Flash-Next |
 | Architecture | MoE, 125B total / 6B active (+51B n-gram embedding, 4B MTP) |
+| Vision | yes (head) / yes (built in) |
 
 ## Summary
 
@@ -15,6 +16,24 @@ The smartest model we can run. Too large for the card, so most experts live in s
 ## Verdict
 
 Smartest overall. On SGLang (EXL3 3-bit, GPU expert cache) it built the best server of every run: 12 tools, 155 tests. Strata also passes test 2. SGLang is single-session only. In test 3 it scored 12/12 on both the known-good server and its own: clear probe briefs, every fact checked against the API, and on its own server a deliberate second probe to rule out a made-up first report. Both runs took about an hour, over a third of it waiting for first tokens, and both reports overstate how thoroughly it compared the lists.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Flash-Next (unpruned) | yes (head) | qwen3vl_merger | 0.91 GB | ~920 (est.) |
+| Flash-Next | yes (built in) | built-in tower (Qwen3.8 VL) | in the checkpoint | 882 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Flash-Next · SGLang, EXL3 3-bit, GPU expert cache | built in (engine-managed) | in the load (est.) | ~920 (est.) | configured |
+| Flash-Next · SGLang fork phase-d-main, EXL3 3-bit, GPU expert cache | built in (engine-managed) | in the load (est.); 2.2 s per screenshot request | 882 (measured) | configured |
+
+- Flash-Next (unpruned): no setup we run loads its vision head or tower: every variant runs blind.
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -64,4 +83,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 3 | fixed: 10 tools, 106 tests pass | 12/12 | 18.1 | 17 | Three probe sessions: an eight-question brief with method notes (paginate, cross-check counts, quote errors), a verbatim cross-check through resources and tools, and a re-check after the fix. Found that its own ha_overview counted 'unknown' entities as 'unavailable'; split the … |
 | 3O | 14/14 | 2 | no | 12/12 | 3.0 | 59 | Two probe sessions: eight numbered facts in plain terms (state "unavailable" in ANY domain, tool used, raw output, counted entity IDs, errors with their text), then a deliberate nine-call re-check with exact arguments to rule out a made-up first report; all 37 calls are in the … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

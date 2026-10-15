@@ -16,4 +16,4 @@ The next Qwen generation. Alibaba has said only that it is in training; the tier
 
 No weights, model cards or dates. A 27B tier would fit like Qwen3.8-27B.
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

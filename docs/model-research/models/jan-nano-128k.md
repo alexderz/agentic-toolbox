@@ -7,6 +7,7 @@
 | Family | Other |
 | Source | janhq/Jan-nano-128k |
 | Architecture | Dense, 4B |
+| Vision | no |
 
 ## Summary
 
@@ -15,6 +16,12 @@ Small long-context model.
 ## Verdict
 
 41 tool calls and no files: it tried to install its own harness.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Jan Nano 128k | no | – | – | – |
 
 ## Variants we ran
 
@@ -32,4 +39,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | fail | 0/5 checks | – | 47.9 | 1 | 0 | – | 128k | – | llama.cpp 0.4 |  |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

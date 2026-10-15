@@ -16,4 +16,4 @@ NVIDIA's conversational speech model: it listens and speaks at the same time, co
 
 Not downloaded. The official weights are 16 GB and gated. A community 4-bit GGUF is 4.4 GB, but only moshi.cpp loads it. None of the engines we run serves speech.
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

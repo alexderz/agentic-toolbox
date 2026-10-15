@@ -7,6 +7,7 @@
 | Family | Nemotron |
 | Source | nvidia/Nemotron-3-Super-120B |
 | Architecture | Hybrid MoE, 120B |
+| Vision | no |
 
 ## Summary
 
@@ -15,6 +16,12 @@ Large hybrid MoE, 77 expert layers in RAM.
 ## Verdict
 
 Passed test 1 with no tests written, at 8.5 tok/s. Not taken further.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Nemotron 3 Super 120B | no | – | – | – |
 
 ## Variants we ran
 
@@ -32,4 +39,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 7 | 8.5 | 46 | 0 | 0.0 | 128k | 77 | llama.cpp 0.4 | 5 subcommands |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

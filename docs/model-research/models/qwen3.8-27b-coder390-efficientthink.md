@@ -7,6 +7,7 @@
 | Family | Qwen3.8 27B |
 | Source | nerkyor/Qwen3.8-27B-Coder390-EfficientThink-Opus5.5-GPT6Astra-Grok4.7-DSV4Pro-K3-SFT-RLOO-MTP-DFlash2 (the author's Q4 GGUF with Q8 MTP heads) |
 | Architecture | Dense, 27B |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,20 @@ An uncensored coding fine-tune of Qwen3.8-27B trained to think briefly. Run on l
 ## Verdict
 
 Passed both tests on the first try and quickly: test 1 scored 5/5 with 59 passing tests in 27 minutes, and test 2 was a full pass with 33 passing tests in 31 minutes, both at 50 tok/s. Neither run repeated a tool call, unlike the Cyber tune of the same base, which looped on every quant. The cost of fitting the 19.8 GB file on a 24 GB card is the 80k context: the agent compacted its conversation 6 and 8 times. The four default slots do not fit, because each MTP slot keeps about 750 MiB of draft state, so it runs with two slots that share one context. Test 3 (2026-10-10, 13 and 29 minutes, 46 to 50 tok/s): on the known-good server it briefed the probe well and checked every answer against the API (rubric 11/12), and all 14 values in its answer file are correct, but it wrote them in its own nested layout after a compaction dropped the required one, so the automatic grade credits 6. On its own server it scored 7/12: one oversized brief cost 87 calls, it never probed again, and it called the server correct although it has no tool for listing services.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B Coder390 EfficientThink (nerkyor), GGUF Q4 LynnStyle with Q8 MTP | yes (head) | qwen3vl_merger Q8_0 | 0.63 GB | 922 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B Coder390 EfficientThink (uncensored) Q4 with Q8 MTP heads · llama.cpp 0.6, MTP drafts, all on GPU at 80k, two slots + vision | CPU (--no-mmproj-offload) | ~0 GB (est.); 0.6 GB head + buffers in system RAM; 7.2 s per screenshot request | 922 (measured) | planned, not configured yet |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -42,4 +57,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | no | 11/12 | 26.3 | 13 | One well-specified brief and two small follow-ups, then every answer compared with the API; trusting the server followed from that, though it never examined the one field that is really wrong. All 14 values are correct in both sections, but under nested keys: the first of three … |
 | 3O | 6/14 | 1 | no | 7/12 | 20.8 | 29 | One sprawling brief cost 87 calls and three probe compactions, and the probe's report garbled the totals. The model traced that to the probe by reading the harness's traffic log and running the server directly, but never probed again. It called its server correct although it has … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

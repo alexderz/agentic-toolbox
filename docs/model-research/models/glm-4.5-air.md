@@ -7,6 +7,7 @@
 | Family | GLM |
 | Source | zai-org/GLM-4.5-Air |
 | Architecture | MoE, 106B / 12B active |
+| Vision | no |
 
 ## Summary
 
@@ -15,6 +16,12 @@ Larger GLM MoE, experts in RAM.
 ## Verdict
 
 3-6 tok/s and its test-2 server never answered initialize. MTP drafting gave nothing with experts in RAM.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| GLM-4.5-Air | no | – | – | – |
 
 ## Variants we ran
 
@@ -33,4 +40,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | – | 3.1 | 94 | 0 | 0.0 | 128k | 55 | llama.cpp 0.4 | 5 subcommands |
 | 2 | partial | 3 tools | 10 | 6.0 | 102 | 12/17 | 73.4 | 128k | 43 | llama.cpp 0.4 | [tests regraded 2026-10-07: 0/0 -> 10/0, grader now sums every cargo test target] no initialize method (-32601 Unknown method: initialize); also sends result:null with error; 103 steps, no runaway, 6.0 tok/s |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

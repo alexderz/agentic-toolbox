@@ -16,4 +16,4 @@ OpenBMB's image and video models, released 2026-10-12. The 1B checkpoint is 2.90
 
 Not downloaded. llama.cpp 0.6 already loads the qwen35 and qwen35moe language files, but not this vision projector: type minicpmv4_7 was added on 2026-10-10 (PR 29416), after the v0.6.0 image from 2026-10-05. Current llama.cpp master has it. The 1B fits a 24 GB card easily. The 35B Q4_K_M plus projector is 20.8 GB, so only a short context fits on the card; the Q8_0 fits with experts in RAM.
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

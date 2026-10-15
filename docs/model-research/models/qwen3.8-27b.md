@@ -7,6 +7,7 @@
 | Family | Qwen3.8 27B |
 | Source | Qwen/Qwen3.8-27B |
 | Architecture | Dense, 27B |
+| Vision | yes (head) / yes (built in) |
 
 ## Summary
 
@@ -15,6 +16,25 @@ Dense 27B model. At 4 bits it fits the 24 GB card with a long context, so it run
 ## Verdict
 
 The default agent model. On vLLM with MTP drafts at 150k context it passed both tests at about 70 tok/s. llama.cpp on the same weights scored the same and ran 2-4x slower. The small-window setups (57-64k) decode faster, but the agent spends the gain on compacting the conversation. On ExLlamaV3 (EXL3 4.00 bpw, 2026-10-13) the DFlash2 drafter writes 158 tok/s on short code at a 98k window and the model's own MTP head 116 tok/s at 196k, both with an 8-bit cache; we keep both setups. Test 6 (one-shot voxel pagoda, 32k cap including thinking, 2026-10-14): on vLLM with thinking on it has not finished a page in five tries (one with a 64k cap, three with a 24,000-token thinking budget), because it thinks through the whole scene first; with thinking off it wrote one page (three identical replies) that a script error leaves blank. The ExLlamaV3 setups cap thinking (DFlash2 at 18,576 tokens, MTP at 24,000) and drew four pages of six, scored 7, 9, 9 and 10 of 10; the two misses ran out of the cap.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B (UD-Q4_K_M) | yes (head) | qwen3vl_merger | 0.93 GB | ~920 (est.) |
+| Qwen3.8-27B (HyperQwen 4-bit, FP8 KV) | yes (built in) | built-in tower (Qwen3.8 VL) | in the checkpoint | 882 (measured) |
+| Qwen3.8-27B EXL3 4.00bpw | yes (built in) | built-in tower (Qwen3.8 VL) | in the checkpoint | 882 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B · vLLM, MTP drafts, 150k context + vision | host RAM (engine offload) | ~0 GB (est.); tower (~0.9 GB est.) in pinned host RAM; 0.9 s per screenshot request | 882 (measured) | planned, not configured yet |
+| Qwen3.8-27B EXL3 4-bit · exllamav3, DFlash2 drafts, 98k, 8-bit cache + vision | host RAM (engine offload) | ~0 GB (est.); tower (~0.9 GB est.) in pinned host RAM; 1.2 s per screenshot request | 882 (measured) | planned, not configured yet |
+
+- Qwen3.8-27B (UD-Q4_K_M): no setup we run loads its vision head or tower: every variant runs blind.
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -71,4 +91,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 2 | fixed: 6 tools, 80 tests pass | 12/12 | 51.2 | 13 | Own server (5 tools) answered every fact it could correctly but had no services tool; built REST ground truth, found the gap, added ha_list_services, extended tests to 79, rebuilt; fixed server grades builds, 6 tools, 80 tests. First probe after the rebuild saw the old 5 tools … |
 | 3O | 14/14 | 4 | fixed: 8 tools, 84 tests pass | 12/12 | 19.6 | 15 | Its first probe matched all 14 facts; it then checked the numbers against the raw server replies in the shim log and sent a cross-check probe, which found ha_events failing ("expected record, received array"). It wrapped the array in {count, events}, updated the end-to-end test … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._
