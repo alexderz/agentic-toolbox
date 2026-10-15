@@ -4,7 +4,7 @@
 # Kept as it ran on Saturn from ~/stories/round2, beside ../tools/story_test.py (the story_test.py in this folder) and
 # a request-draft.json that wraps prompts/round2-prompt.txt as the single user message with max_tokens 20000.
 cd "$(dirname "$0")"
-T="ssh -o HostKeyAlias=titan 10.69.2.62"
+T="ssh -o HostKeyAlias=titan titan"
 $T '~/bin/gpu-lease acquire bakeoff "story test round 2 (operator): orcasaq, qwen3.8-27b-vllm, orcarouter flash-next, two stories each"' || exit 1
 run() {  # model extra-json
   for i in 1 2; do STORY_BASE=$PWD python3 -u ../tools/story_test.py "$1" "$1/run$i" draft "$2"; done
