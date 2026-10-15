@@ -7,6 +7,7 @@
 | Family | Qwen3.8 27B |
 | Source | philbert440/Qwen3.8-27B-Uncensored-Aggressive-W4A16-AWQ |
 | Architecture | Dense, 27B |
+| Vision | yes (built in) |
 
 ## Summary
 
@@ -15,6 +16,20 @@ An uncensored fine-tune of Qwen3.8-27B, AWQ 4-bit, run on vLLM with MTP drafts a
 ## Verdict
 
 The steadiest fast uncensored model: two test-2 full passes and 5/5 on test 1 at 61-68 tok/s. It needs the thinking budget: without it, its first test-1 run spent the whole reply on one think.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B Uncensored | yes (built in) | built-in tower (Qwen3.8 VL) | in the checkpoint | 882 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Qwen3.8-27B Uncensored · vLLM, MTP drafts, 150k context + vision | host RAM (engine offload) | ~0 GB (est.); tower (~0.9 GB est.) in pinned host RAM; 0.9 s per screenshot request | 882 (measured) | planned, not configured yet |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -47,4 +62,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 2 | fixed: 12 tools, 155 tests pass | 10/12 | 47.4 | 18 | One probe session with twelve numbered calls giving exact arguments and the fields to copy verbatim; it built REST ground truth and all 14 facts matched, then re-probed after its change. It did not find the targets_entities defect, although its own probe output showed … |
 | 3O | 14/14 | 4 | no | 12/12 | 42.3 | 11 | It measured the /api/states payload (94 KB) and split the probe work into one metadata session and three parallel per-domain scans, each returning a fixed JSON shape with verbatim errors; its own list_entities has no state filter, so the probe counted "unavailable" rows itself. … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

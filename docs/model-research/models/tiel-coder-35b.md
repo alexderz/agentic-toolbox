@@ -7,6 +7,7 @@
 | Family | Tiel Coder 35B |
 | Source | Tiel-Coder-35B-A3B (GGUF) |
 | Architecture | MoE, 35B / 3B active |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,23 @@ Small-active coder MoE. At IQ4_XS it fits entirely on the GPU at 262k context; t
 ## Verdict
 
 The fastest model that writes working test-1 code on the IQ4_XS file (101 tok/s). An invented endpoint on the first 4-bit test 2 was a sampling problem: retried at temperature 0.6, that file passed both tests (test 2 at 40.8 tok/s in 72 minutes). The Q4_K_XL build with 6 expert layers in RAM, same sampling, was then repeated across every test. Test 1 was 5/5, 5/5, 5/5, 4/5 at 69-81 tok/s; the miss is a NameError, json used and never imported, when an attribute is a list or a dict, and its own tests never show that. Test 2 was a full pass only twice in four runs (69-81 tok/s). The two failures are field names a normal client cannot survive: one reads params.toolName where MCP sends params.name, and one types the JSON-RPC id as a string so numeric ids fail to parse. Its own tests send the shape it wrote, so they stay green. With a trust trap the protocol passed three times (69-79 tok/s); one run left planted endpoints in the code and two shipped real endpoints only. Test 3 leaves a correct server alone, and a perfect 14/14 happened once in three (the other two gathered the right numbers and then mis-read HVAC mode or wrote the wrong JSON keys). On its own server it fixes the services-dict bug every time and the array wrap twice (rubric 10 to 12). Test 4, three tickets and three runs, passed 9 of 9 with no baseline regression and no false done, mostly at 60-81 tok/s. Trust it with a small checked patch. Do not trust one MCP server it writes. Beside Qwen3.8-27B on vLLM (test 1 at 70.5 tok/s, test 2 a full pass at 69.5), it is as fast on llama.cpp and less reliable on the server. Test 6 (one-shot voxel pagoda, 2026-10-14) is where it shines: it wrote three pages at 10 of 10 and one at 8 in eight samples across its three setups (only one other page, from Qwen3.8-27B on ExLlamaV3 with DFlash2, also scored 10), but its failures are all-or-nothing, four zeros: a call to a three.js API removed years ago and a wrong property name, each of which blanks the page, one cap run out while thinking, and one degenerate reply (stray tool-call text repeated); three of the four came from the Q4_K_XL + MTP build and the plain llama.cpp 0.4 entry.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Tiel-Coder-35B 4-bit | yes (head) | qwen3vl_merger | 0.90 GB | 922 (measured) |
+| Tiel-Coder-35B 6-bit | yes (head) | qwen3vl_merger | 0.90 GB | ~920 (est.) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Tiel-Coder-35B 4-bit · llama.cpp, all on GPU, 262k context | GPU | +1.4-2.7 GB (est.) | ~920 (est.) | configured |
+| Tiel-Coder-35B 4-bit · llama.cpp 0.6, all on GPU, 262k, author's coding sampling (temperature 0.6) + vision | CPU (--no-mmproj-offload) | ~0 GB (est.); 0.9 GB head + buffers in system RAM; 6.6 s per screenshot request | 922 (measured) | planned, not configured yet |
+| Tiel-Coder-35B 6-bit · llama.cpp, 20 expert layers in RAM | GPU | +1.4-2.7 GB (est.) | ~920 (est.) | configured |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -74,4 +92,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 2 | fixed: 5 tools, 22 tests pass | 12/12 | 75.8 | 12 | Tiel Coder focus wave, run 2 of test 3 with its own server. REST first, then a brief that named each fact, the tool and the arguments, and asked for raw tool output. It found list_services always empty because /api/services returns a dict, and that the probe host rejects array … |
 | 3O | 13/14 | 2 | fixed: 5 tools, 22 tests pass | 11/12 | 67.3 | 11 | Tiel Coder focus wave, run 3 of test 3 with its own server. Same list_services dict bug, fixed with extract_services; 22 tests pass and the fixed server passes test 2. It did not wrap array structuredContent, so the second probe still failed on both list tools and the list facts … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

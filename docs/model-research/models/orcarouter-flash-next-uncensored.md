@@ -7,6 +7,7 @@
 | Family | Qwen3.8 Flash-Next |
 | Source | orcarouter/Qwen3.8-Flash-Next-Uncensored-GGUF |
 | Architecture | MoE, 125B total / 6B active |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,20 @@ An uncensored fine-tune of Flash-Next, IQ4_XS, with a separate MTP draft file. R
 ## Verdict
 
 Test-2 full pass on llama.cpp 0.6 with long-horizon settings (8 tools, 54 tests, 191 min), but slow: 7.6 tok/s over the run. Smartest uncensored model on the corrected test counts (2026-10-07 regrade): more tools and tests and half the compiler errors per 1,000 lines of Heretic2. Heretic2 is twice as fast. On llama.cpp 0.4 it ran out of time.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Orcarouter Flash-Next Uncensored | yes (head) | qwen3vl_merger | 0.91 GB | 922 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Orcarouter Flash-Next Uncensored · llama.cpp 0.6, experts in RAM, 262k context + vision | CPU (--no-mmproj-offload) | ~0 GB (est.); 0.9 GB head + buffers in system RAM; 11.5 s per screenshot request | 922 (measured) | planned, not configured yet |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -44,4 +59,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 8.4 | 12 | One probe session with the eight questions in plain terms ("entities, of any kind, whose state is unavailable"), asking for raw tool output, the tool and arguments used, and failures said explicitly; the probe answered in 10 calls and cross-checked counts itself. Built REST … |
 | 3O | 14/14 | 3 | fixed: 8 tools, 55 tests pass | 12/12 | 5.8 | 46 | First probe: nine plain questions asking for exact raw tool output or the exact error and the tool used. list_services came back as a client validation error ("expected record, received array" on structuredContent); it checked the MCP schema, confirmed structuredContent must be … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

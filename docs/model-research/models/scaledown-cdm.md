@@ -16,4 +16,4 @@ ScaleDown's October 2026 constrained-decoding models return a structured answer 
 
 No public weights on 2026-10-14, and no announced release date. The Hugging Face org scaledown has no checkpoint for these models. Older ScaleDown-7B-slerp files are a different merge, not this product. Nothing to download or run.
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

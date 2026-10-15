@@ -7,6 +7,7 @@
 | Family | Qwen3.8 Flash-Next |
 | Source | Heretic2 (automated abliteration) of Flash-Next, IQ4XS-NGQ4 |
 | Architecture | MoE, 125B total / 6B active |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,21 @@ Flash-Next with refusals removed by Heretic's automated abliteration. Vision-cap
 ## Verdict
 
 Fastest of the big uncensored models. On llama.cpp 0.6 with long-horizon settings it passed test 2 (7 tools, 33 tests) in 120 minutes at 14.6 tok/s: about twice as fast as the Orcarouter fine-tune on the same engine, which built more (8 tools, 54 tests). Test 1 passed (5/5) on llama.cpp 0.4. In test 3 it handled the known-good server perfectly (14/14 facts, rubric 12/12) but misjudged its own: that server returns data only as structured content with a one-line text summary, so its probe saw 5 of 14 facts, and it still declared the server correct (rubric 8/12).
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Flash-Next Heretic2 | yes (head) | qwen3vl_merger | 0.91 GB | 922 (measured) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Flash-Next Heretic2 · llama.cpp, experts in RAM | GPU | +1.4-2.7 GB (est.) | ~920 (est.) | configured |
+| Flash-Next Heretic2 · llama.cpp 0.6, experts in RAM + vision | CPU (--no-mmproj-offload) | ~0 GB (est.); 0.9 GB head + buffers in system RAM; 11.5 s per screenshot request | 922 (measured) | planned, not configured yet |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -43,4 +59,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 12/12 | 5.5 | 19 | One probe session with eight numbered calls naming exact arguments and fields, the tool's own matched/returned/next_cursor plus the probe's own tally, a list_domains cross-check and errors quoted verbatim; then built REST ground truth in one curl and Python pass and matched all … |
 | 3O | 5/14 | 2 | fixed: 7 tools, 33 tests pass | 8/12 | 10.3 | 44 | Two probe sessions with good numbered briefs (exact definitions, errors quoted verbatim, final 14-fact table) and a full REST ground truth. Its own server returns data only in structuredContent with a one-line text summary, so the probe saw just "434 entities", "light: 52 … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

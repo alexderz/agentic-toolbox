@@ -16,4 +16,4 @@ Microsoft's 1.58-bit embedding models. The I2_S GGUF files are 0.40 GB and 0.34 
 
 Not downloaded. They fit easily and need bitnet.cpp's I2_S kernels, which none of the engines we run has.
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

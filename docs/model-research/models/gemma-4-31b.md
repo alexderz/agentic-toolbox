@@ -7,6 +7,7 @@
 | Family | Gemma 4 |
 | Source | google/gemma-4-31b |
 | Architecture | Dense, 31B |
+| Vision | yes (head) |
 
 ## Summary
 
@@ -15,6 +16,16 @@ Google's dense Gemma 4.
 ## Verdict
 
 Fast and finishes in minutes, but thin: 3 tools on test 2. Needs enable_thinking (its template defaults it off). Test 3 (2026-10-10, 5 and 9 minutes): on the known-good server it delegated cleanly, confirmed every fact against the API and trusted the server (rubric 10/12); on its own server it declared the server fully verified on 12 of 14 facts without probing again (7/12). Both facts files have correct values in the wrong layout, because a compaction dropped the format the prompt asked for, so the automatic grade is 0/14 on both.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Gemma 4 31B 4-bit | yes (head) | gemma4v | 1.20 GB | ~400 (est.) |
+
+- Gemma 4 31B 4-bit: no setup we run loads its vision head or tower: every variant runs blind.
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -52,4 +63,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3G | 14/14 | 1 | no | 10/12 | 26.9 | 4 | One probe returned all eight groups of facts and the agent confirmed each against the API, so trusting the server followed from the evidence. The values in the facts file are correct but in its own nested layout without the verdict fields: a compaction just before writing … |
 | 3O | 0/14 | 1 | no | 7/12 | 18.7 | 8 | The probe needed 54 per-entity calls and could not get the unavailable total or the lock services (a 58 KB reply was cut off). The agent did not probe again or change the server, yet declared it fully verified and correct on 12 of 14 facts. The facts file is a flat custom … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

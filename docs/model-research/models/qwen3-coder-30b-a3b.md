@@ -7,6 +7,7 @@
 | Family | Qwen3.6 |
 | Source | Qwen/Qwen3-Coder-30B-A3B |
 | Architecture | MoE, 30B / 3B active |
+| Vision | no |
 
 ## Summary
 
@@ -15,6 +16,12 @@ Coder MoE.
 ## Verdict
 
 Passed test 1 but wrote thin code with a failing test. Qwen3.6-35B-A3B was better on every measure.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Qwen3-Coder-30B-A3B | no | – | – | – |
 
 ## Variants we ran
 
@@ -32,4 +39,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
 | 1 | pass | 5/5 checks | 4 | 23.8 | 7 | 3 py | 8.2 | 128k | 26 | llama.cpp 0.4 | 7 subcommands |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

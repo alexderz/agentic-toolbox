@@ -7,6 +7,7 @@
 | Family | Gemma 4 |
 | Source | google/gemma-4-26b-a4b |
 | Architecture | MoE, 26B / 4B active |
+| Vision | yes (head) / yes (built in) |
 
 ## Summary
 
@@ -15,6 +16,22 @@ Gemma 4 MoE; on vLLM with AWQ and a draft model.
 ## Verdict
 
 91-153 tok/s but thin (3 tools). On llama.cpp it looped inside tool-call arguments. Test 3 (2026-10-10, 3 to 11 minutes per case): fast and shallow. On the known-good server it scored 8/12 on both engines: it noticed the probe's miscount each time but never sent a second probe, and on vLLM six compactions lost the answer format. On its own servers (4/12 on vLLM, 7/12 on llama.cpp) neither server could connect to the agent harness, so the probes had no tools; on vLLM it believed tool lists the probes invented and reported a validation that never happened. The vLLM server had passed our test-2 grader, whose client is more forgiving than OpenCode's. Test 6 (one-shot voxel pagoda, 2026-10-14, llama.cpp 0.6 q4_0 with MTP at 262k): the quickest answer of any model, about 27 seconds; two of three pages draw (7 and 9 of 10) and the third has a JavaScript syntax error. Its scenes are smaller and plainer than Tiel-Coder's.
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Gemma 4 26B-A4B (Q4) | yes (head) | gemma4v | 1.19 GB | 407 (measured) |
+| Gemma 4 26B-A4B (AWQ) | yes (built in) | built-in tower (Gemma 4) | in the checkpoint | ~400 (est.) |
+
+Setups that load the vision head or tower:
+
+| Variant | Head lives on | Extra VRAM | Tokens per screenshot | Status |
+| --- | --- | --- | --- | --- |
+| Gemma 4 26B-A4B · llama.cpp, all on GPU, 262k context + vision | GPU | +1.4-1.7 GB (est.); 0.9 s per screenshot request | 407 (measured) | planned, not configured yet |
+| Gemma 4 26B-A4B · vLLM, AWQ, draft model | GPU (vLLM default) | in the load (est.) | ~400 (est.) | configured |
+
+Loading a head costs VRAM: its weights plus a compute buffer, about 1.1 to 2.7 GB by head type. On a card already full with the model and its context, the head goes on the CPU instead (llama.cpp --no-mmproj-offload, or the engine's host-RAM offload): then it costs almost no VRAM but system RAM, and every image is encoded on the CPU, which takes longer per screenshot. Every screenshot also takes context: about 400 to 1,200 tokens for a 1280x720 image, depending on the head. A long agent run that takes screenshots often fills its context and compacts sooner. For example, with a head that costs about 920 tokens per screenshot (the Qwen3-VL style), 100 screenshots in a 2-hour run are about 92,000 tokens, over a third of a 262k window.
 
 ## Variants we ran
 
@@ -75,4 +92,4 @@ The model gets an MCP server's source and a probe subagent whose only tools are 
 | 3O | 14/14 | 0 | no | 4/12 | 112.7 | 5 | Own server, run 4. The brief names every fact and asks for a structured format, but it was sent to explore, not mcp-probe. The shim logged 0 tools/call and the server was not changed. The report claims an mcp-probe cross-check against curl. The 14/14 file is not evidence this … |
 | 3O | 14/14 | 3 | fixed: 3 tools, 5 tests pass | 8/12 | 2.4 | 68 | Own server, run 5. Both mcp-probe briefs name the facts and say "Return the facts clearly." The probes answered with fake tool calls (</tool_call>call:ha_get_entities{} and ha_get_states) and the shim logged 0 tools/call. A general subagent then drove the binary, saw "invalid … |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._

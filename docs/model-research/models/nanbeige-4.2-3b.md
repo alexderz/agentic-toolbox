@@ -7,6 +7,7 @@
 | Family | Other |
 | Source | Nanbeige4.2-3B |
 | Architecture | Dense, 3B |
+| Vision | no |
 
 ## Summary
 
@@ -15,6 +16,12 @@ A 3B model.
 ## Verdict
 
 Writes a lot of compiling code for its size, but failed the checks (2/5, 1/5).
+
+## Vision
+
+| Weights | Vision | Head | Head size | Tokens per 1280x720 screenshot |
+| --- | --- | --- | --- | --- |
+| Nanbeige 4.2 3B | no | – | – | – |
 
 ## Variants we ran
 
@@ -35,4 +42,4 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | fail | 2/5 checks | 22 | 19.6 | 39 | 5 py | 4.8 | 128k | – | llama.cpp 0.4 | 7 subcommands |
 | 1 | fail | 1/5 checks | 0 | 15.6 | 38 | 0 | 0.0 | 200k | – | llama.cpp 0.4 | 11 subcommands |
 
-_Generated from the bake-off results on 2026-10-14._
+_Generated from the bake-off results on 2026-10-15._
