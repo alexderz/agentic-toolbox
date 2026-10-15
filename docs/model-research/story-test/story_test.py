@@ -6,16 +6,16 @@ import json, os, re, subprocess, sys, time
 MODEL, OUT = sys.argv[1], sys.argv[2]; STEP = sys.argv[3] if len(sys.argv) > 3 else "both"
 EXTRA = json.loads(sys.argv[4]) if len(sys.argv) > 4 else {}   # extra request fields, e.g. a thinking budget for vLLM
 BASE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "orcasaq-neuromancer")
-T = ["ssh", "-o", "HostKeyAlias=titan", "10.69.2.62"]
+T = ["ssh", "-o", "HostKeyAlias=titan", "titan"]
 os.makedirs(OUT, exist_ok=True)
 
 def run(name, body):
     req = os.path.join(OUT, f"request-{name}.json"); json.dump(body, open(req, "w"))
     rt, ot = f"/tmp/story-{MODEL}-{name}.json", f"/tmp/story-{MODEL}-{name}.out"
-    subprocess.run(["scp", "-q", "-o", "HostKeyAlias=titan", req, f"10.69.2.62:{rt}"], check=True)
+    subprocess.run(["scp", "-q", "-o", "HostKeyAlias=titan", req, f"titan:{rt}"], check=True)
     print(f"{time.strftime('%H:%M:%S')} start {MODEL} {name}", flush=True)
     subprocess.run(T + [f"rm -f {ot}; curl -s -m 5400 127.0.0.1:8081/v1/chat/completions -H 'Content-Type: application/json' -d @{rt} > {ot}"], check=True)
-    subprocess.run(["scp", "-q", "-o", "HostKeyAlias=titan", f"10.69.2.62:{ot}", os.path.join(OUT, f"response-{name}.json")], check=True)
+    subprocess.run(["scp", "-q", "-o", "HostKeyAlias=titan", f"titan:{ot}", os.path.join(OUT, f"response-{name}.json")], check=True)
     d = json.load(open(os.path.join(OUT, f"response-{name}.json")))
     m = d["choices"][0]["message"]; story = m.get("content") or ""
     think = m.get("reasoning_content") or m.get("reasoning") or ""
