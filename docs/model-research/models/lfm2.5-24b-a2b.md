@@ -32,8 +32,8 @@ Each variant is one engine and settings combination. Context and expert offload 
 | LFM2.5-24B-A2B Q4_K_M · llama.cpp 0.6 | llama.cpp 0.6 | Q4_K_M | 128k | – | 157.6 |
 | LFM2.5-24B-A2B Q6_K · llama.cpp 0.6 | llama.cpp 0.6 | Q6_K | 128k | – | 147.7 |
 | LFM2.5-24B-A2B UD-Q4_K_XL · llama.cpp 0.6 | llama.cpp 0.6 | UD-Q4_K_XL (unsloth) | 128k | – | 149.8 |
-| LFM2.5-24B-A2B UD-Q5_K_XL · llama.cpp 0.6 | llama.cpp 0.6 | UD-Q5_K_XL (unsloth) | not run yet | | |
-| LFM2.5-24B-A2B UD-Q6_K_XL · llama.cpp 0.6 | llama.cpp 0.6 | UD-Q6_K_XL (unsloth) | not run yet | | |
+| LFM2.5-24B-A2B UD-Q5_K_XL · llama.cpp 0.6 | llama.cpp 0.6 | UD-Q5_K_XL (unsloth) | 128k | – | 146.7 |
+| LFM2.5-24B-A2B UD-Q6_K_XL · llama.cpp 0.6 | llama.cpp 0.6 | UD-Q6_K_XL (unsloth) | 120k | – | 125.5 |
 
 ## Results
 
@@ -44,6 +44,8 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | partial | 4/5 checks | 8 | 157.6 | 2 | 0 | 0.0 | 128k | – | llama.cpp 0.6 | 4 subcommands |
 | 1 | fail | 2/5 checks | 7 | 176.2 | 1 | 1 py | 3.9 | 128k | – | llama.cpp 0.6 | 3 subcommands |
 | 1 | pass | 5/5 checks | 12 | 149.8 | 2 | 1 py | 2.4 | 128k | – | llama.cpp 0.6 | 4 subcommands |
+| 1 | pass | 5/5 checks | 18 | 146.7 | 83 | 1 py | 1.4 | 128k | – | llama.cpp 0.6 | 8 subcommands |
+| 1 | pass | 5/5 checks | 6 | 125.5 | 2 | 3 py | 7.6 | 120k | – | llama.cpp 0.6 | 5 subcommands |
 | 2 | fail | 0 tools | 2 | 150.3 | 7 | 15/24 | 203.3 | 128k | – | llama.cpp 0.6 | Init fail (checked in src/main.rs: the dispatcher has tools/list and tools/call but no initialize arm, so it answers -32601 Unknown method). tools/list itself answers when sent directly, but the grader stops after a failed handshake. 2 tests. 7 min, 150.3 tok/s, 90 turns, 59,815 … |
 | 2 | partial | 3 tools | 0 | 147.7 | 21 | 51/53 | 1087.0 | 128k | – | llama.cpp 0.6 | Init fail (checked in src/main.rs: no initialize arm, answers -32601 Unknown method). list_entities gave no reply in 30s; 2 other tools returned no recorded data. 0 tests. 21 min, 147.7 tok/s, 158 turns, 183,927 output, no reasoning, 345 lines of Rust, 21,876 MiB. Same flags as … |
 
