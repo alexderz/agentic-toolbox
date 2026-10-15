@@ -1,5 +1,8 @@
 # Model research
 
+> **Model testing has moved** to [agentic-model-testing](https://github.com/alexderz/agentic-model-testing).
+> These pages stay as the history of the work; see [Moved](moved.md).
+
 This space tracks which open-weight models can do real agent work on one
 local machine, how fast they run, and with what settings. It covers every
 model we tested, every model we dropped, and every model we checked and
