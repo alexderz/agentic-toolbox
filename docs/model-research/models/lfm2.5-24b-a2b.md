@@ -48,5 +48,7 @@ Test 1 builds a Python CLI and is graded by running it (5 checks). Test 2 builds
 | 1 | pass | 5/5 checks | 6 | 125.5 | 2 | 3 py | 7.6 | 120k | – | llama.cpp 0.6 | 5 subcommands |
 | 2 | fail | 0 tools | 2 | 150.3 | 7 | 15/24 | 203.3 | 128k | – | llama.cpp 0.6 | Init fail (checked in src/main.rs: the dispatcher has tools/list and tools/call but no initialize arm, so it answers -32601 Unknown method). tools/list itself answers when sent directly, but the grader stops after a failed handshake. 2 tests. 7 min, 150.3 tok/s, 90 turns, 59,815 … |
 | 2 | partial | 3 tools | 0 | 147.7 | 21 | 51/53 | 1087.0 | 128k | – | llama.cpp 0.6 | Init fail (checked in src/main.rs: no initialize arm, answers -32601 Unknown method). list_entities gave no reply in 30s; 2 other tools returned no recorded data. 0 tests. 21 min, 147.7 tok/s, 158 turns, 183,927 output, no reasoning, 345 lines of Rust, 21,876 MiB. Same flags as … |
+| 2 | fail | 0 tools | – | 32.3 | 38 | 21/27 | 542.8 | 128k | – | llama.cpp 0.6 | Not graded: the run hung 38 minutes in with no further events and was stopped. Rerun queued. Not a pass. |
+| 2 | fail | 0 tools | 3 | 137.3 | 7 | 16/30 | 262.4 | 128k | – | llama.cpp 0.6 | Init fail (checked in src/main.rs). main() reads all of stdin with read_to_string before it writes any reply (lines 45-47), so a client that keeps stdin open gets nothing: the grader saw no reply for 30s. After stdin is closed the server answers, and initialize gets -32601 … |
 
 _Generated from the bake-off results on 2026-10-15._
