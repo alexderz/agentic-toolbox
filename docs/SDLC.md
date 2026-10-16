@@ -167,3 +167,4 @@ agents, not which steps exist. Headings and tickets use the step
 | Manager: subagents | Step and item agents, spawn prompts, workers | [subagents.md](sdlc/subagents.md) |
 | Conventions | Names, commits, layout, changelog, designs in git | [conventions.md](sdlc/conventions.md) |
 | Old Stage numbers | A ticket or chat cites a Stage number | [In-flight map](sdlc/conventions.md#in-flight-map) |
+| Stage result | The `result.json` every step writes | [stage-result.md](sdlc/stage-result.md) |
