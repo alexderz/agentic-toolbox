@@ -119,6 +119,12 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | --- | --- |
 | `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
 
+### minecraft
+
+| Id | Ownership |
+| --- | --- |
+| `minecraft-builder` | First-party Bedrock block catalog for models under test. Names and placement states, not remembered numeric ids |
+
 ### languages
 
 | Id | Ownership |

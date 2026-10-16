@@ -61,6 +61,7 @@ path, or **pack** its text into a subagent prompt per
 | **Branches and lands** | Branching an item, or landing one | **Read [branches-and-lands.md](docs/sdlc/branches-and-lands.md)**. |
 | **Subagents** | Minting, resuming, or prompting a subagent or worker | **Read [subagents.md](docs/sdlc/subagents.md)**. |
 | **Knowledge** | Facts about a model, vendor, API, or platform that are not a skill | **Read [knowledge/README.md](knowledge/README.md)**, then `knowledge/<domain>/<kind>/<slug>.md`. |
+| **Minecraft** | Building or reviewing a Bedrock structure, maze, or block plan | **Read `skills/minecraft-builder/SKILL.md`.** Block names and states are in that skill. Do not rely on remembered ids. |
 
 ## Intake (security)
 
