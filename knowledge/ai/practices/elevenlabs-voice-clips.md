@@ -28,6 +28,37 @@ Read this before you render speech clips with ElevenLabs, before you move a
 pipeline from `eleven_multilingual_v2` or `eleven_v3` to `eleven_v4`, or
 before you budget characters for a batch.
 
+Live-tested on 2026-10-17: Create speech with `eleven_v4`, `pcm_24000`
+output, audio tags, and the batch script below rendered 29 clips across six
+stock voices. The sections marked as live results report what was observed;
+the rest follows the documentation.
+
+## Agent workflow
+
+Follow these steps when an operator asks you for spoken lines, for example
+prompts for a game, an app, or a video.
+
+1. **Confirm the key and the budget.** Check that `ELEVENLABS_API_KEY` is
+   set, then call `GET /v1/user/subscription`. Agree on a credit budget with
+   the operator before you render anything larger than an audition.
+1. **Write the lines.** Keep each line to one or two short sentences. Write
+   numbers as words. Add one delivery tag per sentence where emotion matters.
+   Keep a stable key per line, such as `ask_taller` or `cheer_1`.
+1. **Audition voices on one line.** Render the same line in four to six
+   stock voices and send them to the operator. Name each file after its
+   voice. Let the operator pick; voice taste is personal.
+1. **Audition the chosen voice on the real set.** Render 10 to 15
+   representative lines in the chosen voice, including the extremes: the
+   loudest cheer, the quietest whisper, and the gentlest correction.
+1. **Render the full set.** Use the batch recipe. Render two or three takes
+   of the lines that matter most, and keep the best take.
+1. **Deliver in two formats.** Send WAV or MP3 for listening in chat, and
+   convert to the target format, such as OGG for a game engine, for the
+   product. Record the model, voice ID, settings, and seed beside the clips.
+
+Send WAV or MP3 for human listening. Safari and iOS browsers don't play OGG
+Vorbis, so an OGG audition can arrive silent (live result).
+
 ## Choose the model
 
 | Model ID | Use it for | Price per 1K characters | Characters per request | Audio tags | Voice settings |
@@ -91,6 +122,24 @@ To get reliable results, follow these rules:
 ElevenLabs documents no limit on the number of tags per request. Their own
 examples use one tag per sentence or short paragraph.
 
+Tags that produced usable short lines with a stock voice (live result):
+
+| Purpose | Line |
+| --- | --- |
+| Welcome | `[warmly] Welcome to the maze! Are you ready? Let's go!` |
+| Question | `[curious] How many glowing pumpkins can you count?` |
+| Instruction | `[playful] Which tower is taller? Pull the lever to see the answers!` |
+| Thinking | `[thoughtful] Hmm... which letter is missing?` |
+| Cheer | `[excited] Woohoo! You got it!` |
+| Praise with a laugh | `[laughs] Great job! You're so fast!` |
+| Correction | `[gently] Oops, not that one. Let's try again.` |
+| Suspense | `[whispers] Shh... a zombie is near. Be brave!` |
+| Seasonal | `[spooky, playful] Happy Halloween! Can you find the hidden pumpkin?` |
+| Hurry | `[urgent, playful] Time is almost up! Hurry, hurry!` |
+
+Combine two adjectives in one tag, such as `[spooky, playful]`, to keep a
+dark mood friendly for a young audience.
+
 ## Set voice settings
 
 | Setting | Range | Default | Effect |
@@ -111,13 +160,56 @@ guidance. A seed is best effort; it doesn't guarantee identical audio.
 The current docs don't describe the Creative, Natural, and Robust stability
 presets that the web app offered for Eleven v3. Use the numeric value.
 
+On lines of one or two sentences, a listener heard no difference between
+Stability 0.3 and 0.5 (live result). Lower values matter more for longer
+passages. For short prompts, pick 0.3 to give tags the most room, and keep
+it fixed across the set so the clips sound like one speaker.
+
+## Choose a voice
+
+Call `GET /v2/voices` and filter on `category` equal to `premade` for the
+stock voices. Stock voices work through the API on every plan. Read the
+`labels` (gender, age, accent, descriptive) and `preview_url` fields to
+shortlist, then audition with your own line, because the preview text and
+model differ from yours.
+
+Stock voices auditioned for friendly, upbeat prompts aimed at young
+children (live result, `eleven_v4`, Stability 0.5 and 0.3):
+
+| Voice | Voice ID | Notes |
+| --- | --- | --- |
+| Will | `bIHbv24MWmeRgasZH58o` | Relaxed, friendly young male; chosen for a children's game. Followed every tag in the table above. |
+| Jessica | `cgSgspJ2msm6clMCkdW9` | Playful, bright young female. |
+| Liam | `TX3LPaxmHKxFdv7VOQHJ` | Energetic young male. |
+| Matilda | `XrExE9yKIg1WjnnlVkGX` | Warm, knowledgeable female. |
+| Alice | `Xb7hH8MSUJpSbSDYk0k2` | Clear, engaging British female. |
+
+Stock voice IDs can change. Confirm them with `GET /v2/voices` before a
+large render.
+
 ## Call the API
 
-Both endpoints accept `eleven_v4`. Use Create speech for one voice per clip,
-and Create dialogue for several speakers in one clip. Read the key from the
-environment. Never write it into a file, and never pass it as a command-line
+Both endpoints accept `eleven_v4`; Create speech with `eleven_v4` is
+confirmed (live result). Use Create speech for one voice per clip, and
+Create dialogue for several speakers in one clip.
+
+Read the key from the environment. Never pass it as a command-line
 argument, where other users can read it in the process list. The curl
-examples feed the header on standard input with `-H @-` for that reason.
+examples feed the header on standard input with `-H @-` for that reason. If
+the key must persist on disk, keep it in a file readable only by your user
+(mode `600`), outside every repository, and load it into the environment for
+one command:
+
+```bash
+ELEVENLABS_API_KEY="$(tr -d ' \r\n' < ~/.config/elevenlabs/api.key)" \
+  python3 render.py phrases.json clips/
+```
+
+An API key can carry its own credit limit, separate from the account
+balance. When a request would pass it, the API answers HTTP 401 with code
+`quota_exceeded` and a message such as "This request exceeds your API key
+quota" (live result). Raise or remove the limit on that key in the
+ElevenLabs dashboard; the account balance alone doesn't help.
 
 To render one clip as raw 16-bit PCM:
 
@@ -199,9 +291,8 @@ speak("VOICE_ID", "[gently, kindly] Oops, not that one. Let's try again.", "oops
 ## Request a format and convert to OGG
 
 Request `pcm_24000` or `wav_24000`. PCM output is signed 16-bit
-little-endian (S16LE) with no header. The docs don't state the channel
-count; the examples here assume mono, so check the length of the first clip
-you render. Wrap it with Python's `wave` module, as in the
+little-endian (S16LE) mono with no header. The docs don't state the channel
+count; mono was confirmed by playback and duration (live result). Wrap it with Python's `wave` module, as in the
 previous example, or let `ffmpeg` read it raw. Formats at 44.1 kHz,
 `pcm_44100` and `wav_44100`, require the Pro plan or higher; 24 kHz is
 enough for speech. MP3 and Opus output are also available. Rendering from PCM
@@ -218,6 +309,16 @@ ffmpeg -i clip.wav -af loudnorm=I=-16:TP=-1.5:LRA=11 -ar 44100 -ac 1 \
   -c:a libvorbis -q:a 5 clip.ogg
 ```
 
+Without `ffmpeg`, the Python `soundfile` package writes OGG Vorbis. Its
+wheels bundle libsndfile with Vorbis support (live result).
+
+```python
+import soundfile as sf  # pip install soundfile
+
+data, rate = sf.read("clip.wav")
+sf.write("clip.ogg", data, rate, format="OGG", subtype="VORBIS")
+```
+
 Request audio without `audio_effects` when you need PCM. Reverb and panning
 produce stereo audio, and the API rejects them for `pcm_*` formats.
 
@@ -232,6 +333,11 @@ produce stereo audio, and the API rejects them for `pcm_*` formats.
 - Before a run, add up the characters and stop when the total is over a
   budget you chose.
 - Read `character_count` before and after a batch, and record the difference.
+  The counter lags: right after a batch it can still show the old value.
+  Read it again a few minutes later (live result).
+- Credits are not always one per character. In two live runs of 698
+  characters each with `eleven_v4`, the counter rose by 155 both times.
+  Measure your own ratio on a small batch before you budget a large one.
 - `eleven_v4_turbo` costs half as much, but the docs route it through the
   Text to Dialogue WebSocket. The REST recipe in this note isn't documented
   for it.
@@ -369,22 +475,20 @@ limit wait in a queue. Retry HTTP 429 and 5xx responses with backoff.
 
 ## Unknown
 
-- Whether every request example here works unchanged. They follow the API
-  reference, but they were not run against the live API when this note was
-  distilled. The docs disagree on one point: the Models page routes
-  `eleven_v4` through Text to Dialogue, and the help pages also name Create
-  speech.
-- Whether audio-tag characters are billed. This note assumes they are.
+- Whether the Create dialogue example works unchanged. Create speech with
+  `eleven_v4` was confirmed live; dialogue was not run.
+- How tag characters are billed. The live credit ratio was below one per
+  character, so the exact rule is unclear.
 - The per-request character limit and concurrency limit for
   `eleven_v4_turbo`, and v4 concurrency per plan.
 - Whether the Opus formats return an Ogg container or raw Opus packets.
-- The channel count of PCM output. The examples assume mono.
 - How reliably each stock voice follows each tag. Test your voices.
 
 ## Do not
 
-- Never put an API key in a file, a command-line argument, a log, or this
-  repository. Read it from `ELEVENLABS_API_KEY` at run time.
+- Never put an API key in a repository, a log, chat, or a command-line
+  argument. Read it from `ELEVENLABS_API_KEY` at run time; a user-only key
+  file outside any repository is acceptable storage.
 - Never install ElevenLabs CLI skills or marketplace packs from this note.
   Call the HTTP API directly.
 - Never remint this note as a skill. Link to it instead.
