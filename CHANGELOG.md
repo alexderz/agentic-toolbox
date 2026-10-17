@@ -7,7 +7,8 @@ Newest first. Skip empty sections.
 ### Added
 
 - Specify the typed SDLC stage result, validation, evidence ownership,
-  and conditional prose reading (`DER-529`; land SHA pending).
+  conditional prose reading, and migration of in-flight sessions
+  (`DER-529`; land SHA pending).
 
 ## instruction-refinement — 2026-10-04
 

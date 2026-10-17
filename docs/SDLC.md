@@ -10,6 +10,8 @@ when the project uses tickets.
 1. Find your step in [Steps](#steps).
 2. Read the file in that row's Read column and the
    [stage-result contract](sdlc/stage-result.md).
+   For an already active session, follow the
+   [stage-result migration](sdlc/stage-result-migration.md).
 3. You are the **manager** → also read
    [branches-and-lands.md](sdlc/branches-and-lands.md) and
    [subagents.md](sdlc/subagents.md).
@@ -168,4 +170,5 @@ agents, not which steps exist. Headings and tickets use the step
 | Manager: subagents | Step and item agents, spawn prompts, workers | [subagents.md](sdlc/subagents.md) |
 | Conventions | Names, commits, layout, changelog, designs in git | [conventions.md](sdlc/conventions.md) |
 | Stage result | Result contract for each run of a step | [stage-result.md](sdlc/stage-result.md) |
+| In-flight session migration | Adopt stage results without restarting the SDLC | [stage-result-migration.md](sdlc/stage-result-migration.md) |
 | Old Stage numbers | A ticket or chat cites a Stage number | [In-flight map](sdlc/conventions.md#in-flight-map) |
