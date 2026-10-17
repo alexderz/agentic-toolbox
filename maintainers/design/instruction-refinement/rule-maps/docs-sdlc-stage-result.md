@@ -44,3 +44,10 @@ No open meaning questions.
   deterministic wrappers. Scripts need no model to populate it.
 
 These are clarifications of the every-path contract, not driver code.
+
+## Final closure suggestions
+
+The final independent review found no Important or Critical findings.
+Apply its two optional suggestions: separate the example headings with
+a blank line and scope missing/invalid model-output fallback to model
+stages. Command stages retain their wrapper verdict and evidence.

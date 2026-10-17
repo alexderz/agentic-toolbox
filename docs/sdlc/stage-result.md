@@ -85,9 +85,10 @@ Disagreement alone does not authorize opening prose.
 
 When a command has no ordinary exit code, the wrapper normalizes its
 process outcome: timeout `124`, signal `128 + signal number`, launch
-failure `127`. It emits `fail` and names the cause in `findings`. If a
-model returns nothing or invalid output, the harness emits model `fail`
-with non-empty `findings` naming the cause, retaining invalid output
+failure `127`. It emits `fail` and names the cause in `findings`. In a
+model stage, absent or invalid model output makes the harness emit model
+`fail` with non-empty `findings` naming the cause. In a command stage,
+the harness keeps the wrapper result. Retain invalid model output
 separately for diagnosis. Missing files remain reader failures.
 
 | Condition | Action |
@@ -98,13 +99,13 @@ separately for diagnosis. Missing files remain reader failures.
 | None of those | Do not open `findings`. |
 
 ## Examples
+
 ### `pass`
 
 ```json
 {"step": "Build", "status": "pass",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 0},
-  "findings": ""
-}
+  "findings": ""}
 ```
 
 ```json
@@ -119,8 +120,7 @@ separately for diagnosis. Missing files remain reader failures.
 ```json
 {"step": "Build", "status": "fail",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 1},
-  "findings": "npm test exited 1. test/retry.js expected 3 and got 0."
-}
+  "findings": "npm test exited 1. test/retry.js expected 3 and got 0."}
 ```
 
 ### `blocked`
