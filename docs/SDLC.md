@@ -8,7 +8,8 @@ when the project uses tickets.
 ## How to read
 
 1. Find your step in [Steps](#steps).
-2. Read the file in that row's Read column.
+2. Read the file in that row's Read column and the
+   [stage-result contract](sdlc/stage-result.md).
 3. You are the **manager** → also read
    [branches-and-lands.md](sdlc/branches-and-lands.md) and
    [subagents.md](sdlc/subagents.md).
@@ -166,5 +167,5 @@ agents, not which steps exist. Headings and tickets use the step
 | Manager: branches and lands | Project-main, land path, Never | [branches-and-lands.md](sdlc/branches-and-lands.md) |
 | Manager: subagents | Step and item agents, spawn prompts, workers | [subagents.md](sdlc/subagents.md) |
 | Conventions | Names, commits, layout, changelog, designs in git | [conventions.md](sdlc/conventions.md) |
+| Stage result | Result contract for each run of a step | [stage-result.md](sdlc/stage-result.md) |
 | Old Stage numbers | A ticket or chat cites a Stage number | [In-flight map](sdlc/conventions.md#in-flight-map) |
-| Stage result | The `result.json` every step writes | [stage-result.md](sdlc/stage-result.md) |

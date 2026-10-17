@@ -2,45 +2,47 @@
 
 Tickets: item `DER-529`, chunk `DER-421`.
 
-A **stage** is one run of one SDLC step. The step names are the ones in
-[Steps](../SDLC.md#steps). A **stage result** is the file `result.json`
-in the stage's working directory. A **command stage** runs a
-deterministic tool and records that process exit code. A **model stage**
-is any other stage. Deterministic tools and model stages use this same
-schema. This file is not the `result.json` a `grok-acp` run writes.
+A **stage** is one run of one SDLC step. Use the step names in
+[Names](../SDLC.md#names). A **stage result** is the file `result.json`
+in a caller-supplied absolute output directory, unique to this stage
+invocation and outside the source checkout. The caller retains that
+path with the invocation; retries use new directories.
+A **command stage** runs a deterministic tool and records its exit code.
+A **model stage** is any other stage. Both use this schema, not the
+`result.json` a `grok-acp` run writes.
 
 ## Status
 
+A **failure** means the reader rejects the stage as unsuccessful, never
+accepting a claimed `pass`. Do not rewrite the submitted status.
 `status` is exactly `pass`, `fail`, `blocked`, or `needs_input`. Any
-other status is a failure. Do not map an unknown status onto one of the
-four.
+other status is a failure.
 
 | Status | Meaning |
 | --- | --- |
 | `pass` | The stage finished, and its evidence holds. |
 | `fail` | The stage ran, and its evidence does not hold. |
 | `blocked` | The stage stopped on an open blocker. |
-| `needs_input` | The stage stopped for a decision from the operator. |
+| `needs_input` | The stage stopped for a decision from the operator, or someone the operator names in writing. |
 
-`blocked` and `needs_input` are stage results, not tracker states.
-Tracker states stay the six in [Tracker](../SDLC.md#tracker). Sending an
-ask still follows [Asking the operator](../SDLC.md#asking-the-human).
+For tracker states, see [Tracker](../SDLC.md#tracker). For decisions,
+see [Asking the operator](../SDLC.md#asking-the-human).
 
 ## Schema
 
-The file is UTF-8 JSON: one object and no trailing text. The four
-fields are required. An unknown key is a failure. A null value is a
-failure. Omit an evidence key the evidence table does not require. An
-empty string or an empty array does not meet a non-empty rule.
+The file is UTF-8 JSON: one object and no trailing text. Reject duplicate
+keys at every nesting level as a failure; do not keep the last value.
+The four top-level fields are required. An unknown key or a null value
+is a failure. An empty string or array does not meet a non-empty rule.
 
 | Field | Type | Rule |
 | --- | --- | --- |
-| `step` | string | A step name in [Steps](../SDLC.md#steps). |
+| `step` | string | A step name in [Names](../SDLC.md#names). |
 | `status` | string | One of the four statuses. |
-| `evidence` | object | The evidence keys in the evidence table. |
+| `evidence` | object | Stage evidence. |
 | `findings` | string | The prose. It may be empty, except when `status` is `fail` or `blocked`: then it must be non-empty. |
 
-| Evidence key | Type | Required when |
+| Evidence field | Type | Required when |
 | --- | --- | --- |
 | `kind` | `command` or `model` | Always. |
 | `command` | non-empty string | `kind` is `command`. The command line. |
@@ -49,32 +51,35 @@ empty string or an empty array does not meet a non-empty rule.
 | `blocker` | non-empty string | `status` is `blocked`. The blocker ticket id. |
 | `question` | non-empty string | `status` is `needs_input`. The decision the stage waits on. |
 
-## Rules
+Omit an evidence field when its required condition does not hold.
 
-Apply the failure table and the prose table. A file can match a row in each.
+## Rules
 
 | Condition | Record |
 | --- | --- |
 | The file is missing, or it is not one JSON object | Failure |
 | `status` is missing, or it is not one of the four | Failure |
-| `step` is not a step name, a required field is missing or the wrong type, or a key is unknown | Failure |
+| `step` is not a step name, a required top-level or evidence field is missing or invalid, or a key is unknown | Failure |
 | `kind` is `command`, `exit_code` is the integer `0`, and `status` is not `pass` | Failure |
 | `kind` is `command`, `exit_code` is an integer other than `0`, and `status` is not `fail` | Failure |
 | `status` is `fail` or `blocked`, and `findings` is empty | Failure |
 
-A matching command row is a **disagreement**. A disagreement is a failure, including when the file says `pass`.
+A matching command row is a **disagreement** and a failure. Report a
+structured validation error for invalid results or disagreements.
+Disagreement alone does not authorize opening prose.
 
-Write `result.json` on every path:
+The **stage harness** is the caller that persists a stage's output.
 
-1. Write the file before the stage returns.
-2. Write it for `pass`, `fail`, `blocked`, and `needs_input`.
-3. Replace the file. Do not append a second object.
-4. On a command stage, the command wrapper writes `status` from the process exit code so that neither command row matches.
-5. On a command stage, the model may write `findings`.
-6. On a command stage, the model must not write `status`.
-7. On a model stage, the model writes `status` as one of the four.
+1. **Stage harness** persists `result.json` before returning on every path.
+2. **Stage harness** replaces the file; do not append a second object.
+3. **Stage harness** persists model output on behalf of read-only roles;
+   reviewers do not write files or modify the reviewed checkout.
 
-Open the prose in `findings` only when a row here matches. Otherwise do not open `findings`.
+| Actor and stage kind | Output authority |
+| --- | --- |
+| Command wrapper, command stage | Supply `step`, `evidence`, and `status`. Exit `0` means `pass`; any other integer means `fail`. Record `command` and `exit_code` from the actual invocation and process result. The wrapper can populate `findings` from CI links or error output. |
+| Model, command stage | Add `findings` only; do not set `status` or change command evidence. |
+| Model, model stage | Return the four fields to the harness, with `status` as one of the four. |
 
 | Condition | Action |
 | --- | --- |
@@ -87,15 +92,20 @@ Open the prose in `findings` only when a row here matches. Otherwise do not open
 
 ### pass
 
+Command stage:
 ```json
 {
-  "step": "Build",
-  "status": "pass",
-  "evidence": {
-    "kind": "command",
-    "command": "npm test",
-    "exit_code": 0
-  },
+  "step": "Build", "status": "pass",
+  "evidence": {"kind": "command", "command": "npm test", "exit_code": 0},
+  "findings": ""
+}
+```
+
+Model stage:
+```json
+{
+  "step": "Spec", "status": "pass",
+  "evidence": {"kind": "model", "checks": ["Schema matches acceptance"]},
   "findings": ""
 }
 ```
@@ -104,13 +114,8 @@ Open the prose in `findings` only when a row here matches. Otherwise do not open
 
 ```json
 {
-  "step": "Build",
-  "status": "fail",
-  "evidence": {
-    "kind": "command",
-    "command": "npm test",
-    "exit_code": 1
-  },
+  "step": "Build", "status": "fail",
+  "evidence": {"kind": "command", "command": "npm test", "exit_code": 1},
   "findings": "npm test exited 1. test/retry.js expected 3 and got 0."
 }
 ```
@@ -119,12 +124,8 @@ Open the prose in `findings` only when a row here matches. Otherwise do not open
 
 ```json
 {
-  "step": "Build",
-  "status": "blocked",
-  "evidence": {
-    "kind": "model",
-    "blocker": "ABC-12"
-  },
+  "step": "Build", "status": "blocked",
+  "evidence": {"kind": "model", "blocker": "ABC-12"},
   "findings": "ABC-12 is an open blocker, so this stage stops."
 }
 ```
@@ -133,8 +134,7 @@ Open the prose in `findings` only when a row here matches. Otherwise do not open
 
 ```json
 {
-  "step": "Brief",
-  "status": "needs_input",
+  "step": "Brief", "status": "needs_input",
   "evidence": {
     "kind": "model",
     "question": "Stop the retry after 3 attempts, or after 30 seconds?"
@@ -145,4 +145,5 @@ Open the prose in `findings` only when a row here matches. Otherwise do not open
 
 ## Out of scope
 
-This spec does not define the flow file, the Pi command, or session resume.
+This spec does not define the flow file, the Pi command, or session
+resume.

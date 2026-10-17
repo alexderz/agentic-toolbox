@@ -4,6 +4,11 @@ Newest first. Skip empty sections.
 
 ## Unreleased
 
+### Added
+
+- Specify the typed SDLC stage result, validation, evidence ownership,
+  and conditional prose reading (`DER-529`; land SHA pending).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing
