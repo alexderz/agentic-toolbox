@@ -4,12 +4,14 @@ Tickets: item `DER-529`, chunk `DER-421`.
 
 A **stage** is one run of one SDLC step. Use the step names in
 [Names](../SDLC.md#names). A **stage result** is the file `result.json`
-in a caller-supplied absolute output directory, unique to this stage
-invocation and outside the source checkout. The caller retains that
-path with the invocation; retries use new directories.
+in an absolute output directory supplied by the **stage harness**, the
+program that runs a stage and persists its output. Each invocation has
+a unique directory outside the checkout; the harness retains its path.
 A **command stage** runs a deterministic tool and records its exit code.
 A **model stage** is any other stage. Both use this schema, not the
-`result.json` a `grok-acp` run writes.
+worker transport result written by `grok-acp`. **Evidence** is the
+structured data supporting the outcome. The **reader** validates it.
+The **command wrapper** runs a tool and records its process outcome.
 
 ## Status
 
@@ -52,6 +54,7 @@ is a failure. An empty string or array does not meet a non-empty rule.
 | `question` | non-empty string | `status` is `needs_input`. The decision the stage waits on. |
 
 Omit an evidence field when its required condition does not hold.
+The reader rejects a present-but-not-required field as a failure.
 
 ## Rules
 
@@ -65,21 +68,27 @@ Omit an evidence field when its required condition does not hold.
 | `status` is `fail` or `blocked`, and `findings` is empty | Failure |
 
 A matching command row is a **disagreement** and a failure. Report a
-structured validation error for invalid results or disagreements.
+validation error as data for invalid results or disagreements.
 Disagreement alone does not authorize opening prose.
-
-The **stage harness** is the caller that persists a stage's output.
 
 1. **Stage harness** persists `result.json` before returning on every path.
 2. **Stage harness** replaces the file; do not append a second object.
-3. **Stage harness** persists model output on behalf of read-only roles;
-   reviewers do not write files or modify the reviewed checkout.
+3. **Stage harness** persists output for agents that do not write files.
+4. **Stage harness** fixes `step` and `evidence.kind` from the invocation;
+   the reader rejects either field when it mismatches that invocation.
 
 | Actor and stage kind | Output authority |
 | --- | --- |
-| Command wrapper, command stage | Supply `step`, `evidence`, and `status`. Exit `0` means `pass`; any other integer means `fail`. Record `command` and `exit_code` from the actual invocation and process result. The wrapper can populate `findings` from CI links or error output. |
+| Command wrapper, command stage | Supply `step`, `evidence`, and `status`. Exit `0` means `pass`; any other integer means `fail`. Record `command` and `exit_code` from the actual invocation and process result. On `fail`, supply non-empty `findings`, such as a continuous integration job link or error output. |
 | Model, command stage | Add `findings` only; do not set `status` or change command evidence. |
-| Model, model stage | Return the four fields to the harness, with `status` as one of the four. |
+| Model, model stage | Return the result to the harness, with `status` as one of the four. |
+
+When a command has no ordinary exit code, the wrapper normalizes its
+process outcome: timeout `124`, signal `128 + signal number`, launch
+failure `127`. It emits `fail` and names the cause in `findings`. If a
+model returns nothing or invalid output, the harness emits model `fail`
+with non-empty `findings` naming the cause, retaining invalid output
+separately for diagnosis. Missing files remain reader failures.
 
 | Condition | Action |
 | --- | --- |
@@ -89,52 +98,44 @@ The **stage harness** is the caller that persists a stage's output.
 | None of those | Do not open `findings`. |
 
 ## Examples
+### `pass`
 
-### pass
-
-Command stage:
 ```json
-{
-  "step": "Build", "status": "pass",
+{"step": "Build", "status": "pass",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 0},
   "findings": ""
 }
 ```
 
-Model stage:
 ```json
-{
-  "step": "Spec", "status": "pass",
+{"step": "Spec", "status": "pass",
   "evidence": {"kind": "model", "checks": ["Schema matches acceptance"]},
   "findings": ""
 }
 ```
 
-### fail
+### `fail`
 
 ```json
-{
-  "step": "Build", "status": "fail",
+{"step": "Build", "status": "fail",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 1},
   "findings": "npm test exited 1. test/retry.js expected 3 and got 0."
 }
 ```
 
-### blocked
+### `blocked`
 
 ```json
-{
-  "step": "Build", "status": "blocked",
+{"step": "Build", "status": "blocked",
   "evidence": {"kind": "model", "blocker": "ABC-12"},
   "findings": "ABC-12 is an open blocker, so this stage stops."
 }
 ```
 
-### needs_input
+### `needs_input`
 
 ```json
-{
-  "step": "Brief", "status": "needs_input",
+{"step": "Brief", "status": "needs_input",
   "evidence": {
     "kind": "model",
     "question": "Stop the retry after 3 attempts, or after 30 seconds?"
