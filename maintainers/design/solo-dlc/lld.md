@@ -10,7 +10,8 @@
   DER-529; the others get ids at Groom)
 - Date: `2026-10-18`; fix round 1 after the security and adversarial
   reviews of 34e1278; cleanup round 2 after the security and LLD
-  re-reviews of de7c438 passed, applying their recommendations, same day
+  re-reviews of de7c438 passed, applying their recommendations, same day;
+  fix round 4 adds the [driver-file ledger](#driver-file-ledger)
 - Status: **draft, awaiting operator acceptance.** The security
   re-review of de7c438 passed. Architect acceptance is this draft.
   Groom and Build start only after **security** and then the operator accept it
@@ -97,7 +98,7 @@ packages/sdlc-driver/          # core; no runtime dependency; no Pi import
     land.ts                    # land sub-machine, merge-tree classification
     prove.ts                   # command wrapper
     git.ts                     # git calls: hooks off, replace objects off, no force option
-    snapshot.ts                # pre/post hashes, worktree, refs, and tickets checks
+    snapshot.ts                # pre/post hashes, driver-file ledger, worktree, refs, and tickets checks
     tracker.ts                 # the repo skill's local read recipe, as fixed git argv
     groom.ts                   # frozen groom.md parser
     prompts.ts  facts.ts  scan.ts  console.ts  labels.ts  env.ts
@@ -658,6 +659,8 @@ RUN_ROOT/
   driver/lock          # run-root lock
   driver/console.log   # every console line
   driver/snapshot.json # pre-stage hashes of the stage in flight
+  driver/ledger.json   # hash of each driver file at its last driver write
+  driver/driver.stderr # the detached driver's stdout and stderr
   driver/facts/<persona>--run-N.md   # facts passed to that run
   driver/worker-ext/sdlc-worker-<sha12>.ts
   repo.git/            # driver's bare clone of the product repo
@@ -970,8 +973,11 @@ it refuses while any driver holds the lock.
    `{"pid", "procStart", "startedAt"}`. If it exists and its pid is
    alive with the same process start time, exit with
    `another driver holds RUN_ROOT (pid N)`. Otherwise it is stale: print
-   one line and take it.
-2. Validate `run.json`; check `runJsonSha256`. Refuse a
+   one line and take it. Taking a stale lock replaces its
+   [ledger](#driver-file-ledger) entry without comparing it first.
+2. Run the ledger check ([Driver-file ledger](#driver-file-ledger)
+   point 6) before reading `driver.json`; a mismatch stops the start.
+   Validate `run.json`; check `runJsonSha256`. Refuse a
    `tracker.backend` other than `local` with the line in
    [`run.json`](#runjson). Check the harness version equals
    `harness.version` and the installed tree's hash equals
@@ -984,8 +990,8 @@ it refuses while any driver holds the lock.
    tree again: it hashes every file that is not in the cache (an added
    file) or whose stat differs, counts every cached file that is gone
    (a removed file), and reuses the cached hash only for a file whose
-   path and stat both match. The `snapshot` check covers the cache file
-   like any driver file.
+   path and stat both match. The cache file is a driver file, so the
+   ledger covers it.
 3. On the first start, before any fetch, when `repo.git` does not
    exist: `git init --bare --initial-branch=empty repo.git`; set
    `origin` from `run.json` with no force option and fetch refspec
@@ -1004,7 +1010,8 @@ it refuses while any driver holds the lock.
 5. If `inFlight` is set, the previous driver died mid-stage: write
    `interrupted.json` in that run folder, run the
    [post-stage checks](#post-stage-checks) for its stage kind against
-   `driver/snapshot.json`, clear `inFlight`, and append an
+   `driver/snapshot.json` and, for driver files, the ledger, clear
+   `inFlight`, and append an
    `interrupted` event. A failed check is an `operator` stop. Otherwise
    the next run of that scope and node uses the interrupted record's
    `prompt`, `repairOf`, and `invalidRepairs`, so an interrupted repair
@@ -1087,7 +1094,8 @@ worker-only checks.
    ([Pi adapter](#pi-adapter-and-worker-command-line)). Command: run
    the [command body](#command-body).
 6. **Checks.** Run the post-stage checks for this stage kind, whatever
-   the candidate or command result holds. The first failure finishes
+   the candidate or command result holds, `snapshot` first
+   ([Driver-file ledger](#driver-file-ledger) point 5). The first failure finishes
    this stage and does not enter steps 7–11: on a model stage, write a
    driver-authored `fail` (`choice: operator`) naming the check and
    keep `candidate.json`; on a command stage, keep the wrapper result
@@ -1439,7 +1447,7 @@ step 4) records what each check compares.
 
 | Check | After | How |
 | --- | --- | --- |
-| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file, `worktrees/`, `driver/snapshot.json`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
+| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file, `worktrees/`, `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
 | `worktrees` | every stage | For each worktree outside the stage's writable set: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `recordCommit` ([Start](#start) step 5) |
 | `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns. A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `recordCommit` ([Start](#start) step 5) |
 | `tickets` | every stage | [Tickets content check](#tickets-content-check) |
@@ -1456,6 +1464,82 @@ the item it lands, and an item branched from or merged with a newer tip
 does not fail. The `refs` check catches any project-main move during a
 worker stage; this check also covers commits that reach project-main
 between stages.
+
+#### Driver-file ledger
+
+The driver itself changes some files in the `snapshot` walk during a
+stage and across a restart: the start line, `projectMainSeen`, the lock,
+the stat cache. Compared with the pre-stage snapshot, they would fail
+every stage. They are compared with the driver's own record instead.
+
+**Driver files** are `driver.json`, `index.jsonl`, and every file under
+`plan/`, `asks/`, and `driver/`, except `driver/snapshot.json`,
+`driver/ledger.json`, and `driver/driver.stderr`. Only the driver and
+the plugin write them ([Who may write what](#trust-boundaries)). Every
+other path in the walk, such as `run.json`, other persona folders, and
+other personas' sessions, only a worker could change during a stage; it
+is compared with the pre-stage snapshot.
+
+1. **One write path.** The driver and the plugin change a driver file
+   only through one core function, which keeps `driver/ledger.json`:
+
+   ```json
+   {"schemaVersion": 1,
+    "files": {
+      "driver.json": {"type": "file", "mode": "0600", "size": 1834, "sha256": "<hex>", "next": null},
+      "driver/console.log": {"type": "file", "mode": "0600", "size": 90211, "sha256": "<hex>", "next": null}},
+    "updatedAt": "<UTC>"}
+   ```
+
+   The plugin writes only through `core.prepare` and
+   `core.recordAnswer` (`runJsonSha256`, answers in `asks/`), so it uses
+   the same function. Removing a file (the lock at release) removes its
+   entry. The first `/sdlc` creates an empty ledger before it writes any
+   driver file.
+2. **Two phases.** Before a write, the function sets the entry's `next`
+   to the `{size, sha256}` the file will have and writes the ledger;
+   then it writes the file; then it moves `next` into the entry and
+   writes the ledger again. Ledger writes are atomic
+   ([Behavior 4](#behavior-4-run-root-formats)). A file that equals the
+   entry or its `next` passes, so a kill at any point leaves files that
+   pass. At Start, the driver promotes `next` when the file equals it
+   and clears it otherwise.
+3. **Hashes from the driver's bytes.** A replaced file's hash is the
+   SHA-256 of the bytes the driver wrote. `index.jsonl` and
+   `driver/console.log` are append-only: each line is one `write` call
+   with `O_APPEND`, and the new hash comes from a running SHA-256 the
+   driver holds for the file (Node `Hash.copy()`), never from reading
+   the file back. A worker's edit, truncation, or extra line therefore
+   stays a mismatch after the driver's next append. At Start, the
+   ledger check's read of each append-only file seeds its running hash.
+4. **The comparison.** The `snapshot` check compares each driver file
+   with its entry: type, mode, size, and SHA-256, or the entry's `next`
+   (point 2). A driver file with no entry, or an entry with no file,
+   fails. The pre-stage snapshot's records of driver files are ignored.
+   `driver/ledger.json` itself must equal the bytes of the driver's last
+   ledger write, which the driver holds in memory.
+5. **No replace before the check.** From the worker spawn (pipeline
+   step 5) until `snapshot` has run (step 6), the driver only appends to
+   driver files and replaces none. `snapshot` runs first in step 6,
+   before `project-main` writes `projectMainSeen`. A worker's edit of a
+   replaced file such as `driver.json` is therefore still on disk when
+   the check runs; the driver's later rewrite cannot hide it.
+6. **Across a restart.** `driver/ledger.json` persists the hashes. The
+   ledger check is point 4 without the in-memory comparison: the ledger
+   on disk is read as found. `core.prepare` runs it before the plugin
+   reads or writes `driver.json` or records an answer, and
+   [Start](#start) step 2 runs it again before the driver reads
+   `driver.json`; only `driver/lock`, replaced at Start step 1 when
+   stale, is written before it. A mismatch refuses the run root with
+   `driver file changed outside the driver: <path>` and both hashes, as
+   a harness mismatch stops a start; the operator restores the file or
+   starts a new run root. At Start step 5, every change since the
+   interrupted stage's snapshot that the driver or plugin made (the
+   start line, `projectMainSeen`, the lock, the stat cache, the
+   extension copy, the found report's lines, recorded answers) matches
+   the ledger, and only worker-set paths are compared with
+   `driver/snapshot.json`. Trusting the ledger as found is a
+   [residual](#trust-boundaries).
 
 #### Tickets content check
 
@@ -1807,7 +1891,8 @@ uses `run.json` `harness.node`.
 `worker/sdlc-worker.ts`: one file, imported only from Node built-ins and
 `@sinclair/typebox` (Pi's extension loader aliases it for any loaded
 file). The driver copies it into `driver/worker-ext/` at each start, so
-the snapshot covers it.
+the `snapshot` check covers it through the
+[driver-file ledger](#driver-file-ledger).
 
 1. **Load.** Parse every `SDLC_*` variable; check `SDLC_FACTS_SHA256`.
    Any error throws, so Pi reports the extension as failed. On
@@ -1982,7 +2067,7 @@ manager (a worker); the kickoff session model (untrusted; writes
 | TB3a | Harness → driver | The Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` at install | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
 | TB4 | Driver → worker | Prompt, facts, env | Prompt built from driver state; model or operator text fenced as data; facts hash; extension copy hashed; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
 | TB5 | Worker → files | `write`, `edit`, `sdlc_write` | Allowlist, path guard (fail-closed), run-folder tool | Enforced; the guard's check-then-write race is an accepted residual |
-| TB6 | Worker → files through `bash` | Any write | Snapshot, worktree, refs, ancestry, project-main checks | Detected in the run root and worktrees; residual elsewhere (operator accepts in writing) |
+| TB6 | Worker → files through `bash` | Any write | Snapshot (driver files against the driver-file ledger), worktree, refs, ancestry, project-main checks | Detected in the run root and worktrees; residual elsewhere (operator accepts in writing) |
 | TB7 | Worker → result | `candidate.json` | Strict validation; only validated fields route; prose never routes | Enforced |
 | TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit (driver-set author and committer), path, front-matter key and value, comment body, and filed ticket body, plus a scan of every touched file | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
 | TB9 | Driver → tracker | One read per check | The repo skill's `local` read recipe as fixed git argv; ids checked against the key pattern | Enforced |
@@ -2026,7 +2111,7 @@ first write.
 | Item worktree | merges, resets of its own worktrees | its own item | no (detected) | — |
 | `worktrees/integrate`, project-main | commits, merges, pushes | no (detected) | no (detected) | — |
 | `run.json` | no | no | no | no; kickoff writes it |
-| `driver.json`, `index.jsonl`, `plan/`, `driver/`, other persona folders | yes | no (detected) | no (detected) | `driver.json` confirmation and `asks/` answers, while no driver runs |
+| `driver.json`, `index.jsonl`, `plan/`, `driver/`, other persona folders | yes | no (detected) | no (detected) | `driver.json` confirmation and `asks/` answers, while no driver runs, through the [ledger](#driver-file-ledger) |
 | Tracker | read only | per table | per table | — |
 
 **Residual risks.** The HLD's [Risks](hld.md#risks), as narrowed
@@ -2046,9 +2131,18 @@ the stage.
    persona; no program detects a deviation.
 5. Smaller residuals: ignored files written in a worktree that
    `git status --porcelain` does not show; a worker that escapes the
-   leftover sweep; and a worker that tampers with
-   `driver/snapshot.json` while the driver is down, which only weakens
-   the interrupted-stage check.
+   leftover sweep; and a process that rewrites `driver/snapshot.json`,
+   or `driver/ledger.json` together with the driver files it lists,
+   while the driver is down or after killing it. Either only weakens
+   the interrupted-stage check and the next start's
+   [ledger check](#driver-file-ledger), because a restart reads both
+   files as found; the operator already accepts that `bash` can write
+   any file (item 1 below). Also: an escaped leftover's edit of a driver
+   file that the driver replaces before the next check is overwritten
+   without a report, which has no effect because the driver reads
+   driver files only at a start, after the ledger check;
+   `driver/driver.stderr`, which the driver never reads, is not checked;
+   and `driver/lock` is replaced at a start before the ledger check.
 6. N4 (re-review of de7c438, low), stated as residuals:
    - The reviewed-ref ancestry test and the INTAKE record lookup use
      the skills home's local remote-tracking refs; the driver does not
@@ -2181,8 +2275,12 @@ Driver scenarios, each a test:
 18. Crash after a design-record push: a test hook kills the driver
     after the Spec record push returns `0` and before pipeline step 11.
     `meta.json` holds `recordCommit` equal to the pushed commit. The
-    restart passes `refs` and `worktrees` under the pushed record
-    exception, writes `recordCommit` into `interrupted.json`, sets
+    restart passes `snapshot` against the ledger, although the driver
+    changed `driver.json` (`projectMainSeen`), `index.jsonl`,
+    `driver/console.log`, `driver/lock`, and `driver/harness-tree.json`
+    after the pre-stage snapshot. It passes `refs` and `worktrees` under
+    the pushed record exception, writes `recordCommit` into
+    `interrupted.json`, sets
     `chunk.unposted`, re-runs the Spec node, stages nothing, sets
     `chunk.pendingRoute` with that commit, runs paperwork, and routes by
     the re-run's `choice` after `posted`. A re-run that returns `stop`
@@ -2192,6 +2290,19 @@ Driver scenarios, each a test:
     `recordCommit` while another ref also moved; `worktrees/integrate`
     at another commit or dirty; and a kill after the commit and before
     the push.
+19. Driver-file ledger: in one stage the driver appends the start line
+    and `project-main` writes `projectMainSeen`, and `snapshot` passes.
+    A worker that edits `driver.json` (an `items.*.repairs` value) fails
+    `snapshot` naming `driver.json`, although `project-main` rewrites the
+    file after that check; so does a worker that appends a line to
+    `driver/console.log`, truncates `index.jsonl`, adds a file under
+    `asks/`, or edits the copy under `driver/worker-ext/`. A worker that
+    edits `driver.json` and then kills the driver: `/sdlc` refuses the
+    run root with `driver file changed outside the driver: driver.json`
+    and records no answer. A kill between the ledger's `next` write and
+    the file write, and one between the file write and the promotion,
+    each restart with the ledger check passing. An answer that `/sdlc`
+    records while no driver runs passes the next start.
 
 **Pi checks** (item 6 acceptance, on the operator's machine with Pi
 0.73.1 and one local model; manual, gated by `SDLC_PI_SMOKE=1`; they
