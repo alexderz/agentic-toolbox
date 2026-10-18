@@ -57,6 +57,7 @@ Every note:
 | Open Jev-class models (2026-09-27 snapshot; bookmark pass 2026-09-28) | [`ai/models/jev-open-2026-09-27.md`](ai/models/jev-open-2026-09-27.md) |
 | ElevenLabs voice clips with Eleven v4 (2026-10-17) | [`ai/practices/elevenlabs-voice-clips.md`](ai/practices/elevenlabs-voice-clips.md) |
 | Public red-team and blue-team agent skill packs (2026-10-18 snapshot) | [`ai/vendors/security-skill-packs-2026-10-18.md`](ai/vendors/security-skill-packs-2026-10-18.md) |
+| X chatter on red-team and blue-team agent skill packs (2026-10-18) | [`ai/vendors/x-chatter-security-skill-packs-2026-10-18.md`](ai/vendors/x-chatter-security-skill-packs-2026-10-18.md) |
 
 ## Never
 
