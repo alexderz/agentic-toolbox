@@ -354,7 +354,7 @@ exits apply as above unless the row says otherwise.
 | Land builder, fixing after a land check | `test-failure`, `fix` | `ready` [`pass`, `fail`] |
 | Land verifier, re-run or post-land | `land-recheck`, `post-land` | `ok` [`pass`], `fix` [`fail`] |
 | Land proving commands, on the item or on the integration merge | — | `ok` [`pass`], `fix` [`fail`] |
-| Architect paperwork | `paperwork` | `posted` [`pass`] |
+| Architect paperwork | `paperwork` | `posted` [`pass`]. Reserved exit: `stop` only |
 | Manager | `stop`, `gate`, `apply-answer` | `resume` [`pass`], `defer` [`pass`], `escalate` [`needs_input`]. For an `operator` stop or a gate: `escalate` only. Reserved exits are not offered |
 | Invalid-result repair | `repair` | The exits of the stage it repairs |
 | Answer or replacement | `answer`, `handoff` | The exits of the stopped node or stage |
@@ -669,7 +669,7 @@ personas and never write to the tracker.
   "schemaVersion": 1,
   "chunk": {"slug": "solo-dlc", "epic": "der-e421"},
   "bundle": {"id": "sdlc", "home": "/abs/path/to/skills-home", "commit": "<40-hex>",
-             "reviewedRefs": ["origin/main"]},
+             "reviewedRefs": ["origin/main", "origin/integrate/solo-dlc"]},
   "repo": {"origin": "git@github.com:OWNER/REPO.git", "trunk": "main",
            "projectMain": "integrate/solo-dlc", "designDir": "maintainers/design/solo-dlc"},
   "tracker": {"backend": "local", "skill": ".agents/tracker/SKILL.md",
@@ -720,16 +720,21 @@ personas and never write to the tracker.
   a summary of `run.json` (bundle commit, repo, tracker, harness pin,
   models, spending, labels) and records the operator's yes as
   `runJsonSha256` in `driver.json`. No yes, no run.
-- **Bundle commit outside reviewed history (S9).** The summary also
-  shows the full 40-hex bundle commit and, for each ref in
-  `bundle.reviewedRefs` (default the skills home's trunk, as last
-  fetched there), the result of `git -C <home> merge-base --is-ancestor
-  <commit> <ref>`. The driver does not fetch the skills home, so a stale
-  ref fails the check and asks for more, never less. When no ref
-  contains the commit, the summary also shows the SHA-256 of every file
-  under the bundle's `scripts/` and `personas/` at that commit, and the
-  confirmation is `ctx.ui.input`, not `confirm`: the operator's answer
-  must equal the full SHA, else no run.
+- **Bundle commit outside reviewed history (S9).**
+  `bundle.reviewedRefs` defaults to the skills home's trunk and its
+  project-main (`origin/main` and `origin/<projectMain>` when that ref
+  exists in the skills home; this chunk's does). The summary shows the
+  full 40-hex bundle commit and, for each ref, the result of
+  `git -C <home> merge-base --is-ancestor <commit> <ref>`. The driver
+  does not fetch the skills home. A missing ref stops the start and
+  names that ref; the driver does not treat a missing ref as "not an
+  ancestor." When the commit is an ancestor of
+  neither ref, the summary also shows the SHA-256 of every file under
+  the bundle's `scripts/` and `personas/` at that commit, and each
+  script's intake record. A script that has not cleared INTAKE fails
+  the bundle check (`bundle.script-intake`) before that question. The
+  confirmation is then `ctx.ui.input`, not `confirm`: the operator's
+  answer must equal the full SHA, else no run.
 
 #### `driver.json`
 
@@ -941,12 +946,19 @@ it refuses while any driver holds the lock.
    [`run.json`](#runjson). Check the harness version equals
    `harness.version` and the installed tree's hash equals
    `harness.treeSha256`; else stop and print both values of each.
-3. On the first start only, when `repo.git` does not exist: create it
-   (`git init --bare`, `origin` from `run.json`, fetch refspec
-   `+refs/heads/*:refs/remotes/origin/*`), fetch, and add
-   `worktrees/integrate` detached at the fetched project-main tip. On
-   every start: fetch `repo.git`, then run the bundle check at the
-   pinned commit; any error stops the start with the error lines.
+3. On the first start, before any fetch, when `repo.git` does not
+   exist: `git init --bare --initial-branch=empty repo.git`; set
+   `origin` from `run.json` with no force option and fetch refspec
+   `+refs/heads/*:refs/remotes/origin/*`; then
+   `git -C repo.git worktree add --orphan -b integrate-empty <RUN_ROOT>/worktrees/integrate`.
+   The driver requires `git worktree add --orphan`. The bare clone and
+   the integration worktree both exist before any fetch. Then, on every
+   start including the first: fetch `repo.git`. On that first start
+   only, `git -C worktrees/integrate switch --detach refs/remotes/origin/<projectMain>`.
+   If `refs/heads/integrate-empty` still exists,
+   `git -C repo.git update-ref -d refs/heads/integrate-empty`. Then run
+   the bundle check at the pinned commit; any error stops the start
+   with the error lines.
 4. Install the worker extension; if its hash differs from
    `driver.json`, print one line and record the new hash.
 5. If `inFlight` is set, the previous driver died mid-stage: write
@@ -1000,17 +1012,30 @@ worker-only checks.
    `invalidRepairs`), write `driver.json`, then take the pre-stage
    snapshot that the [post-stage checks](#post-stage-checks) for this
    stage kind need, and write `driver/snapshot.json`.
-5. **Run.** Print the start line. Model: call `adapter.runWorker`;
+5. **Run.** Print the start line, except a proving-command stage
+   while `landReentry` is set, which prints none
+   ([console mapping](#land-sub-machine)). Model: call
+   `adapter.runWorker`;
    after it returns, kill leftovers
    ([Pi adapter](#pi-adapter-and-worker-command-line)). Command: run
    the [command body](#command-body).
 6. **Checks.** Run the post-stage checks for this stage kind, whatever
-   the candidate or command result holds. The first failure is an
-   `operator` stop, kind `check failed: <check>`, and no repair runs.
-   On a model stage it writes a driver-authored `fail`
-   (`choice: operator`) naming the check and keeps `candidate.json`. On
-   a command stage it keeps the wrapper result and writes `check.json`.
-   Then go to step 11.
+   the candidate or command result holds. The first failure finishes
+   this stage and does not enter steps 7–11: on a model stage, write a
+   driver-authored `fail` (`choice: operator`) naming the check and
+   keep `candidate.json`; on a command stage, keep the wrapper result
+   and write `check.json`. Then clear `inFlight`, append `end`, print
+   the end line, and take an `operator` stop, kind
+   `check failed: <check>`. No repair runs.
+   A command stage whose checks pass clears `inFlight`, appends
+   `end`, prints the end line unless the console mapping omits it, and
+   routes by the command result's `choice`, unless
+   `items.*.land` is set: then the
+   [land sub-machine](#land-sub-machine) consumes the result and the
+   flow route does not. It does not run steps 7–11. When the command
+   result is `fail` and the checks passed, a proving-command stage
+   with `landReentry` set prints the command-fail line instead of the
+   end line.
 7. *(model)* **Validate.** The candidate is invalid if it is missing,
    fails the strict reader, fails item 1 or the
    [candidate rules](#flowjson), `timedOut` is true, or `modelError` is
@@ -1018,18 +1043,21 @@ worker-only checks.
    - Valid: go to step 8.
    - Invalid and `inFlight.invalidRepairs` is `0`: write a
      driver-authored `fail` (`choice: stop`, findings: the error codes
-     and messages) in this run folder and print
-     `invalid result … repair 1/1`. Go to step 11, which starts the
-     repair: a new stage for the same persona, resumed, with the fixed
-     `repair` prompt holding the errors, `invalidRepairs: 1`, and
-     `repairOf` naming this run. A repair does not count toward the
-     [repair counter](#repair-counter).
+     and messages) in this run folder, print
+     `invalid result … repair 1/1`, clear `inFlight`, append `end`, and
+     print the end line. Then start the repair: a new stage for the
+     same persona, resumed, with the fixed `repair` prompt holding the
+     errors, `invalidRepairs: 1`, and `repairOf` naming this run. A
+     repair does not count toward the
+     [repair counter](#repair-counter). Steps 8–11 do not run.
    - Invalid and `inFlight.invalidRepairs` is `1`: write a
-     driver-authored `fail` (`choice: stop`); keep both candidates; stop
-     kind `invalid result after repair`, with `resumeWith` the same
-     persona and the `answer` prompt. Go to step 11.
+     driver-authored `fail` (`choice: stop`); keep both candidates;
+     clear `inFlight`, append `end`, and print the end line. Stop kind
+     `invalid result after repair` points at this step, with
+     `resumeWith` the same persona and the `answer` prompt. Steps 8–11
+     do not run.
 
-   Steps 8–10 run only after a valid candidate.
+   Steps 8–11 run only after a valid candidate.
 8. *(model)* **Result.** Write `result.json`: the candidate, with each
    omitted fixed field filled from the invocation. If this was a mint
    and the session file now exists, record `sessions[persona]`; if the
@@ -1037,15 +1065,22 @@ worker-only checks.
    message), the next run is a mint again.
 9. *(model)* **Builder push.** After a builder run: check `lastPushed`
    is an ancestor of `HEAD`, push the item branch without force, and
-   record `lastPushed`. Not an ancestor: `operator` stop
-   (`pushed history rewritten`). A rejected push: `operator` stop with
-   the redacted error.
+   record `lastPushed`. Not an ancestor: finish this stage (clear
+   `inFlight`, append `end`, print the end line) and take an
+   `operator` stop (`pushed history rewritten`); do not continue. A
+   rejected push: the same finish, `operator` stop, with the redacted
+   error.
 10. *(model)* **Records.** For a chunk node with `outputs` or
     `outputDirs` and a `pass`, except a paperwork stage:
-    [design-record commit](#design-record-commits).
+    [design-record commit](#design-record-commits). A stop inside that
+    procedure finishes this stage the same way and does not continue.
 11. **Record and route.** Clear `inFlight`, append `end` to
-    `index.jsonl`, print the end line, then route: the stop or repair
-    that steps 6 or 7 chose, else by `choice`.
+    `index.jsonl`, print the end line, and route by `choice`. A
+    paperwork stage does not take this route:
+    [Design-record commits](#design-record-commits) step 7 does. A
+    manager stage routes by [Stops](#stops-and-the-manager). While
+    `items.*.land` is set, the land sub-machine consumes the result
+    and this step does not take the flow route.
 
 #### Command body
 
@@ -1107,7 +1142,7 @@ Per item: `repairs` (never reset), `sentBack`, and `fixPending`.
 | Event | Effect |
 | --- | --- |
 | Send-back: the `prove` node `fail`, the `verify` node `fail`, the `review` node `fail`, or a row-1 re-run `fix` ([Land](#land-sub-machine) L3a′) | If `fixPending`: `repairs += 1`. Then `fixPending = false`, `sentBack = true` |
-| Land-red: proving commands on the integration merge return `fix` ([Land](#land-sub-machine) L6r) | `repairs += 1`, whether or not `fixPending`; then `fixPending = false`, `sentBack = true`. L6 matches only this row, so it adds exactly one |
+| Land-red: proving commands on the integration merge return `fix` ([Land](#land-sub-machine) L6r only) | `repairs += 1` once, whether or not `fixPending`; then `fixPending = false`, `sentBack = true`. The counter matches this land-red row only, never the L6 green path |
 | A builder run starts while `sentBack` is true | `fixPending = true`, `sentBack = false` |
 | A builder run starts for `merge-tip` | No change |
 | `repairs` is 3 or more after an event | Do not resume the builder: `operator` stop, kind `repair budget exhausted`, with `resumeWith` = `builder-<suffix>` and the prompt kind the send-back would have sent: `test-failure` with the failing log path after a proving-command `fail` or land-red, else `fix` |
@@ -1162,9 +1197,13 @@ Rules this table encodes:
   | L2 `blocked` or `needs_input` | None | `STOP` line of kind `blocked` or `needs input`; no merge line |
 
   While `landReentry` is set, the item's lines use the label `Land`
-  and the start notes `fix`, `re-run`, and `re-review`, so the console
-  reads builder → verifier → reviewer as the story says. `index.jsonl`
-  and `result.json` keep the real node and step.
+  and the start notes `fix`, `re-run`, and `re-review`. A
+  proving-command stage in that stretch prints no start line and no
+  end line. When that command fails it prints the command-fail line
+  and nothing else. The persona lines are then the builder end line,
+  the verifier (`re-run`), and the reviewer (`re-review`): builder →
+  verifier → reviewer, as the story says. `index.jsonl` and
+  `result.json` keep the real node and step.
 - A failed push is classified by fetch and `git merge-base
   --is-ancestor`, never by parsing push output. The design-record push
   uses the same rule ([Design-record commits](#design-record-commits)
@@ -1292,10 +1331,17 @@ between stages.
 
 #### Tickets content check
 
-The `local` tickets branch is public on a public repo, so after every
-stage the driver compares it with the pre-stage tip `P`:
+The `local` tickets branch is public on a public repo. After every
+stage, including every worker stage, the driver diffs `origin/tickets`
+against the pre-stage tip `P`, and the `refs` check diffs every other
+ref. The only allowed paths are `tickets/<id>.md` for this stage's
+ticket and that ticket's `comments/`, and a comment body must equal
+the driver's comment template. Any other ref or path is
+`check failed` and an operator stop. `file-tickets` is the only
+exception, and only for the rows marked below.
 
-1. Fetch `tickets`; let `Q` be the new tip. `Q = P`: pass.
+1. Fetch `tickets`; let `Q` be the new tip. `P` is the pre-stage tip.
+   `Q = P`: pass.
 2. `git merge-base --is-ancestor P Q` must succeed.
 3. For each commit in `git rev-list --reverse P..Q`: exactly one parent;
    message exactly `[<id>] <verb>` with `<verb>` one of `create`,
@@ -1324,7 +1370,9 @@ path so the operator can tell a colleague's write from a worker's.
 
 Every git call by the driver sets `GIT_CONFIG_COUNT` to disable hooks
 (`core.hooksPath=/dev/null`), sets `GIT_NO_REPLACE_OBJECTS=1`, and has
-no force option in its code path. The only branch deletion is L9.
+no force option in its code path. The only deletion of a remote product branch is L9. The first-start
+local ref `integrate-empty` is removed with `git update-ref -d` after
+the detach, only if that ref still exists, and it is never pushed.
 
 #### Stops and the manager
 
@@ -1765,7 +1813,7 @@ manager (a worker); the kickoff session model (untrusted; writes
 | TB7 | Worker → result | `candidate.json` | Strict validation; only validated fields route; prose never routes | Enforced |
 | TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit, path, front-matter line, and comment body | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
 | TB9 | Driver → tracker | One read per check | The repo skill's `local` read recipe as fixed git argv; ids checked against the key pattern | Enforced |
-| TB10 | Driver and workers → git remote | Pushes with the operator's credentials | Driver code has no force option; pushes only item branches and project-main; L9 is the only deletion; moved tips decided by `merge-base --is-ancestor`; the `refs` check compares every remote ref around every stage | Enforced for the driver; worker pushes detected after the stage, public before it (operator accepts in writing) |
+| TB10 | Driver and workers → git remote | Pushes with the operator's credentials | Driver code has no force option; pushes only item branches and project-main; L9 is the only remote deletion; moved tips decided by `merge-base --is-ancestor`; the `refs` check compares every remote ref around every stage | Enforced for the driver; worker pushes detected after the stage, public before it (operator accepts in writing) |
 | TB11 | Worker → model provider | Prompt, repo content, tool output | Local model by default; a paid slot requires the spending record | Enforced at start |
 | TB12 | Proving commands | Shell lines | Only from the frozen, reviewed `groom.md` blob and the pinned bundle; hash per run | Enforced |
 | TB13 | Run root → git | Design records | Only declared outputs, regular files, scanned; the operator may allow a non-credential hit; a credential hit is revise-only | Enforced |
@@ -1887,10 +1935,11 @@ Driver scenarios, each a test:
    third failed fix, and the land-red event counting exactly once.
    Resuming a budget stop resumes `builder-<suffix>` with the pending
    `test-failure` or `fix` prompt, and the next failed fix stops again.
-3. Invalid candidate, repair in a new run folder, valid; invalid twice →
-   `invalid result after repair`; a driver killed during the repair run
-   restarts with `invalidRepairs: 1` and stops on the next invalid
-   result.
+3. Invalid candidate, repair in a new run folder, valid; the invalid
+   run does not enter steps 8–11 (no push, no design-record commit).
+   Invalid twice → `invalid result after repair` at step 7; a driver
+   killed during the repair run restarts with `invalidRepairs: 1` and
+   stops on the next invalid result.
 4. Manager `resume`, `defer`, `escalate`; manager invalid → driver-written
    ask; operator-only stops reject `resume`.
 5. Gate answer writes `operator/run-N/result.json` with
@@ -1898,12 +1947,13 @@ Driver scenarios, each a test:
    `trial-kickoff.md` and prints its path; a missing heading stops.
    Paperwork `posted` passes candidate rule 2.
 6. Land: tip unchanged; tip moved → clean (row 1, `tip merged clean`) →
-   done; tip moved → conflict resolved (row 2, `tip merged, conflicts
-   resolved`) → verifier, reviewer, all labelled `Land`; clean then a
-   fix → Review with `reviewBase` at the clean commit; builder `blocked`
-   on merge; push rejected by a concurrent push → L1; push rejected by a
-   pre-receive hook with the tip unchanged → L7x, whatever the hook
-   prints; post-land verifier `fail`.
+   done; tip moved → conflict or a different tree (row 2, `tip merged,
+   conflicts resolved`) → verifier, then reviewer, all labelled `Land`,
+   with a green prove printing no line; clean then a fix → Review with
+   `reviewBase` at the clean commit; builder `blocked` on merge; push
+   rejected by a concurrent push → L1; push rejected by a pre-receive
+   hook with the tip unchanged → L7x, whatever the hook prints;
+   post-land verifier `fail`.
 7. Each post-stage check fires on its misbehavior, including `refs`,
    `tickets` (comment text, other ticket, ticket body, commit message),
    and `extension` (no marker → `check failed: extension`, no repair).
@@ -1922,8 +1972,10 @@ Driver scenarios, each a test:
     text. A path hit → `scan-hit`, `allow` commits.
 13. A proving command and a worker see none of the denylisted
     variables.
-14. A bundle commit outside `reviewedRefs` needs the full SHA typed
-    back.
+14. A bundle commit outside trunk and project-main shows the full
+    SHA, both ancestor results, and the `scripts/` and persona hashes;
+    the answer must equal that SHA. A script that has not cleared
+    INTAKE stops the start first.
 
 **Pi checks** (item 6 acceptance, on the operator's machine with Pi
 0.73.1 and one local model; manual, gated by `SDLC_PI_SMOKE=1`; they
@@ -2008,7 +2060,10 @@ proving commands green; docs current (package READMEs for 5 to 7); one
     `bash`.
 11. Driven runs support only the `local` backend in this chunk (security
     ruling S1). This is the HLD's own rule applied: the kickoff stops
-    without a no-model `read` recipe, and only `local` has one.
+    without a no-model `read` recipe, and only `local` has one. The
+    draft clarification that tracker reads use built-in readers is
+    withdrawn. The HLD's read-command sentence stands, and this LLD
+    does not replace it.
 12. The HLD's per-item remote-tip compare for the verifier and reviewer
     becomes the `refs` check on every remote ref after every stage, and
     tracker comment text moves from residual to detected by the tickets
@@ -2062,7 +2117,7 @@ credentials for Linear on Pi.
 | S7 | Environment of workers and proving commands | Fixed denylist; hygiene, not a boundary; proving lines only from the frozen blob and pinned defaults | [Environment scrub](#environment-scrub) |
 | S8 | Pinned `typescript` dev dependency | Accepted | Trust boundaries |
 | S9 | Bundle commit outside reviewed history | Full SHA, ancestor results, `scripts/` and persona hashes shown; the SHA typed back; `scripts/` clear INTAKE | [`run.json`](#runjson), [Bundle layout](#bundle-layout-and-bundlemd) |
-| Pi pin | Harness supply chain | `integrity` and `treeSha256` in `run.json`, checked at start; 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
+| Pi pin | Harness supply chain | npm `integrity` recorded at install; `treeSha256` (binary hash, or package-tree hash) recorded in `run.json` and checked at every start; 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
 
 ### Questions for the operator
 
@@ -2073,7 +2128,7 @@ credentials for Linear on Pi.
 | O3 | Ticket filing end state: Groom says `ready` and Epic `in_progress`; the HLD table says `backlog` | Follow Groom; the HLD row gets a clarification |
 | O4 | Same-item claim rule: contract v2 or v3 | Settled by security ruling S5: v2, with kickoff checking the repo skill for the same-item sentence. No answer needed |
 | O5 | Linear for driven runs | Driven runs use `local` only in this chunk. Linear, driver reads and worker writes, becomes G9, blocked by G6, with its own LLD addendum and security gate; it carries S1 and S2. Accept |
-| O6 | Pi version: `@mariozechner/pi-coding-agent` 0.73.1 (every Pi fact here was read in it; the registry marks it deprecated) or `@earendil-works/pi-coding-agent` 1.x (the maintained line; facts not yet checked) | Pin 0.73.1 for G6, with `integrity` and `treeSha256` recorded and checked at start, because the Pi facts table and the T1–T6 fallbacks were read there. Moving to 1.x is a later item that re-reads the facts table at 1.x and reruns P1–P7. If the operator picks 1.x now, G6's first task is that re-read; nothing else in this LLD names the package |
+| O6 | Pi version: `@mariozechner/pi-coding-agent` 0.73.1 (every Pi fact here was read in it; the registry marks it deprecated) or `@earendil-works/pi-coding-agent` 1.x (the maintained line; facts not yet checked) | Pin 0.73.1 for G6. Record npm `integrity` at install and `treeSha256` in `run.json`; check `treeSha256` at every start. The Pi facts table and the T1–T6 fallbacks were read at 0.73.1. Moving to 1.x is a later item that re-reads the facts table at 1.x and reruns P1–P7. If the operator picks 1.x now, G6's first task is that re-read; nothing else in this LLD names the package |
 | O7 | Skill ids `test-failure-handler`, `bundle-authoring`, `sdlc-followed-mode`, `sdlc-kickoff` | Accept |
 | O8 | Item 5 split into G5a–G5c | Let Groom split it; with the split, G3 waits only for G5a |
 | O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | Accept in writing at the `spec` gate. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal; Pi's example bubblewrap extension is a later option after intake |
