@@ -5,7 +5,8 @@
   already started as DER-529)
 - Brief: DER-421 brief v3, confirmed by the operator 2026-10-18 (tracker
   copy: a comment on DER-421). This HLD is written from that brief only.
-- Date: `2026-10-18`; fix round 1 after the adversarial review, same day
+- Date: `2026-10-18`; fix rounds 1 and 2 after the adversarial
+  reviews, same day
 - Status: **draft, awaiting operator acceptance**
 
 ## Required
@@ -161,6 +162,12 @@ Each error names the node and exit ([ux.md](ux.md#journeys) J9). The
 comparables node has `comparables.md` as its required output and the
 HLD node has `hld.md`, so the comparables page exists before the HLD
 is written.
+
+The tip-merge re-check in
+[Land](#land-and-post-land-verifier) step 1 runs inside the `land`
+node, not on a flow path. It re-runs the proving commands and the
+verifier only for a clean merge; any other change leaves the `land`
+node for the proving-command node, so the last row still holds.
 
 ### Modes
 
@@ -402,12 +409,19 @@ repo files.
    builder, then commands, verifier, and Review again.
 
 **Repair budget.** Each item has one repair counter. A **failed fix**
-is a builder pass made after a check sent the item back (proving
-commands, verifier, reviewer, or the land commands), followed by any
-check sending the item back again. Each failed fix adds one. The
-counter covers every check and does not reset, not even when a check
-passes. When the third failed fix happens, the driver does not resume
-the builder: it stops with the `operator` exit, an operator gate. An
+is either of these events:
+
+- A builder pass made after a check sent the item back (proving
+  commands, verifier, reviewer, or the land commands), followed by any
+  check sending the item back again.
+- A red run of the proving commands on the integration merge
+  ([Land](#land-and-post-land-verifier) step 3), whether or not the
+  builder pass before it was a fix.
+
+Each failed fix adds one; one event adds at most one. The counter
+covers every check and does not reset, not even when a check passes.
+When the third failed fix happens, the driver does not resume the
+builder: it stops with the `operator` exit, an operator gate. An
 invalid result gets one repair attempt (Driver step 4); that attempt
 does not count as a fix.
 
@@ -415,16 +429,33 @@ does not count as a fix.
 
 After the reviewer passes:
 
-1. The driver fetches. If project-main's tip moved since the item last
-   merged it, the driver resumes the builder with a fixed prompt to
-   merge the tip; then the commands and the verifier re-run. Repeat
-   until the tip is unchanged.
+1. The driver fetches. If project-main's tip is unchanged since the item
+   last merged it, go to step 2. If the tip moved, the driver resumes
+   the builder with a fixed prompt to merge the tip into the item
+   branch, pushes the item branch, and routes by what the builder did:
+
+   | Builder outcome | Driver check | Next |
+   | --- | --- | --- |
+   | Clean tip merge | `git merge-tree --write-tree` of the previous item tip and the new project-main tip succeeds without conflicts, and its tree equals the tree of the item's new `HEAD` | The proving commands and the verifier re-run; then step 1 again |
+   | Any file changed beyond a clean merge, such as a conflict resolution or another commit | The tree differs, or `merge-tree` reports a conflict | The usual path: proving commands, verifier, then Review; then step 1 again |
+   | A conflict the builder cannot resolve | The builder's result is `blocked` | Stop, per [Stops and the manager](#stops-and-the-manager) |
+
+   A `fail` on either path sends the item back to the builder as in
+   [Verification](#verification-and-the-test-failure-path).
 2. The driver merges the item into `integrate/<chunk-slug>` in its own
    integration worktree, at the fetched tip, with the ticket id and a
    `Reviewed-by: <reviewer-label> (<verdict>)` trailer.
-3. It runs the proving commands on that merge. Green → push without
-   force. Red, or push rejected → discard the local merge (driver
-   worktree only) and go back to step 1.
+3. It runs the proving commands on that merge, then routes:
+
+   | Outcome | Next |
+   | --- | --- |
+   | Green, push accepted | Step 4 |
+   | Green, push rejected because the tip moved | Discard the local merge (driver worktree only); return to step 1 |
+   | Red | Discard the local merge. Resume the builder with the log path, as in [Verification](#verification-and-the-test-failure-path) step 4. Count one failed fix on the item's counter ([Repair budget](#verification-and-the-test-failure-path)); on the third, take the `operator` exit instead of resuming the builder. The builder's fix then takes the usual path: proving commands, verifier, Review, then step 1 |
+
+   No path retries the same merge: a rejected push returns to step 1
+   only because the tip moved, and a red run goes back through the
+   builder and counts toward the repair budget.
 4. It resumes the item's verifier with the land SHA and the command
    results.
 5. Verifier `pass`: the verifier moves the item to `done` and comments
@@ -432,11 +463,12 @@ After the reviewer passes:
    the item's state; only when it reads `done` does the driver delete
    the item branch, remove the item worktree, and move to the next
    ready item. The manager is not woken for this.
-6. Verifier `fail`, `blocked`, or `needs_input`: the driver stops with
-   the `operator` exit. It leaves the pushed merge on project-main,
-   keeps the item branch and worktree, and the item is not `done`. The
-   operator decides what happens next. Items that depend on this one
-   stay blocked; other runnable items continue.
+6. Verifier `fail`, `blocked`, or `needs_input`: the verifier moves the
+   item back to `in_progress` and comments its result; the driver stops
+   with the `operator` exit. It leaves the pushed merge on
+   project-main, keeps the item branch and worktree, and the item is
+   not `done`. The operator decides what happens next. Items that
+   depend on this one stay blocked; other runnable items continue.
 
 Notify only when landed+verified: the console's `done` line follows
 step 5.
@@ -449,12 +481,17 @@ Other people and agents share project-main and the `tickets` branch.
 - Branch each item from the fetched project-main tip.
 - Merge one item at a time; the driver runs one merge at a time.
 - Push without force. A push rejected because the tip moved → fetch,
-  redo the merge or commit on the new tip, push again. The driver's push
+  redo the merge or commit on the new tip, push again; for a land, that
+  is [Land](#land-and-post-land-verifier) step 1. The driver's push
   command has no force option.
-- The builder merges the tip into the item branch and does not rebase a
-  pushed branch (detected: [Writable sets](#writable-sets-and-enforcement)).
-  The driver pushes the item branch after each builder pass.
-- If the tip moved, the builder merges it and the verifier re-runs.
+- In-flight builders merge the tip into the item branch and never
+  rebase a pushed branch (detected:
+  [Writable sets](#writable-sets-and-enforcement)). The driver pushes
+  the item branch after each builder pass.
+- If the tip moved, the re-checks depend on the builder's merge, per
+  [Land](#land-and-post-land-verifier) step 1: a clean merge re-runs
+  the proving commands and the verifier; any other change also re-runs
+  Review before land; a conflict the builder cannot resolve is a stop.
 - Writes to the `tickets` branch go only through the `local` adapter's
   write recipe, which fetches, does not force-push, and retries only
   when the ref moved
@@ -506,16 +543,30 @@ Each persona claims under its own agent label, the persona folder name
 (for example `builder-abc-12`, `verifier-abc-12`). The manager's label
 is `manager`.
 
+**Comment fields.** Tracker comments are public. Every comment the run
+writes, from a worker or the manager, carries exactly these fields:
+
+- the ticket id (the Epic id for a chunk stage);
+- the stage status;
+- the run folder, relative to the run root (for example
+  `verifier-abc-12/run-4/`).
+
+Only the post-land verifier's `pass` comment adds three more: the land
+SHA, its result, and the reviewer verdict. No comment holds an absolute
+path, a log, a prompt, or Gather text ([ux.md](ux.md#high-level-ux),
+SD-24). Claim markers keep the shape in
+[`tracker-sdlc` Claim](../../../skills/tracker-sdlc/SKILL.md#claim).
+
 | Persona | Writes, before it exits, whatever the outcome | State after the stage |
 | --- | --- | --- |
-| Builder, every pass | `claim` (claim steps 1–4); `comment` | `in_progress` |
-| Verifier, before land | `claim`; `comment` the ledger verdict | `in_progress` |
-| Reviewer, every pass | `claim`; at the start, `transition` to `in_review` (claim step 5 first); `comment` the verdict | `in_review` |
-| Verifier, post-land, `pass` | `claim`; `transition` to `done`; `comment` land SHA, result, reviewer verdict | `done` |
-| Verifier, post-land, not `pass` | `claim`; `comment` the result | `in_progress` |
-| Step personas (architect, designer, …) | `comment` the repo-relative path of their artifact on the Epic | Epic unchanged |
+| Builder, every pass | `claim` (claim steps 1–4); `comment` the comment fields | `in_progress` |
+| Verifier, before land | `claim`; `comment` the comment fields, with the ledger verdict as the status | `in_progress` |
+| Reviewer, every pass | `claim`; at the start, `transition` to `in_review` (claim step 5 first); `comment` the comment fields, with the verdict as the status | `in_review` |
+| Verifier, post-land, `pass` | `claim`; `transition` to `done`; `comment` the comment fields plus the land SHA, its result, and the reviewer verdict | `done` |
+| Verifier, post-land, not `pass` | `claim`; `transition` back to `in_progress`; `comment` the comment fields | `in_progress` |
+| Step personas (architect, designer, …) | `comment` the comment fields on the Epic | Epic unchanged |
 | Manager, ticket filing | `create` the Epic's tickets after the groom review passes; `set-blocker` | Each planned ticket exists in `backlog` under the Epic, with its planned blockers |
-| Manager, stops | `comment` on stops and escalations | Unchanged |
+| Manager, stops | `comment` the comment fields on stops and escalations | Unchanged |
 
 - **Claims across roles on one item are not collisions.** In claim
   steps 1 and 4, a marker or assignee whose label is `builder-`,
@@ -535,8 +586,6 @@ is `manager`.
   Workers hold the harness's full tracker access. A write the state
   check cannot see, such as comment text, a write to another ticket, or
   a change reverted before the check, is residual risk.
-- Tracker comments cite repo-relative paths only, never absolute paths
-  or run-root paths.
 
 ### Kickoff
 
@@ -599,7 +648,7 @@ node.
 | Builder ≠ verifier ≠ reviewer; resume, never re-mint per loop | One persona folder and session file per role per item; the driver resumes each and replaces none without the operator |
 | Proving commands and DoD | Driver-run commands, read from the committed `groom.md` blob; verifier checks DoD |
 | Three failed fixes → operator | One counter per item that does not reset; the third failed fix takes the `operator` exit |
-| Review before every land, with security reads | Bundle check: every Build-to-land path passes Verify then Review; a Review `pass` without the three security checks is an invalid result |
+| Review before every land, with security reads | Bundle check: every Build-to-land path passes Verify then Review; a tip merge skips a second Review only when the driver finds it clean; a Review `pass` without the three security checks is an invalid result |
 | Serialized lands, `Reviewed-by` trailer, no force-push | Driver land steps |
 | `done` only after land + verify | Post-land verifier is the only persona whose expected state is `done`; the tracker-state check fails any other |
 | Notify only when landed+verified | Console `done` line after the post-land verifier passes |
@@ -624,11 +673,13 @@ confirmed brief (2026-10-18) and this HLD's acceptance, and
 | Claim steps 1 and 4: any other agent's marker is a collision | [`tracker-sdlc` Claim](../../../skills/tracker-sdlc/SKILL.md#claim) | A `builder-`, `verifier-`, or `reviewer-` label with the same ticket id is the same item, not a collision |
 | The manager transitions the item to `in_review` when Review starts | [Review](../../../docs/sdlc/build-review.md#review) step 1 | The reviewer does, at the start of each pass. The operator's direction: the last persona in the loop does the paperwork rather than waking the manager |
 | The manager marks `done` and comments land SHA, verifier result, verdict | [Land path](../../../docs/sdlc/branches-and-lands.md#land-path) | The post-land verifier does; the driver deletes the item branch only after it reads `done` |
-| The manager posts the HLD and LLD path on the Epic | [Plan](../../../docs/sdlc/plan-trial-spec.md#plan) step 7, Spec step 3 | The architect does, as a repo-relative path |
+| The manager posts the HLD and LLD path on the Epic | [Plan](../../../docs/sdlc/plan-trial-spec.md#plan) step 7, Spec step 3 | The architect comments on the Epic with only the [Tracker](#tracker) comment fields; the run folder it names holds the HLD or LLD under `out/` at its repo-relative path |
 | The architect commits and pushes Plan and Spec drafts | [Plan](../../../docs/sdlc/plan-trial-spec.md#plan) steps 3, 5, 6; Spec step 2 | The architect writes them to its run folder and scans them; the driver commits and pushes ([Design-record commits](#design-record-commits)) |
 | The manager sets the land order | [Land path](../../../docs/sdlc/branches-and-lands.md#land-path) | The driver follows the Groom plan order |
+| After an item lands, in-flight builders rebase or merge project-main | [Branches](../../../docs/sdlc/branches-and-lands.md#branches) | In-flight builders merge project-main into the item branch and never rebase a pushed branch ([Git on shared branches](#git-on-shared-branches)) |
+| The landing builder de-conflicts against the project-main tip; then its verifier is resumed | [Branches](../../../docs/sdlc/branches-and-lands.md#branches), [Project-main](../../../docs/sdlc/branches-and-lands.md#project-main) | Per the manager's ruling: a clean tip merge re-runs only the proving commands and the verifier; any change beyond a clean merge, such as a conflict resolution, also re-runs Review before land; a conflict the builder cannot resolve is a stop ([Land](#land-and-post-land-verifier) step 1) |
 | Resume fails, or a transcript passes half the window or is compacted → replace the agent | [Fallback](../../../docs/sdlc/subagents.md#fallback) | Not replaced; compaction from `state.md`; a lost session is a stop and only the operator approves a replacement |
-| Three failed fixes → stop and ask the operator | [`debug`](../../../skills/debug/SKILL.md) phase 4, [Asking the operator](../../../docs/SDLC.md#asking-the-human) | One counter per item, across every check, that does not reset; the third failed fix is the operator gate |
+| Three failed fixes → stop and ask the operator | [`debug`](../../../skills/debug/SKILL.md) phase 4, [Asking the operator](../../../docs/SDLC.md#asking-the-human) | One counter per item, across every check, that does not reset; a red run of the land proving commands counts as a failed fix; the third failed fix is the operator gate |
 | Model stage: absent or invalid output → harness emits `fail` | [Stage result](../../../docs/sdlc/stage-result.md#rules) | One repair attempt first, then `fail` |
 | Schema has four top-level fields | [Stage result](../../../docs/sdlc/stage-result.md#schema) | Adds `schemaVersion`, `choice`, `ticket`, `artifact` (item 1, in place) |
 
@@ -759,6 +810,8 @@ flowchart LR
   V -- pass --> RV[Review]
   RV -- fail --> B
   RV -- pass --> L[Land: merge, commands, push]
+  L -- red: one failed fix --> B
+  L -- tip moved, not a clean merge --> P
   L --> PV[Post-land verifier]
   PV -- pass: done --> D
   PV -. not pass .-> O
