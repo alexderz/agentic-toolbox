@@ -58,8 +58,9 @@ designer's page: [ux.md](ux.md#comparables).
   different model than the builder. Deny writes to read-only personas in
   the harness's own permission system where it has one. A new session
   with an empty transcript as the clean mint for a worker.
-- **Won't copy** — Delegation chosen by a primary agent: that is an
-  orchestrator agent, which the brief rules out. Compaction by a
+- **Won't copy** — Delegation chosen by a primary agent: that is a
+  coordinating agent that dispatches workers, which the brief rules
+  out. Compaction by a
   generic summarizer agent: here the worker's own `state.md` plus
   driver facts build the summary.
 
