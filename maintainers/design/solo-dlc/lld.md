@@ -11,16 +11,24 @@
 - Date: `2026-10-18`; fix round 1 after the security and adversarial
   reviews of 34e1278; cleanup round 2 after the security and LLD
   re-reviews of de7c438 passed, applying their recommendations, same day;
-  fix round 4 adds the [driver-file ledger](#driver-file-ledger)
+  fix round 4 adds the [driver-file ledger](#driver-file-ledger);
+  the OpenCode-first revision, same day, makes OpenCode the first
+  harness on the operator's decision
+  ([clarification](#clarifications-of-the-hld-made-here) 16)
 - Status: **draft, awaiting operator acceptance.** The security
-  re-review of de7c438 passed. Architect acceptance is this draft.
+  re-review of de7c438 passed. The OpenCode-first revision changes the
+  harness-specific rows of [Trust boundaries](#trust-boundaries);
+  **security** re-reads them. Architect acceptance is this draft.
   Groom and Build start only after **security** and then the operator accept it
   ([Security gate](../../../docs/sdlc/plan-trial-spec.md#security-gate)).
 - Spec entry gate: the offline `tracker-sdlc` setup check passed on
   2026-10-18 (`maintainers/AGENTS.md` `## Tracker` names
   `.agents/tracker/SKILL.md`; that file says `Contract: tracker-sdlc v2`).
-- Trial: not run. Every fact the HLD marks for the Trial (T1–T6) has a
-  chosen design and a fallback in
+- Trial: not run; the operator accepted O1, no separate Trial
+  (2026-10-18). OpenCode facts read in 1.19.3 source, and the OpenCode
+  Trial checks O-T1–O-T10 with their fallbacks, are in
+  [opencode-server.md](opencode-server.md). Every Pi fact the HLD marks
+  for the Trial (T1–T6) has a chosen design and a fallback in
   [Trial-dependent decisions](#trial-dependent-decisions). Facts read
   from Pi's published 0.73.1 source are cited in
   [Pi facts](#pi-facts-checked-in-0731-source).
@@ -62,11 +70,11 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
 | `skills/test-failure-handler/SKILL.md` | 3 | New first-party skill, `SOURCES.md` row |
 | `skills/tracker-sdlc/SKILL.md`, `adapters/local.md` | 3 | Same-item claim rule (protected rules: rule maps, **security** read) |
 | One-line routes in `docs/SDLC.md`, `docs/sdlc/subagents.md`, `build-review.md`, `branches-and-lands.md`, `plan-trial-spec.md`, `stage-result.md`, `skills/debug/SKILL.md` | 3 | Each route names the rule and links `bundle-runs.md` |
-| `packages/sdlc-driver/` | 5 | Core driver: TypeScript, Node built-ins only, no Pi dependency |
-| `packages/pi-sdlc/` | 6 | Pi plugin: `/sdlc`, the Pi adapter, the detached driver entry, the worker extension, the smoke test |
+| `packages/sdlc-driver/` | 5 | Core driver: TypeScript, Node built-ins only, no harness dependency |
+| `maintainers/design/solo-dlc/opencode-server.md` | Spec | OpenCode server note: the facts read in 1.19.3 and the Trial checks O-T1–O-T10. Exists; item 7 is groomed from it |
+| `packages/opencode-sdlc/` | 7 | First harness. OpenCode plugin: the TUI `/sdlc` command, the operator-session input guard, the OpenCode adapter, the detached driver entry, the worker plugin, the smoke test |
+| `packages/pi-sdlc/` | 6 | Second harness. Pi plugin: `/sdlc`, the Pi adapter, the detached driver entry, the worker extension, the smoke test |
 | `skills/bundle-authoring/SKILL.md` | 4 | New skill |
-| `maintainers/design/solo-dlc/opencode-server.md` | 7 | One-page OpenCode server note; G7's first deliverable ([Groom split](#groom-split-proposal)) |
-| `packages/opencode-sdlc/` | 7 | OpenCode plugin, hosting the same core |
 | `skills/sdlc-followed-mode/SKILL.md`, `skills/sdlc-kickoff/SKILL.md` | 8 | New skills |
 | `CHANGELOG.md` | all | One line under `## Unreleased` per item |
 
@@ -81,7 +89,7 @@ A third-party bundle is copied into `bundles/<id>/` only after
 **Package layout.**
 
 ```text
-packages/sdlc-driver/          # core; no runtime dependency; no Pi import
+packages/sdlc-driver/          # core; no runtime dependency; no harness import
   package.json                 # private; "type": "module"; engines node >=22.18
   tsconfig.json                # strict; erasableSyntaxOnly; noEmit
   README.md
@@ -104,7 +112,19 @@ packages/sdlc-driver/          # core; no runtime dependency; no Pi import
     prompts.ts  facts.ts  scan.ts  console.ts  labels.ts  env.ts
     adapter.ts                 # HarnessAdapter interface
   test/                        # node:test; fixtures from docs/sdlc/fixtures; fake worker
-packages/pi-sdlc/              # Pi plugin, a Pi package
+packages/opencode-sdlc/        # item 7, first harness: OpenCode plugin package
+  package.json                 # private; "exports": {"./tui": "./src/tui.ts", "./server": "./src/server.ts"}
+  src/tui.ts                   # TUI plugin: /sdlc and /sdlc-stop palette commands, dialogs, toasts
+  src/server.ts                # operator-session server plugin: input guard (chat.message)
+  src/opencode-adapter.ts      # HarnessAdapter for OpenCode: argv, env, worker config, process groups
+  src/worker-config.ts         # builds OPENCODE_CONFIG_CONTENT for one stage
+  src/driver-main.ts           # detached driver entry: core.run(RUN_ROOT, opencodeAdapter)
+  src/cli.ts                   # O-T7 fallback only: the /sdlc steps on a terminal
+  src/opencode-types.ts        # hand-written minimal types for the plugin API used
+  worker/sdlc-worker.ts        # worker plugin; self-contained; loaded only by the worker config
+  test/                        # node:test with a fake `opencode`
+  smoke/                       # end-to-end smoke on real OpenCode; manual
+packages/pi-sdlc/              # item 6, second harness: Pi plugin, a Pi package
   package.json                 # "pi": {"extensions": ["./extensions/sdlc.ts"]}
   extensions/sdlc.ts           # registers /sdlc and /sdlc-stop; input guard; widget
   src/pi-adapter.ts            # HarnessAdapter for Pi: argv, env, process groups
@@ -113,13 +133,15 @@ packages/pi-sdlc/              # Pi plugin, a Pi package
   worker/sdlc-worker.ts        # worker extension; self-contained; NOT in the manifest
   test/                        # node:test with a fake `pi`
   smoke/                       # end-to-end smoke on real Pi; manual
-packages/opencode-sdlc/        # item 7: HarnessAdapter for OpenCode
 ```
 
-The worker extension is not listed in the Pi package manifest, so the
-operator's own Pi session never loads it. `src/pi-types.ts` replaces a
-dev dependency on the Pi package; the smoke test checks it against real
-Pi.
+Neither worker file is listed where the operator's own session loads
+plugins: the OpenCode worker plugin is not in the package `exports`,
+and the Pi worker extension is not in the Pi package manifest. Only
+the worker's own config or `--extension` flag names the hashed copy.
+`src/opencode-types.ts` and `src/pi-types.ts` replace dev dependencies
+on `@opencode-ai/plugin` and the Pi package; each smoke test checks its
+types against the real harness.
 
 ### Behavior 1: stage result v1 (item 1)
 
@@ -255,7 +277,7 @@ nesting, anchors, or comments. Anything else is `persona.frontmatter`.
 | `scope` | yes | `chunk` or `item` |
 | `readOnly` | yes | `true` or `false`. Must be `true` when `job` is `refiner`, `ux-reviewer`, `security`, `groom-reviewer`, `verifier`, or `reviewer` |
 | `model` | yes | A model slot name in `run.json` `models` |
-| `tools` | yes | Subset of Pi's built-in names `read`, `bash`, `edit`, `write`, `grep`, `find`, `ls`. With `readOnly: true`, no `edit` or `write` |
+| `tools` | yes | Subset of the neutral names `read`, `bash`, `edit`, `write`, `grep`, `find`, `ls`, which are Pi's built-in names; the OpenCode adapter maps them to permission rules ([OpenCode adapter](#opencode-adapter-and-worker-command-line)). With `readOnly: true`, no `edit` or `write` |
 | `skills` | yes | Skill ids packed into the mint prompt; `[]` allowed |
 | `tracker` | yes | `true`: pack `tracker-sdlc` and the repo tracker skill |
 
@@ -376,7 +398,8 @@ exits apply as above unless the row says otherwise.
 
 **Candidate rules.** A worker writes `candidate.json` with the
 `sdlc_result` tool or with `sdlc_write`
-([Worker extension](#worker-extension)).
+([Worker plugin (OpenCode)](#worker-plugin-opencode),
+[Worker extension](#worker-extension) for Pi).
 
 1. `schemaVersion`, `step`, `ticket`, and `evidence.kind` may be
    omitted; when present they must equal the invocation's values
@@ -663,11 +686,14 @@ RUN_ROOT/
   driver/driver.stderr # the detached driver's stdout and stderr
   driver/facts/<persona>--run-N.md   # facts passed to that run
   driver/worker-ext/sdlc-worker-<sha12>.ts
+  driver/worker-config/<persona>--run-N.json   # OpenCode: the worker config passed to that run
+  driver/opencode/xdg-config/        # OpenCode: the workers' XDG_CONFIG_HOME; holds only an empty opencode/, mode 0500
   repo.git/            # driver's bare clone of the product repo
   worktrees/integrate/ # integration worktree, detached at project-main
   worktrees/<suffix>/  # one item worktree
   gatherer/run-1/      # kickoff: brief.md, gather session copy
-  <persona>/session.jsonl            # the persona's Pi session
+  <persona>/opencode.db              # OpenCode: the persona's session database, with its -wal and -shm files
+  <persona>/session.jsonl            # Pi: the persona's session file
   <persona>/run-N/     # see Run folder
   prove-<suffix>/run-N/  land-<suffix>/run-N/  commands/run-N/  operator/run-N/
 ```
@@ -691,9 +717,13 @@ personas and never write to the tracker.
   "tracker": {"backend": "local", "skill": ".agents/tracker/SKILL.md",
               "keyPattern": "^der-[a-z0-9]{4}$", "local": {"branch": "tickets"}},
   "mode": "enforced",
-  "harness": {"name": "pi", "package": "@mariozechner/pi-coding-agent", "version": "0.73.1",
-              "bin": "/abs/path/to/pi", "integrity": "sha512-<base64>",
-              "treeSha256": "<hex>"},
+  "harness": {"name": "opencode", "package": "opencode-ai", "version": "1.19.3",
+              "bin": "/abs/path/to/opencode", "node": "/abs/path/to/node",
+              "integrity": {"opencode-ai": "sha512-<base64>", "opencode-linux-x64": "sha512-<base64>"},
+              "treeSha256": "<hex>",
+              "providers": {"local": {"npm": "@ai-sdk/openai-compatible",
+                                      "options": {"baseURL": "<local model endpoint>"},
+                                      "models": {"qwen-coder": {"limit": {"context": 131072, "output": 16384}}}}}},
   "models": {"default": {"model": "local/qwen-coder", "contextWindow": 131072, "paid": false}},
   "spending": null,
   "labels": {"mode": "plain"},
@@ -713,28 +743,44 @@ personas and never write to the tracker.
   Linear for driven runs, both the driver's reads and the workers'
   writes, is the later item G9 with its own security gate
   ([Groom split](#groom-split-proposal), O5).
-- `harness.bin` is the absolute path of the `pi` executable; the
-  optional `harness.node` is the Node binary for the detached driver.
-- **Harness pin.** `harness.package` and `harness.version` name the Pi
-  release; the text supports both `@mariozechner/pi-coding-agent`
-  0.73.1 and `@earendil-works/pi-coding-agent` 1.x, and the operator
-  picks one (O6). Kickoff installs that exact version with npm, which
-  checks the registry's `dist.integrity` while it installs, and records
-  that value as `harness.integrity`. Kickoff then records
-  `harness.treeSha256`: when `harness.bin` is a compiled binary, the
-  SHA-256 of that file; otherwise the SHA-256 of the sorted list of
-  `<path> <sha256>` lines for every regular file under the installed
-  package folder, its `node_modules/` included. An installed package
-  keeps no tarball to re-check `integrity` against, so the
-  [Start](#start) check uses `treeSha256`.
-- `models.<slot>.model` is the Pi `--model` value. A slot with
+- `harness.name` is `opencode` (item 7, the first harness) or `pi`
+  (item 6). `harness.bin` is the absolute path of the `opencode` or `pi`
+  executable. `harness.node` is the Node binary for the detached
+  driver: required for OpenCode, whose TUI runs on its own compiled
+  runtime, and for Pi's compiled binary; optional for Pi on Node.
+- **Harness pin.** `harness.package` and `harness.version` name the
+  release. OpenCode: `opencode-ai` 1.19.3, the version
+  [opencode-server.md](opencode-server.md) was read at. Pi: the text
+  supports both `@mariozechner/pi-coding-agent` 0.73.1 and
+  `@earendil-works/pi-coding-agent` 1.x, and the operator picks one
+  (O6). Kickoff installs that exact version with npm, which checks the
+  registry's `dist.integrity` of each package while it installs, and
+  records those values in `harness.integrity`, keyed by package name:
+  for OpenCode, `opencode-ai` and the platform package whose binary its
+  `postinstall` copies into `bin/`. Kickoff then records
+  `harness.treeSha256`: when `harness.bin` is a compiled binary, as
+  OpenCode's is, the SHA-256 of that file; otherwise the SHA-256 of the
+  sorted list of `<path> <sha256>` lines for every regular file under
+  the installed package folder, its `node_modules/` included. An
+  installed package keeps no tarball to re-check `integrity` against,
+  so the [Start](#start) check uses `treeSha256`.
+- `harness.providers` (OpenCode only): the `provider` entries that the
+  model slots name, copied by kickoff from the operator's resolved
+  OpenCode config. Kickoff refuses an entry whose `options` hold
+  `apiKey` or any header value; credentials stay in OpenCode's own
+  store (Model credentials in [Trust boundaries](#trust-boundaries)).
+  It also refuses an entry whose `npm` package is not one the pinned
+  binary bundles, so no provider package is downloaded at run time.
+  Each model's `limit.context` equals the slot's `contextWindow`.
+- `models.<slot>.model` is the harness `--model` value,
+  `provider/model` for both harnesses. A slot with
   `"paid": true` requires `spending` = `{"askId": "kickoff-1",
   "approvedAt": "<UTC>", "text": "<the operator's words>"}`.
 - `env.scrubExtra`: variable names added to the fixed denylist in
   [Environment scrub](#environment-scrub). It can only add names.
 - At the first `/sdlc`, and whenever its hash changes, the plugin shows
   a summary of `run.json` (bundle commit, repo, tracker, harness pin,
-  models, spending, labels) and records the operator's yes as
+  OpenCode providers, models, spending, labels) and records the operator's yes as
   `runJsonSha256` in `driver.json`. No yes, no run.
 - **Bundle commit outside reviewed history (S9, N2, N4).** The driver
   derives the reviewed refs itself and never reads them from
@@ -774,7 +820,7 @@ personas and never write to the tracker.
   "runJsonSha256": "<hex>",
   "bundle": {"commit": "<40-hex>", "checkedAt": "<UTC>"},
   "worker": {"extension": "driver/worker-ext/sdlc-worker-1a2b3c4d5e6f.ts",
-             "sha256": "<hex>", "harnessVersion": "0.73.1"},
+             "sha256": "<hex>", "harnessVersion": "1.19.3"},
   "chunk": {"node": "spec", "state": "active", "stop": null, "askId": null,
             "pendingRoute": null, "unposted": null},
   "groom": {"path": "maintainers/design/solo-dlc/groom.md", "recordCommit": "<sha>",
@@ -785,7 +831,7 @@ personas and never write to the tracker.
                  "lastPushed": "<sha>", "reviewBase": "<sha>",
                  "stop": null, "askId": null}
   },
-  "sessions": {"builder-der-a530": {"path": "builder-der-a530/session.jsonl",
+  "sessions": {"builder-der-a530": {"path": "builder-der-a530/opencode.db", "id": "ses_<id>",
                "state": "live", "packed": ["tdd", "yagni", "debug"]}},
   "runs": {"builder-der-a530": 5, "prove-der-a530": 4},
   "inFlight": null,
@@ -810,6 +856,7 @@ personas and never write to the tracker.
 | `stop` | `{"kind", "run", "operatorOnly", "resumeWith"}` while the manager handles a stop. `resumeWith` is `{"persona", "prompt", "log"}`: who the driver resumes, and with which prompt kind, when the answer is `resume` |
 | `sessions.*.state` | `live`, `lost` (stopped; ask open), `replaced` (minted again on the operator's answer; the old file is kept as `session.lost-<UTC>.jsonl`) |
 | `sessions.*.packed` | Skill ids already in that session's transcript |
+| `sessions.*.path`, `sessions.*.id` | The persona's session file: the OpenCode database or the Pi `session.jsonl`. `id`: the OpenCode session id the adapter read at the mint; `null` for Pi, whose file is the session |
 | `groom.recordCommit` | The last `groom.md` commit the driver pushed ([Design-record commits](#design-record-commits) step 6) |
 | `inFlight` | `{"run", "scope", "node", "kind", "prompt", "repairOf", "invalidRepairs", "recordCommit", "pid", "startedAt"}` while a stage runs. `kind` is `model` or `command`. `invalidRepairs` is `1` on an invalid-result repair stage, else `0`; `repairOf` names the run it repairs. `recordCommit` is `null` until [Design-record commits](#design-record-commits) step 5 sets it, before each push, to the commit that push sends; it is the only value the [pushed record exception](#start) trusts |
 | `projectMainSeen` | The project-main tip the driver last fetched outside a worker stage or last pushed ([Post-stage checks](#post-stage-checks)) |
@@ -861,13 +908,15 @@ never reads proving commands from it.
 
 `kind` is `gate` (choices = the gate's exit names), `lost-session`
 (choices `replace`, `defer`), `scan-hit` (choices `allow`, `revise`),
-`scan-secret` (choices `revise`, `defer`; never `allow`), `pi-dir`
-(choices `allow`, `defer`), or `operator-stop` (free text). An answer is
+`scan-secret` (choices `revise`, `defer`; never `allow`), `pi-dir` or
+`opencode-dir` (choices `allow`, `defer`), or `operator-stop` (free
+text). An answer is
 `{"choice": "<one of choices or null>", "text": "<verbatim>", "at": "<UTC>"}`.
 `ask-N.md` renders the same fields with the message and the answer
 verbatim. Answers are recorded only by the plugin's `/sdlc` handler, in
 the operator's interactive session, while no driver holds the lock
-([Host shape](#host-shape-and-sdlc)).
+([OpenCode host shape](#opencode-host-shape-and-sdlc),
+[Pi host shape](#pi-host-shape-and-sdlc)).
 
 #### Run folder
 
@@ -885,7 +934,7 @@ the operator's interactive session, while no driver holds the lock
 | `commands.json` | driver | Command stages: one entry per command: index, line, exit code, duration, log path |
 | `check.json` | driver | Command stages only: the post-stage check that failed, when one did |
 | `<extract>.md` | driver | Gate results only: the section an exit's `extract` copied, such as `trial-kickoff.md` |
-| `logs/` | driver, extension | `worker.jsonl` (Pi's JSON stream), `worker.stderr`, `ext.json` (extension load marker; missing → `check failed: extension`), `prove-K.log` |
+| `logs/` | driver, extension | `worker.jsonl` (the harness's JSON stream: `opencode run --format json` or Pi's `--mode json`), `worker.stderr`, `ext.json` (extension or worker-plugin load marker; missing → `check failed: extension`), `prove-K.log` |
 | `interrupted.json` | driver | Present when the run was interrupted; such a folder never gets `result.json` and is never reused. Holds `recordCommit`, for people, when the pushed record exception's pushed case applied ([Start](#start) step 5) |
 
 #### Driver facts
@@ -945,23 +994,39 @@ The core knows no harness. A plugin passes a `HarnessAdapter`:
 
 ```ts
 interface HarnessAdapter {
-  name: string;                                   // "pi", "opencode", "test"
+  name: string;                                   // "opencode", "pi", "test"
   checkVersion(pinned: string): Promise<string>;  // returns the actual version
   installWorkerExtension(runRoot: string): Promise<{path: string; sha256: string}>;
-  sessionLooksValid(path: string): Promise<boolean>;
+  sessionLooksValid(session: SessionRef, cwd: string): Promise<boolean>;
+  preflight(spec: WorkerSpec): Promise<Preflight>; // before each spawn; no model call
   runWorker(spec: WorkerSpec, signal: AbortSignal): Promise<WorkerExit>;
   ui: {line(text: string): void; notify(kind: "stop" | "ask" | "done", text: string): void};
 }
+interface SessionRef { path: string; id: string | null }  // id: OpenCode session id; null for Pi
 interface WorkerSpec {
-  persona: string; job: string; mint: boolean; sessionPath: string;
+  persona: string; job: string; mint: boolean; session: SessionRef;
   runDir: string; promptPath: string; cwd: string; tools: string[];
   model: string; env: Record<string, string>; timeoutSec: number; logDir: string;
 }
 interface WorkerExit {
   exitCode: number | null; signal: string | null; timedOut: boolean;
-  modelError: string | null;                      // adapter-specific: Pi stopReason error/aborted
+  modelError: string | null;   // OpenCode: exit 1 or an `error` line; Pi: stopReason error/aborted
+  sessionId: string | null;    // OpenCode: the id from the first stream line; Pi: null
+  sessionMissing: boolean;     // OpenCode: `Session not found` on a resume
 }
+type Preflight =
+  | {ok: true}
+  | {stop: "harness-dir"; askKind: "pi-dir" | "opencode-dir"; path: string; treeHash: string}
+  | {check: "harness-config"; detail: string};
 ```
+
+`preflight` returns `harness-dir` for a folder the adapter refuses
+until the operator allows it (Pi: `.pi/` in the cwd; OpenCode:
+`~/.opencode/` or `/etc/opencode/`), and `harness-config` when the
+harness would load configuration the driver did not write. The
+[stage pipeline](#stage-pipeline) step 5 turns them into stops.
+`sessionMissing` makes the stage a `session lost` stop, like a failed
+pipeline step 2.
 
 The core API is `prepare(runRoot, adapter)` (lock check, validation,
 the found report, pending asks) and `run(runRoot, adapter)` (the loop).
@@ -1105,9 +1170,14 @@ worker-only checks.
    `harness.treeSha256` from the stat cache ([Start](#start) step 2);
    a mismatch finishes the stage as a failed check
    (`check failed: harness`, step 6) without spawning. Then call
-   `adapter.runWorker`;
+   `adapter.preflight`: `harness-config` finishes the stage the same
+   way (`check failed: harness-config`) without spawning;
+   `harness-dir` is an `operator` stop with its ask kind, unless
+   `driver.json` records an `allow` for that path and tree hash. Then
+   call `adapter.runWorker`;
    after it returns, kill leftovers
-   ([Pi adapter](#pi-adapter-and-worker-command-line)). Command: run
+   ([OpenCode adapter](#opencode-adapter-and-worker-command-line),
+   [Pi adapter](#pi-adapter-and-worker-command-line)). Command: run
    the [command body](#command-body).
 6. **Checks.** Run the post-stage checks for this stage kind, whatever
    the candidate or command result holds, `snapshot` first
@@ -1151,9 +1221,10 @@ worker-only checks.
    Steps 8–11 run only after a valid candidate.
 8. *(model)* **Result.** Write `result.json`: the candidate, with each
    omitted fixed field filled from the invocation. If this was a mint
-   and the session file now exists, record `sessions[persona]`; if the
-   file does not exist (Pi writes it only after the first assistant
-   message), the next run is a mint again.
+   and the session file now exists, record `sessions[persona]`, with
+   `WorkerExit.sessionId` as `id` for OpenCode; if the file does not
+   exist (Pi writes it only after the first assistant message), or
+   OpenCode reported no id, the next run is a mint again.
 9. *(model)* **Builder push.** After a builder run: check `lastPushed`
    is an ancestor of `HEAD`, push the item branch without force, and
    record `lastPushed`. Not an ancestor: finish this stage (clear
@@ -1215,8 +1286,8 @@ worker-only checks.
 Workers and proving commands start with the operator's environment
 minus:
 
-- every `SDLC_*` variable (the adapter then sets the worker's own),
-  and `PI_CODING_AGENT_SESSION_DIR`;
+- every `SDLC_*` and `OPENCODE_*` variable (the adapter then sets the
+  worker's own), and `PI_CODING_AGENT_SESSION_DIR`;
 - the fixed denylist: `LINEAR_API_KEY`, `LIN_API_KEY`, `GH_TOKEN`,
   `GITHUB_TOKEN`, `NPM_TOKEN`, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`,
   every name matching `AWS_*`, and every name ending in `_KEY`,
@@ -1225,8 +1296,10 @@ minus:
 
 This is hygiene, not a boundary. A worker or a proving command can still
 read any credential file the operator can read and can use the
-operator's git credential helper or SSH agent. Pi reads model
-credentials from its own configuration; a model slot whose key comes
+operator's git credential helper or SSH agent. The harness reads model
+credentials from its own store: OpenCode from `auth.json` in its data
+folder, which the worker environment leaves at the operator's default;
+Pi from its configuration. A model slot whose key comes
 from a scrubbed variable cannot start, and the kickoff's model line
 checks each slot's key source and stops with that reason. Proving lines
 come only from the frozen `groom.md` blob and the pinned bundle's
@@ -1483,13 +1556,13 @@ step 4) records what each check compares.
 
 | Check | After | How |
 | --- | --- | --- |
-| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file, `worktrees/`, `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
+| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file (OpenCode: `opencode.db` and its `-wal` and `-shm` files), `worktrees/`, `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
 | `worktrees` | every stage | For each worktree outside the stage's writable set: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `inFlight.recordCommit` in `driver.json`, never a value from the run folder ([Start](#start) step 5) |
 | `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns. A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `inFlight.recordCommit` in `driver.json` ([Start](#start) step 5) |
 | `tickets` | every stage | [Tickets content check](#tickets-content-check) |
 | `ancestry` | builder stages | `lastPushed` is an ancestor of `HEAD` (pipeline step 9) |
 | `project-main` | every worker stage | Fetch; let `M0` be `projectMainSeen` and `M1` the fetched tip. For each active item with `HEAD` `H`, no commit in `git rev-list H ^M0 ^<each commit in lands>` is also in `git rev-list M1 ^M0`. Then `projectMainSeen = M1` |
-| `extension` | worker stages | `logs/ext.json` exists and names this persona and facts hash. Missing or wrong: `check failed: extension`, an `operator` stop with no repair, because the stage ran without the path guard and the compaction hook |
+| `extension` | worker stages | `logs/ext.json` exists and names this persona and facts hash; for OpenCode it also names the persona's agent, the agent the worker plugin saw in `chat.message`. Missing or wrong: `check failed: extension`, an `operator` stop with no repair, because the stage ran without the path guard and the compaction hook, or under another agent's permissions |
 | `tracker-state` | worker stages | [Tracker-state check](#tracker-state-check) |
 
 **`projectMainSeen`.** The driver also sets it to the tip it fetches at
@@ -1623,7 +1696,8 @@ persona label
 **Driver-set identity.** The adapter sets `GIT_AUTHOR_NAME` and
 `GIT_COMMITTER_NAME` to `<label>`, and `GIT_AUTHOR_EMAIL` and
 `GIT_COMMITTER_EMAIL` to `<label>@sdlc.invalid`, in every worker's
-environment ([Pi adapter](#pi-adapter-and-worker-command-line)). Git
+environment ([OpenCode adapter](#opencode-adapter-and-worker-command-line),
+[Pi adapter](#pi-adapter-and-worker-command-line)). Git
 gives these variables precedence over `user.name` and `user.email`, so
 the `local` recipe's commits carry them, and so do a builder's item
 commits. A tickets commit with any other value fails, whoever made
@@ -1680,10 +1754,11 @@ the detach, only if that ref still exists, and it is never pushed.
 | `operator gate: <tag>` | A gate node | `escalate` | `gate` |
 | `operator: <question>` | Worker chose `operator` | `escalate` | `operator-stop` |
 | `repair budget exhausted` | Repair counter | `escalate` | `operator-stop` |
-| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), the pre-spawn `harness` re-check, `extract`, `unexpected session file`, `pushed history rewritten` | `escalate` | `operator-stop` |
+| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), the pre-spawn `harness` re-check, the pre-spawn `harness-config` preflight, `extract`, `unexpected session file`, `pushed history rewritten` | `escalate` | `operator-stop` |
 | `scan hit` | Design-record step 3, no credential hit | Not resumed: the driver writes the ask | `scan-hit` |
 | `scan hit: credential` | Design-record step 3, a credential hit | Not resumed: the driver writes the ask | `scan-secret` |
-| `session lost: <file>` | Pipeline step 2 | `escalate` | `lost-session` |
+| `session lost: <file>` | Pipeline step 2, or `WorkerExit.sessionMissing` | `escalate` | `lost-session` |
+| `OpenCode config folder: <path>` | `~/.opencode/` or `/etc/opencode/` exists ([OpenCode adapter](#opencode-adapter-and-worker-command-line)) | `escalate` | `opencode-dir` |
 | `project Pi files: <path>` | `.pi/` in a worker cwd ([Pi adapter](#pi-adapter-and-worker-command-line)) | `escalate` | `pi-dir` |
 | `post-land verify failed` | L9 | `escalate` | `operator-stop` |
 
@@ -1819,9 +1894,238 @@ id for the chunk. `<L>` is the node `label`, padded to 7.
 `driver/console.log` holds every line. No color carries meaning, and no
 worker transcript goes to the console.
 
-### Behavior 6: Pi plugin and worker extension (item 6)
+### Behavior 6: harness plugins (item 7 OpenCode first, item 6 Pi second)
 
-#### Host shape and `/sdlc`
+Both plugins host the same core through the
+[adapter interface](#adapter-interface). Item 7, OpenCode, is built and
+proven first, because the operator's first tests run in OpenCode
+([clarification](#clarifications-of-the-hld-made-here) 16). Item 6, Pi,
+follows. The OpenCode facts, read in 1.19.3 source, and the Trial
+checks O-T1–O-T10 with their fallbacks are in
+[opencode-server.md](opencode-server.md); this section fixes the design.
+
+#### OpenCode host shape and `/sdlc`
+
+**Chosen: a detached driver process**, the shape the HLD
+[Trial question](hld.md#trial-question) assumes without a Trial. It
+depends on O-T7; the fallback is in
+[opencode-server.md](opencode-server.md#trial-checks).
+
+`src/tui.ts`, a TUI plugin with default export `{id: "sdlc", tui}`,
+registers two palette commands with `api.keymap.registerLayer`, each
+with a `slashName`, and no tool. Picking a command from the
+autocomplete or the palette runs it in the TUI process with no model
+turn. Neither takes an argument, so each asks for the run root.
+
+`/sdlc`:
+
+1. Refuse when `SDLC_RUN_DIR` is set (a worker process), or when the
+   TUI's own argv holds `--port`, `--hostname`, or `--mdns`: with those
+   flags the TUI opens a server listener that a worker's `bash` could
+   use to drive the TUI.
+2. Ask for `RUN_ROOT` with `api.ui.DialogPrompt`, prefilled with the
+   last run root from `api.kv`, and resolve it to an absolute path. If
+   a live driver holds the lock: show its status and pending asks in
+   `api.ui.DialogAlert`, say that answers are recorded when it is idle
+   or after `/sdlc-stop`, and return.
+3. `core.prepare`: show validation errors in `DialogAlert`; the
+   `run.json` confirmation in `DialogConfirm`, or in `DialogPrompt`
+   when the answer must equal the full bundle SHA; the found report;
+   and each pending ask in full. For each ask, `DialogSelect` offers its
+   choices plus `not now`, then `DialogPrompt` takes the text;
+   `core.recordAnswer` stores it.
+4. Append the run root to `roots.json` in the plugin's state folder,
+   `$XDG_STATE_HOME/opencode-sdlc/`, for the input guard in step 6.
+5. Spawn `harness.node src/driver-main.ts RUN_ROOT` with `detached:
+   true` (a new session and process group), stdin closed, stdout and
+   stderr to `driver/driver.stderr`, and `unref()`. The TUI runs inside
+   the compiled `opencode` binary, so `process.execPath` is not Node.
+6. Start a two-second timer that calls `api.ui.toast` for each new
+   `STOP`, ask, or `done` line of `driver/console.log` and shows its
+   last 12 lines in the `sidebar_content` slot (`api.slots.register`).
+   If O-T7 shows the slot cannot render plain text, the toasts stay and
+   `/sdlc` shows the `tail -f RUN_ROOT/driver/console.log` line.
+
+**Input guard.** `src/server.ts`, a server plugin in the operator's own
+OpenCode, throws in `chat.message` when a text part starts with
+`/sdlc`, and for any prompt while the lock of a run root in
+`roots.json` is held by a live process. The throw fails the prompt
+before OpenCode saves the message or calls a model, and its text
+reads `driver running: one large-model session at a time` or
+`pick /sdlc from the command list`. No server command named `sdlc`
+exists, because a server command always runs a model turn. Depends on
+O-T8; the fallback is in the note and is operator question
+[O11](#questions-for-the-operator).
+
+`/sdlc-stop` asks for the run root, then sends `SIGTERM` to the lock
+holder after checking its process start time. The driver then kills
+the worker's process group, waits for any git critical section, writes
+`interrupted.json`, releases the lock, and exits (SD-12).
+
+Item 7's README gives the install lines: the package folder path in the
+`plugin` list of the operator's `tui.json` and `opencode.json`. OpenCode
+loads each entry by kind from the package `exports`, and loads
+TypeScript directly. The README checks the lines on 1.19.3.
+
+#### OpenCode adapter and worker command line
+
+```text
+<harness.bin> run --format json [--session <sessions[persona].id>]
+  --agent <label> --model <run.json models[slot].model>
+  --title "<label> run-N" --dir <cwd>
+  < RUN_ROOT/<persona>/run-N/prompt.md
+```
+
+| Part | Why |
+| --- | --- |
+| `run --format json`, no positional message | Headless, one process, no TCP listener; the prompt arrives on stdin, which `opencode run` joins into the message |
+| `--session <id>` | Absent on a mint, which creates a root session with no parent and an empty transcript; present on a resume. A missing id exits `1` with `Session not found` |
+| `--agent <label>` | The per-stage agent in the worker config, holding the persona's permission rules |
+| `--title` | A set title skips OpenCode's title model call |
+| `--model`, `--dir` | The slot's `provider/model`; the persona's cwd |
+
+- **cwd:** builder, verifier, reviewer: `worktrees/<suffix>`. Chunk
+  personas: `worktrees/integrate`.
+- **Worker config:** `src/worker-config.ts` builds it per stage, keeps
+  it in `driver/worker-config/<persona>--run-N.json` (a
+  [driver file](#driver-file-ledger)), and passes the same text in
+  `OPENCODE_CONFIG_CONTENT`. It holds the keys the note's
+  [Chosen shape](opencode-server.md#chosen-shape) lists, the providers
+  from `run.json` `harness.providers`, and one agent named for the
+  persona label with the permission rules of the note's
+  [Tools per persona](opencode-server.md#tools-per-persona), built from
+  the persona's `tools` and `readOnly`. The `external_directory` allow
+  list names the run root and the system temporary folder.
+- **Preflight** (`adapter.preflight`), before each spawn, with no model
+  call:
+  1. `~/.opencode/` or `/etc/opencode/` exists: OpenCode reads both
+     whatever the environment says. Return `harness-dir` with ask kind
+     `opencode-dir` and the SHA-256 of the sorted `<path> <sha256>`
+     list of the folder's files. An `allow` holds until that hash
+     changes.
+  2. Run `<harness.bin> debug config` with the worker's environment and
+     cwd. Its `plugin`, `agent`, `permission`, `mcp`, `instructions`,
+     `command`, and `provider` must equal the worker config's, apart
+     from OpenCode's built-in agents. Any other entry returns
+     `harness-config`, naming the key. This catches the layers the
+     environment cannot switch off: remote and organization config tied
+     to the operator's OpenCode login.
+- **Environment:** the scrubbed environment of
+  [Environment scrub](#environment-scrub); plus:
+
+  | Variable | Value |
+  | --- | --- |
+  | `SDLC_RUN_DIR` | Absolute run folder |
+  | `SDLC_RUN_REL` | Run folder relative to the run root |
+  | `SDLC_PERSONA`, `SDLC_JOB`, `SDLC_TICKET`, `SDLC_STEP` | The invocation |
+  | `SDLC_WRITABLE` | JSON array of absolute paths: the run folder, plus the item worktree for the builder |
+  | `SDLC_EXITS` | JSON array of `{"name", "statuses"}`, reserved exits included as the worker may use them |
+  | `SDLC_CHECKS`, `SDLC_OUTPUTS` | JSON arrays from the node |
+  | `SDLC_FACTS`, `SDLC_FACTS_SHA256` | [Driver facts](#driver-facts) |
+  | `GIT_AUTHOR_NAME`, `GIT_COMMITTER_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_EMAIL` | `<label>`, `<label>`, `<label>@sdlc.invalid`, `<label>@sdlc.invalid`: the [driver-set identity](#tickets-content-check) |
+  | `OPENCODE_DB` | `RUN_ROOT/<persona>/opencode.db` |
+  | `OPENCODE_CONFIG_CONTENT` | The worker config |
+  | `XDG_CONFIG_HOME` | `RUN_ROOT/driver/opencode/xdg-config`, holding one empty `opencode/` folder; the driver creates both at each start and sets `opencode/` to mode `0500`, because OpenCode creates that folder at start-up and fails if it cannot |
+  | `SDLC_XDG_CONFIG_HOME` | The operator's `XDG_CONFIG_HOME`, empty when unset; the worker plugin restores it for `bash` |
+  | `OPENCODE_DISABLE_PROJECT_CONFIG`, `OPENCODE_DISABLE_CLAUDE_CODE`, `OPENCODE_DISABLE_AUTOUPDATE`, `OPENCODE_DISABLE_MODELS_FETCH`, `OPENCODE_DISABLE_LSP_DOWNLOAD` | `1` ([note](opencode-server.md#chosen-shape)) |
+
+  With project config off, the product repo's `opencode.json`,
+  `.opencode/`, `AGENTS.md`, and `CLAUDE.md` do not load, so the cwd
+  needs no refusal like Pi's `.pi/`.
+- **Process:** spawned with `detached: true` so the worker leads its own
+  process group; stdout to `logs/worker.jsonl`, stderr to
+  `logs/worker.stderr`. On timeout or `/sdlc-stop`: `SIGTERM` to the
+  group, 20 seconds, then `SIGKILL`.
+- **Leftovers:** after the worker exits, the adapter sends `SIGTERM` to
+  the group and, on Linux, to every process of the same user whose
+  `/proc/<pid>/environ` holds this `SDLC_RUN_DIR`. A process that
+  cleared its environment escapes: residual.
+- **Outcome:** exit `1`, or an `error` line in `worker.jsonl`, sets
+  `modelError`. `Session not found` on a resume sets `sessionMissing`.
+  The first line's `sessionID` is `sessionId`. A stream with no line
+  means the worker never started.
+- **`sessionLooksValid`:** the database file exists, starts with the
+  SQLite header, and `<harness.bin> session list --format json`, run
+  with the persona's `OPENCODE_DB` and cwd, lists exactly
+  `sessions[persona].id`.
+
+#### Worker plugin (OpenCode)
+
+`worker/sdlc-worker.ts`: one file, imported only from Node built-ins.
+Tool args are plain JSON Schema, so it needs no `zod`. The driver copies
+it into `driver/worker-ext/` at each start, and the worker config names
+that copy by `file://` URL, so the `snapshot` check covers it through
+the [driver-file ledger](#driver-file-ledger).
+
+1. **Load.** Parse every `SDLC_*` variable; check `SDLC_FACTS_SHA256`.
+   Any error throws; OpenCode then logs and skips the plugin, so the
+   marker is missing. At init, write `logs/ext.json`
+   (`{"persona", "factsSha256", "version"}`) with `fs` directly; on the
+   first `chat.message`, add `"agent"` from the hook input. A missing
+   or wrong marker has one outcome: the post-stage `extension` check
+   fails, an `operator` stop with no repair.
+2. **`tool.execute.before` guard.** For `write` and `edit`, take
+   `args.filePath`; for `apply_patch`, every path on a `*** Add File:`,
+   `*** Update File:`, `*** Delete File:`, or `*** Move to:` line of
+   `args.patchText`. Resolve each path: a leading `~/` is the home
+   folder; a relative path is against the process cwd. Resolve
+   symbolic links on the deepest existing ancestor and on the target if
+   it exists. Allow only a path inside an `SDLC_WRITABLE` entry, with no
+   `.git` path component, and, inside the run folder, not `prompt.md`,
+   `result.json`, `meta.json`, `commands.json`, `interrupted.json`, or
+   `logs/`. Otherwise throw an error that names the writable set; the
+   throw rejects the tool call. The whole handler sits in `try`; any
+   error throws.
+3. **`sdlc_write`.** Parameters `{path, content}`. `path` is relative to
+   the run folder and matches
+   `^(candidate\.json|result\.md|state\.md|ledger\.json|ask-human\.md|out/[A-Za-z0-9._/-]+)$`
+   with no `.` or `..` segment. Parent folders are created one by one
+   and checked to be real folders. The file opens with
+   `O_WRONLY|O_CREAT|O_TRUNC|O_NOFOLLOW`, mode `0600`. Content at most
+   1 MiB; `state.md` at most 60 lines and 6,000 characters, else an
+   error that says to shorten it. The tool checks the types of its own
+   args, because OpenCode does not validate JSON Schema args.
+4. **`sdlc_result`.** Parameters `status` (enum of the four statuses),
+   `choice` (enum of the names in `SDLC_EXITS`), `findings`,
+   `artifact`, `checks` (array of strings), `blocker`, and `question`.
+   OpenCode makes every JSON Schema property required, so an unused
+   `checks` is `[]` and an unused `blocker` or `question` is `""`. It
+   applies the shape rules of item 1 and candidate rules 2, 3, and 5,
+   returns the errors to the model in the same turn, and writes
+   `candidate.json` only when they pass. The driver validates again;
+   the tool is advisory. Its tests run the shared fixtures, so the two
+   stay in step.
+5. **Compaction summary.** The deterministic summary is:
+
+   ```text
+   # Compaction summary (sdlc worker, not a model)
+   ## Persona
+   <SDLC_PERSONA> (<SDLC_JOB>) for <SDLC_TICKET>, step <SDLC_STEP>.
+   Current run folder: <SDLC_RUN_REL>. Write files only with sdlc_write;
+   finish with sdlc_result.
+   ## State (state.md, at most one page)
+   <state.md, first 60 lines>
+   ## Driver facts (written by the driver)
+   <SDLC_FACTS, verbatim>
+   ```
+
+   A missing `state.md` is replaced by one line saying so.
+   `experimental.session.compacting` sets `output.prompt` to an
+   instruction to return that text verbatim.
+   `experimental.chat.messages.transform` replaces the text of every
+   `summary: true` message with it on each model request, so the model
+   sees the deterministic summary whatever the compaction agent wrote.
+   `experimental.chat.system.transform` appends the driver-facts block
+   to every request's system prompt. No handler cancels a compaction.
+6. **`shell.env`.** Returns `{XDG_CONFIG_HOME: SDLC_XDG_CONFIG_HOME}`,
+   so `bash` and `git` see the operator's setting.
+
+The plugin registers no command and reads no file outside the run
+folder except its own load-time constants.
+
+#### Pi host shape and `/sdlc`
+
+Item 6, the second harness, blocked by item 7; its Pi version is O6.
 
 **Chosen: a detached driver process** (HLD
 [Trial question](hld.md#trial-question): without a Trial result, Spec
@@ -1886,37 +2190,21 @@ uses `run.json` `harness.node`.
 | `--tools` | Allowlist for built-in and extension tools; read-only personas get no `write` or `edit` |
 | `--model` | `provider/id[:thinking]` from the persona's slot |
 
-- **cwd:** builder, verifier, reviewer: `worktrees/<suffix>`. Chunk
-  personas: `worktrees/integrate`.
-- **Project Pi files:** before each start, the driver refuses a cwd
+- **cwd:** as in the [OpenCode adapter](#opencode-adapter-and-worker-command-line).
+- **Project Pi files:** in `adapter.preflight`, before each start, the driver refuses a cwd
   that contains `.pi/`, because Pi reads project settings,
   `.pi/SYSTEM.md`, and `.pi/APPEND_SYSTEM.md` from there. This is an
   `operator` stop with ask kind `pi-dir` (choices `allow`, `defer`). An
   `allow` is recorded in `driver.json` with the git tree hash of that
   `.pi/` folder and holds until the tree changes.
 - **Environment:** the scrubbed environment of
-  [Environment scrub](#environment-scrub); plus:
+  [Environment scrub](#environment-scrub); the `SDLC_*` and `GIT_*`
+  rows of the [OpenCode table](#opencode-adapter-and-worker-command-line),
+  with the same values; plus `PI_OFFLINE=1`: Pi skips its start-up
+  network calls and version check. No `OPENCODE_*` variable is set.
 
-  | Variable | Value |
-  | --- | --- |
-  | `SDLC_RUN_DIR` | Absolute run folder |
-  | `SDLC_RUN_REL` | Run folder relative to the run root |
-  | `SDLC_PERSONA`, `SDLC_JOB`, `SDLC_TICKET`, `SDLC_STEP` | The invocation |
-  | `SDLC_WRITABLE` | JSON array of absolute paths: the run folder, plus the item worktree for the builder |
-  | `SDLC_EXITS` | JSON array of `{"name", "statuses"}`, reserved exits included as the worker may use them |
-  | `SDLC_CHECKS`, `SDLC_OUTPUTS` | JSON arrays from the node |
-  | `SDLC_FACTS`, `SDLC_FACTS_SHA256` | [Driver facts](#driver-facts) |
-  | `GIT_AUTHOR_NAME`, `GIT_COMMITTER_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_EMAIL` | `<label>`, `<label>`, `<label>@sdlc.invalid`, `<label>@sdlc.invalid`: the [driver-set identity](#tickets-content-check) |
-  | `PI_OFFLINE` | `1`: Pi skips its start-up network calls and version check |
-
-- **Process:** spawned with `detached: true` so the worker leads its own
-  process group; stdout to `logs/worker.jsonl`, stderr to
-  `logs/worker.stderr`. On timeout or `/sdlc-stop`: `SIGTERM` to the
-  group, 20 seconds, then `SIGKILL`.
-- **Leftovers:** after the worker exits, the adapter sends `SIGTERM` to
-  the group and, on Linux, to every process of the same user whose
-  `/proc/<pid>/environ` holds this `SDLC_RUN_DIR`. A process that
-  cleared its environment escapes: residual.
+- **Process, leftovers:** as in the
+  [OpenCode adapter](#opencode-adapter-and-worker-command-line).
 - **Outcome:** Pi's JSON mode exits `0` even when the model call fails.
   The adapter reads the last `agent_end` event in `worker.jsonl`; when
   the last assistant message's `stopReason` is `error` or `aborted`,
@@ -1939,49 +2227,22 @@ the `snapshot` check covers it through the
    (`{"persona", "factsSha256", "version"}`) with `fs` directly. A
    missing or wrong marker has one outcome: the post-stage `extension`
    check fails, an `operator` stop with no repair.
-2. **`tool_call` guard.** For `write` and `edit`: resolve `input.path`
-   (a leading `~/` is the home folder; relative paths against the
-   process cwd); resolve symbolic links on the deepest existing
-   ancestor and on the target if it exists. Allow only a path inside a
-   `SDLC_WRITABLE` entry, with no `.git` path component, and, inside the
-   run folder, not `prompt.md`, `result.json`, `meta.json`,
-   `commands.json`, `interrupted.json`, or `logs/`. Otherwise return
-   `{block: true, reason}` naming the writable set. The whole handler
-   sits in `try`; any error blocks. Pi also blocks the call when a
-   `tool_call` handler throws.
-3. **`sdlc_write`.** Parameters `{path, content}`. `path` is relative to
-   the run folder and matches
-   `^(candidate\.json|result\.md|state\.md|ledger\.json|ask-human\.md|out/[A-Za-z0-9._/-]+)$`
-   with no `.` or `..` segment. Parent folders are created one by one
-   and checked to be real folders. The file opens with
-   `O_WRONLY|O_CREAT|O_TRUNC|O_NOFOLLOW`, mode `0600`. Content at most
-   1 MiB; `state.md` at most 60 lines and 6,000 characters, else an
-   error that says to shorten it.
-4. **`sdlc_result`.** Parameters `status`, `choice` (a TypeBox union of
-   the names in `SDLC_EXITS`), `findings`, `artifact`, and the optional
-   `checks`, `blocker`, `question`. It applies the shape rules of item 1
-   and candidate rules 2, 3, and 5, returns the errors to the model in
-   the same turn, and writes `candidate.json` only when they pass. The
-   driver validates again; the tool is advisory. Its tests run the
-   shared fixtures, so the two stay in step.
+2. **`tool_call` guard.** For `write` and `edit`, apply the path rules
+   of the [OpenCode guard](#worker-plugin-opencode) point 2 to
+   `input.path`. A path they refuse returns `{block: true, reason}`
+   naming the writable set. The whole handler sits in `try`; any error
+   blocks. Pi also blocks the call when a `tool_call` handler throws.
+3. **`sdlc_write`.** As the OpenCode plugin's point 3, with TypeBox
+   parameters, which Pi validates.
+4. **`sdlc_result`.** As the OpenCode plugin's point 4, with `choice` a
+   TypeBox union of the names in `SDLC_EXITS`, and `checks`, `blocker`,
+   and `question` optional.
 5. **`session_before_compact`.** Returns
    `{compaction: {summary, firstKeptEntryId, tokensBefore}}`, the last
-   two from `event.preparation`. The summary:
-
-   ```text
-   # Compaction summary (worker extension)
-   ## Persona
-   <SDLC_PERSONA> (<SDLC_JOB>) for <SDLC_TICKET>, step <SDLC_STEP>.
-   Current run folder: <SDLC_RUN_REL>. Write files only with sdlc_write;
-   finish with sdlc_result.
-   ## State (state.md, at most one page)
-   <state.md, first 60 lines>
-   ## Driver facts (written by the driver)
-   <SDLC_FACTS, verbatim>
-   ```
-
-   A missing `state.md` is replaced by one line saying so. The handler
-   never cancels a compaction.
+   two from `event.preparation`. The summary is the deterministic
+   summary of the OpenCode plugin's point 5, which Pi stores as the
+   compaction itself, so no model writes it. The handler never cancels
+   a compaction.
 
 The extension registers no command and reads no file outside the run
 folder except its own load-time constants.
@@ -2043,28 +2304,21 @@ changes a line stops the run.
 
 **Backend and shell recipes.** Driven runs use the `local` adapter only
 in this chunk; kickoff and `/sdlc` refuse any other backend
-([`run.json`](#runjson)). Pi workers have no MCP client, so every recipe
+([`run.json`](#runjson)). Workers have no MCP server: Pi has no MCP
+client, and the OpenCode worker config lists none. So every recipe
 in the repo skill must run from `bash`; the `local` recipes do. This
 repo's Linear skill uses MCP, so Linear for driven runs needs shell
 recipes, a no-model read recipe, and its own security gate: G9
 ([O5](#questions-for-the-operator)).
 
-### Behavior 8: later items (4, 7, 8)
+### Behavior 8: later items (4, 8)
+
+Both items start after the first harness, OpenCode (item 7), works.
 
 - **Item 4, `bundle-authoring`.** Walks an author through the
   [bundle layout](#bundle-layout-and-bundlemd), persona files, and
   `flow.json`; ends by running `sdlc-driver check` until it exits `0`.
   It routes to `bundle-spec.md` and `flow-spec.md` and restates no rule.
-- **Item 7, OpenCode plugin.** `packages/opencode-sdlc/` provides an
-  OpenCode `HarnessAdapter` and a user command. This LLD fixes only that
-  it hosts the same core and passes the same driver tests through the
-  adapter contract. G7 cannot be groomed until its first deliverable
-  exists: `maintainers/design/solo-dlc/opencode-server.md`, a note of
-  at most one page that records, for a pinned OpenCode version, the
-  command that starts the server, how a session is created and resumed,
-  and how the adapter keeps a single worker process at a time. The
-  worker shape, acceptance, and proving commands are groomed from that
-  note.
 - **Item 8, `sdlc-followed-mode`.** The same algorithm in prose: the
   loop, the stage pipeline without process isolation, the same run
   folders and `result.json`, the exit rule, and `followed, not enforced`
@@ -2083,12 +2337,15 @@ recipes, a no-model read recipe, and its own security gate: G9
 - **Item 8, `sdlc-kickoff`.** Runs the readiness checklist (tracker and
   onboarding, with `local` the only backend for driven runs; the
   shell-recipe check; the `local` read recipe; project-main from trunk;
-  the run root's parent; labels mode; the Pi install, `integrity`, and
-  `treeSha256`; models, each slot's key source, and the spending gate),
+  the run root's parent; labels mode; the harness install, OpenCode
+  first: `integrity`, `treeSha256`, and for OpenCode the providers
+  copied into `harness.providers`; models, each slot's key source, and
+  the spending gate),
   Gather, the Epic, then writes `run.json`,
   `checklist.md`, `gatherer/run-1/` (brief and a copy of the Gather
   session), and an empty `refiner/run-1/`. It prints the run root and
-  `/sdlc RUN_ROOT`.
+  the start line for the harness: in OpenCode, pick `/sdlc` and give
+  the run root; in Pi, `/sdlc RUN_ROOT`.
 
 ### Trust boundaries
 
@@ -2100,12 +2357,14 @@ manager (a worker); the kickoff session model (untrusted; writes
 
 | # | Boundary | What crosses | Control | Kind |
 | --- | --- | --- | --- | --- |
-| TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, answers | User commands only; refused without UI or inside a worker; answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
+| TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, answers | User commands only, never a tool; refused inside a worker. OpenCode: the commands exist only in the TUI plugin, so no headless path starts the driver; refused when the TUI has a server listener; a server command named `sdlc` never exists. Pi: refused without UI. Answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
+| TB1a | Operator's session → model while a driver runs | The operator's own prompts | OpenCode: the server plugin's `chat.message` throw while a lock is held and for typed `/sdlc` text (O-T8). Pi: the `input` handler | Enforced if O-T8 holds; else notify only, operator question [O11](#questions-for-the-operator) |
 | TB2 | Kickoff model → `run.json` | Paths, models, tracker, spending, harness pin | Strict schema; `local` backend only; the operator confirms a summary at the first `/sdlc` and on every change; reviewed refs derived by the driver, never read from `run.json`; a bundle commit outside them, or a `run.json` naming another ref, needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at a reviewed ref | Enforced; the refs are local, not fetched (residual) |
 | TB3 | Bundle → driver | Flow, personas, skills, scripts | Pinned commit read with `git show`; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
-| TB3a | Harness → driver | The Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` at install | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
-| TB4 | Driver → worker | Prompt, facts, env | Prompt built from driver state; model or operator text fenced as data; facts hash; extension copy hashed; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
-| TB5 | Worker → files | `write`, `edit`, `sdlc_write` | Allowlist, path guard (fail-closed), run-folder tool | Enforced; the guard's check-then-write race is an accepted residual |
+| TB3a | Harness → driver | The OpenCode binary or the Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` of each package at install. OpenCode: self-update off in the worker config and environment; provider packages only from those bundled in the binary | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
+| TB3b | Operator's harness config → worker | OpenCode: plugins, tools, agents, MCP servers, instructions, remote and organization config. Pi: `.pi/` project files | OpenCode: `XDG_CONFIG_HOME` pointed at an empty unwritable folder, project config off, `~/.opencode/` and `/etc/opencode/` refused until allowed, and `debug config` compared with the worker config before every spawn. Pi: `--no-extensions`, `--no-skills`, `-nc`, and the `.pi/` refusal | Enforced before each spawn (OpenCode: O-T2); config that changes between the compare and the spawn is residual |
+| TB4 | Driver → worker | Prompt, facts, env, OpenCode worker config | Prompt built from driver state; model or operator text fenced as data; facts hash; extension or worker-plugin copy hashed; worker config kept as a driver file; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
+| TB5 | Worker → files | `write`, `edit`, OpenCode `apply_patch`, `sdlc_write` | Allowlist (OpenCode: permission rules; Pi: `--tools`), path guard (fail-closed), run-folder tool. OpenCode adds its own `external_directory` rules, so a write outside the run root and the temporary folder is refused before the guard runs | Enforced (OpenCode: O-T4); the guard's check-then-write race is an accepted residual |
 | TB6 | Worker → files through `bash` | Any write | Snapshot (driver files against the driver-file ledger), worktree, refs, ancestry, project-main checks | Detected in the run root and worktrees; residual elsewhere (operator accepts in writing) |
 | TB7 | Worker → result | `candidate.json` | Strict validation; only validated fields route; prose never routes | Enforced |
 | TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit (driver-set author and committer), path, front-matter key and value, comment body, and filed ticket body, plus a scan of every touched file | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
@@ -2121,7 +2380,7 @@ manager (a worker); the kickoff session model (untrusted; writes
 | --- | --- | --- | --- |
 | Worker tracker credential | `local`: the operator's git credentials. No other backend in this chunk; Linear is G9 | Workers | Run root files the driver writes |
 | Git credentials | The operator's credential helper or SSH agent | Driver and workers | `run.json` (origin URL without user info) |
-| Model credentials | Pi's own configuration | Pi | Run root files the driver writes; the scrubbed environment |
+| Model credentials | The harness's own store: OpenCode's `auth.json` in its data folder; Pi's configuration | The harness | Run root files the driver writes; the scrubbed environment; `run.json` `harness.providers`, which kickoff refuses with an `apiKey` or header |
 
 The driver holds no tracker key in this chunk. A worker can still print
 a secret it can read into a log or `out/`: logs stay in the run root
@@ -2140,7 +2399,10 @@ comments are public: only the template in
 [Tracker calls](#behavior-7-tracker-calls-per-persona), enforced after
 the fact by the [tickets check](#tickets-content-check). A `local`
 tickets branch on a public repo is public; kickoff warns before the
-first write.
+first write. OpenCode workers also write OpenCode's own logs, and the
+full text of long tool outputs, under the operator's OpenCode data
+folder, outside the run root: the same operator-private class, never
+committed or published, and not covered by the run root's `0700`.
 
 **Who may write what.**
 
@@ -2168,6 +2430,24 @@ push that `driver.json` does not name is an `operator` stop, whatever
 here: tracker comment text and writes to other tickets are now detected
 by the tickets check, and worker pushes by the `refs` check, both after
 the stage.
+
+**New with OpenCode first, for security's re-read.** None of these
+changes the three residuals the operator accepted (O9).
+
+1. Worker copies of logs and long tool output in the operator's
+   OpenCode data folder (Data class).
+2. Harness config that changes between the pre-spawn `debug config`
+   compare and the spawn (TB3b).
+3. The `~/.opencode/` and `/etc/opencode/` refusal and its `allow`,
+   the counterpart of S4's `.pi/` refusal.
+4. A worker's `bash` can start another `opencode` process against the
+   operator's own config, as it can start `pi`: the HLD's existing
+   risk, unchanged.
+5. If O-T8 fails, the operator's own session can call a model while a
+   worker runs (TB1a): operator question [O11](#questions-for-the-operator).
+6. If O-T1 fails, its fallback adds a loopback listener per stage that
+   a worker's `bash` can reach with the password from the server's
+   environment; **security** rules on that shape before item 7 uses it.
 
 **Accepted by security** (review of 34e1278):
 
@@ -2207,7 +2487,7 @@ the stage.
      re-hashed between starts; the full hash at the next start catches
      it.
    - `harness.node`, the Node binary for the detached driver under
-     Pi's compiled binary, is not hashed.
+     OpenCode and under Pi's compiled binary, is not hashed.
 
 **Operator must accept in writing** (at the `spec` gate; the answer is
 recorded verbatim in `asks/`):
@@ -2241,9 +2521,9 @@ text. UX acceptance of [ux.md](ux.md) by the operator is pending.
 | 2 | — | `docs/sdlc/fixtures/flows/` holds one fixture per bundle-check code, including each `gate.*` row's counterexample (`gate.trial` among them), exit `checks`, `extract`, and a script without an intake bullet, and `fixtures/bundles/minimal/` | `K1`, `K7`; `wc -l docs/sdlc/bundle-spec.md docs/sdlc/flow-spec.md` ≤ 150 each |
 | 3 | — | `bundles/sdlc/` follows the spec; rule maps; the S5 claim-condition diff | `K1`–`K7`; `node packages/sdlc-driver/src/cli.ts check bundles/sdlc`, which needs G5's bundle check on project-main, hence the land order in [Groom split](#groom-split-proposal) |
 | 5 | `node:test` per module: strict reader, result and candidate rules, front matter, bundle check, labels, groom parser, facts, scan, console | Every fixture under `docs/sdlc/fixtures/`; driver tests with the fake worker against a temporary bare origin with a `local` tickets branch | `npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check` (`tsc -p . && node --test`) |
-| 6 | Argv and env builder; worker extension with a fake extension API: path guard (links, `..`, `.git`, `~`), `sdlc_write`, `sdlc_result` on the shared fixtures, compaction summary | Plugin and adapter against a fake `pi` that records argv and env | `npm --prefix packages/pi-sdlc ci && npm --prefix packages/pi-sdlc run check`; then the Pi checks below |
+| 7 | Argv, env, and worker-config builder (permission rules per persona; read-only personas get no edit tool); preflight; worker plugin with a fake plugin API: path guard for `write`, `edit`, and `apply_patch` (links, `..`, `.git`, `~`), `sdlc_write`, `sdlc_result` on the shared fixtures, the three compaction hooks, `shell.env` | The item 5 driver suite through the OpenCode adapter against a fake `opencode` that records argv, env, and the worker config | `npm --prefix packages/opencode-sdlc ci && npm --prefix packages/opencode-sdlc run check`; acceptance runs the OpenCode checks below, O-T1–O-T10 first |
+| 6 | Argv and env builder; worker extension with a fake extension API: path guard (links, `..`, `.git`, `~`), `sdlc_write`, `sdlc_result` on the shared fixtures, compaction summary | Plugin and adapter against a fake `pi` that records argv and env | `npm --prefix packages/pi-sdlc ci && npm --prefix packages/pi-sdlc run check`; acceptance runs the Pi checks below first |
 | 4 | — | Following the skill produces a bundle under `docs/sdlc/fixtures/bundles/authored/` that passes the check | `K1`, `K7`; `node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/authored` |
-| 7 | Adapter unit tests | The item 5 driver suite through the OpenCode adapter with a fake server | First deliverable: `maintainers/design/solo-dlc/opencode-server.md`, at most one page (command, session, single worker process), checked by `K1`-style `wc -l` ≤ 60 and the reviewer. G7 is groomed, and its proving commands written, only after that note lands |
 | 8 | — | A followed-mode walk-through of `fixtures/bundles/minimal/` writes run folders whose results pass `sdlc-driver validate` | `K1`, `K7`; the validate lines |
 
 **Fake worker** (item 5, `test/fake-worker.ts`). The test adapter starts
@@ -2298,7 +2578,7 @@ Driver scenarios, each a test:
     `groom.md` changed after review stops ticket filing.
 11. First start creates `repo.git` and `worktrees/integrate` before any
     fetch; a `run.json` with `backend: linear` is refused at start; a
-    changed Pi tree hash stops the start.
+    changed harness tree hash stops the start.
 12. A design record with a credential-shaped line → `scan-secret`, no
     `allow`; the console and ask name file, line, and class, never the
     text. A path hit → `scan-hit`, `allow` commits.
@@ -2321,7 +2601,7 @@ Driver scenarios, each a test:
     `chunk.pendingRoute` set) before paperwork starts; killing the
     driver during paperwork replays it in a new run folder and routes
     by the stored `choice` after `posted`.
-17. A worker whose Pi tree changed after start fails the pre-spawn
+17. A worker whose harness tree changed after start fails the pre-spawn
     `harness` re-check without spawning: once for an edited file, once
     for an added file, and once for a removed file.
 18. Crash after a design-record push: a test hook kills the driver
@@ -2378,10 +2658,29 @@ Driver scenarios, each a test:
     each restart with the ledger check passing. An answer that `/sdlc`
     records while no driver runs passes the next start.
 
-**Pi checks** (item 6 acceptance, on the operator's machine with Pi
-0.73.1 and one local model; manual, gated by `SDLC_PI_SMOKE=1`; they
-spend no money). These run the Trial questions as tests; each failure
-switches to its fallback in
+**OpenCode checks** (item 7 acceptance, run first, on the operator's
+machine with OpenCode 1.19.3 and one local model; manual, gated by
+`SDLC_OPENCODE_SMOKE=1`; they spend no money). Item 7 runs
+O-T1–O-T10 from [opencode-server.md](opencode-server.md#trial-checks)
+as its first acceptance tests, before any other; each failure switches
+to the fallback in that table, and any fallback that names **security**
+or the operator waits for that answer. Then:
+
+- O-E2E end-to-end: `smoke/run.sh` builds a fixture product repo (one
+  small Node function, a `local` tickets branch, a frozen `groom.md`
+  with two items, one blocking the other), seeds a run root at
+  `@items`, and runs `src/driver-main.ts` with `bundles/sdlc` under the
+  OpenCode adapter. Pass: both items `done` on the tickets branch, in
+  order; two land commits on the fixture project-main with
+  `Reviewed-by` trailers; every `result.json` passes
+  `sdlc-driver validate`; `meta.json` argv shows the `opencode run`
+  flags above; each `driver/worker-config/` file holds the persona's
+  permission rules; no check failed.
+
+**Pi checks** (item 6 acceptance, after item 7 lands, on the
+operator's machine with Pi at the O6 version and one local model;
+manual, gated by `SDLC_PI_SMOKE=1`; they spend no money). These run the
+Trial questions as tests; each failure switches to its fallback in
 [Trial-dependent decisions](#trial-dependent-decisions):
 
 - P1 (T1): `/sdlc` on a fixture run root starts the detached driver, the
@@ -2398,17 +2697,12 @@ switches to its fallback in
 - P6 (T6): `write`/`edit` absent for read-only personas; the guard
   blocks writes outside, through a symbolic link, and when the handler
   throws; `sdlc_write` stays in the run folder.
-- P7 end-to-end: `smoke/run.sh` builds a fixture product repo (one small
-  Node function, a `local` tickets branch, a frozen `groom.md` with two
-  items, one blocking the other), seeds a run root at `@items`, and runs
-  `src/driver-main.ts` with `bundles/sdlc`. Pass: both items `done` on
-  the tickets branch, in order; two land commits on the fixture
-  project-main with `Reviewed-by` trailers; every `result.json` passes
-  `sdlc-driver validate`; `meta.json` argv shows the flags above; no
-  check failed.
+- P7 end-to-end: O-E2E's fixture and pass conditions under the Pi
+  adapter, with `meta.json` argv showing the Pi flags above instead of
+  the worker-config condition.
 
 **Definition of done**, every item: acceptance on its ticket; the item's
-proving commands green; docs current (package READMEs for 5 to 7); one
+proving commands green; docs current (package READMEs for 5, 7, and 6); one
 `CHANGELOG.md` line; rule maps for every edited agent file.
 
 ### Land
@@ -2425,6 +2719,11 @@ proving commands green; docs current (package READMEs for 5 to 7); one
 ## Optional
 
 ### Trial-dependent decisions
+
+OpenCode, item 7, the first harness: the checks O-T1–O-T10, each with
+its chosen design and fallback, are in
+[opencode-server.md](opencode-server.md#trial-checks). Pi, item 6, the
+second harness, read at 0.73.1:
 
 | Trial | Chosen design | Confirmed in 0.73.1 source | Fallback if disproved |
 | --- | --- | --- | --- |
@@ -2457,8 +2756,9 @@ proving commands green; docs current (package READMEs for 5 to 7); one
    holds for text mode); the driver reads `stopReason` from the stream.
 9. Prompts go on stdin; worktrees and driver folders use the label
    suffix; `repo.git/` is added to the run root.
-10. Pi workers have no MCP client, so repo tracker recipes must run from
-    `bash`.
+10. Workers have no MCP server, so repo tracker recipes must run from
+    `bash`: Pi has no MCP client, and the OpenCode worker config lists
+    no MCP server.
 11. Driven runs support only the `local` backend in this chunk (security
     ruling S1). This is the HLD's own rule applied: the kickoff stops
     without a no-model `read` recipe, and only `local` has one. The
@@ -2478,13 +2778,35 @@ proving commands green; docs current (package READMEs for 5 to 7); one
     item 2 only and runs 3 and 5 in one wave; G3's proving commands run
     G5's bundle check on `bundles/sdlc`, so that check must be on
     project-main first ([Groom split](#groom-split-proposal)).
-16. Item 7 (G7) is not groomed with the others. The HLD keeps it in the
-    last wave after item 6; here it is deferred until its first
-    deliverable, `opencode-server.md`, has landed, and its proving
-    commands are written from that note.
+16. **Harness order: OpenCode first, Pi second** (the operator's
+    decision, 2026-10-18: the first tests run in OpenCode). This
+    replaces the order in the brief ("The Pi plugin comes first, then
+    an OpenCode plugin"; "Items 4, 7 and 8 come after the Pi path
+    works") and in the HLD (Goals 3, [Items](hld.md#items), the
+    [Trial question](hld.md#trial-question), and
+    [Open](hld.md#open)'s "OpenCode server behavior: checked before
+    item 7 starts"). Item 7 is blocked by items 3 and 5; item 6 by item
+    7; items 4 and 8 come after the OpenCode path works. The local
+    model and the one-session rule are unchanged; HLD Goal 1, Pi on one
+    local model, is met at item 6. The OpenCode server question is
+    answered by [opencode-server.md](opencode-server.md), so item 7 is
+    groomed with the others. Where the HLD names a Pi mechanism
+    (`pi -p --mode json --session`, `--no-extensions`, `--tools`,
+    `session_before_compact`, `ctx.hasUI`), the OpenCode counterpart in
+    [Behavior 6](#behavior-6-harness-plugins-item-7-opencode-first-item-6-pi-second)
+    applies to item 7 and the Pi text to item 6. One difference in
+    kind: OpenCode stores a compaction summary that a model wrote. The
+    worker plugin replaces it in every model request, so the HLD's
+    "Driver facts reach the compaction summary unaltered" holds for
+    what the model reads, not for the stored message.
 17. G9, Linear for driven runs, is new: the HLD has no such item. It
     comes from security ruling S1 and carries S1 and S2, with its own
     LLD addendum and **security** gate.
+18. The OpenCode `/sdlc` takes the run root in a dialog, not as an
+    argument, because an OpenCode slash command from a plugin takes no
+    argument; the HLD's "the operator runs `/sdlc RUN_ROOT`" becomes
+    "picks `/sdlc` and gives the run root" in OpenCode
+    ([O10](#questions-for-the-operator)).
 
 ### Groom split (proposal)
 
@@ -2494,28 +2816,28 @@ proving commands green; docs current (package READMEs for 5 to 7); one
 | G2 | Bundle and flow spec, fixtures | G1 | Candidate and `choice` rules extend item 1's fields |
 | G5 | Core driver | G1, G2 | Implements both specs; its tests read their fixtures |
 | G3 | SDLC bundle, `test-failure-handler`, tracker wiring, `bundle-runs.md` | G2, G5 | Written in the spec's format. Land order: G5 lands before G3, because G3's proving commands run G5's bundle check on `bundles/sdlc`. Differs from the HLD: [clarification](#clarifications-of-the-hld-made-here) 15 |
-| G6 | Pi plugin, worker extension, Pi checks | G3, G5 | Hosts the core; the smoke runs `bundles/sdlc` |
-| G4 | `bundle-authoring` | G6 | Brief: after the Pi path works |
-| G8 | `sdlc-followed-mode`, `sdlc-kickoff` | G6 | Brief: after the Pi path works |
-| G7 | OpenCode plugin. Not groomed in this pass: its first deliverable, the one-page server note `opencode-server.md` (command, session, single worker process), must exist before G7 is groomed | G6 | Brief: after the Pi path works; the server's behavior is unconfirmed. Deferral: [clarification](#clarifications-of-the-hld-made-here) 16 |
-| G9 | Linear for driven runs: a no-model read recipe for the driver and shell write recipes for workers. Not groomed in this pass: it needs its own LLD addendum and its own **security** gate | G6 | Security ruling S1; carries S1 and S2 (below). Not an HLD item: [clarification](#clarifications-of-the-hld-made-here) 17 |
+| G7 | OpenCode plugin, worker plugin, OpenCode checks (O-T1–O-T10 first, then O-E2E) | G3, G5 | First harness: the operator's first tests run in OpenCode. Hosts the core; the smoke runs `bundles/sdlc`. Order: [clarification](#clarifications-of-the-hld-made-here) 16 |
+| G6 | Pi plugin, worker extension, Pi checks (P1–P7) | G7 | Second harness. Blocked by G7 so it reuses G7's adapter tests, fake-harness pattern, and smoke fixture, and items stay one at a time. Pi version: O6 |
+| G4 | `bundle-authoring` | G7 | After the first harness works |
+| G8 | `sdlc-followed-mode`, `sdlc-kickoff` | G7 | After the first harness works |
+| G9 | Linear for driven runs: a no-model read recipe for the driver and shell write recipes for workers. Not groomed in this pass: it needs its own LLD addendum and its own **security** gate | G7 | Security ruling S1; carries S1 and S2 (below). Not an HLD item: [clarification](#clarifications-of-the-hld-made-here) 17 |
 
-Waves: 1: G1; 2: G2; 3: G5; 4: G3; 5: G6; 6: G4, G8. G7 and G9 are
-groomed later, each after its precondition. No gate items. Item 5 is
+Waves: 1: G1; 2: G2; 3: G5; 4: G3; 5: G7; 6: G6, G4, G8. G9 is
+groomed later, after its own LLD addendum. No gate items. Item 5 is
 the largest for a 100k-token builder. Groom may split it into G5a
 (strict reader, result and candidate rules, front matter, bundle check;
 ← G1, G2), G5b (run root, state machine, stage pipeline, stops, fake
 worker; ← G5a), and G5c (git, land, proving commands, snapshot, refs
 and tickets checks, tracker read, scan; ← G5b). With the split, G3 ←
 G2, G5a (land order G5a before G3), so G3 can build beside G5b and G5c,
-and G6 ← G3, G5c.
+and G7 ← G3, G5c; G6 stays ← G7.
 
 **G9 carries** from the security review of 34e1278: S1, the Linear read
 key, with the constraints **security** set (the key file's content must
 match the `lin_api_` format; the key path and its parents are no
 symbolic link; the `run.json` confirmation shows the path; a same-uid
 process reading the key is residual); and S2, worker tracker
-credentials for Linear on Pi.
+credentials for Linear on each harness.
 
 ### Security rulings (review of 34e1278; N1–N4 from the re-review of de7c438)
 
@@ -2534,21 +2856,23 @@ credentials for Linear on Pi.
 | N2 | Reviewed refs | Derived by the driver, never read from `run.json`; any other ref named forces the typed SHA | [`run.json`](#runjson) |
 | N3 | INTAKE record for an unreviewed bundle commit | Record and hash must be in `docs/INTAKE.md` at a derived reviewed ref; one inside the bundle commit does not count | [Bundle layout](#bundle-layout-and-bundlemd) |
 | N4 | Low residuals | Local refs, no fetch; `treeSha256` re-checked per spawn from a stat cache; `harness.node` not hashed | [Trust boundaries](#trust-boundaries) |
-| Pi pin | Harness supply chain | npm `integrity` recorded at install; `treeSha256` (binary hash, or package-tree hash) recorded in `run.json` and checked at every start; 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
+| Harness pin | Harness supply chain | npm `integrity` recorded at install; `treeSha256` (binary hash, or package-tree hash) recorded in `run.json` and checked at every start. Ruled for Pi; OpenCode 1.19.3 (binary hash; integrity of `opencode-ai` and its platform package; self-update off) follows the same ruling and awaits **security**'s re-read. Pi 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
 
 ### Questions for the operator
 
 | # | Question | Recommendation |
 | --- | --- | --- |
-| O1 | Run a Trial before Build? | No separate Trial. This LLD keeps every Pi fact behind the adapter and the worker extension, so a fallback changes item 6, not item 5's shape; item 6 runs T1–T6 as P1–P6 first |
-| O2 | UX Q1–Q3 | Accept the recommended defaults this LLD assumes: replies at the next `/sdlc` (Q1); the handoff block in [Behavior 8](#behavior-8-later-items-4-7-8) (Q2); `index.jsonl` (Q3) |
+| O1 | Run a Trial before Build? | **Accepted by the operator, 2026-10-18: no separate Trial.** Every harness fact sits behind the adapter and the worker plugin or extension, so a fallback changes item 7 or item 6, not item 5's shape. Item 7 runs O-T1–O-T10 first; item 6 runs T1–T6 as P1–P6 first |
+| O2 | UX Q1–Q3 | Accept the recommended defaults this LLD assumes: replies at the next `/sdlc` (Q1); the handoff block in [Behavior 8](#behavior-8-later-items-4-8) (Q2); `index.jsonl` (Q3) |
 | O3 | Ticket filing end state: Groom says `ready` and Epic `in_progress`; the HLD table says `backlog` | Follow Groom; the HLD row gets a clarification |
 | O4 | Same-item claim rule: contract v2 or v3 | Settled by security ruling S5: v2, with kickoff checking the repo skill for the same-item sentence. No answer needed |
-| O5 | Linear for driven runs | Driven runs use `local` only in this chunk. Linear, driver reads and worker writes, becomes G9, blocked by G6, with its own LLD addendum and security gate; it carries S1 and S2. Accept |
-| O6 | Pi version: `@mariozechner/pi-coding-agent` 0.73.1 (every Pi fact here was read in it; the registry marks it deprecated) or `@earendil-works/pi-coding-agent` 1.x (the maintained line; facts not yet checked) | Pin 0.73.1 for G6. Record npm `integrity` at install and `treeSha256` in `run.json`; check `treeSha256` at every start. The Pi facts table and the T1–T6 fallbacks were read at 0.73.1. Moving to 1.x is a later item that re-reads the facts table at 1.x and reruns P1–P7. If the operator picks 1.x now, G6's first task is that re-read; nothing else in this LLD names the package |
+| O5 | Linear for driven runs | Driven runs use `local` only in this chunk. Linear, driver reads and worker writes, becomes G9, blocked by G7, with its own LLD addendum and security gate; it carries S1 and S2. Accept |
+| O6 | **Open; gates only G6, the second harness.** Pi version: `@mariozechner/pi-coding-agent` 0.73.1 (every Pi fact here was read in it; the registry marks it deprecated) or `@earendil-works/pi-coding-agent` 1.x (the maintained line; facts not yet checked). G7 pins OpenCode 1.19.3 and does not wait for this answer | Pin 0.73.1 for G6. Record npm `integrity` at install and `treeSha256` in `run.json`; check `treeSha256` at every start. The Pi facts table and the T1–T6 fallbacks were read at 0.73.1. Moving to 1.x is a later item that re-reads the facts table at 1.x and reruns P1–P7. If the operator picks 1.x now, G6's first task is that re-read; nothing else in this LLD names the package |
 | O7 | Skill ids `test-failure-handler`, `bundle-authoring`, `sdlc-followed-mode`, `sdlc-kickoff` | Accept |
 | O8 | Item 5 split into G5a–G5c | Let Groom split it; with the split, G3 waits only for G5a |
-| O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | Accept in writing at the `spec` gate. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal; Pi's example bubblewrap extension is a later option after intake |
+| O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | **Accepted in writing by the operator, 2026-10-18: "Risks are acceptable."** The three residuals do not depend on the harness, and OpenCode first adds none to them; its new items are listed for **security** under Trust boundaries. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal |
+| O10 | In OpenCode, `/sdlc` takes the run root in a dialog instead of as an argument ([clarification](#clarifications-of-the-hld-made-here) 18); kickoff prints the run root and "pick `/sdlc`". The console lines are unchanged | Accept. A plugin slash command in OpenCode 1.19.3 takes no argument, and typed `/sdlc RUN_ROOT` would reach the model; the dialog keeps the start model-free |
+| O11 | If O-T8 fails, OpenCode cannot stop the operator's own prompt while a worker runs: one large-model session at a time becomes the operator's discipline in that session, with a toast and the console warning | Accept that fallback for item 7 only, decided now so item 7 does not stop on it. A second session costs speed or memory on the local model; it does not skip a gate or a check. Item 6 keeps Pi's enforced `input` guard |
 
 ### Rollout / rollback
 
