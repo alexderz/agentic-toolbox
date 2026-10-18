@@ -8,14 +8,15 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - HLD: `maintainers/design/solo-dlc/hld.md` (Plan, same step)
 - Stories: [user-stories.md](user-stories.md)
 - Date: `2026-10-18`
-- Agent review (requirements only): pending
+- Agent review (requirements only): round 1 failed; fix round 1 done,
+  re-check pending
 - Operator: pending
 
 ## People
 
 - **Operator.** Owns the repo and the tracker. Runs the kickoff skill
   and Gather in an interactive session, types `/sdlc RUN_ROOT`, answers
-  escalated questions, and holds every operator gate.
+  escalated questions, and holds every operator gate (SD-26).
 - **Manager session.** The agent session the driver resumes when a stage
   stops. Answers from what the project holds, or escalates.
 - **Workers.** One harness process per persona invocation: builder,
@@ -53,16 +54,23 @@ Human gate: operator accepts, or writes `UX verification not required`.
   public repo.
 - **J3 Driver runs workers.** `/sdlc RUN_ROOT` → the console shows one
   start line and one end line per stage: item, step, persona, new or
-  resumed, run folder; then status, choice, and artifact path → items
-  build, verify, review, land, and close without waking the manager.
+  resumed, run folder; then status, choice, and artifact path. No stage
+  starts before the previous one has ended or stopped → every exit from
+  Build goes Build → Verify → Review → items land and close without
+  waking the manager.
 - **J4 Failing proving command.** Proving command fails → console shows
   the failure, the log path, and `repair 1/3` → builder resumed with the
   log → commands re-run → pass, then the model verifier runs. Third
-  failed fix → stop (J5).
+  failed fix → stop (J5). An invalid `result.json` gets one repair,
+  shown as `repair 1/1`; still invalid → stop (J5).
 - **J5 Stop, manager first.** A stage stops → console names the stop
   kind, the stage, and its run folder → driver resumes the manager →
   manager answers from the project and the driver continues, or the
-  manager escalates and the console shows a full `ask-human.md` message.
+  manager escalates and the console shows a full `ask-human.md` message
+  → the escalated item waits; other unblocked items continue, one
+  large-model session at a time → the next `/sdlc RUN_ROOT` shows the
+  ask before any stage starts, and the operator's next line is the
+  reply.
 - **J6 Trial question.** HLD stage ends → operator gets an
   `ask-human.md` message: run a Trial or not, with the architect's
   recommendation → yes writes the Trial kickoff prompt and prints its
@@ -85,7 +93,20 @@ Human gate: operator accepts, or writes `UX verification not required`.
   followed-mode skill with a bundle and run root → first line it writes
   says the run is followed, not enforced → agent follows the same flow,
   writes the same run folders, and applies the same exit rule → at each
-  separate-agent step it hands off to a new session (open question Q2).
+  separate-agent step it prints the persona, the run folder, and the
+  prompt, then stops; the operator opens a new session for that step
+  (open question Q2).
+- **J11 Moved tip at land.** Reviewer passes → driver fetches → the tip
+  moved → console says so → builder resumed to merge the tip into the
+  item branch → verifier re-runs → driver fetches again → tip unchanged
+  → driver merges this one item and pushes without force → post-land
+  verifier → `done`.
+- **J12 Operator gate.** A stage reaches an operator gate: accepting
+  the Plan or the Spec, a waiver, a security severity, three failed
+  fixes, a destructive action, or spending → driver resumes the manager,
+  which may only escalate → console and the manager's run folder hold
+  the full `ask-human.md` message; in followed mode it says `followed,
+  not enforced` → operator replies as in J5. The Trial question is J6.
 
 ## Stories
 
@@ -94,7 +115,7 @@ In [user-stories.md](user-stories.md):
 | Person | Stories |
 | --- | --- |
 | Operator, start | SD-1 ready the repo, SD-2 tracker and public tickets, SD-3 Gather, SD-4 run root and start line, SD-5 only the operator starts |
-| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager |
+| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager, SD-26 operator gates, SD-27 Build → Verify → Review, SD-28 land on a moved tip |
 | Bundle author | SD-14 write a bundle, SD-15 errors by step and exit |
 | Followed mode | SD-16 followed, not enforced, SD-17 separate-agent steps, SD-18 same exit rule |
 | Workers | SD-19 builder with failing log, SD-20 builder after compaction, SD-21 verifier ledger, SD-22 post-land verifier, SD-23 reviewer re-review, SD-24 claim and comment |
@@ -121,21 +142,47 @@ ABC-12 Build   builder  resumed  builder/run-5  started
 ABC-12 Build   pass     choice verify  artifact builder/run-5/result.md
 ABC-12 Verify  verifier resumed  verifier/run-3  started
 ABC-12 Verify  pass     choice review  ledger 2 fixed, 0 open, 1 nit
-ABC-12 Land    merged   integrate/solo-dlc  verified  done
+ABC-12 Review  reviewer resumed  reviewer/run-2  started
+ABC-12 Review  pass     choice land  reads pr-review, security-hardening
+ABC-12 Land    fetched  tip moved  builder merges the tip
+ABC-12 Land    builder  resumed  builder/run-6  started  merge tip
+ABC-12 Land    pass     tip merged  artifact builder/run-6/result.md
+ABC-12 Land    verifier resumed  verifier/run-4  started  re-run
+ABC-12 Land    pass     ledger 0 open
+ABC-12 Land    fetched  tip unchanged  merged  integrate/solo-dlc  pushed
+ABC-12 Land    verifier resumed  verifier/run-5  verified  done
+ABC-13 Build   invalid result  builder/run-8  repair 1/1
 STOP   ABC-13 Build  repair budget exhausted (3 failed fixes)  builder/run-9
        resuming manager  manager/run-2
 ```
 
 Each line names the item, the step, the persona, whether the session is
 new or resumed, and the run folder relative to the run root. A stop
-line starts with `STOP` and a reason in words, not color alone.
+line starts with `STOP` and a reason in words, not color alone. One
+large-model session runs at a time, so no start line appears before the
+previous stage's end line or `STOP` line. A `choice` that would skip
+Verify or Review is rejected with one line naming the step, the value,
+and the allowed exits.
 
 **Stops.** The manager is always resumed first. If it answers, the
 console prints one line naming where the answer came from (brief, plan,
 spec, tracker, or a Gather session) and the run continues. If it
 escalates, the console prints the full `ask-human.md` message and the
-ask is also saved in the manager's run folder (open question Q1 covers
-how the operator replies).
+ask is also saved in the manager's run folder. The escalated item waits
+while other unblocked items continue. The next `/sdlc RUN_ROOT` shows
+the ask before any stage starts, and the operator's next line is the
+reply (open question Q1).
+
+**Operator gates.** Accepting the Plan, accepting the Spec, waivers,
+security severity, three failed fixes, destructive actions, and spending
+always reach the operator. The manager may only escalate them. In
+followed mode the ask also says `followed, not enforced`. The Trial
+question at the end of HLD is its own ask (SD-9).
+
+**Tracker comments.** Public comments carry only the ticket id, the
+status, and the run folder relative to the run root; a land comment may
+add the land SHA, the result, and the reviewer verdict. No absolute
+paths, logs, prompts, or Gather text.
 
 **Run root.** One folder per persona, `run-N` folders inside, old runs
 kept. `state.md` is at most one page. The operator never has to read a
@@ -149,7 +196,8 @@ before it starts anything.
 **Followed mode.** Same run root, same files, same exit rule. The
 difference is stated, not hidden: the first line, each stage's prose,
 and each stop say `followed, not enforced`, meaning an agent, not a
-driver, keeps the gates on this harness.
+driver, keeps the gates on this harness. At a separate-agent step the
+skill prints the persona, the run folder, and the prompt, then stops.
 
 **Bundle authoring.** The skill walks the author through the folder
 and the flow file. The driver's bundle check reports errors by step and
@@ -184,18 +232,20 @@ shape. For look and flow:
 
 ## Open questions for the operator
 
-- **Q1 Replying to an escalation.** Recommend: the driver pauses and
-  shows the ask; the operator replies in the same console; if the
-  operator is away or exits, the run is saved as waiting, and the next
-  `/sdlc RUN_ROOT` shows the ask again. Depends on whether the TUI stays
-  usable during a long command handler, which the brief lists as not
-  confirmed: a Trial candidate.
-- **Q2 Separate-agent steps in followed mode.** Recommend: the skill
-  prints a handoff block (persona, run folder, prompt to paste) and the
-  operator opens a new session for that step. One session plays two
-  separate-agent roles only with a written operator waiver, saved in the
-  run folder.
-- **Q3 Chronological index.** Recommend: the driver appends one line per
-  stage to one index file at the run root (time, item, step, persona,
-  run folder, status). It answers "what ran, in what order" without
-  opening persona folders, and is the same data resume reports.
+Q1–Q3 stay open until the operator accepts this page.
+
+- **Q1 Replying to an escalation. Open.** Recommend: the escalated item
+  waits and other unblocked items continue, one large-model session at
+  a time. When the operator runs `/sdlc RUN_ROOT`, the ask appears
+  before any stage starts, and the next line the operator types is the
+  reply (SD-8). A reply typed in the console while the run is going
+  depends on whether the TUI stays usable during a long command
+  handler, which the brief lists as not confirmed: a Trial candidate,
+  not a done-when.
+- **Q2 Separate-agent steps in followed mode. Open.** Recommend: the
+  skill prints the persona, the run folder, and the prompt, then stops;
+  the operator opens a new session for that step (SD-17).
+- **Q3 Chronological index. Open.** Recommend: the driver appends one
+  line per stage to one index file at the run root (time, item, step,
+  persona, run folder, status). It answers "what ran, in what order"
+  without opening persona folders, and is the same data resume reports.

@@ -12,15 +12,19 @@ git, or tracker state.
 
 ### SD-1 Ready the repo before Gather
 
-- **As** the operator **I want** the kickoff skill to check the repo
-  and plumbing first **so that** a run never starts on a missing
-  tracker or branch.
+- **As** the operator **I want** the kickoff skill to ready the repo and
+  the plumbing first **so that** the run starts on a ready repo, with
+  the tracker chosen now or after Gather.
 - **Done when:**
   - The kickoff skill runs in a normal interactive session; no driver
     and no plugin are required.
-  - It shows a checklist covering tracker, project-main branch, and the
-    run root's parent folder, each line marked `done`, `to do`, or
-    `deferred`.
+  - It shows a checklist covering the tracker, each branch the run uses
+    (trunk, project-main, and the `tickets` branch when the `local`
+    adapter is chosen), and the run root's parent folder. Each line is
+    marked `done`, `to do`, or `deferred`.
+  - The `local` adapter is an allowed tracker choice.
+  - The tracker line can be `deferred` until after Gather. A deferred
+    choice is asked again before the first tracker write (SD-2).
   - It writes nothing before the operator replies to the checklist.
 - **Out of scope:** installing the harness or the plugin.
 
@@ -86,8 +90,12 @@ git, or tracker state.
     `resumed`, and the run folder.
   - Each end line names the status, the `choice`, and the `artifact`
     path.
+  - No new start line appears until the previous stage has printed its
+    end line or a `STOP` line.
   - A failed proving command line names the command, the log path, and
     the repair count as `repair N/3`.
+  - An invalid `result.json` line names the stage and the run folder,
+    and its repair attempt prints `repair 1/1`.
   - Status is in words; no meaning by color alone.
   - Worker transcripts are not printed to the console.
 - **Out of scope:** a dashboard; live transcript streaming.
@@ -104,7 +112,7 @@ git, or tracker state.
     manager's run folder.
   - If the manager answers, one line names the source it used (brief,
     plan, spec, tracker, or a Gather session) and the run continues.
-  - An operator gate always escalates, even if the manager could answer.
+  - An operator gate always escalates, as SD-26 sets out.
 - **Out of scope:** the manager's reasoning in the console.
 
 ### SD-8 Answer an escalated question
@@ -114,11 +122,13 @@ git, or tracker state.
 - **Done when:**
   - The console shows a complete `ask-human.md` message, and the same
     text is saved in the manager's run folder.
-  - The item stays blocked until the operator answers; other unblocked
-    items keep moving.
-  - Leaving and typing `/sdlc RUN_ROOT` later shows the same ask again.
-  - How the reply is entered follows the operator's answer to UX Q1.
-- **Out of scope:** replies from a chat channel.
+  - The escalated item waits. Other unblocked items continue, one
+    large-model session at a time.
+  - When the operator runs `/sdlc RUN_ROOT`, the same ask appears before
+    any stage starts, and the next line the operator types is the
+    reply. The reply is saved verbatim with the ask.
+- **Out of scope:** replies from a chat channel; a reply typed in the
+  console while the run is going, which is a Trial candidate (UX Q1).
 
 ### SD-9 Decide on a Trial at the end of HLD
 
@@ -138,10 +148,13 @@ git, or tracker state.
 - **As** the operator **I want** to find any stage's files from its
   console line **so that** I can audit what happened.
 - **Done when:**
-  - Every run folder named on the console exists and holds
-    `result.json`, prose, logs, and `state.md`.
-  - `result.json` passes the reader in `docs/sdlc/stage-result.md`,
-    including `schemaVersion`, `choice`, `ticket`, and `artifact`.
+  - Every run folder named on the console exists.
+  - The run folder of each finished invocation holds `result.json`,
+    prose, logs, and `state.md`. Its `result.json` passes the reader in
+    `docs/sdlc/stage-result.md`, including `schemaVersion`, `choice`,
+    `ticket`, and `artifact`.
+  - An interrupted run folder stays, is marked interrupted, and is
+    exempt from the reader rule.
   - `state.md` is at most one page.
   - Old run folders are still present after later runs.
 - **Out of scope:** search across run roots.
@@ -167,8 +180,9 @@ git, or tracker state.
 - **Done when:**
   - Interrupting the console marks the in-flight run folder interrupted
     and leaves the run root ready for SD-11.
-  - No merge or push is left half done: a merge is either complete
-    and pushed, or not started.
+  - No merge is left half done: the merge has either not started, or
+    has finished and is checked out.
+  - No push uses force, and stopping needs no push.
 - **Out of scope:** pausing a single item while others continue.
 
 ### SD-13 See items land without waking the manager
@@ -176,14 +190,66 @@ git, or tracker state.
 - **As** the operator **I want** land paperwork done by the driver and
   the verifier **so that** a pass needs no manager turn.
 - **Done when:**
-  - After a reviewer pass, the console shows merge, proving commands on
-    `integrate/solo-dlc`, and the verifier's confirmation, then `done`.
+  - After a reviewer pass, the console shows fetch, merge, proving
+    commands on `integrate/solo-dlc`, and the verifier's confirmation,
+    then `done`.
   - The ticket has a comment with the land SHA, the result, and the
     reviewer verdict.
   - No manager run folder is created for a land with no stop.
   - A dependent item's first line appears only after its blocker shows
     `done`.
 - **Out of scope:** landing project-main on trunk.
+
+### SD-26 Hold every operator gate myself
+
+- **As** the operator **I want** every operator gate to come to me
+  **so that** no agent makes a decision the SDLC keeps for me.
+- **Done when:**
+  - Each of these gates stops its stage and comes to the operator:
+    accepting the Plan, accepting the Spec, a waiver, a security
+    severity, three failed fixes, a destructive action, and spending.
+  - The manager may not answer a gate. Its result for a gate is always
+    an escalation, even when the project holds an answer.
+  - The console shows the full `ask-human.md` message, and the same
+    text is saved in the manager's run folder.
+  - In followed mode, the ask carries the words `followed, not
+    enforced`.
+  - The stage does not continue until the operator's reply is recorded
+    (SD-8).
+- **Out of scope:** the Trial question, which is SD-9.
+
+### SD-27 See every Build exit pass Verify and Review
+
+- **As** the operator **I want** the driver to send every exit from
+  Build through Verify and then Review **so that** no change lands
+  without the separate checks, including the security reads.
+- **Done when:**
+  - In enforced mode, the console shows every exit from Build as
+    Build → Verify → Review: a Build pass is followed by Verify for the
+    same item, and a Verify pass by Review.
+  - No Land line appears for an item unless Review passed after the
+    item's last Build pass.
+  - Each Review end line names its security reads.
+  - At run time, a `choice` that would skip a step, or any `choice` not
+    in the step's exits, is rejected. One line names the step, the
+    value, and the allowed exits, and the run does not take that exit.
+- **Out of scope:** followed mode, which is SD-18.
+
+### SD-28 Land on a moved tip without force
+
+- **As** the operator **I want** lands to stay safe on branches other
+  people share **so that** no one's work is overwritten.
+- **Done when:**
+  - The console shows a fetch line before each merge.
+  - Merges run one item at a time: no item's merge line appears while
+    another item's merge is unfinished.
+  - No push uses force: each pushed tip of a shared branch contains the
+    tip it replaced.
+  - When the fetched tip has moved, the console shows a line that says
+    so, then a builder line merging the tip into the item branch, then
+    a verifier re-run line, before the merge.
+- **Out of scope:** a merge conflict the builder cannot resolve; that
+  is a stop (SD-7).
 
 ## Bundle author
 
@@ -206,9 +272,8 @@ git, or tracker state.
   - The bundle check reports one error per line, each naming the file,
     the step, and the exit or field at fault.
   - A flow file with an exit to an undefined step fails the check.
-  - At run time, a `choice` not in the step's exits is rejected with a
-    line naming the step, the value, and the allowed exits.
-- **Out of scope:** auto-fixing the flow file.
+- **Out of scope:** auto-fixing the flow file; rejecting a `choice` at
+  run time, which is SD-27.
 
 ## Followed mode
 
@@ -228,11 +293,10 @@ git, or tracker state.
 - **As** the operator **I want** separate-agent steps to stay separate
   **so that** followed mode keeps the same gates.
 - **Done when:**
-  - At a step that needs a separate agent, the skill stops and hands
-    off per the operator's answer to UX Q2.
-  - The skill never plays the builder and the verifier or reviewer of
-    one item in one session without a written operator waiver saved in
-    the run folder.
+  - At a step that needs a separate agent, the skill prints the
+    persona, the run folder, and the prompt, then stops.
+  - The skill never continues as the next separate-agent persona in
+    the same session.
 - **Out of scope:** starting processes on harnesses that cannot.
 
 ### SD-18 Apply the same exit rule in followed mode
@@ -254,6 +318,8 @@ git, or tracker state.
 - **As** the builder **I want** a short prompt with the failing log
   path **so that** I fix the failure without re-reading the item.
 - **Done when:**
+  - The builder is resumed from the same session file as its earlier
+    passes on the item, and its start line says `resumed`.
   - The resume prompt is the fixed text that loads
     `test-failure-handler`, plus the log path and `repair N/3`; it does
     not repeat the item, the spec, or earlier logs.
@@ -282,6 +348,8 @@ git, or tracker state.
   `state.md` **so that** a re-check confirms fixes instead of starting
   over.
 - **Done when:**
+  - Each re-check resumes the same verifier session file as the item's
+    earlier checks, and its start line says `resumed`.
   - The model verifier starts only after every proving command passes.
   - Each ledger entry has a criticality; a re-check marks each
     committed issue fixed or still open.
@@ -295,6 +363,8 @@ git, or tracker state.
 - **As** the verifier **I want** to confirm the land on project-main
   **so that** `done` means landed and verified.
 - **Done when:**
+  - The post-land verifier resumes the same session file as the item's
+    earlier checks, and its start line says `resumed`.
   - The resumed verifier reads the proving-command results on
     `integrate/solo-dlc` and confirms them.
   - It moves the ticket to `done` and comments the land SHA, the
@@ -319,7 +389,12 @@ git, or tracker state.
 - **Done when:**
   - Every worker run, whatever its status, leaves a claim and a comment
     on its ticket through `tracker-sdlc`, before the process exits.
-  - The comment names the run folder and the status.
+  - Every tracker comment the run writes, from a worker or the manager,
+    carries only the ticket id, the status, and the run folder relative
+    to the run root.
+  - A land comment may also carry the land SHA, the result, and the
+    reviewer verdict.
+  - No comment holds an absolute path, a log, a prompt, or Gather text.
 - **Out of scope:** tracker writes by the console or the driver.
 
 ## Manager
@@ -334,5 +409,6 @@ git, or tracker state.
     and the question or failure.
   - The manager's result cites the file or session it answered from,
     or escalates with a full `ask-human.md` message.
-  - An operator gate is escalated, never answered by the manager.
+  - An operator gate is escalated, never answered by the manager
+    (SD-26).
 - **Out of scope:** the manager doing land paperwork.
