@@ -246,10 +246,18 @@ git, or tracker state.
   - No push uses force: each pushed tip of a shared branch contains the
     tip it replaced.
   - When the fetched tip has moved, the console shows a line that says
-    so, then a builder line merging the tip into the item branch, then
-    a verifier re-run line, before the merge.
-- **Out of scope:** a merge conflict the builder cannot resolve; that
-  is a stop (SD-7).
+    so, then a builder line merging the tip into the item branch. The
+    builder's end line says either `tip merged clean` or `tip merged,
+    conflicts resolved`.
+  - After `tip merged clean`, a verifier re-run line follows, and no
+    reviewer line appears before the item's merge line.
+  - After `tip merged, conflicts resolved`, the console shows builder,
+    then verifier re-run, then reviewer re-run lines, and the item's
+    merge line appears only after both re-runs pass.
+  - When the builder cannot resolve a conflict, the console shows a
+    `STOP` line of kind `blocked` (SD-7), and no merge line appears for
+    that item.
+- **Out of scope:** how the builder resolves a conflict.
 
 ## Bundle author
 

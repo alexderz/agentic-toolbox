@@ -8,8 +8,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - HLD: `maintainers/design/solo-dlc/hld.md` (Plan, same step)
 - Stories: [user-stories.md](user-stories.md)
 - Date: `2026-10-18`
-- Agent review (requirements only): round 1 failed; fix round 1 done,
-  re-check pending
+- Agent review (requirements only): round 1 failed; fix round 1 done;
+  re-check raised one major; fix round 2 done, re-check pending
 - Operator: pending
 
 ## People
@@ -98,9 +98,12 @@ Human gate: operator accepts, or writes `UX verification not required`.
   (open question Q2).
 - **J11 Moved tip at land.** Reviewer passes → driver fetches → the tip
   moved → console says so → builder resumed to merge the tip into the
-  item branch → verifier re-runs → driver fetches again → tip unchanged
+  item branch → builder's end line says the merge was clean or needed
+  conflict resolution → verifier re-runs → if the builder resolved
+  conflicts, reviewer re-runs too → driver fetches again → tip unchanged
   → driver merges this one item and pushes without force → post-land
-  verifier → `done`.
+  verifier → `done`. A conflict the builder cannot resolve is a stop
+  (J5), and the item does not merge.
 - **J12 Operator gate.** A stage reaches an operator gate: accepting
   the Plan or the Spec, a waiver, a security severity, three failed
   fixes, a destructive action, or spending → driver resumes the manager,
@@ -146,11 +149,20 @@ ABC-12 Review  reviewer resumed  reviewer/run-2  started
 ABC-12 Review  pass     choice land  reads pr-review, security-hardening
 ABC-12 Land    fetched  tip moved  builder merges the tip
 ABC-12 Land    builder  resumed  builder/run-6  started  merge tip
-ABC-12 Land    pass     tip merged  artifact builder/run-6/result.md
+ABC-12 Land    pass     tip merged clean  artifact builder/run-6/result.md
 ABC-12 Land    verifier resumed  verifier/run-4  started  re-run
 ABC-12 Land    pass     ledger 0 open
 ABC-12 Land    fetched  tip unchanged  merged  integrate/solo-dlc  pushed
 ABC-12 Land    verifier resumed  verifier/run-5  verified  done
+ABC-14 Land    fetched  tip moved  builder merges the tip
+ABC-14 Land    builder  resumed  builder/run-7  started  merge tip
+ABC-14 Land    pass     tip merged, conflicts resolved  artifact builder/run-7/result.md
+ABC-14 Land    verifier resumed  verifier/run-6  started  re-run
+ABC-14 Land    pass     ledger 0 open
+ABC-14 Land    reviewer resumed  reviewer/run-3  started  re-review
+ABC-14 Land    pass     reads pr-review, security-hardening
+ABC-14 Land    fetched  tip unchanged  merged  integrate/solo-dlc  pushed
+ABC-14 Land    verifier resumed  verifier/run-7  verified  done
 ABC-13 Build   invalid result  builder/run-8  repair 1/1
 STOP   ABC-13 Build  repair budget exhausted (3 failed fixes)  builder/run-9
        resuming manager  manager/run-2
