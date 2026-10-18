@@ -9,10 +9,11 @@
 - Tickets this LLD covers: DER-421 (chunk); brief items 1–8 (item 1 is
   DER-529; the others get ids at Groom)
 - Date: `2026-10-18`; fix round 1 after the security and adversarial
-  reviews of 34e1278, same day
-- Status: **draft, awaiting security re-review and operator
-  acceptance.** Architect acceptance is this draft. Groom and Build
-  start only after **security** and then the operator accept it
+  reviews of 34e1278; cleanup round 2 after the security and LLD
+  re-reviews of de7c438 passed, applying their recommendations, same day
+- Status: **draft, awaiting operator acceptance.** The security
+  re-review of de7c438 passed. Architect acceptance is this draft.
+  Groom and Build start only after **security** and then the operator accept it
   ([Security gate](../../../docs/sdlc/plan-trial-spec.md#security-gate)).
 - Spec entry gate: the offline `tracker-sdlc` setup check passed on
   2026-10-18 (`maintainers/AGENTS.md` `## Tracker` names
@@ -54,6 +55,7 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
 | `docs/sdlc/bundle-spec.md` | 2 | Owner: bundle layout, `bundle.md`, persona files, prompt kinds, placeholders. ≤150 lines |
 | `docs/sdlc/flow-spec.md` | 2 | Owner: `flow.json`, exits, reserved exits, candidate rules, bundle check, error codes. ≤150 lines |
 | `docs/sdlc/fixtures/flows/`, `docs/sdlc/fixtures/bundles/` | 2 | Flow and bundle fixtures with expected error codes |
+| `docs/INTAKE.md` | 2 | New `## Script records` section: one line per bundle script **security** cleared ([Bundle layout](#bundle-layout-and-bundlemd)) |
 | `docs/sdlc/bundle-runs.md` | 3 | Owner of every rule change in [HLD Rule changes](hld.md#rule-changes), plus run-root formats for agents. ≤150 lines |
 | `bundles/sdlc/` | 3 | The SDLC bundle: `bundle.md`, `flow.json`, `personas/*.md` |
 | `skills/test-failure-handler/SKILL.md` | 3 | New first-party skill, `SOURCES.md` row |
@@ -172,7 +174,7 @@ numbers as at 34e1278:
 | L40–45 table | Add four rows: `schemaVersion`, `choice`, `ticket`, `artifact`, with the rules above | +4 |
 | L77–78 | Rule 4 rewritten as rule 1 above, still two lines | 0 |
 | after L78 | New rule 5, two lines | +2 |
-| L101–146 | Cut the four `###` example headings L103, L118, L126, L135 and their blank lines L104, L119, L127, L136: −8. Each of the five examples gains one line for the new fields: +5. Fold each lone brace onto the line before it in the model `pass` (L115, −1), `blocked` (L132, −1), and `needs_input` (L140, L142, L144: −3) examples: −5 | −8 |
+| L101–146 | Cut the four `###` example headings L103, L118, L126, L135 and their blank lines L104, L119, L127, L136: −8. Each of the five examples gains one line for the new fields: +5. Fold the lone closing brace onto the line before it in the model `pass` (L115, −1) and `blocked` (L132, −1) examples. In the `needs_input` example, join L140 (`"kind": "model",`) onto L139 and fold the closing braces L142 and L144 onto the lines before them (−3). Together: −5 | −8 |
 | L149–150 | Out-of-scope sentence reworded, still two lines | 0 |
 
 Result: 148 lines. Item 3's one-line route to `bundle-runs.md` makes it
@@ -219,6 +221,18 @@ bundles/<bundle-id>/
   which **security** cleared that exact file. First-party scripts clear
   INTAKE too. The bundle check fails a script whose hash differs or
   that has no bullet (`bundle.script-intake`).
+- **Script records.** A `<record>` matches `^[a-z0-9][a-z0-9-]{0,39}$`
+  and names one line under `## Script records` in `docs/INTAKE.md`:
+  `` `<record>` `bundles/<bundle-id>/scripts/<file>` sha256 `<hex>` ``.
+  **security** writes that line when it clears the file. For a bundle
+  commit outside reviewed history ([`run.json`](#runjson)), the
+  driver's start-time bundle check also reads `docs/INTAKE.md` with
+  `git -C <home> show <ref>:docs/INTAKE.md` at each derived reviewed
+  ref, and fails a script unless one of them holds a line with its
+  record, path, and hash (`bundle.script-intake`). A record that exists
+  only in the bundle commit, or in any commit that is not an ancestor
+  of a derived reviewed ref, does not count. A bundle commit inside
+  reviewed history needs only the bullet.
 - `## Required skills` equals the union of every persona's and node's
   `skills`. Each id resolves to `skills/<id>/SKILL.md` in the skills
   home at the pinned commit, with a `SOURCES.md` row, or to the bundle's
@@ -424,7 +438,7 @@ clean, `1` on any error.
 | B9 | `outputs` and `outputDirs` are normalized repo-relative paths | `flow.output-path` |
 | B10 | A `land` node names existing nodes of the right kind: `prove` is an item `command` node with `commands: "groom"`; `verify` is a model node with job `verifier`; `review` has step `Review`, job `reviewer`, and `checks` holding `intake`, `sha-pins`, `trust-boundary` | `flow.land-ref`, `flow.review-checks` |
 | B11 | Gate rows below hold on every path | `gate.*` |
-| B12 | `bundle.md` headings; no symbolic links; size caps; every `scripts/` file listed with its hash and intake record | `bundle.layout`, `bundle.script-intake` |
+| B12 | `bundle.md` headings; no symbolic links; size caps; every `scripts/` file listed with its hash and intake record; outside reviewed history, that record and hash present in `docs/INTAKE.md` at a derived reviewed ref ([Script records](#bundle-layout-and-bundlemd)) | `bundle.layout`, `bundle.script-intake` |
 | B13 | `extract` only on `gate` exits; `from` is a normalized repo-relative path; `to` matches `^[a-z0-9-]{1,40}\.md$` | `flow.extract` |
 
 Gate rows. The checker finds the nodes by kind, step, job, outputs, and
@@ -668,8 +682,7 @@ personas and never write to the tracker.
 {
   "schemaVersion": 1,
   "chunk": {"slug": "solo-dlc", "epic": "der-e421"},
-  "bundle": {"id": "sdlc", "home": "/abs/path/to/skills-home", "commit": "<40-hex>",
-             "reviewedRefs": ["origin/main", "origin/integrate/solo-dlc"]},
+  "bundle": {"id": "sdlc", "home": "/abs/path/to/skills-home", "commit": "<40-hex>"},
   "repo": {"origin": "git@github.com:OWNER/REPO.git", "trunk": "main",
            "projectMain": "integrate/solo-dlc", "designDir": "maintainers/design/solo-dlc"},
   "tracker": {"backend": "local", "skill": ".agents/tracker/SKILL.md",
@@ -720,21 +733,35 @@ personas and never write to the tracker.
   a summary of `run.json` (bundle commit, repo, tracker, harness pin,
   models, spending, labels) and records the operator's yes as
   `runJsonSha256` in `driver.json`. No yes, no run.
-- **Bundle commit outside reviewed history (S9).**
-  `bundle.reviewedRefs` defaults to the skills home's trunk and its
-  project-main (`origin/main` and `origin/<projectMain>` when that ref
-  exists in the skills home; this chunk's does). The summary shows the
-  full 40-hex bundle commit and, for each ref, the result of
-  `git -C <home> merge-base --is-ancestor <commit> <ref>`. The driver
-  does not fetch the skills home. A missing ref stops the start and
-  names that ref; the driver does not treat a missing ref as "not an
-  ancestor." When the commit is an ancestor of
-  neither ref, the summary also shows the SHA-256 of every file under
-  the bundle's `scripts/` and `personas/` at that commit, and each
-  script's intake record. A script that has not cleared INTAKE fails
-  the bundle check (`bundle.script-intake`) before that question. The
-  confirmation is then `ctx.ui.input`, not `confirm`: the operator's
-  answer must equal the full SHA, else no run.
+- **Bundle commit outside reviewed history (S9, N2, N4).** The driver
+  derives the reviewed refs itself and never reads them from
+  `run.json`. They are two refs in the skills home:
+  `origin/<trunk>`, where `<trunk>` is the branch that
+  `git -C <home> symbolic-ref refs/remotes/origin/HEAD` names, and
+  `origin/<projectMain>`, with `run.json` `repo.projectMain`, used only
+  when that ref exists in the skills home (this chunk's does). The
+  driver does not fetch the skills home, so these are the operator's
+  local remote-tracking refs as last fetched (a residual:
+  [Trust boundaries](#trust-boundaries)). A missing `origin/HEAD` or
+  `origin/<trunk>` stops the start and names the ref; the driver
+  never treats a missing ref as "not an ancestor," and an absent
+  `origin/<projectMain>` is shown as `absent`. The
+  summary shows the full 40-hex bundle commit and, for each derived
+  ref, the result of
+  `git -C <home> merge-base --is-ancestor <commit> <ref>`. When the
+  commit is an ancestor of neither ref, the summary also shows the
+  SHA-256 of every file under the bundle's `scripts/` and `personas/`
+  at that commit, and each script's intake record. A script whose
+  record and hash are not in `docs/INTAKE.md` at a derived ref fails
+  the bundle check (`bundle.script-intake`,
+  [Script records](#bundle-layout-and-bundlemd)) before that question.
+  The confirmation is then `ctx.ui.input`, not `confirm`: the
+  operator's answer must equal the full SHA, else no run.
+- **Other refs force the typed SHA.** `bundle.reviewedRefs` is
+  optional and never used for the ancestry test. When it is present
+  and lists any ref other than the two derived refs, the driver takes
+  the typed-SHA path above, even when the commit is an ancestor of a
+  derived ref, and the summary names the extra refs.
 
 #### `driver.json`
 
@@ -745,7 +772,8 @@ personas and never write to the tracker.
   "bundle": {"commit": "<40-hex>", "checkedAt": "<UTC>"},
   "worker": {"extension": "driver/worker-ext/sdlc-worker-1a2b3c4d5e6f.ts",
              "sha256": "<hex>", "harnessVersion": "0.73.1"},
-  "chunk": {"node": "spec", "state": "active", "stop": null, "askId": null},
+  "chunk": {"node": "spec", "state": "active", "stop": null, "askId": null,
+            "pendingRoute": null},
   "groom": {"path": "maintainers/design/solo-dlc/groom.md", "reviewedCommit": "<sha>",
             "frozenCommit": "<sha>", "commandsSha256": "<hex>"},
   "items": {
@@ -769,6 +797,7 @@ personas and never write to the tracker.
 | --- | --- |
 | `chunk.state`, `items.*.state` | `pending` (not started), `active`, `waiting` (an ask is open: `askId`), `deferred` (the manager deferred it; retried at the next `/sdlc`), `done` |
 | `chunk.node`, `items.*.node` | Current node id, or `@items` / `@done` |
+| `chunk.pendingRoute` | `null`, or `{"node", "choice", "run", "record", "commit"}` from the end of an HLD or Spec stage whose design record was committed until its paperwork stage returns `posted`: the node and `choice` to route, the node's run, the record path, and the pushed commit ([Design-record commits](#design-record-commits) step 7) |
 | `items.*.land` | `null` outside the land node, else `{"phase", "p1", "p2", "cleanTree", "cleanCommit", "landCommit"}`; `phase` is one of the [Land](#land-sub-machine) rows |
 | `items.*.landReentry` | `true` from L3b or L6r until the item next enters the land node at L1; selects the console label ([Land](#land-sub-machine)) |
 | `repairs`, `sentBack`, `fixPending` | [Repair counter](#repair-counter) |
@@ -945,7 +974,13 @@ it refuses while any driver holds the lock.
    `tracker.backend` other than `local` with the line in
    [`run.json`](#runjson). Check the harness version equals
    `harness.version` and the installed tree's hash equals
-   `harness.treeSha256`; else stop and print both values of each.
+   `harness.treeSha256`, hashing every file in full; else stop and
+   print both values of each. The driver keeps a stat cache of the
+   tree (path, inode, size, `mtime`, `ctime`, SHA-256) in
+   `driver/harness-tree.json`, written only here, so the
+   [stage pipeline](#stage-pipeline) can re-check the hash
+   before each worker spawn and re-hash only changed files, in memory.
+   The `snapshot` check covers the cache file like any driver file.
 3. On the first start, before any fetch, when `repo.git` does not
    exist: `git init --bare --initial-branch=empty repo.git`; set
    `origin` from `run.json` with no force option and fetch refspec
@@ -968,7 +1003,9 @@ it refuses while any driver holds the lock.
    `interrupted` event. A failed check is an `operator` stop. Otherwise
    the next run of that scope and node uses the interrupted record's
    `prompt`, `repairOf`, and `invalidRepairs`, so an interrupted repair
-   is not granted a second repair.
+   is not granted a second repair. An interrupted paperwork stage is
+   replayed from `chunk.pendingRoute`
+   ([Design-record commits](#design-record-commits) step 7).
 6. Print the found report ([Console](#console-lines)); any `deferred`
    scope becomes `active`.
 7. Enter the loop.
@@ -985,7 +1022,10 @@ it refuses while any driver holds the lock.
    `projectMainSeen` to the fetched tip, create its branch from that tip
    with `git worktree add -b <branch> worktrees/<suffix> <tip>`, push
    the branch without force, and set `lastPushed`.
-4. Run the scope's current node ([Node routing](#node-routing)).
+4. Run the scope's current node ([Node routing](#node-routing)). For
+   the chunk with `chunk.pendingRoute` set, run the architect's
+   paperwork stage instead
+   ([Design-record commits](#design-record-commits) step 7).
 5. Repeat.
 
 One stage runs at a time, model or command, across all scopes.
@@ -1013,8 +1053,11 @@ worker-only checks.
    snapshot that the [post-stage checks](#post-stage-checks) for this
    stage kind need, and write `driver/snapshot.json`.
 5. **Run.** Print the start line, except a proving-command stage
-   while `landReentry` is set, which prints none
-   ([console mapping](#land-sub-machine)). Model: call
+   while `items.*.land` or `landReentry` is set, which prints none
+   ([console mapping](#land-sub-machine)). Model: re-check
+   `harness.treeSha256` from the stat cache ([Start](#start) step 2);
+   a mismatch finishes the stage as a failed check
+   (`check failed: harness`, step 6) without spawning. Then call
    `adapter.runWorker`;
    after it returns, kill leftovers
    ([Pi adapter](#pi-adapter-and-worker-command-line)). Command: run
@@ -1034,8 +1077,8 @@ worker-only checks.
    [land sub-machine](#land-sub-machine) consumes the result and the
    flow route does not. It does not run steps 7–11. When the command
    result is `fail` and the checks passed, a proving-command stage
-   with `landReentry` set prints the command-fail line instead of the
-   end line.
+   with `items.*.land` or `landReentry` set prints the command-fail
+   line instead of the end line.
 7. *(model)* **Validate.** The candidate is invalid if it is missing,
    fails the strict reader, fails item 1 or the
    [candidate rules](#flowjson), `timedOut` is true, or `modelError` is
@@ -1074,13 +1117,23 @@ worker-only checks.
     `outputDirs` and a `pass`, except a paperwork stage:
     [design-record commit](#design-record-commits). A stop inside that
     procedure finishes this stage the same way and does not continue.
+    Paperwork never runs inside this step: it is a later stage of its
+    own (step 11).
 11. **Record and route.** Clear `inFlight`, append `end` to
-    `index.jsonl`, print the end line, and route by `choice`. A
-    paperwork stage does not take this route:
-    [Design-record commits](#design-record-commits) step 7 does. A
-    manager stage routes by [Stops](#stops-and-the-manager). While
-    `items.*.land` is set, the land sub-machine consumes the result
-    and this step does not take the flow route.
+    `index.jsonl`, print the end line, and route by `choice`, with
+    these exceptions:
+    - The HLD or Spec node after step 10's design-record commit: in the
+      same `driver.json` write that clears `inFlight`, set
+      `chunk.pendingRoute` to this node, `choice`, run, record path,
+      and pushed commit. Do not route; the next stage is the
+      architect's paperwork
+      ([Design-record commits](#design-record-commits) step 7).
+    - A paperwork stage that returns `posted`: in one `driver.json`
+      write, clear `inFlight` and `chunk.pendingRoute` and route by
+      `pendingRoute.choice` from `pendingRoute.node`.
+    - A manager stage routes by [Stops](#stops-and-the-manager).
+    - While `items.*.land` is set, the land sub-machine consumes the
+      result and this step does not take the flow route.
 
 #### Command body
 
@@ -1191,18 +1244,21 @@ Rules this table encodes:
 
   | Driver classification | Builder end line | Lines that follow |
   | --- | --- | --- |
-  | L3 row 1: no conflict, tree equals the clean merge | `tip merged clean` | Verifier re-run (and the proving commands); no reviewer line while the tree stays clean |
+  | L3 row 1: no conflict, tree equals the clean merge | `tip merged clean` | Verifier re-run; no reviewer line while the tree stays clean. The L3a proving commands print no line unless they fail, as in [ux.md](ux.md)'s SD-28 sample |
   | L3 row 2: conflict, or any other tree | `tip merged, conflicts resolved` | Verifier re-run, then reviewer re-run, then the merge line |
   | L3c after a fix: tree differs from `cleanTree` | The fix run's normal end line | Verifier re-run, then reviewer re-run with the range from `reviewBase` (the clean merge commit) |
   | L2 `blocked` or `needs_input` | None | `STOP` line of kind `blocked` or `needs input`; no merge line |
 
   While `landReentry` is set, the item's lines use the label `Land`
   and the start notes `fix`, `re-run`, and `re-review`. A
-  proving-command stage in that stretch prints no start line and no
+  proving-command stage inside the land node (`items.*.land` set: L3a
+  and L6) or while `landReentry` is set prints no start line and no
   end line. When that command fails it prints the command-fail line
-  and nothing else. The persona lines are then the builder end line,
-  the verifier (`re-run`), and the reviewer (`re-review`): builder →
-  verifier → reviewer, as the story says. `index.jsonl` and
+  and nothing else. A green L6 run is reported by the
+  `tip unchanged  merged  <projectMain>  pushed` line. The persona
+  lines are then the builder end line, the verifier (`re-run`), and
+  the reviewer (`re-review`): builder → verifier → reviewer, as the
+  story says. `index.jsonl` and
   `result.json` keep the real node and step.
 - A failed push is classified by fetch and `git merge-base
   --is-ancestor`, never by parsing push output. The design-record push
@@ -1277,19 +1333,42 @@ For a chunk `model` node with `outputs` or `outputDirs`, after a valid
    a `blocked` stop, no retry.
 6. Record the commit SHA in `meta.json`. For `groom`, it becomes
    `groom.reviewedCommit` when the next `groom-review` passes.
-7. For the HLD node and the Spec node: resume the architect in a new
-   run folder with `paperwork` and `{{commentText}}` holding the comment
-   fields plus `Record: <path>`. Its exits are the
+7. For the HLD node and the Spec node, paperwork is a separate stage
+   that starts only after the parent stage has finished: `inFlight`
+   cleared, `end` appended, and `chunk.pendingRoute` persisted
+   ([Stage pipeline](#stage-pipeline) step 11). While
+   `chunk.pendingRoute` is set, the chunk's next stage is always the
+   paperwork stage: resume the architect in a new run folder with
+   `paperwork` and `{{commentText}}` holding the comment fields plus
+   `Record: <pendingRoute.record>`. Its exits are the
    [driver-fixed](#driver-fixed-exits) `posted` [`pass`], plus the
    reserved `stop`; its `pass` evidence is `comment: <comment id>`. A
-   `stop` is a manager stop of kind `paperwork failed`. The original
-   node's `choice` routes only after `posted`.
+   `stop` is a manager stop of kind `paperwork failed`; `resume` runs
+   paperwork again with the answer, and `defer` leaves
+   `pendingRoute` set for the next `/sdlc`. The parent node's `choice`
+   routes only after `posted`.
+
+   **Crash replay.** `driver.json` holds the parent's end and the
+   pending route in one atomic write, so a restart sees one of three
+   states. (a) The parent is still `inFlight`: [Start](#start) step 5
+   marks it interrupted and the node runs again; its record commit, if
+   pushed, is already on project-main, so step 4 stages nothing new
+   unless the re-run changes the file. (b) `pendingRoute` is set and a
+   paperwork stage is `inFlight`: Start step 5 marks that run
+   interrupted and runs its post-stage checks, and the loop runs
+   paperwork again in a new run folder. A comment the interrupted run
+   already posted stays; the replay posts its own, with its own
+   `Run:` line, so the Epic can show two paperwork comments for one
+   record. (c) `pendingRoute` is set and nothing is `inFlight`: the loop
+   runs paperwork. Paperwork never re-commits the record, and once
+   `pendingRoute` is set the parent node does not run again for that
+   record.
 
 #### Scan patterns
 
-Per line, applied to every committed record and every ticket body the
-[tickets check](#tickets-content-check) compares. Each pattern has a
-class:
+Per line, applied to every committed record and to every ticket or
+comment file the [tickets check](#tickets-content-check) sees added or
+modified, in full, front matter included. Each pattern has a class:
 
 | Class | Patterns | Operator may `allow` |
 | --- | --- | --- |
@@ -1345,23 +1424,67 @@ exception, and only for the rows marked below.
 2. `git merge-base --is-ancestor P Q` must succeed.
 3. For each commit in `git rev-list --reverse P..Q`: exactly one parent;
    message exactly `[<id>] <verb>` with `<verb>` one of `create`,
-   `claim`, `transition`, `comment`, `set-blocker`; and every entry of
+   `claim`, `transition`, `comment`, `set-blocker`; author name, author
+   email, committer name, and committer email
+   (`git log -1 --format=%an%x00%ae%x00%cn%x00%ce <c>`) equal the
+   driver-set identity for this stage, below; and every entry of
    `git diff-tree -r --no-renames --name-status <c>^ <c>` is allowed by
    the table below, mode `100644`.
-4. Anything else is `check failed: tickets`, an `operator` stop that
-   names the commit and path, never the text.
+4. Scan every added or modified file at `Q` in full, front matter
+   included, with the [scan patterns](#scan-patterns). Any hit fails;
+   the operator cannot `allow` it here. One exception: a non-credential
+   hit on a `file-tickets` body line that copies a `groom.md` line the
+   operator allowed at that file's design-record scan (the recorded
+   `scan-hit` answer in `asks/` names that file and line) does not
+   fail.
+5. For `file-tickets`, the filing rules below hold over the whole
+   range.
+6. Anything else is `check failed: tickets`, an `operator` stop that
+   names the commit and path, or the file, line, and class of a scan
+   hit, never the text.
 
 `<id>` is the stage's `ticket`: the item for an item stage and for a
 manager stage about an item; otherwise the Epic. `<label>` is the
 persona label
 ([Tracker calls](#behavior-7-tracker-calls-per-persona)).
 
+**Driver-set identity.** The adapter sets `GIT_AUTHOR_NAME` and
+`GIT_COMMITTER_NAME` to `<label>`, and `GIT_AUTHOR_EMAIL` and
+`GIT_COMMITTER_EMAIL` to `<label>@sdlc.invalid`, in every worker's
+environment ([Pi adapter](#pi-adapter-and-worker-command-line)). Git
+gives these variables precedence over `user.name` and `user.email`, so
+the `local` recipe's commits carry them, and so do a builder's item
+commits. A tickets commit with any other value fails, whoever made
+it.
+
+**Front-matter values.** `<state>` is one of `backlog`, `ready`,
+`in_progress`, `in_review`, `done`, `canceled`. `<UTC>` matches
+`^[0-9]{4}-[0-9]{2}-[0-9]{2}T[0-9]{2}:[0-9]{2}:[0-9]{2}\.[0-9]{6}Z$`,
+the `local` recipe's `now` format.
+
 | Entry | Allowed when |
 | --- | --- |
-| `M tickets/<id>.md` | Only the front-matter lines `state`, `assignee`, and `updated` differ from the parent; every other line is byte-equal |
+| `M tickets/<id>.md` | Only the front-matter lines `state:`, `assignee:`, and `updated:` differ from the parent; every other line is byte-equal. `state` is a `<state>`; `assignee` equals `<label>` or is unchanged from the parent; `updated` is a `<UTC>` |
 | `A comments/<id>/<TS>-<label>.md` | At most one per stage. `<TS>` matches `^[0-9]{8}T[0-9]{6}Z$`. The body equals the driver's [comment template](#behavior-7-tracker-calls-per-persona) for this stage, with `Status` one of the four statuses and only the optional lines that row allows, with the driver's values |
-| `file-tickets` only: `A tickets/<new>.md` | `<new>` matches `tracker.keyPattern`; `type: task`, `parent` the Epic, `title` `G<n>: <title>` of a groom item, `labels` and `links` empty, `blocked_by` empty or planned ids; the body equals that item's `### G<n>` section of `groom.md` at `groom.reviewedCommit` |
-| `file-tickets` only: `M tickets/<new>.md`, `M tickets/<epic>.md` | As the first row, with `blocked_by` also allowed to gain planned ids |
+| `file-tickets` only: `A tickets/<new>.md` | `<new>` matches `tracker.keyPattern`. The front matter has exactly these keys, each once, in this order: `id`, `type`, `title`, `state`, `parent`, `blocked_by`, `labels`, `assignee`, `created`, `updated`, `links`. `id` is `<new>`; `type: task`; `title` is `G<n>: <title>`, byte-equal to a groom item's heading text; `state: backlog`; `parent` is the Epic; `blocked_by` is `[]` or a list of planned ticket ids; `labels: []`; `assignee` empty; `created` and `updated` are the same `<UTC>`; `links: []`. The body, every line after the closing `---`, equals that item's section of the reviewed `groom.md` (filing rule 1, below) |
+| `file-tickets` only: `M tickets/<new>.md`, `M tickets/<epic>.md` | As the first row, with `blocked_by` also allowed to gain planned ids, and `assignee` unchanged |
+
+**Filing rules** (`file-tickets` only):
+
+1. **Reviewed, scanned body.** The section source is `groom.md` at
+   `groom.reviewedCommit`: a commit the driver made, whose copy passed
+   the [scan](#scan-patterns) at design-record step 3, and which
+   `git merge-base --is-ancestor <reviewedCommit> origin/<projectMain>`
+   shows is already on project-main at the check. Otherwise the check
+   fails. The section is the lines after its `### G<n>: <title>`
+   heading up to the next `##` or `###` heading, with leading and
+   trailing blank lines dropped.
+2. **One ticket per groom item.** Each `A tickets/<new>.md` in the range
+   matches exactly one groom item by title, and no groom item gets two.
+3. **No duplicate filing.** No `A` is allowed for a groom item that
+   already has a ticket at `P` whose `parent` is the Epic and whose
+   `title` starts with `G<n>: `. A re-run of `file-tickets` after an
+   interrupted one reuses that ticket; the manager's prompt says so.
 
 Other people share the tickets branch and project-main. A write to
 another ticket, or any other ref move, during a stage also stops the
@@ -1385,7 +1508,7 @@ the detach, only if that ref still exists, and it is never pushed.
 | `operator gate: <tag>` | A gate node | `escalate` | `gate` |
 | `operator: <question>` | Worker chose `operator` | `escalate` | `operator-stop` |
 | `repair budget exhausted` | Repair counter | `escalate` | `operator-stop` |
-| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), `extract`, `unexpected session file`, `pushed history rewritten` | `escalate` | `operator-stop` |
+| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), the pre-spawn `harness` re-check, `extract`, `unexpected session file`, `pushed history rewritten` | `escalate` | `operator-stop` |
 | `scan hit` | Design-record step 3, no credential hit | Not resumed: the driver writes the ask | `scan-hit` |
 | `scan hit: credential` | Design-record step 3, a credential hit | Not resumed: the driver writes the ask | `scan-secret` |
 | `session lost: <file>` | Pipeline step 2 | `escalate` | `lost-session` |
@@ -1611,6 +1734,7 @@ uses `run.json` `harness.node`.
   | `SDLC_EXITS` | JSON array of `{"name", "statuses"}`, reserved exits included as the worker may use them |
   | `SDLC_CHECKS`, `SDLC_OUTPUTS` | JSON arrays from the node |
   | `SDLC_FACTS`, `SDLC_FACTS_SHA256` | [Driver facts](#driver-facts) |
+  | `GIT_AUTHOR_NAME`, `GIT_COMMITTER_NAME`, `GIT_AUTHOR_EMAIL`, `GIT_COMMITTER_EMAIL` | `<label>`, `<label>`, `<label>@sdlc.invalid`, `<label>@sdlc.invalid`: the [driver-set identity](#tickets-content-check) |
   | `PI_OFFLINE` | `1`: Pi skips its start-up network calls and version check |
 
 - **Process:** spawned with `detached: true` so the worker leads its own
@@ -1804,14 +1928,14 @@ manager (a worker); the kickoff session model (untrusted; writes
 | # | Boundary | What crosses | Control | Kind |
 | --- | --- | --- | --- | --- |
 | TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, answers | User commands only; refused without UI or inside a worker; answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
-| TB2 | Kickoff model → `run.json` | Paths, models, tracker, spending, harness pin | Strict schema; `local` backend only; the operator confirms a summary at the first `/sdlc` and on every change; a bundle commit outside reviewed history needs the full SHA typed back, with `scripts/` and persona hashes shown | Enforced |
+| TB2 | Kickoff model → `run.json` | Paths, models, tracker, spending, harness pin | Strict schema; `local` backend only; the operator confirms a summary at the first `/sdlc` and on every change; reviewed refs derived by the driver, never read from `run.json`; a bundle commit outside them, or a `run.json` naming another ref, needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at a reviewed ref | Enforced; the refs are local, not fetched (residual) |
 | TB3 | Bundle → driver | Flow, personas, skills, scripts | Pinned commit read with `git show`; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
-| TB3a | Harness → driver | The Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start; npm checked `integrity` at install | Enforced at start |
+| TB3a | Harness → driver | The Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` at install | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
 | TB4 | Driver → worker | Prompt, facts, env | Prompt built from driver state; model or operator text fenced as data; facts hash; extension copy hashed; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
 | TB5 | Worker → files | `write`, `edit`, `sdlc_write` | Allowlist, path guard (fail-closed), run-folder tool | Enforced; the guard's check-then-write race is an accepted residual |
 | TB6 | Worker → files through `bash` | Any write | Snapshot, worktree, refs, ancestry, project-main checks | Detected in the run root and worktrees; residual elsewhere (operator accepts in writing) |
 | TB7 | Worker → result | `candidate.json` | Strict validation; only validated fields route; prose never routes | Enforced |
-| TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit, path, front-matter line, and comment body | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
+| TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit (driver-set author and committer), path, front-matter key and value, comment body, and filed ticket body, plus a scan of every touched file | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
 | TB9 | Driver → tracker | One read per check | The repo skill's `local` read recipe as fixed git argv; ids checked against the key pattern | Enforced |
 | TB10 | Driver and workers → git remote | Pushes with the operator's credentials | Driver code has no force option; pushes only item branches and project-main; L9 is the only remote deletion; moved tips decided by `merge-base --is-ancestor`; the `refs` check compares every remote ref around every stage | Enforced for the driver; worker pushes detected after the stage, public before it (operator accepts in writing) |
 | TB11 | Worker → model provider | Prompt, repo content, tool output | Local model by default; a paid slot requires the spending record | Enforced at start |
@@ -1876,6 +2000,17 @@ the stage.
    leftover sweep; and a worker that tampers with
    `driver/snapshot.json` while the driver is down, which only weakens
    the interrupted-stage check.
+6. N4 (re-review of de7c438, low), stated as residuals:
+   - The reviewed-ref ancestry test and the INTAKE record lookup use
+     the skills home's local remote-tracking refs; the driver does not
+     fetch the skills home, so a stale or locally moved ref is trusted
+     as the operator left it.
+   - `harness.treeSha256` is checked at every start and re-checked
+     before each worker spawn from a stat cache. A change that keeps a
+     file's inode, size, `mtime`, and `ctime` is not re-hashed between
+     starts; the full hash at the next start catches it.
+   - `harness.node`, the Node binary for the detached driver under
+     Pi's compiled binary, is not hashed.
 
 **Operator must accept in writing** (at the `spec` gate; the answer is
 recorded verbatim in `asks/`):
@@ -1975,7 +2110,22 @@ Driver scenarios, each a test:
 14. A bundle commit outside trunk and project-main shows the full
     SHA, both ancestor results, and the `scripts/` and persona hashes;
     the answer must equal that SHA. A script that has not cleared
-    INTAKE stops the start first.
+    INTAKE stops the start first, including a script whose record
+    exists only in the bundle commit's own `docs/INTAKE.md`. A
+    `run.json` whose `bundle.reviewedRefs` lists another ref takes the
+    typed-SHA path even for a commit on trunk.
+15. Tickets check (N1): a `state` outside the enum, an `assignee` set
+    to another label, a malformed `updated`, a commit with another
+    author or committer, a credential-shaped line in ticket front
+    matter, and, for `file-tickets`, an extra key, a second ticket for
+    one groom item, a re-filed item, and a body that differs from the
+    reviewed section each fail.
+16. Paperwork: the HLD stage ends (`end` appended, `inFlight` cleared,
+    `chunk.pendingRoute` set) before paperwork starts; killing the
+    driver during paperwork replays it in a new run folder and routes
+    by the stored `choice` after `posted`.
+17. A worker whose Pi tree changed after start fails the pre-spawn
+    `harness` re-check without spawning.
 
 **Pi checks** (item 6 acceptance, on the operator's machine with Pi
 0.73.1 and one local model; manual, gated by `SDLC_PI_SMOKE=1`; they
@@ -2072,6 +2222,18 @@ proving commands green; docs current (package READMEs for 5 to 7); one
     so no ask can quote the hit.
 14. Gate results use `evidence.kind: model`, the closer of the
     contract's two kinds.
+15. Item 3 (G3) waits for item 5 (G5, or G5a after a split) and lands
+    after it. The HLD [Items](hld.md#items) table blocks item 3 on
+    item 2 only and runs 3 and 5 in one wave; G3's proving commands run
+    G5's bundle check on `bundles/sdlc`, so that check must be on
+    project-main first ([Groom split](#groom-split-proposal)).
+16. Item 7 (G7) is not groomed with the others. The HLD keeps it in the
+    last wave after item 6; here it is deferred until its first
+    deliverable, `opencode-server.md`, has landed, and its proving
+    commands are written from that note.
+17. G9, Linear for driven runs, is new: the HLD has no such item. It
+    comes from security ruling S1 and carries S1 and S2, with its own
+    LLD addendum and **security** gate.
 
 ### Groom split (proposal)
 
@@ -2080,12 +2242,12 @@ proving commands green; docs current (package READMEs for 5 to 7); one
 | G1 | Result format (DER-529) | — | — |
 | G2 | Bundle and flow spec, fixtures | G1 | Candidate and `choice` rules extend item 1's fields |
 | G5 | Core driver | G1, G2 | Implements both specs; its tests read their fixtures |
-| G3 | SDLC bundle, `test-failure-handler`, tracker wiring, `bundle-runs.md` | G2, G5 | Written in the spec's format. Land order: G5 lands before G3, because G3's proving commands run G5's bundle check on `bundles/sdlc` |
+| G3 | SDLC bundle, `test-failure-handler`, tracker wiring, `bundle-runs.md` | G2, G5 | Written in the spec's format. Land order: G5 lands before G3, because G3's proving commands run G5's bundle check on `bundles/sdlc`. Differs from the HLD: [clarification](#clarifications-of-the-hld-made-here) 15 |
 | G6 | Pi plugin, worker extension, Pi checks | G3, G5 | Hosts the core; the smoke runs `bundles/sdlc` |
 | G4 | `bundle-authoring` | G6 | Brief: after the Pi path works |
 | G8 | `sdlc-followed-mode`, `sdlc-kickoff` | G6 | Brief: after the Pi path works |
-| G7 | OpenCode plugin. Not groomed in this pass: its first deliverable, the one-page server note `opencode-server.md` (command, session, single worker process), must exist before G7 is groomed | G6 | Brief: after the Pi path works; the server's behavior is unconfirmed |
-| G9 | Linear for driven runs: a no-model read recipe for the driver and shell write recipes for workers. Not groomed in this pass: it needs its own LLD addendum and its own **security** gate | G6 | Security ruling S1; carries S1 and S2 (below) |
+| G7 | OpenCode plugin. Not groomed in this pass: its first deliverable, the one-page server note `opencode-server.md` (command, session, single worker process), must exist before G7 is groomed | G6 | Brief: after the Pi path works; the server's behavior is unconfirmed. Deferral: [clarification](#clarifications-of-the-hld-made-here) 16 |
+| G9 | Linear for driven runs: a no-model read recipe for the driver and shell write recipes for workers. Not groomed in this pass: it needs its own LLD addendum and its own **security** gate | G6 | Security ruling S1; carries S1 and S2 (below). Not an HLD item: [clarification](#clarifications-of-the-hld-made-here) 17 |
 
 Waves: 1: G1; 2: G2; 3: G5; 4: G3; 5: G6; 6: G4, G8. G7 and G9 are
 groomed later, each after its precondition. No gate items. Item 5 is
@@ -2104,7 +2266,7 @@ symbolic link; the `run.json` confirmation shows the path; a same-uid
 process reading the key is residual); and S2, worker tracker
 credentials for Linear on Pi.
 
-### Security rulings (review of 34e1278)
+### Security rulings (review of 34e1278; N1–N4 from the re-review of de7c438)
 
 | # | Topic | Ruling | Where it lands |
 | --- | --- | --- | --- |
@@ -2117,6 +2279,10 @@ credentials for Linear on Pi.
 | S7 | Environment of workers and proving commands | Fixed denylist; hygiene, not a boundary; proving lines only from the frozen blob and pinned defaults | [Environment scrub](#environment-scrub) |
 | S8 | Pinned `typescript` dev dependency | Accepted | Trust boundaries |
 | S9 | Bundle commit outside reviewed history | Full SHA, ancestor results, `scripts/` and persona hashes shown; the SHA typed back; `scripts/` clear INTAKE | [`run.json`](#runjson), [Bundle layout](#bundle-layout-and-bundlemd) |
+| N1 | Tickets content (re-review of de7c438) | State enum, assignee, strict `updated`, exact key set for filed tickets, one ticket per groom item, no re-filing, whole-file scan, filed body equals the reviewed and scanned section on project-main, driver-set author and committer | [Tickets content check](#tickets-content-check) |
+| N2 | Reviewed refs | Derived by the driver, never read from `run.json`; any other ref named forces the typed SHA | [`run.json`](#runjson) |
+| N3 | INTAKE record for an unreviewed bundle commit | Record and hash must be in `docs/INTAKE.md` at a derived reviewed ref; one inside the bundle commit does not count | [Bundle layout](#bundle-layout-and-bundlemd) |
+| N4 | Low residuals | Local refs, no fetch; `treeSha256` re-checked per spawn from a stat cache; `harness.node` not hashed | [Trust boundaries](#trust-boundaries) |
 | Pi pin | Harness supply chain | npm `integrity` recorded at install; `treeSha256` (binary hash, or package-tree hash) recorded in `run.json` and checked at every start; 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
 
 ### Questions for the operator
