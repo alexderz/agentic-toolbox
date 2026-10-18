@@ -92,14 +92,17 @@ last matching rule wins. `edit` covers `edit`, `write`, and
 | `experimental.session.compacting` | Sets `output.prompt`: return the deterministic summary verbatim |
 | `experimental.chat.messages.transform` | Runs on every model request. Replaces the text of each `summary: true` message with the deterministic summary: persona header, `state.md`, driver facts |
 | `experimental.chat.system.transform` | Appends the driver-facts block to every request's system prompt |
-| `shell.env` | Sets `XDG_CONFIG_HOME` back to the operator's value for `bash`, so `git` reads the operator's config |
+| `shell.env` | Sets `output.env.XDG_CONFIG_HOME` back to the operator's value for `bash`, so `git` reads the operator's config. A returned object is ignored |
 
 **Compaction differs from Pi.** OpenCode has no hook that supplies the
 summary. The hidden `compaction` agent writes it in a model call with
 no tools. The hook can only replace that agent's prompt. The
 `messages.transform` replacement makes every later request carry the
 deterministic summary, whatever the stored summary says. Compaction
-fires when tokens reach the context limit minus `compaction.reserved`;
+fires when tokens reach `usable()` in `session/overflow.ts`: when the
+model sets `limit.input`, `usable()` is `limit.input -
+compaction.reserved`; otherwise it is `limit.context -
+maxOutputTokens`, and `compaction.reserved` is ignored.
 `compaction.auto: false` turns it off.
 
 **Structured output.** The HTTP prompt body accepts `format:
@@ -144,15 +147,16 @@ field. `opencode run` does not expose it, so it is the O-T6 fallback.
 | The data, config, and state folders are created at start-up; an unwritable config folder skips the `npm` install and `.gitignore` write | `S/core/src/global.ts`, `S/core/src/npm.ts`, `S/opencode/src/config/config.ts` |
 | Instructions: global `AGENTS.md`, `~/.claude/CLAUDE.md`, project `AGENTS.md`/`CLAUDE.md`; project files skipped with `OPENCODE_DISABLE_PROJECT_CONFIG` | `S/opencode/src/session/instruction.ts` |
 | Built-in tool ids; `apply_patch` replaces `edit` and `write` for `gpt-` models | `S/opencode/src/tool/registry.ts` |
+| Every `{tool,tools}/*.{js,ts}` file in each config folder, `~/.opencode/` and `/etc/opencode/` included, is imported as a tool; `debug config` does not list these tools | `S/opencode/src/tool/registry.ts`, `config/config.ts` |
 | `deny` with pattern `*` removes a tool; `edit` covers three tools; last match wins; agent `tools` is deprecated for `permission` | `S/opencode/src/permission/index.ts`, `session/llm/request.ts`, `S/core/src/v1/config/agent.ts` |
 | `external_directory` asks for paths outside the project in `read`, `write`, `edit`, `apply_patch`, and `bash` | `S/opencode/src/tool/external-directory.ts`, `tool/shell.ts` |
 | `tool.execute.before` runs before execute; a throw rejects the call | `S/opencode/src/session/tools.ts`, `plugin/index.ts`; [Plugins](https://opencode.ai/docs/plugins/) |
 | Plugin tools accept JSON Schema args; a plugin tool overrides a built-in of the same name | `S/opencode/src/tool/registry.ts`; [Plugins](https://opencode.ai/docs/plugins/) |
 | A plugin that fails to load is logged and skipped | `S/opencode/src/plugin/index.ts` |
-| Compaction: model-written by the `compaction` agent; `session.compacting` changes only the prompt; trigger and `compaction.auto` | `S/opencode/src/session/compaction.ts`, `session/overflow.ts`, `P/index.d.ts` |
+| Compaction: model-written by the `compaction` agent; `session.compacting` changes only the prompt; trigger at `usable()`: `limit.input - compaction.reserved` when `limit.input` is set, else `limit.context - maxOutputTokens` with `reserved` ignored; `compaction.auto` | `S/opencode/src/session/compaction.ts`, `session/overflow.ts`, `P/index.d.ts` |
 | `messages.transform` runs on each model request before conversion; `system.transform` on each request | `S/opencode/src/session/prompt.ts`, `session/llm/request.ts` |
 | `chat.message` runs before the user message is saved | `S/opencode/src/session/prompt.ts` |
-| `shell.env` output is spread over `process.env` for `bash` | `S/opencode/src/tool/shell.ts` |
+| `shell.env` gets `{env}` as its output object; the hook mutates `output.env`, which is spread over `process.env` for `bash`; its return value is not read | `S/opencode/src/tool/shell.ts` |
 | Structured output through `format`, forced tool, `structured` field | `S/opencode/src/session/prompt.ts` |
 | Title call skipped when the title is set or the `title` agent is disabled | `S/opencode/src/session/prompt.ts`, `agent/agent.ts` |
 | TUI slash commands from plugins; typed text goes to `session.command` only for a server command, else to `session.prompt` | `S/tui/src/keymap.tsx`, `tui/src/component/prompt/index.tsx`, `tui/src/feature-plugins/system/diff-viewer.tsx`, `P/tui.d.ts` |
@@ -170,9 +174,9 @@ its fallback.
 | --- | --- | --- |
 | O-T1 Headless worker | Mint, then three resumed passes keep context; a missing id exits `1`; a model error exits `1`; no TCP listener while it runs | `opencode serve` on loopback with a random port and a per-stage `OPENCODE_SERVER_PASSWORD`, driven over HTTP with `fetch`, killed after the stage. Adds a listener that a worker's `bash` can reach: a new trust-boundary row for **security** |
 | O-T2 Isolation | With the worker environment, `opencode debug config` shows only the driver's plugin, agent, permissions, and providers, with no MCP server and no instructions | None needed: the adapter runs the same compare before every spawn and stops on a difference (`check failed: harness-config`) |
-| O-T3 `bash` config | `shell.env` restores `XDG_CONFIG_HOME`; `git` in a worker uses the operator's settings | Set `GIT_CONFIG_GLOBAL` to the operator's global git config file in the worker environment |
+| O-T3 `bash` config | `shell.env` setting `output.env.XDG_CONFIG_HOME` restores it; `git` in a worker uses the operator's settings | Set `GIT_CONFIG_GLOBAL` to the operator's global git config file in the worker environment |
 | O-T4 Write controls | No edit tool for read-only personas; the guard blocks writes outside the writable set, through a symbolic link, inside `.git`, and when it throws, for `write`, `edit`, and `apply_patch`; `sdlc_write` stays in the run folder | Pi's T6 fallback: permissions alone, detection for the rest, reported to **security** |
-| O-T5 Compaction | With a small `limit.context`, compaction fires under `opencode run`; the next request carries the deterministic summary; a fact removed from `state.md` stays in the facts block | `compaction.auto: false`, and an `operator` stop near the window for a `handoff` mint, as in Pi's T4 fallback |
+| O-T5 Compaction | With the limit that `usable()` reads made small (`limit.input` when the trial model's provider entry sets it, else `limit.context`), compaction fires under `opencode run` at `usable()`; the next request carries the deterministic summary; a fact removed from `state.md` stays in the facts block | `compaction.auto: false`, and an `operator` stop when the session nears `usable()` for a `handoff` mint, as in Pi's T4 fallback |
 | O-T6 Results | Ten runs of a fixed task; count valid candidates first time and after one repair | `format: json_schema` through the O-T1 fallback shape; below 8 of 10, ask the operator for another model |
 | O-T7 `/sdlc` | The TUI command runs with no model turn; `DialogPrompt`, `DialogSelect`, and `DialogConfirm` work when called as functions without JSX; the detached driver starts under `harness.node`; the TUI stays usable; toasts show `STOP` and ask lines | A terminal command, `node packages/opencode-sdlc/src/cli.ts RUN_ROOT`, with the same steps on its own terminal: still no model, outside OpenCode |
 | O-T8 Input guard | A `chat.message` throw stops a prompt with no model call while the lock is held, and stops typed `/sdlc` text; the operator sees the reason | A toast only: the operator's own session can start a model call while a worker runs. Operator question O11 in the LLD |

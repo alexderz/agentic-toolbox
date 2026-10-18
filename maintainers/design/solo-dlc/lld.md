@@ -772,6 +772,9 @@ personas and never write to the tracker.
   It also refuses an entry whose `npm` package is not one the pinned
   binary bundles, so no provider package is downloaded at run time.
   Each model's `limit.context` equals the slot's `contextWindow`.
+  Compaction reads `limit.input` in place of `limit.context` when the
+  entry sets it ([note](opencode-server.md#worker-plugin-hooks)), so a
+  set `limit.input` must not exceed `contextWindow`.
 - `models.<slot>.model` is the harness `--model` value,
   `provider/model` for both harnesses. A slot with
   `"paid": true` requires `spending` = `{"askId": "kickoff-1",
@@ -1889,7 +1892,7 @@ id for the chunk. `<L>` is the node `label`, padded to 7.
 | Manager answered | `       manager answered from <source>  <S> continues` |
 | Ask | The full `ask-human.md` text between `--- ask-N ---` lines |
 | Say | `<S> <L>  <say text>` |
-| Summary | `idle  <n> pending asks  <n> waiting  <n> deferred  type /sdlc RUN_ROOT to continue` |
+| Summary | OpenCode: `idle  <n> pending asks  <n> waiting  <n> deferred  pick /sdlc, then enter RUN_ROOT to continue`; Pi: `idle  <n> pending asks  <n> waiting  <n> deferred  type /sdlc RUN_ROOT to continue` |
 
 `driver/console.log` holds every line. No color carries meaning, and no
 worker transcript goes to the console.
@@ -1999,10 +2002,14 @@ TypeScript directly. The README checks the lines on 1.19.3.
 - **Preflight** (`adapter.preflight`), before each spawn, with no model
   call:
   1. `~/.opencode/` or `/etc/opencode/` exists: OpenCode reads both
-     whatever the environment says. Return `harness-dir` with ask kind
-     `opencode-dir` and the SHA-256 of the sorted `<path> <sha256>`
-     list of the folder's files. An `allow` holds until that hash
-     changes.
+     whatever the environment says. If either holds a `tool/` or
+     `tools/` folder, return `harness-config` naming it, whatever the
+     operator has allowed: OpenCode imports every `*.js` and `*.ts`
+     file there as a tool, and `debug config` does not list those
+     tools, so step 2 cannot see them. Otherwise return `harness-dir`
+     with ask kind `opencode-dir` and the SHA-256 of the sorted
+     `<path> <sha256>` list of the folder's files. An `allow` holds
+     until that hash changes.
   2. Run `<harness.bin> debug config` with the worker's environment and
      cwd. Its `plugin`, `agent`, `permission`, `mcp`, `instructions`,
      `command`, and `provider` must equal the worker config's, apart
@@ -2117,8 +2124,11 @@ the [driver-file ledger](#driver-file-ledger).
    sees the deterministic summary whatever the compaction agent wrote.
    `experimental.chat.system.transform` appends the driver-facts block
    to every request's system prompt. No handler cancels a compaction.
-6. **`shell.env`.** Returns `{XDG_CONFIG_HOME: SDLC_XDG_CONFIG_HOME}`,
-   so `bash` and `git` see the operator's setting.
+6. **`shell.env`.** Sets `output.env.XDG_CONFIG_HOME` to
+   `SDLC_XDG_CONFIG_HOME`, so `bash` and `git` see the operator's
+   setting. The hook's return value is ignored, so it returns nothing.
+   If O-T3 fails, the adapter sets `GIT_CONFIG_GLOBAL` instead
+   ([note](opencode-server.md#trial-checks)).
 
 The plugin registers no command and reads no file outside the run
 folder except its own load-time constants.
@@ -2344,8 +2354,8 @@ Both items start after the first harness, OpenCode (item 7), works.
   Gather, the Epic, then writes `run.json`,
   `checklist.md`, `gatherer/run-1/` (brief and a copy of the Gather
   session), and an empty `refiner/run-1/`. It prints the run root and
-  the start line for the harness: in OpenCode, pick `/sdlc` and give
-  the run root; in Pi, `/sdlc RUN_ROOT`.
+  the start line for the harness: in OpenCode, "pick `/sdlc`, then
+  enter RUN_ROOT"; in Pi, `/sdlc RUN_ROOT`.
 
 ### Trust boundaries
 
@@ -2362,7 +2372,7 @@ manager (a worker); the kickoff session model (untrusted; writes
 | TB2 | Kickoff model → `run.json` | Paths, models, tracker, spending, harness pin | Strict schema; `local` backend only; the operator confirms a summary at the first `/sdlc` and on every change; reviewed refs derived by the driver, never read from `run.json`; a bundle commit outside them, or a `run.json` naming another ref, needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at a reviewed ref | Enforced; the refs are local, not fetched (residual) |
 | TB3 | Bundle → driver | Flow, personas, skills, scripts | Pinned commit read with `git show`; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
 | TB3a | Harness → driver | The OpenCode binary or the Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` of each package at install. OpenCode: self-update off in the worker config and environment; provider packages only from those bundled in the binary | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
-| TB3b | Operator's harness config → worker | OpenCode: plugins, tools, agents, MCP servers, instructions, remote and organization config. Pi: `.pi/` project files | OpenCode: `XDG_CONFIG_HOME` pointed at an empty unwritable folder, project config off, `~/.opencode/` and `/etc/opencode/` refused until allowed, and `debug config` compared with the worker config before every spawn. Pi: `--no-extensions`, `--no-skills`, `-nc`, and the `.pi/` refusal | Enforced before each spawn (OpenCode: O-T2); config that changes between the compare and the spawn is residual |
+| TB3b | Operator's harness config → worker | OpenCode: plugins, tools, agents, MCP servers, instructions, remote and organization config. Pi: `.pi/` project files | OpenCode: `XDG_CONFIG_HOME` pointed at an empty unwritable folder, project config off, `~/.opencode/` and `/etc/opencode/` refused until allowed, a `tool/` or `tools/` folder in either refused even after an allow, and `debug config` compared with the worker config before every spawn. Pi: `--no-extensions`, `--no-skills`, `-nc`, and the `.pi/` refusal | Enforced before each spawn (OpenCode: O-T2); config that changes between the compare and the spawn is residual |
 | TB4 | Driver → worker | Prompt, facts, env, OpenCode worker config | Prompt built from driver state; model or operator text fenced as data; facts hash; extension or worker-plugin copy hashed; worker config kept as a driver file; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
 | TB5 | Worker → files | `write`, `edit`, OpenCode `apply_patch`, `sdlc_write` | Allowlist (OpenCode: permission rules; Pi: `--tools`), path guard (fail-closed), run-folder tool. OpenCode adds its own `external_directory` rules, so a write outside the run root and the temporary folder is refused before the guard runs | Enforced (OpenCode: O-T4); the guard's check-then-write race is an accepted residual |
 | TB6 | Worker → files through `bash` | Any write | Snapshot (driver files against the driver-file ledger), worktree, refs, ancestry, project-main checks | Detected in the run root and worktrees; residual elsewhere (operator accepts in writing) |
@@ -2439,7 +2449,9 @@ changes the three residuals the operator accepted (O9).
 2. Harness config that changes between the pre-spawn `debug config`
    compare and the spawn (TB3b).
 3. The `~/.opencode/` and `/etc/opencode/` refusal and its `allow`,
-   the counterpart of S4's `.pi/` refusal.
+   the counterpart of S4's `.pi/` refusal. An `allow` never covers a
+   `tool/` or `tools/` folder there: those tools escape the
+   `debug config` compare, so the preflight always refuses them.
 4. A worker's `bash` can start another `opencode` process against the
    operator's own config, as it can start `pi`: the HLD's existing
    risk, unchanged.
@@ -2805,7 +2817,7 @@ second harness, read at 0.73.1:
 18. The OpenCode `/sdlc` takes the run root in a dialog, not as an
     argument, because an OpenCode slash command from a plugin takes no
     argument; the HLD's "the operator runs `/sdlc RUN_ROOT`" becomes
-    "picks `/sdlc` and gives the run root" in OpenCode
+    "picks `/sdlc`, then enters RUN_ROOT" in OpenCode
     ([O10](#questions-for-the-operator)).
 
 ### Groom split (proposal)
@@ -2871,7 +2883,7 @@ credentials for Linear on each harness.
 | O7 | Skill ids `test-failure-handler`, `bundle-authoring`, `sdlc-followed-mode`, `sdlc-kickoff` | Accept |
 | O8 | Item 5 split into G5a–G5c | Let Groom split it; with the split, G3 waits only for G5a |
 | O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | **Accepted in writing by the operator, 2026-10-18: "Risks are acceptable."** The three residuals do not depend on the harness, and OpenCode first adds none to them; its new items are listed for **security** under Trust boundaries. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal |
-| O10 | In OpenCode, `/sdlc` takes the run root in a dialog instead of as an argument ([clarification](#clarifications-of-the-hld-made-here) 18); kickoff prints the run root and "pick `/sdlc`". The console lines are unchanged | Accept. A plugin slash command in OpenCode 1.19.3 takes no argument, and typed `/sdlc RUN_ROOT` would reach the model; the dialog keeps the start model-free |
+| O10 | In OpenCode, `/sdlc` takes the run root in a dialog instead of as an argument ([clarification](#clarifications-of-the-hld-made-here) 18); kickoff prints the run root and "pick `/sdlc`, then enter RUN_ROOT" ([item 8](#behavior-8-later-items-4-8)), and the OpenCode [Summary console line](#console-lines) ends `pick /sdlc, then enter RUN_ROOT to continue`. Pi keeps the typed `/sdlc RUN_ROOT` in both | Accept. A plugin slash command in OpenCode 1.19.3 takes no argument, and typed `/sdlc RUN_ROOT` would reach the model; the dialog keeps the start model-free |
 | O11 | If O-T8 fails, OpenCode cannot stop the operator's own prompt while a worker runs: one large-model session at a time becomes the operator's discipline in that session, with a toast and the console warning | Accept that fallback for item 7 only, decided now so item 7 does not stop on it. A second session costs speed or memory on the local model; it does not skip a gate or a check. Item 6 keeps Pi's enforced `input` guard |
 
 ### Rollout / rollback

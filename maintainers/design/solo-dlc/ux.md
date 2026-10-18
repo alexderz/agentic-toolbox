@@ -16,7 +16,7 @@ Human gate: operator accepts, or writes `UX verification not required`.
 ## People
 
 - **Operator.** Owns the repo and the tracker. Runs the kickoff skill
-  and Gather in an interactive session, types `/sdlc RUN_ROOT`, answers
+  and Gather in an interactive session, runs the start command, answers
   escalated questions, and holds every operator gate (SD-26).
 - **Manager session.** The agent session the driver resumes when a stage
   stops. Answers from what the project holds, or escalates.
@@ -38,6 +38,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **Stop**: a stage that is `blocked`, returns `needs_input`, exhausts
   its repair budget, or gives an invalid result after its one repair.
 - **Console**: the operator's terminal session where `/sdlc` runs.
+- **Start command**: how the operator starts or resumes the driver. In
+  OpenCode, start and resume use a dialog: pick `/sdlc`, then enter
+  RUN_ROOT. In Pi, type `/sdlc RUN_ROOT`.
 
 ## Journeys
 
@@ -45,15 +48,15 @@ Human gate: operator accepts, or writes `UX verification not required`.
   operator loads the kickoff skill → readiness checklist (tracker,
   branches, plumbing) → Gather interviews the operator on a brain dump →
   operator confirms the brief → kickoff initializes the run root →
-  console prints the run root and the exact line `/sdlc RUN_ROOT` →
-  operator types it.
+  console prints the run root and the exact start command for
+  the harness → operator runs it.
 - **J2 Public tickets warning.** No tracker connected → kickoff offers
   the `local` adapter (a `tickets` branch) → the repo is public → kickoff
   says, before anything is written, that ticket titles, bodies, and
   comments on that branch are public → operator picks: use it, name
   another tracker or repo, or decide after Gather. No default on a
   public repo.
-- **J3 Driver runs workers.** `/sdlc RUN_ROOT` → the console shows one
+- **J3 Driver runs workers.** Start command → the console shows one
   start line and one end line per stage: item, step, persona, new or
   resumed, run folder; then status, choice, and artifact path. No stage
   starts before the previous one has ended or stopped → every exit from
@@ -69,8 +72,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
   manager answers from the project and the driver continues, or the
   manager escalates and the console shows a full `ask-human.md` message
   → the escalated item waits; other unblocked items continue, one
-  large-model session at a time → the next `/sdlc RUN_ROOT` shows the
-  ask before any stage starts, and the operator's next line is the
+  large-model session at a time → the next start command shows
+  the ask before any stage starts, and the operator's next line is the
   reply.
 - **J6 Trial question.** HLD stage ends → operator gets an
   `ask-human.md` message: run a Trial or not, with the architect's
@@ -80,8 +83,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
   folder for an item and step from the console line, or from the run
   root's chronological index (open question Q3) → reads prose,
   `result.json`, logs, and `state.md`.
-- **J8 Crash or reboot.** Harness dies mid-stage → operator types
-  `/sdlc RUN_ROOT` again → console reports what it found: last finished
+- **J8 Crash or reboot.** Harness dies mid-stage → operator runs
+  the start command again → console reports what it found: last finished
   stage, the interrupted run folder (kept), sessions it will resume, and
   the next run folder → continues. A missing session file stops the
   resume with a clear message; the driver never resumes into a blank
@@ -135,9 +138,10 @@ In [user-stories.md](user-stories.md):
 shows a short readiness checklist and marks each line done, to do, or
 deferred. Tracker choice is one `ask-human.md` message. Gather is the
 existing `discover-the-idea` interview. The session ends with two lines
-the operator can copy: the run root and `/sdlc RUN_ROOT`. If the
+the operator can copy: the run root and the start command, in OpenCode
+"pick `/sdlc`, then enter RUN_ROOT", in Pi `/sdlc RUN_ROOT`. If the
 operator asks the model to start the run, the model says `/sdlc` is a
-command only the operator can type, and repeats the line.
+command only the operator can run, and repeats the line.
 
 **Driver console.** Terse and line-based; worker transcripts go to log
 files, not the console. Rough sketch, exact text belongs to Spec:
@@ -199,7 +203,7 @@ console prints one line naming where the answer came from (brief, plan,
 spec, tracker, or a Gather session) and the run continues. If it
 escalates, the console prints the full `ask-human.md` message and the
 ask is also saved in the manager's run folder. The escalated item waits
-while other unblocked items continue. The next `/sdlc RUN_ROOT` shows
+while other unblocked items continue. The next start command shows
 the ask before any stage starts, and the operator's next line is the
 reply (open question Q1).
 
@@ -221,7 +225,9 @@ kept. `state.md` is at most one page. The operator never has to read a
 worker transcript to know what happened: the console line, `result.json`,
 and the prose are enough.
 
-**Resume.** Typing `/sdlc RUN_ROOT` again is the only resume action.
+**Resume.** The start command again is the only resume action: in
+OpenCode, pick `/sdlc`, then enter RUN_ROOT in its dialog; in Pi, type
+`/sdlc RUN_ROOT`.
 No flags to remember. The first lines report what the driver found
 before it starts anything.
 
@@ -246,7 +252,7 @@ shape. For look and flow:
 
 | Example | Steal | Will not copy |
 | --- | --- | --- |
-| [`git rebase`](https://git-scm.com/docs/git-rebase) stop and continue | A stop says why, where its state is, and the one command that continues. State lives on disk, so a crash loses nothing. | Separate `--continue`, `--skip`, and `--abort` verbs. Here, `/sdlc RUN_ROOT` is the only resume. |
+| [`git rebase`](https://git-scm.com/docs/git-rebase) stop and continue | A stop says why, where its state is, and the one command that continues. State lives on disk, so a crash loses nothing. | Separate `--continue`, `--skip`, and `--abort` verbs. Here, the start command is the only resume. |
 | [GitHub Actions run logs](https://docs.github.com/en/actions/how-tos/monitor-workflows/use-workflow-run-logs) | One status line per step, full log one hop away. | A web page, live log streaming in the main view, and color as the only status signal. |
 | [`terraform apply`](https://developer.hashicorp.com/terraform/cli/commands/apply) confirmation | Nothing irreversible happens until the person answers in words. | `-auto-approve`: no flag skips an operator gate. |
 
@@ -268,7 +274,7 @@ Q1–Q3 stay open until the operator accepts this page.
 
 - **Q1 Replying to an escalation. Open.** Recommend: the escalated item
   waits and other unblocked items continue, one large-model session at
-  a time. When the operator runs `/sdlc RUN_ROOT`, the ask appears
+  a time. When the operator next runs the start command, the ask appears
   before any stage starts, and the next line the operator types is the
   reply (SD-8). A reply typed in the console while the run is going
   depends on whether the TUI stays usable during a long command
