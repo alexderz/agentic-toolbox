@@ -249,11 +249,18 @@ git, or tracker state.
     so, then a builder line merging the tip into the item branch. The
     builder's end line says either `tip merged clean` or `tip merged,
     conflicts resolved`.
-  - After `tip merged clean`, a verifier re-run line follows, and no
-    reviewer line appears before the item's merge line.
+  - After `tip merged clean`, a verifier re-run line follows. While the
+    item branch's tree is still exactly the tree of that clean merge
+    commit, no reviewer line appears before the item's merge line.
   - After `tip merged, conflicts resolved`, the console shows builder,
     then verifier re-run, then reviewer re-run lines, and the item's
     merge line appears only after both re-runs pass.
+  - If the builder changes the item branch after `tip merged clean`,
+    for example to fix a failed verifier re-run, the console shows
+    builder, then verifier re-run, then reviewer re-run lines before the
+    item's merge line. The merge line appears only after both re-runs
+    pass, and the reviewer's re-review range starts at the clean merge
+    commit.
   - When the builder cannot resolve a conflict, the console shows a
     `STOP` line of kind `blocked` (SD-7), and no merge line appears for
     that item.
@@ -400,6 +407,10 @@ git, or tracker state.
   - Every tracker comment the run writes, from a worker or the manager,
     carries only the ticket id, the status, and the run folder relative
     to the run root.
+  - A comment may also carry one more field: the repo-relative git path
+    of a record this run has committed, such as the HLD or LLD path a
+    step persona posts on the Epic. That path names a file that a commit
+    made by this run added or changed.
   - A land comment may also carry the land SHA, the result, and the
     reviewer verdict.
   - No comment holds an absolute path, a log, a prompt, or Gather text.

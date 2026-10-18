@@ -9,7 +9,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - Stories: [user-stories.md](user-stories.md)
 - Date: `2026-10-18`
 - Agent review (requirements only): round 1 failed; fix round 1 done;
-  re-check raised one major; fix round 2 done, re-check pending
+  re-check raised one major; fix round 2 done; round 3 review raised
+  two majors; fix round 3 done, re-check pending
 - Operator: pending
 
 ## People
@@ -100,7 +101,11 @@ Human gate: operator accepts, or writes `UX verification not required`.
   moved → console says so → builder resumed to merge the tip into the
   item branch → builder's end line says the merge was clean or needed
   conflict resolution → verifier re-runs → if the builder resolved
-  conflicts, reviewer re-runs too → driver fetches again → tip unchanged
+  conflicts, reviewer re-runs too → after a clean merge, Review is
+  skipped only while the item's tree is exactly that merge; if the
+  builder changes anything after it, for example to fix a failed
+  re-run, the console shows builder → verifier → reviewer again before
+  the merge line → driver fetches again → tip unchanged
   → driver merges this one item and pushes without force → post-land
   verifier → `done`. A conflict the builder cannot resolve is a stop
   (J5), and the item does not merge.
@@ -163,8 +168,21 @@ ABC-14 Land    reviewer resumed  reviewer/run-3  started  re-review
 ABC-14 Land    pass     reads pr-review, security-hardening
 ABC-14 Land    fetched  tip unchanged  merged  integrate/solo-dlc  pushed
 ABC-14 Land    verifier resumed  verifier/run-7  verified  done
-ABC-13 Build   invalid result  builder/run-8  repair 1/1
-STOP   ABC-13 Build  repair budget exhausted (3 failed fixes)  builder/run-9
+ABC-15 Land    fetched  tip moved  builder merges the tip
+ABC-15 Land    builder  resumed  builder/run-8  started  merge tip
+ABC-15 Land    pass     tip merged clean  artifact builder/run-8/result.md
+ABC-15 Land    verifier resumed  verifier/run-8  started  re-run
+ABC-15 Land    fail     ledger 1 open  builder fixes after the clean merge
+ABC-15 Land    builder  resumed  builder/run-9  started  fix
+ABC-15 Land    pass     choice verify  artifact builder/run-9/result.md
+ABC-15 Land    verifier resumed  verifier/run-9  started  re-run
+ABC-15 Land    pass     ledger 0 open
+ABC-15 Land    reviewer resumed  reviewer/run-4  started  re-review
+ABC-15 Land    pass     reads pr-review, security-hardening
+ABC-15 Land    fetched  tip unchanged  merged  integrate/solo-dlc  pushed
+ABC-15 Land    verifier resumed  verifier/run-10  verified  done
+ABC-13 Build   invalid result  builder/run-10  repair 1/1
+STOP   ABC-13 Build  repair budget exhausted (3 failed fixes)  builder/run-11
        resuming manager  manager/run-2
 ```
 
@@ -192,9 +210,11 @@ followed mode the ask also says `followed, not enforced`. The Trial
 question at the end of HLD is its own ask (SD-9).
 
 **Tracker comments.** Public comments carry only the ticket id, the
-status, and the run folder relative to the run root; a land comment may
-add the land SHA, the result, and the reviewer verdict. No absolute
-paths, logs, prompts, or Gather text.
+status, and the run folder relative to the run root. Any comment may add
+one more field: the repo-relative git path of a record this run has
+committed, such as the HLD or LLD path posted on the Epic. A land
+comment may add the land SHA, the result, and the reviewer verdict. No
+absolute paths, logs, prompts, or Gather text.
 
 **Run root.** One folder per persona, `run-N` folders inside, old runs
 kept. `state.md` is at most one page. The operator never has to read a
