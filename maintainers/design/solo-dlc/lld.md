@@ -773,7 +773,7 @@ personas and never write to the tracker.
   "worker": {"extension": "driver/worker-ext/sdlc-worker-1a2b3c4d5e6f.ts",
              "sha256": "<hex>", "harnessVersion": "0.73.1"},
   "chunk": {"node": "spec", "state": "active", "stop": null, "askId": null,
-            "pendingRoute": null},
+            "pendingRoute": null, "unposted": null},
   "groom": {"path": "maintainers/design/solo-dlc/groom.md", "reviewedCommit": "<sha>",
             "frozenCommit": "<sha>", "commandsSha256": "<hex>"},
   "items": {
@@ -798,6 +798,7 @@ personas and never write to the tracker.
 | `chunk.state`, `items.*.state` | `pending` (not started), `active`, `waiting` (an ask is open: `askId`), `deferred` (the manager deferred it; retried at the next `/sdlc`), `done` |
 | `chunk.node`, `items.*.node` | Current node id, or `@items` / `@done` |
 | `chunk.pendingRoute` | `null`, or `{"node", "choice", "run", "record", "commit"}` from the end of an HLD or Spec stage whose design record was committed until its paperwork stage returns `posted`: the node and `choice` to route, the node's run, the record path, and the pushed commit ([Design-record commits](#design-record-commits) step 7) |
+| `chunk.unposted` | `null`, or `{"node", "record", "commit"}`: a design record an interrupted HLD or Spec run pushed before its stage ended ([Start](#start) step 5). Cleared when [Stage pipeline](#stage-pipeline) step 11 sets `chunk.pendingRoute` |
 | `items.*.land` | `null` outside the land node, else `{"phase", "p1", "p2", "cleanTree", "cleanCommit", "landCommit"}`; `phase` is one of the [Land](#land-sub-machine) rows |
 | `items.*.landReentry` | `true` from L3b or L6r until the item next enters the land node at L1; selects the console label ([Land](#land-sub-machine)) |
 | `repairs`, `sentBack`, `fixPending` | [Repair counter](#repair-counter) |
@@ -868,7 +869,7 @@ the operator's interactive session, while no driver holds the lock
 
 | File | Writer | Notes |
 | --- | --- | --- |
-| `meta.json` | driver | Node, scope, persona, `new` or `resumed`, prompt kind, `repairOf`, start and end times, the worker argv |
+| `meta.json` | driver | Node, scope, persona, `new` or `resumed`, prompt kind, `repairOf`, start and end times, the worker argv; `recordCommit`, the design-record commit, written before its push ([Design-record commits](#design-record-commits) step 5) |
 | `prompt.md` | driver | The prompt sent on stdin |
 | `candidate.json` | worker | Through `sdlc_result` or `sdlc_write` |
 | `result.json` | driver | The validated result, or a driver-authored one |
@@ -881,7 +882,7 @@ the operator's interactive session, while no driver holds the lock
 | `check.json` | driver | Command stages only: the post-stage check that failed, when one did |
 | `<extract>.md` | driver | Gate results only: the section an exit's `extract` copied, such as `trial-kickoff.md` |
 | `logs/` | driver, extension | `worker.jsonl` (Pi's JSON stream), `worker.stderr`, `ext.json` (extension load marker; missing → `check failed: extension`), `prove-K.log` |
-| `interrupted.json` | driver | Present when the run was interrupted; such a folder never gets `result.json` and is never reused |
+| `interrupted.json` | driver | Present when the run was interrupted; such a folder never gets `result.json` and is never reused. Holds `recordCommit` when the pushed record exception applied ([Start](#start) step 5) |
 
 #### Driver facts
 
@@ -979,8 +980,12 @@ it refuses while any driver holds the lock.
    tree (path, inode, size, `mtime`, `ctime`, SHA-256) in
    `driver/harness-tree.json`, written only here, so the
    [stage pipeline](#stage-pipeline) can re-check the hash
-   before each worker spawn and re-hash only changed files, in memory.
-   The `snapshot` check covers the cache file like any driver file.
+   before each worker spawn, in memory. The re-check walks the whole
+   tree again: it hashes every file that is not in the cache (an added
+   file) or whose stat differs, counts every cached file that is gone
+   (a removed file), and reuses the cached hash only for a file whose
+   path and stat both match. The `snapshot` check covers the cache file
+   like any driver file.
 3. On the first start, before any fetch, when `repo.git` does not
    exist: `git init --bare --initial-branch=empty repo.git`; set
    `origin` from `run.json` with no force option and fetch refspec
@@ -1006,6 +1011,25 @@ it refuses while any driver holds the lock.
    is not granted a second repair. An interrupted paperwork stage is
    replayed from `chunk.pendingRoute`
    ([Design-record commits](#design-record-commits) step 7).
+
+   **Pushed record exception.** An interrupted HLD or Spec stage (not
+   its paperwork) may have pushed its design record before it died.
+   Let `C` be `recordCommit` in the interrupted run's `meta.json`
+   ([Design-record commits](#design-record-commits) step 5) and `S` the
+   snapshot's project-main tip. When `C` is set, the `refs` and
+   `worktrees` checks allow exactly one difference:
+   `refs/heads/<projectMain>` now points at `C` and
+   `git merge-base --is-ancestor S C` succeeds, and
+   `worktrees/integrate` has `HEAD` equal to `C` and the same
+   `git status --porcelain` as before. Every other ref and every other
+   worktree must still be equal, and every other check runs unchanged;
+   any other difference is an `operator` stop. When the exception
+   applies, write `recordCommit: C` into `interrupted.json`, and, in the
+   `driver.json` write that clears `inFlight`, set `projectMainSeen` to
+   `C` and `chunk.unposted` to the node, the record path, and `C`. The
+   node then runs again; [Stage pipeline](#stage-pipeline) step 11 turns
+   `chunk.unposted` into `chunk.pendingRoute` so that paperwork runs for
+   `C`.
 6. Print the found report ([Console](#console-lines)); any `deferred`
    scope becomes `active`.
 7. Enter the loop.
@@ -1125,9 +1149,17 @@ worker-only checks.
     - The HLD or Spec node after step 10's design-record commit: in the
       same `driver.json` write that clears `inFlight`, set
       `chunk.pendingRoute` to this node, `choice`, run, record path,
-      and pushed commit. Do not route; the next stage is the
-      architect's paperwork
+      and pushed commit, and clear `chunk.unposted`. Do not route; the
+      next stage is the architect's paperwork
       ([Design-record commits](#design-record-commits) step 7).
+    - The HLD or Spec node after a `pass` whose step 10 staged nothing,
+      while `chunk.unposted.node` is this node: the record is already
+      on project-main from an interrupted run ([Start](#start) step 5).
+      In the same write, set `chunk.pendingRoute` to this node,
+      `choice`, run, and `chunk.unposted.record` and
+      `chunk.unposted.commit`, and clear `chunk.unposted`. Do not route;
+      paperwork runs next. A re-run that does not `pass` routes as
+      usual and leaves `chunk.unposted` set for the node's next `pass`.
     - A paperwork stage that returns `posted`: in one `driver.json`
       write, clear `inFlight` and `chunk.pendingRoute` and route by
       `pendingRoute.choice` from `pendingRoute.node`.
@@ -1326,13 +1358,17 @@ For a chunk `model` node with `outputs` or `outputDirs`, after a valid
      hits as `<file>:<line> <class>`.
 4. `git add -- <paths>`; commit `[<epic>] <Step>: <node id> from
    <run>`. Nothing staged: no commit, continue.
-5. Push without force. Exit `0`: set `projectMainSeen` to the pushed
-   commit. Non-zero: fetch; if the tip moved as in
-   [Land](#land-sub-machine) L7m, detach at the new tip, copy and commit
-   again, and push, at most 10 rounds, then a `blocked` stop. Otherwise
-   a `blocked` stop, no retry.
-6. Record the commit SHA in `meta.json`. For `groom`, it becomes
-   `groom.reviewedCommit` when the next `groom-review` passes.
+5. Before each push, write the commit's SHA as `recordCommit` in this
+   run's `meta.json` (atomic write), so that a restart can tell the
+   driver's own push from any other
+   ([Start](#start) step 5, pushed record exception). Push without
+   force. Exit `0`: set `projectMainSeen` to the pushed commit.
+   Non-zero: fetch; if the tip moved as in [Land](#land-sub-machine)
+   L7m, detach at the new tip, copy and commit again, record the new
+   SHA the same way, and push, at most 10 rounds, then a `blocked`
+   stop. Otherwise a `blocked` stop, no retry.
+6. `recordCommit` in `meta.json` is the pushed commit. For `groom`, it
+   becomes `groom.reviewedCommit` when the next `groom-review` passes.
 7. For the HLD node and the Spec node, paperwork is a separate stage
    that starts only after the parent stage has finished: `inFlight`
    cleared, `end` appended, and `chunk.pendingRoute` persisted
@@ -1350,19 +1386,32 @@ For a chunk `model` node with `outputs` or `outputDirs`, after a valid
 
    **Crash replay.** `driver.json` holds the parent's end and the
    pending route in one atomic write, so a restart sees one of three
-   states. (a) The parent is still `inFlight`: [Start](#start) step 5
-   marks it interrupted and the node runs again; its record commit, if
-   pushed, is already on project-main, so step 4 stages nothing new
-   unless the re-run changes the file. (b) `pendingRoute` is set and a
-   paperwork stage is `inFlight`: Start step 5 marks that run
-   interrupted and runs its post-stage checks, and the loop runs
-   paperwork again in a new run folder. A comment the interrupted run
-   already posted stays; the replay posts its own, with its own
-   `Run:` line, so the Epic can show two paperwork comments for one
-   record. (c) `pendingRoute` is set and nothing is `inFlight`: the loop
-   runs paperwork. Paperwork never re-commits the record, and once
-   `pendingRoute` is set the parent node does not run again for that
-   record.
+   states:
+
+   - (a) The parent is still `inFlight`: [Start](#start) step 5 marks
+     it interrupted and runs its post-stage checks. If nothing was
+     pushed, the checks run as for any stage and the node runs again.
+     If project-main is at the run's `recordCommit` `C`, the checks pass
+     only under Start step 5's pushed record exception; the node then
+     runs again, step 4 stages nothing unless the re-run changes the
+     file, and [Stage pipeline](#stage-pipeline) step 11 sets
+     `pendingRoute` from `C`, so paperwork runs. A re-run that changes
+     the file commits its own record, which replaces `C`. Any other
+     change is an `operator` stop and the node does not run again; that
+     includes a crash after step 4's commit and before its push, which
+     leaves the integration worktree at an unpushed commit.
+   - (b) `pendingRoute` is set and a paperwork stage is `inFlight`:
+     Start step 5 marks that run interrupted and runs its post-stage
+     checks with no exception. Only when they pass does the loop run
+     paperwork again in a new run folder; a failed check is an
+     `operator` stop. A comment the interrupted run already posted
+     stays; the replay posts its own, with its own `Run:` line, so the
+     Epic can show two paperwork comments for one record.
+   - (c) `pendingRoute` is set and nothing is `inFlight`: the loop runs
+     paperwork.
+
+   Paperwork never re-commits the record, and once `pendingRoute` is
+   set the parent node does not run again for that record.
 
 #### Scan patterns
 
@@ -1391,8 +1440,8 @@ step 4) records what each check compares.
 | Check | After | How |
 | --- | --- | --- |
 | `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file, `worktrees/`, `driver/snapshot.json`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
-| `worktrees` | every stage | For each worktree outside the stage's writable set: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in |
-| `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns. A ref added, deleted, or moved fails, whoever moved it |
+| `worktrees` | every stage | For each worktree outside the stage's writable set: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `recordCommit` ([Start](#start) step 5) |
+| `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns. A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `recordCommit` ([Start](#start) step 5) |
 | `tickets` | every stage | [Tickets content check](#tickets-content-check) |
 | `ancestry` | builder stages | `lastPushed` is an ancestor of `HEAD` (pipeline step 9) |
 | `project-main` | every worker stage | Fetch; let `M0` be `projectMainSeen` and `M1` the fetched tip. For each active item with `HEAD` `H`, no commit in `git rev-list H ^M0 ^<each commit in lands>` is also in `git rev-list M1 ^M0`. Then `projectMainSeen = M1` |
@@ -2006,9 +2055,11 @@ the stage.
      fetch the skills home, so a stale or locally moved ref is trusted
      as the operator left it.
    - `harness.treeSha256` is checked at every start and re-checked
-     before each worker spawn from a stat cache. A change that keeps a
-     file's inode, size, `mtime`, and `ctime` is not re-hashed between
-     starts; the full hash at the next start catches it.
+     before each worker spawn from a stat cache. The re-check walks the
+     tree, so it hashes added files and notices removed ones. A change
+     that keeps a file's inode, size, `mtime`, and `ctime` is not
+     re-hashed between starts; the full hash at the next start catches
+     it.
    - `harness.node`, the Node binary for the detached driver under
      Pi's compiled binary, is not hashed.
 
@@ -2125,7 +2176,22 @@ Driver scenarios, each a test:
     driver during paperwork replays it in a new run folder and routes
     by the stored `choice` after `posted`.
 17. A worker whose Pi tree changed after start fails the pre-spawn
-    `harness` re-check without spawning.
+    `harness` re-check without spawning: once for an edited file, once
+    for an added file, and once for a removed file.
+18. Crash after a design-record push: a test hook kills the driver
+    after the Spec record push returns `0` and before pipeline step 11.
+    `meta.json` holds `recordCommit` equal to the pushed commit. The
+    restart passes `refs` and `worktrees` under the pushed record
+    exception, writes `recordCommit` into `interrupted.json`, sets
+    `chunk.unposted`, re-runs the Spec node, stages nothing, sets
+    `chunk.pendingRoute` with that commit, runs paperwork, and routes by
+    the re-run's `choice` after `posted`. A re-run that returns `stop`
+    leaves `chunk.unposted` set, and the node's next `pass` runs
+    paperwork. Each of these stops at restart with `check failed`:
+    project-main at a commit other than `recordCommit`; project-main at
+    `recordCommit` while another ref also moved; `worktrees/integrate`
+    at another commit or dirty; and a kill after the commit and before
+    the push.
 
 **Pi checks** (item 6 acceptance, on the operator's machine with Pi
 0.73.1 and one local model; manual, gated by `SDLC_PI_SMOKE=1`; they
