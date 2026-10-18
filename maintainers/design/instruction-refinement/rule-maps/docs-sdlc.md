@@ -176,3 +176,37 @@ DER-351 meaning questions:
   Resolved by the operator, 2026-09-27: the bare ID does not help the
   user, so every message to the operator names the ticket with a slug.
   The format is an example, not required word for word. No open MQ.
+
+## DER-529: stage-result entry route
+
+Old: `docs/SDLC.md` at 5160a81, lines 1–169. New: `docs/SDLC.md`.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 1–10 | SDLC scope and step selection | kept | Opening through How to read, step 1 |
+| 11 | Load the selected step file | kept; extend with a route to the common result contract | How to read, step 2 |
+| 12–168 | Manager routes, roles, names, tracker, grains, operator decisions, and step routes | kept | Same sections; line numbers shift by one |
+| 169 | Deprecated stage-number route | kept | Last table row |
+| — | Common stage-result contract | route | Stage result row and How to read link to `docs/sdlc/stage-result.md` |
+
+## DER-529 meaning questions
+
+No open meaning questions. The requested contract adds a result for
+every SDLC stage; existing step rules and tracker states stay unchanged.
+
+## DER-529: in-flight migration addendum
+
+Old: `docs/SDLC.md` at 4a342db, lines 1–171.
+New: `docs/SDLC.md`.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 1–11 | Scope, step selection, and selected-file loading | kept | Opening and How to read |
+| 12 | Common result-contract route | kept; add direct migration route for active sessions | How to read |
+| 13–169 | Existing manager, role, name, tracker, grain, decision, and step rules | kept | Same sections |
+| 170 | Stage-result route | kept | Stage result row |
+| 171 | Deprecated stage-number route | kept | Last row |
+| — | Active sessions adopt the result contract at an invocation boundary | route | In-flight session migration row and How to read link |
+
+Meaning question resolved by the operator’s migration request: existing
+sessions adopt prospectively without restarting already completed steps.

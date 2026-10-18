@@ -8,6 +8,10 @@ Newest first. Skip empty sections.
 
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
 
+- Specify the typed SDLC stage result, validation, evidence ownership,
+  conditional prose reading, and migration of in-flight sessions
+  (`DER-529`; land SHA pending).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing
