@@ -790,6 +790,7 @@ RUN_ROOT/
   driver/console.log   # every console line
   driver/snapshot.json # pre-stage hashes of the stage in flight
   driver/ledger.json   # hash of each driver file at its last driver write
+  driver/state.json    # tip record: seq, tip, genesis, pushedTip, restore; never mirrored
   driver/driver.stderr # the detached driver's stdout and stderr
   driver/facts/<persona>--run-N.md   # facts passed to that run
   driver/worker-ext/sdlc-worker-<sha12>.ts
@@ -1114,7 +1115,7 @@ the operator's interactive session, while no driver holds the lock
 | `ledger.json`, `baseline.json` | verifier | D. [Verifier ledger](#sdlc-personas-and-prompts) |
 | `ask-human.md` | manager | D. On `escalate` |
 | `out/` | worker | D. Files for the repo, at their repo-relative paths |
-| `commands.json`, `env-evidence.json` | driver | D. Command stages: one entry per command: index, line, exit code, duration, log path (local; absent after a restore). `env-evidence.json` (env command stages): each toolchain line with the first 200 characters of its output, each `passEnv` value replaced by `<passEnv NAME>` before the write, each dependency step, and the baseline status |
+| `commands.json`, `env-evidence.json` | driver | D. Command stages: one entry per command: index, line, exit code, duration, log path (local; absent after a restore). `env-evidence.json` (env command stages): each toolchain line with its output after each `passEnv` value is replaced by `<passEnv NAME>`, then cut to the first 200 characters, each dependency step, and the baseline status |
 | `check.json` | driver | D. Command stages only: the post-stage check that failed, when one did |
 | `<extract>.md` | driver | D. Gate results only: the section an exit's `extract` copied, such as `trial-kickoff.md` |
 | `logs/` | driver, extension | Local. `worker.jsonl` (the harness's JSON stream: `opencode run --format json` or Pi's `--mode json`), `worker.stderr`, `ext.json` (extension or worker-plugin load marker; missing → `check failed: extension`), `prove-K.log` |
@@ -1205,7 +1206,12 @@ the session backup; each driver push to project-main outside a stage
 (L8); Start step 7. Holding the lock, in `worktrees/state/`:
 
 1. `HEAD` equals `tip` and the worktree is clean; else
-   `check failed: state`, an `operator` stop.
+   `check failed: state`, an `operator` stop. One exception, a kill
+   between step 4's commit and its tip-record write: when the worktree
+   is clean, `HEAD`'s only parent is `tip`, its `sdlc-state.json` has
+   `prev` equal to `tip` and `seq` one above the record's, and its
+   ledger matches its tree, the driver adopts `HEAD` as `tip` (and `seq`)
+   and goes on.
 2. Copy each **D** file whose hash differs from the tip's ledger; never
    delete one. A run folder's worker-written files (`result.md`,
    `state.md`, `ledger.json`, `baseline.json`, `ask-human.md`, `out/`)
@@ -1246,11 +1252,18 @@ writes a new `machine.json`, then
    one. A failure refuses, naming commit and path. Commits by another
    identity than the driver's are listed: the identity is forgeable.
 3. **Named commits.** Each set `groom.reviewedCommit`,
-   `groom.frozenCommit`, `env.specCommit`, `env.landCommit`, `lands`
-   entry, and `projectMainSeen` is an ancestor of the fetched
-   `origin/<projectMain>`, and `bundle.commit` exists in the toolbox;
-   else `check failed: state-commits`, naming the field. The Start
-   preflight repeats this test.
+   `groom.frozenCommit`, `groom.recordCommit`, `env.specCommit`,
+   `env.landCommit`, `chunk.pendingRoute.commit`,
+   `chunk.unposted.commit`, `lands` entry, and `projectMainSeen` is an
+   ancestor of the fetched `origin/<projectMain>`, and `bundle.commit`
+   exists in the toolbox; else `check failed: state-commits`, naming the
+   field. `inFlight.recordCommit` is exempt: in the not-pushed case it is
+   on no ref, and the [pushed record exception](#start) accepts it only
+   as project-main's or `worktrees/integrate`'s exact tip. Item and env
+   branch tips (`lastPushed`, `reviewBase`, `env.branch`) are outside the
+   test: anyone with branch push can move them, and Start step 3 checks
+   each remote tip equals `lastPushed`. [Start](#start) step 3 repeats
+   this test after its fetch.
 4. Copy the files in, create the driver ledger, write the tip record
    with `restore: {"tip", "confirmed": false}`.
 
@@ -1272,8 +1285,9 @@ copies, logs) are absent after a restore; readers treat them so.
 **Drill.** Run prep's last step at `pushed` and `local`:
 `sdlc-driver drill RUN_ROOT` restores the branch from its drill source
 into a temporary `0700` folder with no lease, no push, and a copy of
-`machine.json`, then compares `sdlc-driver status` of both roots and
-each file the tip's ledger lists. Pass: `restore drill: done`; else the
+`machine.json`, then compares `sdlc-driver status` of both roots,
+ignoring the lease, the tip record's `restore` and `pushedTip`, and the
+run-root path, and each file the tip's ledger lists. Pass: `restore drill: done`; else the
 line names the difference and Run prep prints no Gather line. The
 folder is removed either way.
 
@@ -1394,9 +1408,7 @@ it refuses while any driver holds the lock.
    commit); `adapter.missingModels` is empty for every model slot; a set
    `backup.dir` passes its `machine.json` rules, else one warning line;
    `gatherer/run-1/brief.md` exists, else the line
-   `no brief yet: finish Gather first` and no run; the restore's
-   named-commits test ([Durable run state](#durable-run-state) restore
-   step 3); one warning line per `passEnv` variable whose value is
+   `no brief yet: finish Gather first` and no run; one warning line per `passEnv` variable whose value is
    shorter than 6 characters, which the scan cannot match. While the
    tip record's `restore.confirmed` is `false`, the start waits for the
    restore confirmation.
@@ -1415,7 +1427,10 @@ it refuses while any driver holds the lock.
    with the error lines.
 
    Run prep's `state-init` runs this first-start part, because the
-   state worktree needs `repo.git`. After the fetch, on every start: at
+   state worktree needs `repo.git`. After the fetch, on every start: run
+   the restore's named-commits test
+   ([Durable run state](#durable-run-state) restore step 3) against the
+   fetched `origin/<projectMain>`; at
    `pushed`, apply the [lease](#durable-run-state) rule to the fetched
    state branch; at `pushed` and `local`, check `worktrees/state/` as
    persist step 1 does. Recreate a missing item or env worktree at
@@ -1474,7 +1489,9 @@ it refuses while any driver holds the lock.
 6. Print the found report ([Console](#console-lines)); any `deferred`
    scope becomes `active`.
 7. Persist when a **D** file differs from the tip's ledger (recorded
-   answers, a repin, a restore); then enter the loop.
+   answers, a repin, a restore), not counting the worker-written files
+   of folders in `unmirrored`, which persist never copies; then enter
+   the loop.
 
 #### Repin the toolbox
 
@@ -1514,10 +1531,11 @@ for the run root and the new commit in dialogs; Pi takes
    ([Design-record commits](#design-record-commits) step 7). The chunk
    at `env-prep` creates the env branch first
    ([Build-environment gate](#build-environment-gate) point 2).
-5. After the stage finishes, by any path: persist
+5. After the stage finishes, by any path: back up the stage persona's
+   session file when `backup.dir` is set
+   ([Sessions and rehydrate](#sessions-and-rehydrate)), then persist
    ([Durable run state](#durable-run-state)) unless `state.level` is
-   `plain`, then back up the stage persona's session file when
-   `backup.dir` is set ([Sessions and rehydrate](#sessions-and-rehydrate)).
+   `plain`.
 6. Repeat.
 
 One stage runs at a time, model or command, across all scopes. A chunk
@@ -3329,7 +3347,9 @@ Driver scenarios, each a test:
     the summary shows the `run.json` summary and `runJsonSha256` is
     recorded only after the answer; `local` restores from `repo.git`;
     `plain` skips the drill. Gather's `persist` puts the brief on the
-    branch before the first `/sdlc`.
+    branch before the first `/sdlc`. A kill between a state commit and
+    its tip-record write → the next Start adopts `HEAD` and persists; a
+    `HEAD` whose parent or `seq` does not match → `check failed: state`.
 22. Boot files: rendered at `state-init` and ticket filing, identical
     across two run roots; a deleted file is rendered again with the same
     hash; an edited file → `check failed: boot`; a repin that changes a

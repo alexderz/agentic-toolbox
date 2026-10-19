@@ -989,7 +989,7 @@ items 3 and 5.
 - The exact flow-file schema, file names inside run folders, console
   wording, and skill ids: Spec.
 - OpenCode server behavior: checked before item 7 starts.
-- From the run-state revision (the LLD's O12–O19 hold the
+- From the run-state revision (the LLD's O12–O20 hold the
   recommendations): the level on a public repo; a new `docs/sdlc/`
   owner file; item 0's driver steps waiting for item 5; who removes the
   state branch; an env re-entry that needs new items; the writable
