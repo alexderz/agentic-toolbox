@@ -10,7 +10,11 @@
   reviews, same day; run-state revision `2026-10-19` for the operator's
   decisions A–D: Run prep first, durable run state in the product repo,
   rehydrated sessions, and the build-environment gate
-- Status: **draft, awaiting operator acceptance**
+- Status: **accepted by the operator at 021f81d, 2026-10-19** (Plan,
+  with UX and Spec). The pinned-clone revision of the same day applies
+  the operator's toolbox-clone decision ([Toolbox](#run-root-and-state))
+  and awaits the operator's acceptance with the LLD's pinned-clone
+  revision.
 
 ## Required
 
@@ -69,8 +73,8 @@
   a plugin. People and journeys: [ux.md](ux.md#people).
 
 - **UX / stories** — [ux.md](ux.md) and
-  [user-stories.md](user-stories.md) (designer). Agent review and
-  operator acceptance: pending on that page. UX questions Q1 (replying
+  [user-stories.md](user-stories.md) (designer). Agent review passed;
+  the operator accepted the UX page at 021f81d, 2026-10-19. UX questions Q1 (replying
   to an escalation), Q2 (the followed-mode handoff form), and Q3 (the
   chronological index) stay **open** until the operator accepts the UX
   page. This HLD does not lock them; [Open](#open) lists each one with
@@ -232,14 +236,14 @@ skill decides.
    (`driver/lock`); if another live driver holds it, it exits. It reads
    `run.json` and `driver.json` and repeats the cheap Run prep checks:
    the toolbox and pinned commit, the harness pin, the model slots, the
-   state branch's lease, and the boot files. It reports what it found
+   state branch's lease, and the compiled files. It reports what it found
    (last finished stage, interrupted run folder, sessions it will
    resume or rehydrate, next run folder), then continues
    ([ux.md](ux.md#journeys) J8).
 2. It picks the next runnable node: chunk nodes in flow order; then
    items in plan order whose blockers are all landed+verified.
 3. It opens a new run folder for the persona, writes `prompt.md` there
-   (a mint starts with the persona's boot file), writes the facts file
+   (a mint starts with the persona's compiled file), writes the facts file
    under `driver/facts/`, persists the run state with the in-flight
    marker, records the pre-stage hashes, and starts or resumes the
    worker.
@@ -285,7 +289,7 @@ list every entry:
 ```text
 RUN_ROOT/
   run.json  driver.json  index.jsonl  checklist.md  plan/  asks/   # D: durable
-  machine.json  boot/  driver/  repo.git/  worktrees/  env-data/   # local
+  machine.json  driver/  repo.git/  worktrees/  env-data/          # local
   <persona>/session.*                                              # local
   <persona>/run-N/   # result.json, result.md, state.md, out/ (D); prompt.md, logs/ (local)
 ```
@@ -307,23 +311,42 @@ from decision B's `pushed` default that the operator confirms (LLD O12).
   hit is never committed.
 - A lease and fast-forward-only pushes keep two machines from driving
   one run. A restore verifies the state, checks the commits it names
-  against project-main and the toolbox, and waits for the operator's
-  confirmation; Run prep ends with a restore drill.
+  against project-main and the toolbox, re-clones the toolbox at the
+  pin, and waits for the operator's confirmation: the operator types
+  the genesis state commit from the note Run prep told them to keep off
+  the machine, and the tip (LLD O20). Run prep ends with a restore
+  drill.
 
-**Toolbox.** The driver reads the bundle and skills from the toolbox
-checkout at the pinned commit with `git show`; a product repo never
-carries a copy, not even of a boot file. Run prep checks the checkout
-and the commit, and every driver start checks them again. Moving the pin
-of a running chunk is the operator's `/sdlc-repin` command between
-stages: it shows the diff, re-pins, and records it in the history.
+**Toolbox.** Run prep clones the toolbox into the operator checkout's
+`.sdlc/toolbox/` at a recorded tag or commit (the pin, in `run.json`, so
+on the state branch too) and ignores `.sdlc/` through
+`.git/info/exclude`, which every worktree of the checkout shares. It
+writes no product-repo change, and no commit ever carries `.sdlc/`. The
+driver, the bundle check, the INTAKE checks, and skill packing read only
+that clone. Before every stage and at every start the driver checks
+that the clone is read-only, sits at the pin, and is clean, and that the
+compiled files match their hashes; any difference is an operator stop.
+`.sdlc/` is in the pre- and post-stage hash check and in no worker's
+writable set. Moving the pin is the operator's `/sdlc-repin` between
+stages: it fetches in the clone, checks out the new tag, shows the
+diff, recompiles, and records it in the history. A restore on another
+machine re-clones the recorded remote at the pin. The general SDLC gets
+the same clone as DER-570.
 
-**Boot files.** The driver compiles one boot file per persona from the
-pinned commit: the persona's role, its packed skills inline, and the
-repo facts (test command, branches, tracker ids, project-main). A
-worker's first prompt starts with it, so a session begins with one read
-and no routing lookups; per-stage parts stay in the prompt kinds. Boot
-files are local and are compiled again when missing; the state branch
-records only the pin and each boot file's hash.
+The run root and `.sdlc/` hold different things. The run root, outside
+every git worktree and `0700`, holds the run's state, sessions, logs,
+and worktrees. `.sdlc/` holds only what the pin and the repo facts
+determine, so it carries no secret and can be rebuilt at any time.
+
+**Compiled files.** The driver compiles one file per persona,
+`.sdlc/compiled/<persona>.md`, from the clone at the pin: the persona's
+role, its packed skills inline, and the repo facts (test command,
+branches, tracker ids, project-main). Each records the pin and a hash
+of its sources. A worker's first prompt names it by absolute path, so a
+session begins with one read and no routing lookups; per-stage parts
+stay in the prompt kinds. Item worktrees hold no `.sdlc/`. A missing
+or stale file is compiled again from the clone; the state branch
+records only the pin and each file's hash.
 
 - Chunk personas use their role name (`architect`, `refiner`,
   `designer`, `ux-reviewer`, `security`, `groom-reviewer`, `manager`).
@@ -422,7 +445,7 @@ shell is caught only by the checks below.
   a persona's file is missing, for example after a restore on another
   machine, the driver restores it from the optional backup, else starts
   a fresh session with a fixed **rehydrate** prompt built from the
-  boot file, the persona's `state.md`, and the driver facts. It is not
+  compiled file, the persona's `state.md`, and the driver facts. It is not
   a stop. A file that exists but does not load, or a second loss before
   the rehydrated session gives one valid result, is still a stop: the
   file may not be the persona's own, and a loop must end.
@@ -753,8 +776,7 @@ Gather.
 2. It runs the readiness checks: the tracker and its `read` command,
    project-main cut from trunk, the harness at the pinned version,
    every model slot resolving, push permission to the remote, branch
-   protection and CI presence, and the toolbox checkout with the pinned
-   commit reachable.
+   protection and CI presence, and the toolbox clone at the pin.
 3. It files the Epic and prepares the run root and the state branch,
    persists the state, and runs the restore drill.
 4. It prints the Gather line. No copy of the Run prep session is kept;
@@ -804,12 +826,16 @@ node.
   lease catch a write during a run. A restore requires the commits the
   state names for proving and env commands to be on project-main and
   the bundle commit to pass the toolbox's reviewed-ref rule, and shows
-  them for the operator's confirmation. Residual risk: anyone who can
+  them for the operator's confirmation, which needs the genesis commit
+  from the operator's own note (LLD O20). Residual risk: anyone who can
   push project-main can still plant such a commit there and a
   consistent state naming it, and so choose commands the restored run
   executes, unless the operator spots it in the summary.
-- The toolbox is read only at the pinned commit; a new pin needs the
-  operator's `/sdlc-repin` between stages.
+- The toolbox is read only from the clone at the pin, checked before
+  every stage; a new pin needs the operator's `/sdlc-repin` between
+  stages. Workers can write the operator checkout through `bash`; the
+  hash check detects a write to `.sdlc/`, and the rest of the checkout
+  stays a residual risk.
 - The build environment's commands come only from the accepted LLD,
   re-hashed before each run. Credentials an integration needs reach
   command stages by variable name, never workers.
@@ -867,7 +893,7 @@ and this HLD's acceptance, and
 | The manager sets the land order | [Land path](../../../docs/sdlc/branches-and-lands.md#land-path) | The driver follows the Groom plan order |
 | After an item lands, in-flight builders rebase or merge project-main | [Branches](../../../docs/sdlc/branches-and-lands.md#branches) | In-flight builders merge project-main into the item branch and never rebase a pushed branch ([Git on shared branches](#git-on-shared-branches)) |
 | The landing builder de-conflicts against the project-main tip; then its verifier is resumed | [Branches](../../../docs/sdlc/branches-and-lands.md#branches), [Project-main](../../../docs/sdlc/branches-and-lands.md#project-main) | Per the manager's ruling: a builder `blocked` result is a stop, whatever the merge check reports; while the item's tree equals the mechanical clean merge, only the proving commands and the verifier re-run; the driver re-checks after every builder edit, and any other tree, such as a conflict resolution or a fix after the clean check, also re-runs Review before land ([Land](#land-and-post-land-verifier) step 1) |
-| Resume fails, or a transcript passes half the window or is compacted → replace the agent | [Fallback](../../../docs/sdlc/subagents.md#fallback) | Not replaced on context pressure; compaction from `state.md`. A missing session file is rehydrated from the boot file, `state.md`, and driver facts; an unloadable one is a stop, and only the operator approves a replacement |
+| Resume fails, or a transcript passes half the window or is compacted → replace the agent | [Fallback](../../../docs/sdlc/subagents.md#fallback) | Not replaced on context pressure; compaction from `state.md`. A missing session file is rehydrated from the compiled file, `state.md`, and driver facts; an unloadable one is a stop, and only the operator approves a replacement |
 | Groom follows the Spec gate | [Spec](../../../docs/sdlc/plan-trial-spec.md#spec), [Groom](../../../docs/sdlc/groom-step.md) | Env-prep and the env gate sit between them; Groom writes proving commands against the proven environment |
 | Three failed fixes → stop and ask the operator | [`debug`](../../../skills/debug/SKILL.md) phase 4, [Asking the operator](../../../docs/SDLC.md#asking-the-human) | One counter per item, across every check, that does not reset; a red run of the land proving commands counts as a failed fix; the third failed fix is the operator gate |
 | Model stage: absent or invalid output → harness emits `fail` | [Stage result](../../../docs/sdlc/stage-result.md#rules) | One repair attempt first, then `fail` |
@@ -891,7 +917,8 @@ and points at the flow spec instead.
 | Product code, docs, changelog | Git: item branches, then project-main | Pushed as built; pushed after each land |
 | Epic, items, blockers, claims, comments, `done` | Tracker through `tracker-sdlc` (any backend; `local` = `tickets` branch) | The board |
 | Driver position, results, `state.md`, asks, plan, brief, env evidence (the D files) | Run root, mirrored to the state branch at `local` and `pushed` | Kept across crashes; at `pushed`, across the loss of the machine |
-| Sessions, prompts, logs, worktrees, boot files | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
+| Toolbox clone, compiled files | `.sdlc/` in the operator checkout, ignored, never committed | Rebuilt from the recorded remote at the pin |
+| Sessions, prompts, logs, worktrees | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
 
 If git and the run root disagree, git and the tracker win for what
 landed; the run root wins for what ran. A lost run root at `pushed`
@@ -989,13 +1016,15 @@ items 3 and 5.
 - The exact flow-file schema, file names inside run folders, console
   wording, and skill ids: Spec.
 - OpenCode server behavior: checked before item 7 starts.
-- From the run-state revision (the LLD's O12–O20 hold the
-  recommendations): the level on a public repo; a new `docs/sdlc/`
-  owner file; item 0's driver steps waiting for item 5; who removes the
+- From the run-state revision (the LLD's O12–O20; the operator accepted
+  O12, O13, O17, O18, and O20 as recommended on 2026-10-19): the level
+  on a public repo; a new `docs/sdlc/` owner file; item 0's driver steps waiting for item 5; who removes the
   state branch; an env re-entry that needs new items; the writable
   state branch as a residual to accept in writing; the env gate's
   agent-plus-operator shape; integration credentials for command stages
   only.
+- From the pinned-clone revision (the LLD's O21, open): one run per
+  operator checkout.
 
 ## Optional
 
@@ -1052,9 +1081,13 @@ flowchart LR
 - **Bundles copying skill bodies**: two owners per skill, and pins drift.
 - **New step names `Verify` and `Land`**: would change the SDLC's
   Names; nodes carry existing step names instead.
-- **Copying the toolbox or boot files into the product repo**: two
+- **Committing the toolbox or compiled files to the product repo**: two
   copies drift, and a product repo would carry another project's
-  instructions; the driver reads the pinned commit instead.
+  instructions; the clone stays ignored and pinned instead.
+- **Reading the operator's own toolbox checkout with `git show`**: the
+  earlier design. Replaced by the pinned clone (operator, 2026-10-19):
+  one self-contained folder beside the repo that a restore rebuilds
+  from the recorded remote, and that workers can read by path.
 - **Committing session transcripts**: large, and they hold tool output
   and private text; rehydrate and the optional private backup cover a
   lost session.

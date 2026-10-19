@@ -28,7 +28,7 @@ git, or tracker state.
     each branch the run uses (trunk, project-main, and the `tickets`
     branch when the `local` adapter is chosen), the harness at its
     pinned version, every model slot, push permission, branch
-    protection and CI, the toolbox checkout and pinned commit, and the
+    protection and CI, the toolbox clone at its tag or commit, and the
     run root's parent folder. Each line is marked `done`, `to do`,
     `deferred`, or `n/a`.
   - The tracker answer is required: Run prep files the Epic, so the
@@ -208,7 +208,7 @@ git, or tracker state.
     reused; the next invocation gets a new `run-N`.
   - If a session file to resume is missing, the found report names the
     persona as `will rehydrate`, and its next start line says
-    `rehydrated`: a fresh session that begins from its boot file, its
+    `rehydrated`: a fresh session that begins from its compiled file, its
     last `state.md`, and the driver's facts, never a blank one.
   - If a session file is present but does not load, the driver stops
     and names the file.
@@ -232,7 +232,9 @@ git, or tracker state.
   **so that** a lost machine costs only the stage that was running.
 - **Done when:**
   - The kickoff skill's restore mode asks only the machine-local
-    questions and rebuilds the run root from the state branch.
+    questions, rebuilds the run root from the state branch, and
+    re-clones the toolbox at the pin from the remote that `run.json`
+    records.
   - A state with an edited or missing file is refused, naming it.
   - A state that names a proving, env, or land commit not on
     project-main is refused, naming the field.
@@ -286,11 +288,28 @@ git, or tracker state.
 - **Done when:**
   - `/sdlc-repin` works only while no driver runs, and shows the diff
     of the bundle and skills before asking.
-  - After the yes, `run.json` names the new commit and the history
-    records the old and new commits.
-  - Without the command, every start uses the pinned commit, and a
-    product repo never holds a copy of the toolbox.
+  - It fetches in the toolbox clone and checks out the new tag; after
+    the yes, `run.json` names the new commit and tag, the history
+    records the old and new commits, and the compiled files are
+    rebuilt. A no leaves the clone at the old pin.
+  - Without the command, every start uses the pinned commit, and no
+    product-repo commit holds a copy of the toolbox.
 - **Out of scope:** pinning per item.
+
+### SD-34 Keep the pinned toolbox beside the repo
+
+- **As** the operator **I want** the run's toolbox cloned at its pin
+  inside my checkout but out of git **so that** I can read exactly what
+  the workers follow, and nothing changes it unseen.
+- **Done when:**
+  - Run prep clones the toolbox into `.sdlc/toolbox/` and adds `.sdlc/`
+    to `.git/info/exclude`; `git status` of the checkout is unchanged.
+  - Each persona's compiled file is in `.sdlc/compiled/`, and the
+    worker's first prompt names it by path.
+  - A changed, unpinned, or writable clone, or an edited compiled file,
+    stops the run before the next stage with a line naming what
+    differs; the driver does not repair it.
+- **Out of scope:** two runs sharing one checkout (LLD O21).
 
 ### SD-13 See items land without waking the manager
 
