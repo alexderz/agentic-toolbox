@@ -31,10 +31,11 @@ git, or tracker state.
     protection and CI, the toolbox checkout and pinned commit, and the
     run root's parent folder. Each line is marked `done`, `to do`,
     `deferred`, or `n/a`.
-  - The `local` adapter is an allowed tracker choice.
-  - The tracker line can be `deferred` until after Gather. A deferred
-    choice is asked again before the first tracker write (SD-2).
-  - It writes nothing before the operator replies to the checklist.
+  - The tracker answer is required: Run prep files the Epic, so the
+    tracker line cannot be `deferred`. The `local` adapter is an allowed
+    choice.
+  - The checklist is a preview: it writes nothing, cuts no branch, and
+    pushes nothing before the operator replies to it.
   - It ends with a restore drill line (`done`, or `n/a` at `plain`)
     and the line that starts Gather. No copy of the Run prep session is
     kept.
@@ -50,11 +51,9 @@ git, or tracker state.
   - If the repo is public, the message states that the `tickets` branch
     and every title, body, and comment on it are public, before any
     ticket is written.
-  - The choices include: use `local`, name another tracker or repo, or
-    decide after Gather. A public repo has no default; silence writes
-    nothing.
-  - A choice of "after Gather" asks again before the first tracker
-    write.
+  - The choices are: use `local`, or name another tracker or repo. A
+    public repo has no default; silence writes nothing and Run prep does
+    not finish.
 - **Out of scope:** creating tracker types or states.
 
 ### SD-3 Turn a brain dump into a confirmed brief
@@ -65,9 +64,12 @@ git, or tracker state.
   - Gather runs in a new session after Run prep, follows
     `discover-the-idea`, and ends with a brief the operator confirms in
     words.
-  - The brief is written into the run root that Run prep prepared, and
-    the Gather session is saved there where the manager can read it
-    later; the session copy is never committed.
+  - The brief is written into the run root that Run prep prepared and
+    reaches the state branch before Gather ends.
+  - The Gather session is saved on this machine where the manager can
+    read it later; the copy is never committed. After a restore on
+    another machine the copy is gone, and the manager reads the brief
+    alone.
   - The driver refuses to start before the brief exists.
 - **Out of scope:** changing the Gather interview itself.
 
@@ -76,8 +78,8 @@ git, or tracker state.
 - **As** the operator **I want** the run root and the exact command
   printed **so that** I can start the run without searching.
 - **Done when:**
-  - After the brief is confirmed, the run root exists outside the
-    checkout with the first run folders.
+  - The run root already exists outside the checkout from Run prep;
+    after the brief is confirmed it holds `gatherer/run-1/brief.md`.
   - The last lines of the Gather session are the absolute run root and
     the start command with the real path: in OpenCode "pick `/sdlc`,
     then enter RUN_ROOT", in Pi `/sdlc RUN_ROOT`.
@@ -99,9 +101,9 @@ git, or tracker state.
   with a safe default **so that** losing a machine does not lose the
   run, and I decide what reaches the remote.
 - **Done when:**
-  - Run prep offers `pushed`, `local`, and `plain`, with `pushed` as the
-    default; on a public repo it states that the state branch would be
-    public and offers no default.
+  - Run prep offers the three levels, with the default and the
+    public-repo warning, as the LLD's
+    [durability levels](lld.md#durable-run-state) define them.
   - At `pushed`, after every stage the remote branch
     `sdlc/run/<chunk-slug>` has a new commit, and it never appears in
     project-main or trunk.
@@ -232,8 +234,12 @@ git, or tracker state.
   - The kickoff skill's restore mode asks only the machine-local
     questions and rebuilds the run root from the state branch.
   - A state with an edited or missing file is refused, naming it.
-  - The start command shows the restore summary and starts nothing
-    until the operator types the start of the state tip.
+  - A state that names a proving, env, or land commit not on
+    project-main is refused, naming the field.
+  - The start command shows the restore summary, including the
+    `run.json` summary and each named commit, and starts nothing until
+    the operator types the start of the genesis commit from their own
+    note and of the state tip.
   - Personas resume from the session backup when one matches, else are
     rehydrated (SD-11).
   - The old machine, started again, refuses to drive the run.

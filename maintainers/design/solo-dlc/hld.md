@@ -279,55 +279,36 @@ The run root lives outside the checkout, chosen at Run prep (default
 under `$XDG_STATE_HOME/sdlc/<chunk-slug>/`). The driver refuses a run
 root inside a git worktree. It deletes no run folder.
 
+A sketch; the LLD's [run root formats](lld.md#behavior-4-run-root-formats)
+list every entry:
+
 ```text
 RUN_ROOT/
-  run.json           # D: bundle id and commit, repo, project-main, tracker, mode, level, persona → model
-  machine.json       # machine-local paths: toolbox, harness, backup folder
-  driver.json        # D: driver-owned: node per item, repair counters, pending asks, hashes
-  index.jsonl        # D: stage history, if the operator accepts UX Q3 as recommended
-  checklist.md       # D: Run prep readiness checklist
-  plan/items.json    # D: Groom snapshot: order, blockers, ticket ids, groom.md commit, command hash
-  asks/ask-N.md      # D: escalation text and the operator's answer, verbatim
-  boot/<persona>.md  # compiled boot file: role, packed skills, repo facts
-  driver/lock        # run-root lock
-  driver/facts/      # facts passed to each worker start, one file per run folder
-  worktrees/<ticket>/      # one item worktree
-  worktrees/integrate/     # driver's integration worktree, on project-main
-  worktrees/env/           # the env-builder's worktree
-  worktrees/state/         # the state branch's worktree, driver only
-  <persona>/session.*      # the worker's harness session file
-  <persona>/run-N/   # prompt.md, candidate.json, result.json (D), result.md (D, prose),
-                     # state.md (D), out/ (D, files for the repo), logs/
+  run.json  driver.json  index.jsonl  checklist.md  plan/  asks/   # D: durable
+  machine.json  boot/  driver/  repo.git/  worktrees/  env-data/   # local
+  <persona>/session.*                                              # local
+  <persona>/run-N/   # result.json, result.md, state.md, out/ (D); prompt.md, logs/ (local)
 ```
 
 **Durable and local parts.** The files marked D are the run's durable
-state. Run prep asks how durable it must be; the default is `pushed`:
+state. Run prep asks for the durability level, `pushed`, `local`, or
+`plain`; the levels, the default, and the public-repo warning are
+defined once in the LLD's [durability levels](lld.md#durable-run-state).
+On a public repo the design offers no default, a deliberate departure
+from decision B's `pushed` default that the operator confirms (LLD O12).
 
-| Level | The D files live in | Survives |
-| --- | --- | --- |
-| `pushed` (default) | The driver-owned orphan branch `sdlc/run/<chunk-slug>` in the product repo, in its own worktree, committed and pushed to `origin` at every stage start (with the in-flight marker) and end | The loss of the machine |
-| `local` | The same branch, committed but never pushed | A damaged run-root file |
-| `plain` | The run root only | Crashes on this machine |
-
-- The state branch is never merged into project-main or trunk, so
-  nothing has to be stripped. The driver never deletes it; the
-  operator removes it after project-main lands on trunk.
-- Everything else stays local and uncommitted: the driver's bare clone,
-  every worktree, harness session files, the OpenCode database, worker
-  configs, boot files, prompts, and logs. A session transcript is never
-  committed.
-- Before every state commit the driver scans the files for local
-  paths, addresses, and credential-shaped strings; a hit is an
-  operator stop, and a credential hit is never committed.
-- A lease in the pushed state names the machine that drives the run;
-  pushes are fast-forward only, so two machines never drive the same
-  run after a recovery.
-- Restoring on another machine verifies the state's hash ledger, and
-  the operator confirms it before any stage runs. Run prep ends with a
-  restore drill: restore from a fresh clone into a temporary folder and
-  check that the driver's status reads it.
-- On a public repo the state branch is public; Run prep says so and
-  asks for the level with no default.
+- At `pushed` and `local` the D files are committed to the driver-owned
+  orphan branch `sdlc/run/<chunk-slug>`, never merged into project-main
+  or trunk; at `pushed` it is pushed after every stage. The driver
+  never deletes it.
+- Everything else stays local and uncommitted, including every session
+  transcript.
+- Before every state commit the driver scans the files; a credential
+  hit is never committed.
+- A lease and fast-forward-only pushes keep two machines from driving
+  one run. A restore verifies the state, checks the commits it names
+  against project-main and the toolbox, and waits for the operator's
+  confirmation; Run prep ends with a restore drill.
 
 **Toolbox.** The driver reads the bundle and skills from the toolbox
 checkout at the pinned commit with `git show`; a product repo never
@@ -599,13 +580,12 @@ before Groom. By then the technology choices are known.
 
 - **Design records.** The HLD's required test harness and environment
   section says what is needed (see Required). The LLD adds a required
-  `## Build environment` section with one machine-readable block: each
-  dependency's setup (clone, configure, auth by variable name only),
-  start, ready, reset, and stop commands, the toolchain version
-  commands, the proving commands, and the repo's test command. The
-  driver rejects a Spec `pass` without a valid block; **security** reads
-  the commands; the Spec gate quotes the dependencies and the variables
-  the commands may receive.
+  `## Build environment` section with one machine-readable block of
+  dependency, toolchain, proving, and test commands
+  ([LLD](lld.md#the-json-sdlc-env-block)). The driver rejects a Spec
+  `pass` without a valid block; **security** reads the commands; the
+  Spec gate quotes the dependencies and the variables the commands may
+  receive.
 - **Env-prep.** A builder-job persona, `env-builder`, builds the harness
   and environment on its own branch, and the driver runs the block's
   commands as command stages, then a baseline run of the test command:
@@ -694,7 +674,7 @@ repo's `.agents/tracker/SKILL.md`, with any backend. With no tracker
 connected, Run prep uses the existing `local` adapter (a `tickets`
 branch); on a public repo that branch is public, onboarding says so
 before writing, and the operator may name an alternative. The tracker
-is chosen at onboarding or after Gather.
+is chosen at Run prep and cannot be deferred: Run prep files the Epic.
 
 The driver writes nothing to the tracker. It reads ticket state with
 the repo tracker skill's `read` command, run as a command with no model
@@ -769,7 +749,7 @@ Gather.
 1. It asks only the setup questions a run needs, never product
    questions: toolbox and pin, repo and branches, chunk slug and Epic
    title, tracker, harness and models, run-root location, durability
-   level (default `pushed`), and an optional session backup folder.
+   level, and an optional session backup folder.
 2. It runs the readiness checks: the tracker and its `read` command,
    project-main cut from trunk, the harness at the pinned version,
    every model slot resolving, push permission to the remote, branch
@@ -782,7 +762,8 @@ Gather.
 
 **Gather** then runs in a new interactive session on the operator's
 brain dump (`discover-the-idea`), writes the confirmed brief into the
-run root, keeps a copy of its session, and prints the run root and the
+run root, persists it to the state branch, keeps a local copy of its
+session, and prints the run root and the
 line `/sdlc RUN_ROOT`. The operator types it. If asked to start the
 run, the model says only the operator can type it. Gather comes after
 Run prep so that its kept transcript holds no setup detail, the brief
@@ -820,9 +801,13 @@ node.
   scan applies to anything copied to project-main.
 - Workers hold the operator's git credentials, so the state branch is
   writable by them, as project-main is. The post-stage checks and the
-  lease catch a write during a run; a restore from a forged but
-  consistent state is caught only by the operator reading the restore
-  summary: residual risk, beside the project-main one.
+  lease catch a write during a run. A restore requires the commits the
+  state names for proving and env commands to be on project-main and
+  the bundle commit to pass the toolbox's reviewed-ref rule, and shows
+  them for the operator's confirmation. Residual risk: anyone who can
+  push project-main can still plant such a commit there and a
+  consistent state naming it, and so choose commands the restored run
+  executes, unless the operator spots it in the summary.
 - The toolbox is read only at the pinned commit; a new pin needs the
   operator's `/sdlc-repin` between stages.
 - The build environment's commands come only from the accepted LLD,
@@ -1109,7 +1094,10 @@ flowchart LR
   stops paths, addresses, and credential shapes, not every private
   sentence.
 - Workers can write the state branch with the operator's credentials;
-  a forged, consistent state is caught only at the restore summary.
+  a forged, consistent state that names commits planted on project-main
+  can choose the proving and env commands a restored run executes, and
+  is caught only at the restore summary
+  ([Trust boundaries](#trust-boundaries-hld-grain)).
 - A rehydrated persona loses the reasoning that was in its transcript
   and keeps only `state.md`, the facts, and its run folders.
 - Env-prep runs the LLD's commands with the operator's rights; a wrong

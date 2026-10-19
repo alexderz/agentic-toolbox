@@ -50,10 +50,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **Start command**: how the operator starts or resumes the driver. In
   OpenCode, start and resume use a dialog: pick `/sdlc`, then enter
   RUN_ROOT. In Pi, type `/sdlc RUN_ROOT`.
-- **Durability level**: how the run's state survives. `pushed`
-  (default): a state branch in the product repo, pushed after every
-  stage, so another machine can take over. `local`: the same branch,
-  never pushed. `plain`: the run root only.
+- **Durability level**: how the run's state survives: `pushed`,
+  `local`, or `plain`, defined once in the LLD's
+  [durability levels](lld.md#durable-run-state).
 - **State branch**: `sdlc/run/<chunk-slug>`, the driver's own branch,
   never merged.
 - **Rehydrate**: start a fresh session for a persona whose session file
@@ -76,9 +75,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **J2 Public tickets warning.** No tracker connected → kickoff offers
   the `local` adapter (a `tickets` branch) → the repo is public → kickoff
   says, before anything is written, that ticket titles, bodies, and
-  comments on that branch are public → operator picks: use it, name
-  another tracker or repo, or decide after Gather. No default on a
-  public repo.
+  comments on that branch are public → operator picks: use it, or name
+  another tracker or repo. No default on a public repo, and Run prep
+  does not finish without an answer: it files the Epic.
 - **J3 Driver runs workers.** Start command → the console shows one
   start line and one end line per stage: item, step, persona, new or
   resumed, run folder; then status, choice, and artifact path. No stage
@@ -147,7 +146,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
   machine-local questions and restores the run root from the state
   branch → start command → the console shows the restore summary (last
   stage, in-flight run, lease holder, any commit not made by the
-  driver) → the operator types the first 12 characters of the state tip
+  driver, the commits it names on project-main, the `run.json`
+  summary) → the operator types the first 12 characters of the genesis
+  commit from the note Run prep told them to keep, and of the state tip
   → the run continues; personas rehydrate or restore from the backup.
   The old machine, if it comes back, refuses to drive the run.
 - **J14 Env gate.** Spec gate accepted → env-builder builds the harness
@@ -184,18 +185,9 @@ In [user-stories.md](user-stories.md):
 product. It asks one question at a time, each with its default:
 toolbox and pin, repo and branches, chunk slug and Epic title, tracker,
 harness and models, run root, durability, backup folder. The
-durability question reads:
-
-```text
-How should this run's state survive?
-  pushed (default): a state branch sdlc/run/<chunk-slug> in this repo,
-    pushed after every stage; another machine can take over.
-  local: the same branch, never pushed; survives a damaged file, not a lost machine.
-  plain: the run root only; survives crashes on this machine.
-```
-
-On a public repo it adds that the state branch, with the brief, results,
-and your answers, would be public, and offers no default. Then it shows
+durability question lists the three
+[levels](lld.md#durable-run-state), one line each, with the LLD's
+public-repo warning and no default on a public repo. Then it shows
 the readiness checklist and marks each line done, to do, deferred, or
 n/a. Tracker choice is one `ask-human.md` message. It ends with the
 restore drill's line and the Gather line; the session is then
@@ -314,7 +306,7 @@ before it starts anything, including the state branch and any persona
 it will rehydrate. On another machine, the kickoff skill's restore mode
 rebuilds the run root first, and the start command then asks the
 operator to confirm the restore summary by typing the start of the
-state tip.
+genesis commit and of the state tip.
 
 **Followed mode.** Same run root, same files, same exit rule. The
 difference is stated, not hidden: the first line, each stage's prose,
