@@ -4,9 +4,12 @@
 - Track / chunk ids: skills-home process track; chunk DER-421 (item 1
   already started as DER-529)
 - Brief: DER-421 brief v3, confirmed by the operator 2026-10-18 (tracker
-  copy: a comment on DER-421). This HLD is written from that brief only.
+  copy: a comment on DER-421). This HLD is written from that brief and
+  the operator's decisions of 2026-10-19 only.
 - Date: `2026-10-18`; fix rounds 1 to 3 after the adversarial
-  reviews, same day
+  reviews, same day; run-state revision `2026-10-19` for the operator's
+  decisions A–D: Run prep first, durable run state in the product repo,
+  rehydrated sessions, and the build-environment gate
 - Status: **draft, awaiting operator acceptance**
 
 ## Required
@@ -17,7 +20,9 @@
   resume sub-agents. Vanilla Pi on one local model has no in-session
   sub-agents, and only one large-model session can run at a time. On
   that harness today the SDLC either collapses into one agent that
-  grades its own work, or does not run.
+  grades its own work, or does not run. The operator works alone: one
+  harness session at a time, no fleet of agents, and no supervising
+  agent. A run must survive the loss of the machine it runs on.
 
 - **Goals**
   1. Run the whole SDLC, every separate-agent gate and operator gate
@@ -39,7 +44,9 @@
   - A coordinating agent that dispatches workers, or any model-callable
     tool that starts, steers, or stops the driver.
   - Running more than one large-model session at a time.
-  - New SDLC steps, roles, tracker states, or tracker verbs.
+  - New SDLC steps, roles, tracker states, or tracker verbs. Run prep
+    and the build-environment gate add nodes and personas under
+    existing steps and jobs.
   - Removing or weakening any gate. This path relocates some tracker
     writes and changes worker replacement; it removes none of them.
   - Trunk, Changelog, and Monthly inside the driver in this chunk; the
@@ -51,9 +58,12 @@
   - Per-verb tracker credentials. Most backends (for example, Linear)
     do not offer them; see [Tracker](#tracker).
 
-- **Users / operators** — The **operator** runs the kickoff skill, types
-  `/sdlc RUN_ROOT`, answers escalations, and holds every operator gate.
-  **Workers** are harness processes, one per persona. The **manager**
+- **Users / operators** — The **operator** runs Run prep and then
+  Gather, types `/sdlc RUN_ROOT`, answers escalations, and holds every
+  operator gate. The **Run prep session** is a short interactive
+  session for the run's setup, discarded afterwards. **Workers** are
+  harness processes, one per persona, including the `env-builder` that
+  builds the build and test environment. The **manager**
   is a worker session resumed only on stops. **Bundle authors** write
   bundles. **Followed-mode agents** follow a bundle on a harness without
   a plugin. People and journeys: [ux.md](ux.md#people).
@@ -70,6 +80,17 @@
 - **Comparables** — [comparables.md](comparables.md): the Pi subagent
   example, OpenCode agents and the Task tool, Archon, LangGraph
   persistence.
+
+- **Test harness and environment** — Required in every HLD that a
+  bundle run writes (the architect's HLD node prompt and its `test-env`
+  check; [Build-environment gate](#build-environment-gate)): each
+  dependency to run (for example a database engine, a single-node
+  Kafka, or an existing platform such as AD, with the operator's
+  integration instructions), the build tools and toolchains, and the
+  test harness. For this chunk: Node 22.18 or later, git with
+  `worktree add --orphan`, and `node:test` with a fake worker against a
+  temporary bare origin; no external service; OpenCode 1.19.3 and Pi at
+  the O6 version only for the manual smoke checks.
 
 ## Shape
 
@@ -110,7 +131,7 @@ bundles/<bundle-id>/
   home's `skills/<id>/` by id; the bundle copies no skill body, so each
   skill keeps one owner and one `SOURCES.md` pin. New skills the chunk
   needs (`test-failure-handler`, the bundle-authoring skill, the
-  followed-mode skill, the kickoff skill) are ordinary first-party
+  followed-mode skill, the kickoff skill for Run prep and Gather) are ordinary first-party
   skills under `skills/`, each with a `SOURCES.md` row and a
   **security** cut. Final ids are fixed at Spec.
 - Code lives under `packages/`: the core driver, the Pi plugin, and the
@@ -156,6 +177,7 @@ bundle check rejects a flow in which any path from the entry node:
 | The HLD node | The comparables node |
 | The Spec node | The Plan operator `gate` node |
 | A Groom node or a Build node | The Spec node, the **security** node, and the Spec operator `gate` node |
+| A Groom node or an item node | The env operator `gate` node and the env land ([Build-environment gate](#build-environment-gate)) |
 | A `land` node, from a Build node | The proving-command node, the verifier node, and the Review node |
 
 Each error names the node and exit ([ux.md](ux.md#journeys) J9). The
@@ -181,6 +203,7 @@ for the proving-command node, so the last row still holds.
 | Proving commands | Driver reads them from the committed `groom.md` blob and runs them | Agent reads them from the committed `groom.md` and runs them |
 | Writable sets | Enforced or detected per [Writable sets and enforcement](#writable-sets-and-enforcement) | Skill rule |
 | Run root, run folders, `result.json` | Same | Same |
+| Durable run state | The operator's level; default `pushed` ([Run root and state](#run-root-and-state)) | `plain`: no driver persists it |
 | Every stop, prose, first line | — | States `followed, not enforced` |
 
 "Followed, not enforced" means an agent, not a program, keeps the gates;
@@ -207,14 +230,19 @@ skill decides.
 
 1. On `/sdlc RUN_ROOT`, the driver takes the run-root lock
    (`driver/lock`); if another live driver holds it, it exits. It reads
-   `run.json` and `driver.json`, reports what it found (last finished
-   stage, interrupted run folder, sessions it will resume, next run
-   folder), then continues ([ux.md](ux.md#journeys) J8).
+   `run.json` and `driver.json` and repeats the cheap Run prep checks:
+   the toolbox and pinned commit, the harness pin, the model slots, the
+   state branch's lease, and the boot files. It reports what it found
+   (last finished stage, interrupted run folder, sessions it will
+   resume or rehydrate, next run folder), then continues
+   ([ux.md](ux.md#journeys) J8).
 2. It picks the next runnable node: chunk nodes in flow order; then
    items in plan order whose blockers are all landed+verified.
-3. It opens a new run folder for the persona, writes `prompt.md` there,
-   writes the facts file under `driver/facts/`, records the pre-stage
-   hashes, and starts or resumes the worker.
+3. It opens a new run folder for the persona, writes `prompt.md` there
+   (a mint starts with the persona's boot file), writes the facts file
+   under `driver/facts/`, persists the run state with the in-flight
+   marker, records the pre-stage hashes, and starts or resumes the
+   worker.
 4. It validates the worker's `candidate.json` against the stage-result
    contract, the node's exits, required outputs, and required checks;
    fixes `step` and `evidence.kind` from the invocation; and writes
@@ -229,8 +257,10 @@ skill decides.
 6. For a chunk node with required outputs, it commits those files into
    project-main per [Design-record commits](#design-record-commits).
 7. It records the stage in the run's history (the format is UX Q3,
-   open) and prints the console line
-   ([ux.md](ux.md#high-level-ux)), then routes by `choice`.
+   open), prints the console line
+   ([ux.md](ux.md#high-level-ux)), persists the run state
+   ([Run root and state](#run-root-and-state)), then routes by
+   `choice`.
 
 - Workers run headless (`pi -p --mode json --session <file>`). `pi -p`
   exits 1 only when the model call fails, so the driver takes the
@@ -245,26 +275,74 @@ skill decides.
 
 ### Run root and state
 
-The run root is durable, outside the checkout, chosen at kickoff
-(default under `$XDG_STATE_HOME/sdlc/<chunk-slug>/`). The driver refuses
-a run root inside a git worktree. It deletes no run folder.
+The run root lives outside the checkout, chosen at Run prep (default
+under `$XDG_STATE_HOME/sdlc/<chunk-slug>/`). The driver refuses a run
+root inside a git worktree. It deletes no run folder.
 
 ```text
 RUN_ROOT/
-  run.json           # bundle id and commit, repo, project-main, tracker, mode, persona → model
-  driver.json        # driver-owned: node per item, repair counters, pending asks, hashes
-  index.jsonl        # stage history, if the operator accepts UX Q3 as recommended
-  checklist.md       # kickoff readiness checklist
-  plan/items.json    # Groom snapshot: order, blockers, ticket ids, groom.md commit, command hash
-  asks/ask-N.md      # escalation text and the operator's answer, verbatim
+  run.json           # D: bundle id and commit, repo, project-main, tracker, mode, level, persona → model
+  machine.json       # machine-local paths: toolbox, harness, backup folder
+  driver.json        # D: driver-owned: node per item, repair counters, pending asks, hashes
+  index.jsonl        # D: stage history, if the operator accepts UX Q3 as recommended
+  checklist.md       # D: Run prep readiness checklist
+  plan/items.json    # D: Groom snapshot: order, blockers, ticket ids, groom.md commit, command hash
+  asks/ask-N.md      # D: escalation text and the operator's answer, verbatim
+  boot/<persona>.md  # compiled boot file: role, packed skills, repo facts
   driver/lock        # run-root lock
   driver/facts/      # facts passed to each worker start, one file per run folder
   worktrees/<ticket>/      # one item worktree
   worktrees/integrate/     # driver's integration worktree, on project-main
+  worktrees/env/           # the env-builder's worktree
+  worktrees/state/         # the state branch's worktree, driver only
   <persona>/session.*      # the worker's harness session file
-  <persona>/run-N/   # prompt.md, candidate.json, result.json, result.md (prose),
-                     # state.md, out/ (files for the repo), logs/
+  <persona>/run-N/   # prompt.md, candidate.json, result.json (D), result.md (D, prose),
+                     # state.md (D), out/ (D, files for the repo), logs/
 ```
+
+**Durable and local parts.** The files marked D are the run's durable
+state. Run prep asks how durable it must be; the default is `pushed`:
+
+| Level | The D files live in | Survives |
+| --- | --- | --- |
+| `pushed` (default) | The driver-owned orphan branch `sdlc/run/<chunk-slug>` in the product repo, in its own worktree, committed and pushed to `origin` at every stage start (with the in-flight marker) and end | The loss of the machine |
+| `local` | The same branch, committed but never pushed | A damaged run-root file |
+| `plain` | The run root only | Crashes on this machine |
+
+- The state branch is never merged into project-main or trunk, so
+  nothing has to be stripped. The driver never deletes it; the
+  operator removes it after project-main lands on trunk.
+- Everything else stays local and uncommitted: the driver's bare clone,
+  every worktree, harness session files, the OpenCode database, worker
+  configs, boot files, prompts, and logs. A session transcript is never
+  committed.
+- Before every state commit the driver scans the files for local
+  paths, addresses, and credential-shaped strings; a hit is an
+  operator stop, and a credential hit is never committed.
+- A lease in the pushed state names the machine that drives the run;
+  pushes are fast-forward only, so two machines never drive the same
+  run after a recovery.
+- Restoring on another machine verifies the state's hash ledger, and
+  the operator confirms it before any stage runs. Run prep ends with a
+  restore drill: restore from a fresh clone into a temporary folder and
+  check that the driver's status reads it.
+- On a public repo the state branch is public; Run prep says so and
+  asks for the level with no default.
+
+**Toolbox.** The driver reads the bundle and skills from the toolbox
+checkout at the pinned commit with `git show`; a product repo never
+carries a copy, not even of a boot file. Run prep checks the checkout
+and the commit, and every driver start checks them again. Moving the pin
+of a running chunk is the operator's `/sdlc-repin` command between
+stages: it shows the diff, re-pins, and records it in the history.
+
+**Boot files.** The driver compiles one boot file per persona from the
+pinned commit: the persona's role, its packed skills inline, and the
+repo facts (test command, branches, tracker ids, project-main). A
+worker's first prompt starts with it, so a session begins with one read
+and no routing lookups; per-stage parts stay in the prompt kinds. Boot
+files are local and are compiled again when missing; the state branch
+records only the pin and each boot file's hash.
 
 - Chunk personas use their role name (`architect`, `refiner`,
   `designer`, `ux-reviewer`, `security`, `groom-reviewer`, `manager`).
@@ -300,12 +378,16 @@ change.
 | Persona | Writable set |
 | --- | --- |
 | `builder-<ticket>` | Its current `run-N/` and `worktrees/<ticket>/` |
+| `env-builder` | Its current `run-N/` and `worktrees/env/` |
 | Every other persona | Its current `run-N/` |
+
+No persona's writable set holds `worktrees/state/` or the state branch;
+the post-stage checks cover both.
 
 The harness itself writes the persona's own session file; that file is
 outside the writable set and outside the hash check.
 
-**Read-only personas** are the verifier, reviewer, refiner,
+**Read-only personas** are the verifiers and reviewers (item and env), refiner,
 `ux-reviewer`, `security`, and `groom-reviewer`, plus any persona whose
 front matter sets the read-only flag. They start with the harness's
 write and edit tools denied.
@@ -353,14 +435,25 @@ shell is caught only by the checks below.
 - **Mint** = a new session file with only the crafted task.
   **Resume** = the same session file, delta-only prompt.
 - Before every resume, the driver checks that the session file exists.
-  Pi silently creates a new session at a missing path, so a missing
-  file is a stop, not a resume into a blank session.
+  Pi silently creates a new session at a missing path, so the driver
+  never resumes into a blank session by accident.
+- **Rehydrate.** Session files and transcripts are never committed. When
+  a persona's file is missing, for example after a restore on another
+  machine, the driver restores it from the optional backup, else starts
+  a fresh session with a fixed **rehydrate** prompt built from the
+  boot file, the persona's `state.md`, and the driver facts. It is not
+  a stop. A file that exists but does not load, or a second loss before
+  the rehydrated session gives one valid result, is still a stop: the
+  file may not be the persona's own, and a loop must end.
+- **Session backup.** Optional and best effort: after each stage the
+  driver compresses the persona's session file to a private folder the
+  operator names, outside every repo.
 - The driver resumes the builder, verifier, and reviewer of an item
   across every pass on that item and does not replace them. Context
-  pressure is handled by compaction, not by replacement. A lost or
-  unloadable session file is a stop; the driver mints a replacement
-  only on the operator's recorded answer, and passes it a short handoff
-  per [Fallback](../../../docs/sdlc/subagents.md#fallback).
+  pressure is handled by compaction, not by replacement; a rehydrate
+  happens only when the file is gone. An unloadable session file is a
+  stop; the driver mints a replacement only on the operator's recorded
+  answer, with the rehydrate prompt.
 - Each item has one git worktree. The builder writes it; the verifier
   and reviewer read it ([Writable sets](#writable-sets-and-enforcement)).
 - Groom sizes items to keep the builder's context reasonable for a 100k
@@ -498,6 +591,46 @@ After the reviewer passes:
 Notify only when landed+verified: the console's `done` line follows
 step 5.
 
+### Build-environment gate
+
+The move from design to build is a gate that prepares and proves the
+build and test environment, once per chunk, after the Spec gate and
+before Groom. By then the technology choices are known.
+
+- **Design records.** The HLD's required test harness and environment
+  section says what is needed (see Required). The LLD adds a required
+  `## Build environment` section with one machine-readable block: each
+  dependency's setup (clone, configure, auth by variable name only),
+  start, ready, reset, and stop commands, the toolchain version
+  commands, the proving commands, and the repo's test command. The
+  driver rejects a Spec `pass` without a valid block; **security** reads
+  the commands; the Spec gate quotes the dependencies and the variables
+  the commands may receive.
+- **Env-prep.** A builder-job persona, `env-builder`, builds the harness
+  and environment on its own branch, and the driver runs the block's
+  commands as command stages, then a baseline run of the test command:
+  green, or the failures recorded as pre-existing so later failures are
+  not blamed on builders. An `env-verifier` checks the evidence line by
+  line, and an `env-reviewer` reviews the harness code with the
+  **security** reads. Evidence (commands, versions, outputs) goes into
+  the run state.
+- **Gate.** After that agent gate, the operator accepts the environment,
+  sends it back to the env-builder, or routes back to Spec for an LLD
+  change. An env-builder that cannot build the section as written asks
+  the operator the same way. On acceptance the driver lands the harness
+  code on project-main by the item land path, and Groom starts.
+- **Why Groom comes after.** Ticket filing freezes each item's proving
+  commands, which must run in this environment. Grooming against a
+  proven harness and a recorded baseline is grounded; a failed env
+  costs no groomed work.
+- **Build loop.** Builders and verifiers use only the accepted
+  environment; they never invent a harness. An item that needs a new
+  capability stops; the operator routes the chunk back to env-prep, or
+  to Spec for an LLD change, and the item resumes after the new env
+  lands.
+- The general multi-agent SDLC gets the same gate separately (DER-565);
+  this chunk changes no general SDLC document for it.
+
 ### Git on shared branches
 
 Other people and agents share project-main and the `tickets` branch.
@@ -558,7 +691,7 @@ tracker-state check, or is a post-land verifier that does not pass.
 All tracker writes go through
 [`tracker-sdlc`](../../../skills/tracker-sdlc/SKILL.md) and the product
 repo's `.agents/tracker/SKILL.md`, with any backend. With no tracker
-connected, the kickoff uses the existing `local` adapter (a `tickets`
+connected, Run prep uses the existing `local` adapter (a `tickets`
 branch); on a public repo that branch is public, onboarding says so
 before writing, and the operator may name an alternative. The tracker
 is chosen at onboarding or after Gather.
@@ -566,7 +699,7 @@ is chosen at onboarding or after Gather.
 The driver writes nothing to the tracker. It reads ticket state with
 the repo tracker skill's `read` command, run as a command with no model
 (`local`: `git show origin/tickets:tickets/<id>.md` after a fetch). The
-kickoff checklist requires that command; without it, the kickoff stops.
+Run prep checklist requires that command; without it, Run prep stops.
 
 Each persona claims under its own agent label, the persona folder name
 (for example `builder-abc-12`, `verifier-abc-12`). The manager's label
@@ -627,23 +760,38 @@ SD-24). Claim markers keep the shape in
   check cannot see, such as comment text, a write to another ticket, or
   a change reverted before the check, is residual risk.
 
-### Kickoff
+### Run prep and Gather
 
-A kickoff skill runs in a normal interactive session:
+**Run prep** is stage 0: a small interactive session, discarded
+afterwards, that sets up the run itself. It is not the brief and not
+Gather.
 
-1. It readies the repo and plumbing: tracker choice and onboarding,
-   project-main cut from trunk, and the readiness checklist, which
-   includes the tracker `read` command.
-2. It runs Gather (`discover-the-idea`) on the operator's brain dump.
-3. It files the Epic, then initializes the run root: `run.json`, one
-   folder per chunk persona, `gatherer/run-1/` holding the Gather
-   output, and the first run folder for the refiner.
-4. It prints the run root and the line `/sdlc RUN_ROOT`. The operator
-   types it. If asked to start the run, the model says only the operator
-   can type it.
+1. It asks only the setup questions a run needs, never product
+   questions: toolbox and pin, repo and branches, chunk slug and Epic
+   title, tracker, harness and models, run-root location, durability
+   level (default `pushed`), and an optional session backup folder.
+2. It runs the readiness checks: the tracker and its `read` command,
+   project-main cut from trunk, the harness at the pinned version,
+   every model slot resolving, push permission to the remote, branch
+   protection and CI presence, and the toolbox checkout with the pinned
+   commit reachable.
+3. It files the Epic and prepares the run root and the state branch,
+   persists the state, and runs the restore drill.
+4. It prints the Gather line. No copy of the Run prep session is kept;
+   its answers live in the run's files.
 
-The driver's first node is Refine. A refiner exit back to Gather is a
-stop to the operator: continue Gather in the kickoff session, then type
+**Gather** then runs in a new interactive session on the operator's
+brain dump (`discover-the-idea`), writes the confirmed brief into the
+run root, keeps a copy of its session, and prints the run root and the
+line `/sdlc RUN_ROOT`. The operator types it. If asked to start the
+run, the model says only the operator can type it. Gather comes after
+Run prep so that its kept transcript holds no setup detail, the brief
+lands in a ready and durable run root, and readiness failures surface
+before the interview.
+
+The skill `sdlc-kickoff` holds both, plus a restore mode, and is first
+in the build order. The driver's first node is Refine. A refiner exit
+back to Gather is a stop to the operator: continue Gather, then type
 `/sdlc RUN_ROOT` again. The operator confirms the brief at a `gate`
 node.
 
@@ -664,28 +812,43 @@ node.
   The post-stage checks detect shell writes in the run root and the
   worktrees; they do not prevent them.
 - The run root holds logs that may contain tool output. It lives
-  outside every checkout and is not committed or published; Plan step
-  4's scan applies to anything copied from it.
+  outside every checkout; logs, prompts, and transcripts are never
+  committed or published. At the `local` and `pushed` levels the D
+  files are committed to the state branch, and at `pushed` they are on
+  the remote: public on a public repo, which Run prep says before the
+  first push. Every state commit is scanned first, and Plan step 4's
+  scan applies to anything copied to project-main.
+- Workers hold the operator's git credentials, so the state branch is
+  writable by them, as project-main is. The post-stage checks and the
+  lease catch a write during a run; a restore from a forged but
+  consistent state is caught only by the operator reading the restore
+  summary: residual risk, beside the project-main one.
+- The toolbox is read only at the pinned commit; a new pin needs the
+  operator's `/sdlc-repin` between stages.
+- The build environment's commands come only from the accepted LLD,
+  re-hashed before each run. Credentials an integration needs reach
+  command stages by variable name, never workers.
 - The driver puts no tracker or model credential in the run root,
   prompts, or facts. A worker can still print one into a log: residual
   risk.
 - A reviewer on a paid model is spending and egress: an operator gate at
-  kickoff, recorded in `run.json`.
+  Run prep, recorded in `run.json`.
 
 ## Gates kept
 
 | SDLC gate | How this path keeps it |
 | --- | --- |
 | Operator confirms the brief | `gate` node after Refine |
-| Gatherer ≠ refiner | Gather is the kickoff session; the refiner is a separate worker process |
+| Gatherer ≠ refiner | Gather is its own interactive session after Run prep; the refiner is a separate worker process |
 | Comparables before Plan shape | Comparables node before the HLD node; the bundle check rejects a flow that skips it |
 | UX review by a different agent; operator accepts or waives | `designer` and `ux-reviewer` personas, then a `gate` node |
 | Operator accepts the Plan; Trial question | `gate` nodes at the end of Plan; the bundle check rejects a path to Spec that skips them |
 | Spec entry: `tracker-sdlc` setup check | First check in the Spec node's prompt; failure is `blocked` |
 | Security reviews the LLD; architect, security, then operator accept | `security` persona node, then a `gate` node; the bundle check rejects a path to Groom or Build that skips either |
+| Build environment proven before Groom and Build (new; the general SDLC's version is DER-565) | Env-prep nodes, an agent gate, then the env operator `gate` node; the bundle check rejects a path to Groom or an item that skips the gate or the env land |
 | Groom: no ticket before a clean groom reviewer passes | `groom-reviewer` persona loop; ticket filing is a later manager node |
 | No start past an open blocker | Plan order in the driver; the builder's claim reads blockers |
-| Builder ≠ verifier ≠ reviewer; resume, never re-mint per loop | One persona folder and session file per role per item; the driver resumes each and replaces none without the operator |
+| Builder ≠ verifier ≠ reviewer; resume, never re-mint per loop | One persona folder and session file per role per item; the driver resumes each and replaces none without the operator, except a rehydrate of the same persona when its session file is gone |
 | Proving commands and DoD | Driver-run commands, read from the committed `groom.md` blob; verifier checks DoD |
 | Three failed fixes → operator | One counter per item that does not reset; the third failed fix takes the `operator` exit |
 | Review before every land, with security reads | Bundle check: every Build-to-land path passes Verify then Review; a tip merge skips a second Review only while the item's tree equals the clean merge, re-checked after every builder edit; a Review `pass` without the three security checks is an invalid result |
@@ -702,7 +865,8 @@ writes them into one new owner file, `docs/sdlc/bundle-runs.md`, with a
 one-line route from each current owner. Several owners are protected
 rules in the [writing standard](../../writing-standard.md#protected-rules):
 the item carries rule maps, the meaning question is answered by the
-confirmed brief (2026-10-18) and this HLD's acceptance, and
+confirmed brief (2026-10-18), the operator's decisions of 2026-10-19,
+and this HLD's acceptance, and
 **security** reads them at Review.
 
 | Current rule | Owner | Change on this path |
@@ -718,7 +882,8 @@ confirmed brief (2026-10-18) and this HLD's acceptance, and
 | The manager sets the land order | [Land path](../../../docs/sdlc/branches-and-lands.md#land-path) | The driver follows the Groom plan order |
 | After an item lands, in-flight builders rebase or merge project-main | [Branches](../../../docs/sdlc/branches-and-lands.md#branches) | In-flight builders merge project-main into the item branch and never rebase a pushed branch ([Git on shared branches](#git-on-shared-branches)) |
 | The landing builder de-conflicts against the project-main tip; then its verifier is resumed | [Branches](../../../docs/sdlc/branches-and-lands.md#branches), [Project-main](../../../docs/sdlc/branches-and-lands.md#project-main) | Per the manager's ruling: a builder `blocked` result is a stop, whatever the merge check reports; while the item's tree equals the mechanical clean merge, only the proving commands and the verifier re-run; the driver re-checks after every builder edit, and any other tree, such as a conflict resolution or a fix after the clean check, also re-runs Review before land ([Land](#land-and-post-land-verifier) step 1) |
-| Resume fails, or a transcript passes half the window or is compacted → replace the agent | [Fallback](../../../docs/sdlc/subagents.md#fallback) | Not replaced; compaction from `state.md`; a lost session is a stop and only the operator approves a replacement |
+| Resume fails, or a transcript passes half the window or is compacted → replace the agent | [Fallback](../../../docs/sdlc/subagents.md#fallback) | Not replaced on context pressure; compaction from `state.md`. A missing session file is rehydrated from the boot file, `state.md`, and driver facts; an unloadable one is a stop, and only the operator approves a replacement |
+| Groom follows the Spec gate | [Spec](../../../docs/sdlc/plan-trial-spec.md#spec), [Groom](../../../docs/sdlc/groom-step.md) | Env-prep and the env gate sit between them; Groom writes proving commands against the proven environment |
 | Three failed fixes → stop and ask the operator | [`debug`](../../../skills/debug/SKILL.md) phase 4, [Asking the operator](../../../docs/SDLC.md#asking-the-human) | One counter per item, across every check, that does not reset; a red run of the land proving commands counts as a failed fix; the third failed fix is the operator gate |
 | Model stage: absent or invalid output → harness emits `fail` | [Stage result](../../../docs/sdlc/stage-result.md#rules) | One repair attempt first, then `fail` |
 | Schema has four top-level fields | [Stage result](../../../docs/sdlc/stage-result.md#schema) | Adds `schemaVersion`, `choice`, `ticket`, `artifact` (item 1, in place) |
@@ -740,11 +905,13 @@ and points at the flow spec instead.
 | Bundles, flow files, personas, skills, packages, these design records, `groom.md` with proving commands | Git, this repo | Designs in git from onset |
 | Product code, docs, changelog | Git: item branches, then project-main | Pushed as built; pushed after each land |
 | Epic, items, blockers, claims, comments, `done` | Tracker through `tracker-sdlc` (any backend; `local` = `tickets` branch) | The board |
-| Driver position, sessions, run folders, asks, logs, worktrees | Run root, outside the checkout | Kept across crashes; the driver deletes no run folder |
+| Driver position, results, `state.md`, asks, plan, brief, env evidence (the D files) | Run root, mirrored to the state branch at `local` and `pushed` | Kept across crashes; at `pushed`, across the loss of the machine |
+| Sessions, prompts, logs, worktrees, boot files | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
 
 If git and the run root disagree, git and the tracker win for what
-landed; the run root wins for what ran. A lost run root loses the worker
-sessions, not the work: every resume stops and the operator decides.
+landed; the run root wins for what ran. A lost run root at `pushed`
+loses only the local part: a restore rebuilds the rest, the operator
+confirms it, and a persona whose session file is gone is rehydrated.
 
 ## Worker rules
 
@@ -754,9 +921,11 @@ sessions, not the work: every resume stops and the operator decides.
 - One large-model worker process at a time.
 - Each worker writes only its writable set. Read-only personas start
   without write and edit tools.
-- Workers leave proving commands, `flow.json`, `driver.json`, and other
-  persona folders unchanged; they write their own run folder instead.
-  Each is enforced or detected per the same section.
+- Workers leave proving commands, `flow.json`, `driver.json`, other
+  persona folders, and the state branch unchanged; they write their own
+  run folder instead. Each is enforced or detected per the same section.
+- Builders and verifiers use only the accepted build environment; a
+  need for a new capability is a stop that routes back to env-prep.
 - Workers do not bypass **security**: the Spec security node and the
   Review security checks are flow nodes and required checks that the
   bundle check and result validation enforce.
@@ -775,6 +944,7 @@ proving commands, and the final blocker reasons.
 
 | # | Item | Blocked by | Reason |
 | --- | --- | --- | --- |
+| 0 | Run prep skill (`sdlc-kickoff`: Run prep, Gather, restore) and the run-state formats | none | Operator decision A: first in the build order |
 | 1 | Result-format update (DER-529, `stage-result.md` in place) | none | — |
 | 2 | Bundle and flow spec | 1 | `choice` semantics use item 1's fields |
 | 3 | SDLC as the first bundle: personas, state templates, `test-failure-handler`, tracker wiring, `bundle-runs.md` | 2 | Written in the flow spec's format |
@@ -782,10 +952,12 @@ proving commands, and the final blocker reasons.
 | 6 | Pi plugin | 3, 5 | Hosts the core; proves the Pi path on the SDLC bundle |
 | 4 | Bundle-authoring skill | 6 | Brief: after the Pi path works |
 | 7 | OpenCode plugin | 6 | Brief: after the Pi path works |
-| 8 | Followed-mode skill and kickoff skill | 6 | Brief: after the Pi path works |
+| 8 | Followed-mode skill | 6 | Brief: after the Pi path works |
 
-Waves: 1 → 2 → 3, 5 → 6 → 4, 7, 8. Until item 8 lands, the Pi path is
-proven on a run root that item 6's tests create directly.
+Waves: 0, 1 → 2 → 3, 5 → 6 → 4, 7, 8. Item 0 fixes the Run prep
+procedure and formats first; its driver steps run once item 5 lands.
+The LLD revises the harness order (OpenCode first) and the land order of
+items 3 and 5.
 
 ## Chunk record
 
@@ -828,10 +1000,17 @@ proven on a run root that item 6's tests create directly.
   starting with Linear, at onboarding for the repo that uses them.
 - Agent labels must match `^[a-z0-9][a-z0-9-]{0,31}$`, so the longest
   label, `reviewer-<ticket>`, limits ticket id length to 23 characters.
-  Spec says what the kickoff does with a longer id.
+  Spec says what Run prep does with a longer id.
 - The exact flow-file schema, file names inside run folders, console
   wording, and skill ids: Spec.
 - OpenCode server behavior: checked before item 7 starts.
+- From the run-state revision (the LLD's O12–O19 hold the
+  recommendations): the level on a public repo; a new `docs/sdlc/`
+  owner file; item 0's driver steps waiting for item 5; who removes the
+  state branch; an env re-entry that needs new items; the writable
+  state branch as a residual to accept in writing; the env gate's
+  agent-plus-operator shape; integration credentials for command stages
+  only.
 
 ## Optional
 
@@ -839,10 +1018,16 @@ proven on a run root that item 6's tests create directly.
 
 ```mermaid
 flowchart LR
-  K[Kickoff skill, interactive: Gather] -->|prints RUN_ROOT| C["/sdlc RUN_ROOT (operator)"]
+  K0[Run prep, interactive, discarded: setup, readiness, state, drill] --> K[Gather, interactive: brief]
+  K -->|prints RUN_ROOT| C["/sdlc RUN_ROOT (operator)"]
   C --> D[Driver]
-  D --> R[Refine → brief gate → comparables → HLD → gates → Spec → security → gate → Groom → file tickets]
-  R --> B[Build: builder]
+  D --> R[Refine → brief gate → comparables → HLD → gates → Spec → security → gate]
+  R --> E[Env-prep: build, prove, baseline, verify, review → env gate → env land]
+  E --> G[Groom → file tickets]
+  G --> B[Build: builder]
+  B -. needs a new env capability .-> O
+  O -. route back .-> E
+  D -. every stage start and end .-> S[(State branch)]
   B --> P[Proving commands]
   P -- fail --> B
   P -- pass --> V[Verifier]
@@ -882,6 +1067,17 @@ flowchart LR
 - **Bundles copying skill bodies**: two owners per skill, and pins drift.
 - **New step names `Verify` and `Land`**: would change the SDLC's
   Names; nodes carry existing step names instead.
+- **Copying the toolbox or boot files into the product repo**: two
+  copies drift, and a product repo would carry another project's
+  instructions; the driver reads the pinned commit instead.
+- **Committing session transcripts**: large, and they hold tool output
+  and private text; rehydrate and the optional private backup cover a
+  lost session.
+- **Gather inside Run prep**: the kept Gather transcript would carry the
+  setup detail (paths, hosts) that the manager reads later.
+- **Env-prep as the first groomed item**: Groom would freeze proving
+  commands before the environment is proven, and a done item cannot be
+  re-entered when a later item needs a new capability.
 
 ### Risks
 
@@ -908,6 +1104,17 @@ flowchart LR
 - More tracker writers mean more chances of a failed write; every write
   still goes through `tracker-sdlc` Runtime rules.
 - A public `tickets` branch exposes ticket text; onboarding warns.
+- At `pushed`, the state branch carries briefs, prose, and verbatim
+  answers to the remote; on a public repo they are public. The scan
+  stops paths, addresses, and credential shapes, not every private
+  sentence.
+- Workers can write the state branch with the operator's credentials;
+  a forged, consistent state is caught only at the restore summary.
+- A rehydrated persona loses the reasoning that was in its transcript
+  and keeps only `state.md`, the facts, and its run folders.
+- Env-prep runs the LLD's commands with the operator's rights; a wrong
+  `stop` or `reset` line can damage data on the machine, as a wrong
+  proving command can.
 
 ### PoC questions (Trial)
 

@@ -14,11 +14,17 @@
   fix round 4 adds the [driver-file ledger](#driver-file-ledger);
   the OpenCode-first revision, same day, makes OpenCode the first
   harness on the operator's decision
-  ([clarification](#clarifications-of-the-hld-made-here) 16)
+  ([clarification](#clarifications-of-the-hld-made-here) 16); the
+  run-state revision, 2026-10-19, applies the operator's decisions A–D:
+  Run prep first, durable run state in the product repo, rehydrated
+  sessions, and the build-environment gate
+  ([clarifications](#clarifications-of-the-hld-made-here) 19–25)
 - Status: **draft, awaiting operator acceptance.** The security
   re-review of de7c438 passed. The OpenCode-first revision changes the
   harness-specific rows of [Trust boundaries](#trust-boundaries);
-  **security** re-reads them. Architect acceptance is this draft.
+  the run-state revision adds TB14–TB18 and changes the rulings listed
+  under [Changed by the run-state revision](#trust-boundaries);
+  **security** re-reads both. Architect acceptance is this draft.
   Groom and Build start only after **security** and then the operator accept it
   ([Security gate](../../../docs/sdlc/plan-trial-spec.md#security-gate)).
 - Spec entry gate: the offline `tracker-sdlc` setup check passed on
@@ -49,9 +55,26 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
   defines for stages the driver adds inside or around nodes: land
   sub-stages, paperwork, and manager stages
   ([Driver-fixed exits](#driver-fixed-exits)).
-- **Pinned commit**: the skills-home commit recorded in `run.json`.
+- **Toolbox**: this skills home, checked out on the operator's machine
+  beside the product repo. Nothing from it is copied into a product
+  repo.
+- **Pinned commit**: the toolbox commit recorded in `run.json`.
   The driver reads `flow.json`, personas, and packed skill bodies only
-  from that commit, never from a working tree.
+  from that commit, with `git show`, never from a working tree.
+- **Run prep**: stage 0, a short interactive session that asks the
+  setup questions, runs the readiness checks, and prepares the run
+  root. Its session is discarded ([Behavior 8](#behavior-8-run-prep-and-later-items-0-4-8)).
+- **Durability level**: `pushed`, `local`, or `plain`; how the run
+  state survives ([Durable run state](#durable-run-state)).
+- **State branch**: `sdlc/run/<chunk-slug>`, the driver-owned orphan
+  branch in the product repo that holds the durable run state.
+- **Boot file**: `boot/<persona>.md`, one compiled file per persona:
+  role, packed skills, and repo facts ([Boot files](#boot-files)).
+- **Rehydrate**: start a fresh session for a persona whose session
+  file is missing, from its boot file, `state.md`, and driver facts.
+- **Env-prep**: the chunk-scope nodes that build and prove the build
+  and test environment after Spec is accepted
+  ([Build-environment gate](#build-environment-gate)).
 
 ## Required
 
@@ -59,13 +82,15 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
 
 | Path | Item | What |
 | --- | --- | --- |
+| `skills/sdlc-kickoff/SKILL.md` | 0 | New skill, first in the build order: Run prep, Gather wrap-up, and restore modes ([Behavior 8](#behavior-8-run-prep-and-later-items-0-4-8)). ≤250 lines |
+| `docs/sdlc/run-state.md` | 0 | New owner: run-root layout for agents, `machine.json`, durability levels, the state branch, lease, restore and drill, boot files, rehydrate, session backup. ≤150 lines. A new `docs/sdlc/` file is an operator ask under standard 9 ([O13](#questions-for-the-operator)) |
 | `docs/sdlc/stage-result.md` | 1 | Edited in place: v1 fields, rules, examples; stays ≤150 lines per the [line budget](#line-budget-for-stage-resultmd) |
 | `docs/sdlc/fixtures/results/` | 1 | Valid and invalid result fixtures, each with an `.expect.json` |
 | `docs/sdlc/bundle-spec.md` | 2 | Owner: bundle layout, `bundle.md`, persona files, prompt kinds, placeholders. ≤150 lines |
-| `docs/sdlc/flow-spec.md` | 2 | Owner: `flow.json`, exits, reserved exits, candidate rules, bundle check, error codes. ≤150 lines |
+| `docs/sdlc/flow-spec.md` | 2 | Owner: `flow.json`, exits, reserved exits, candidate rules, bundle check, chunk land and re-entry, the `json sdlc-env` block, error codes. ≤150 lines; if the env additions do not fit, item 2 asks the operator (standard 9) rather than grow it |
 | `docs/sdlc/fixtures/flows/`, `docs/sdlc/fixtures/bundles/` | 2 | Flow and bundle fixtures with expected error codes |
 | `docs/INTAKE.md` | 2 | New `## Script records` section: one line per bundle script **security** cleared ([Bundle layout](#bundle-layout-and-bundlemd)) |
-| `docs/sdlc/bundle-runs.md` | 3 | Owner of every rule change in [HLD Rule changes](hld.md#rule-changes), plus run-root formats for agents. ≤150 lines |
+| `docs/sdlc/bundle-runs.md` | 3 | Owner of every rule change in [HLD Rule changes](hld.md#rule-changes); routes run-root formats to `run-state.md`. ≤150 lines |
 | `bundles/sdlc/` | 3 | The SDLC bundle: `bundle.md`, `flow.json`, `personas/*.md` |
 | `skills/test-failure-handler/SKILL.md` | 3 | New first-party skill, `SOURCES.md` row |
 | `skills/tracker-sdlc/SKILL.md`, `adapters/local.md` | 3 | Same-item claim rule (protected rules: rule maps, **security** read) |
@@ -75,14 +100,20 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
 | `packages/opencode-sdlc/` | 7 | First harness. OpenCode plugin: the TUI `/sdlc` command, the operator-session input guard, the OpenCode adapter, the detached driver entry, the worker plugin, the smoke test |
 | `packages/pi-sdlc/` | 6 | Second harness. Pi plugin: `/sdlc`, the Pi adapter, the detached driver entry, the worker extension, the smoke test |
 | `skills/bundle-authoring/SKILL.md` | 4 | New skill |
-| `skills/sdlc-followed-mode/SKILL.md`, `skills/sdlc-kickoff/SKILL.md` | 8 | New skills |
+| `skills/sdlc-followed-mode/SKILL.md` | 8 | New skill |
 | `CHANGELOG.md` | all | One line under `## Unreleased` per item |
 
 Final skill ids, fixed here: `test-failure-handler`, `bundle-authoring`,
 `sdlc-followed-mode`, `sdlc-kickoff`.
 
-**Where bundles live.** In the skills home, at `bundles/<bundle-id>/`.
-A run pins one skills-home commit; a product repo never carries a copy.
+**Where bundles live.** In the toolbox, at `bundles/<bundle-id>/`.
+A run pins one toolbox commit; a product repo never carries a copy of a
+bundle, a persona, a skill, or a boot file. The toolbox stays a separate
+checkout beside the product repo: Run prep checks that it is present
+and that the pinned commit is reachable, and every driver start checks
+it again ([Start](#start) step 2). Changing the pin of a running chunk
+is the operator's `/sdlc-repin` command, between stages
+([Repin](#repin-the-toolbox)).
 A third-party bundle is copied into `bundles/<id>/` only after
 [INTAKE](../../../docs/INTAKE.md).
 
@@ -94,8 +125,14 @@ packages/sdlc-driver/          # core; no runtime dependency; no harness import
   tsconfig.json                # strict; erasableSyntaxOnly; noEmit
   README.md
   src/
-    index.ts                   # public API: prepare, run, checkBundle, validateResult
-    cli.ts                     # `check BUNDLE_DIR [--at COMMIT]`, `validate RESULT --flow F --node N`
+    index.ts                   # public API: prepare, run, checkBundle, validateResult, repin
+    cli.ts                     # `check BUNDLE_DIR [--at COMMIT]`, `validate RESULT --flow F --node N`,
+                               # and the Run prep steps: `readiness`, `state-init`, `boot`, `status`,
+                               # `restore`, `drill` (Behavior 8)
+    state.ts                   # durable run state: mirror, scan, commit, push, lease, restore, drill
+    boot.ts                    # boot files: render from the pinned commit, hash
+    env.ts                     # `json sdlc-env` parser, env command stages, dependency pre-steps
+    backup.ts                  # optional session backup and restore
     json.ts                    # strict JSON reader (duplicate keys, nulls, trailing text)
     result.ts                  # stage-result v1 and candidate rules
     flow.ts  bundle.ts  check.ts   # flow types, bundle loader (git show at pinned commit), bundle check
@@ -114,7 +151,7 @@ packages/sdlc-driver/          # core; no runtime dependency; no harness import
   test/                        # node:test; fixtures from docs/sdlc/fixtures; fake worker
 packages/opencode-sdlc/        # item 7, first harness: OpenCode plugin package
   package.json                 # private; "exports": {"./tui": "./src/tui.ts", "./server": "./src/server.ts"}
-  src/tui.ts                   # TUI plugin: /sdlc and /sdlc-stop palette commands, dialogs, toasts
+  src/tui.ts                   # TUI plugin: /sdlc, /sdlc-stop, and /sdlc-repin palette commands, dialogs, toasts
   src/server.ts                # operator-session server plugin: input guard (chat.message)
   src/opencode-adapter.ts      # HarnessAdapter for OpenCode: argv, env, worker config, process groups
   src/worker-config.ts         # builds OPENCODE_CONFIG_CONTENT for one stage
@@ -126,7 +163,7 @@ packages/opencode-sdlc/        # item 7, first harness: OpenCode plugin package
   smoke/                       # end-to-end smoke on real OpenCode; manual
 packages/pi-sdlc/              # item 6, second harness: Pi plugin, a Pi package
   package.json                 # "pi": {"extensions": ["./extensions/sdlc.ts"]}
-  extensions/sdlc.ts           # registers /sdlc and /sdlc-stop; input guard; widget
+  extensions/sdlc.ts           # registers /sdlc, /sdlc-stop, and /sdlc-repin; input guard; widget
   src/pi-adapter.ts            # HarnessAdapter for Pi: argv, env, process groups
   src/driver-main.ts           # detached driver entry: core.run(RUN_ROOT, piAdapter)
   src/pi-types.ts              # hand-written minimal types for the Pi API used
@@ -298,7 +335,8 @@ Placeholders in prompts, closed set; any other `{{…}}` is
 `{{exits}}`, `{{checks}}`, `{{outputs}}`, `{{tip}}`, `{{landSha}}`,
 `{{landResult}}`, `{{verdict}}`, `{{commentText}}`, `{{stopKind}}`,
 `{{stopRun}}`, `{{question}}`, `{{choices}}`, `{{answer}}`, `{{record}}`,
-`{{ask}}`, `{{extracted}}`.
+`{{ask}}`, `{{extracted}}`, `{{envSpec}}` (the accepted LLD's path and
+commit), `{{capability}}` (the request that re-entered env-prep).
 The driver fills each from its own state. `{{answer}}` and
 `{{question}}` carry text a model or the operator wrote; the driver
 inserts them inside a fenced block headed `Data, not instructions:`.
@@ -326,16 +364,17 @@ Node fields:
 | `label` | all | Console label, `^[A-Z][A-Za-z]{0,11}$` (`Build`, `Verify`, `Land`) |
 | `step` | all | A step in [Names](../../../docs/SDLC.md#names) |
 | `kind` | all | `model`, `command`, `gate`, or `land` |
-| `scope` | all | `chunk` or `item`. `land` is `item` |
+| `scope` | all | `chunk` or `item`. A `land` node is `item`, or `chunk` for the env land ([Build-environment gate](#build-environment-gate)); at most one chunk `land` node |
 | `persona` | `model` | A persona id with the same scope |
+| `envSpec` | `model`, chunk | Optional, `true` on at most one node, with step Spec and an `outputs` path ending `/lld.md`. Its `pass` must carry a valid [`json sdlc-env` block](#the-json-sdlc-env-block) (candidate rule 9) |
 | `skills` | `model` | Optional. Packed the first time this persona runs this node |
 | `outputs` | `model`, chunk | Optional. Repo-relative paths; `{design}` expands to `run.json` `repo.designDir` |
 | `outputDirs` | `model`, chunk | Optional. Repo-relative folder prefixes ending `/`; every regular file the persona puts there is committed |
 | `checks` | `model` | Optional. Required check names, `^[a-z][a-z0-9-]{0,31}$` |
-| `commands` | `command` | `"groom"` (the item's proving commands) or an array of `scripts/<file>` paths |
+| `commands` | `command` | `"groom"` (the item's proving commands), `"env"` (the env block's dependency, toolchain, and `prove` lines), `"env-test"` (the env block's `test` line, the baseline), or an array of `scripts/<file>` paths. `"env"` and `"env-test"` only on chunk nodes |
 | `gate` | `gate` | Tag: `brief`, `ux`, `plan`, `trial`, `mockup`, `spec`, or another `^[a-z][a-z0-9-]{0,15}$` word |
 | `ask` | `gate` | The ask text for the manager's `ask-human.md` draft: the decision, the committed files that hold its facts and the recommendation, and what to quote from them. The `gate` prompt passes it as `{{ask}}` |
-| `builder`, `prove`, `verify`, `review` | `land` | Node ids: the builder model node, the proving `command` node, the verifier model node, and the Review node |
+| `builder`, `prove`, `verify`, `review` | `land` | Node ids of the land node's scope: the builder model node, the proving `command` node, the verifier model node, and the Review node |
 | `exits` | all | Array of exit objects |
 
 Exit fields: `name` (`^[a-z][a-z0-9-]{0,31}$`, unique per node, never
@@ -364,8 +403,8 @@ Targets and exit shapes:
 - `command` nodes have exactly two exits: one with `["pass"]`, one with
   `["fail"]`.
 - Each `gate` exit has exactly one status, `pass` or `fail`.
-- A `land` node has exactly one exit, `done`, with `["pass"]`, to
-  `@done`.
+- A `land` node has exactly one exit, `done`, with `["pass"]`: an item
+  land to `@done`, the chunk land to a chunk node.
 
 **Reserved exits.** Every node has two exits that no flow lists:
 
@@ -394,7 +433,8 @@ exits apply as above unless the row says otherwise.
 | Architect paperwork | `paperwork` | `posted` [`pass`]. Reserved exit: `stop` only |
 | Manager | `stop`, `gate`, `apply-answer` | `resume` [`pass`], `defer` [`pass`], `escalate` [`needs_input`]. For an `operator` stop or a gate: `escalate` only. Reserved exits are not offered |
 | Invalid-result repair | `repair` | The exits of the stage it repairs |
-| Answer or replacement | `answer`, `handoff` | The exits of the stopped node or stage |
+| Answer | `answer` | The exits of the stopped node or stage |
+| Rehydrated session | `rehydrate`, wrapping the prompt kind the stage would have sent | The exits of that stage ([Sessions and rehydrate](#sessions-and-rehydrate)) |
 
 **Candidate rules.** A worker writes `candidate.json` with the
 `sdlc_result` tool or with `sdlc_write`
@@ -422,6 +462,13 @@ exits apply as above unless the row says otherwise.
    change in its worktree (`flow.uncommitted`).
 8. The verifier's `ledger.json` exists and is valid
    ([Verifier ledger](#sdlc-personas-and-prompts)) (`flow.ledger`).
+9. `pass` on an `envSpec` node: `out/<lld path>` has one
+   `## Build environment` section holding exactly one valid
+   [`json sdlc-env` block](#the-json-sdlc-env-block) (`flow.env-block`).
+10. An `env-capability: <one line>` entry in `evidence.checks` is
+    allowed only with `needs_input` and `choice: operator`
+    (`flow.env-capability`); it makes the stop kind `env capability`
+    ([Stops](#stops-and-the-manager)).
 
 Any rule failing makes the candidate invalid
 ([Stage pipeline](#stage-pipeline) step 7).
@@ -460,10 +507,11 @@ clean, `1` on any error.
 | B7 | Persona front matter, read-only rule, tool names, placeholders | `persona.*` |
 | B8 | Every skill id resolves and has a `SOURCES.md` row or lives in the bundle; `## Required skills` matches | `bundle.skill` |
 | B9 | `outputs` and `outputDirs` are normalized repo-relative paths | `flow.output-path` |
-| B10 | A `land` node names existing nodes of the right kind: `prove` is an item `command` node with `commands: "groom"`; `verify` is a model node with job `verifier`; `review` has step `Review`, job `reviewer`, and `checks` holding `intake`, `sha-pins`, `trust-boundary` | `flow.land-ref`, `flow.review-checks` |
+| B10 | A `land` node names existing nodes of its own scope and the right kind: `prove` is a `command` node with `commands: "groom"` (item land) or `"env"` (chunk land); `verify` is a model node with job `verifier`; `review` has step `Review`, job `reviewer`, and `checks` holding `intake`, `sha-pins`, `trust-boundary` | `flow.land-ref`, `flow.review-checks` |
 | B11 | Gate rows below hold on every path | `gate.*` |
 | B12 | `bundle.md` headings; no symbolic links; size caps; every `scripts/` file listed with its hash and intake record; outside reviewed history, that record and hash present in `docs/INTAKE.md` at a derived reviewed ref ([Script records](#bundle-layout-and-bundlemd)) | `bundle.layout`, `bundle.script-intake` |
 | B13 | `extract` only on `gate` exits; `from` is a normalized repo-relative path; `to` matches `^[a-z0-9-]{1,40}\.md$` | `flow.extract` |
+| B14 | `envSpec` on at most one Spec node with an `lld.md` output; `commands: "env"` or `"env-test"`, or a chunk `land` node, only when that node exists | `flow.env` |
 
 Gate rows. The checker finds the nodes by kind, step, job, outputs, and
 gate tag, so a flow cannot avoid a row by renaming nodes:
@@ -473,8 +521,9 @@ gate tag, so a flow cannot avoid a row by renaming nodes:
 | `gate.comparables` | `entry` | The HLD node: chunk `model`, step Plan, an `outputs` path ending `/hld.md` | The comparables node: chunk `model`, step Plan, an `outputs` path ending `/comparables.md` |
 | `gate.plan` | `entry` | The Spec node: `model`, step Spec, an `outputs` path ending `/lld.md` | The `gate` node tagged `plan` |
 | `gate.trial` | `entry` | The Spec node, as in `gate.plan` | The `gate` node tagged `trial` |
-| `gate.spec` | `entry` | Any Groom node, or any item node | The Spec node, then the `model` node with step Spec and job `security`, then the `gate` node tagged `spec` |
-| `gate.land` | Each `model` node with job `builder` | The `land` node | Its `prove`, `verify`, and `review` nodes |
+| `gate.spec` | `entry` | Any Groom node, any item node, or any chunk node with a builder persona or a `"env"` or `"env-test"` command | The Spec node, then the `model` node with step Spec and job `security`, then the `gate` node tagged `spec` |
+| `gate.env` | `entry` | Any Groom node, or any item node | The `gate` node tagged `env`, then the chunk `land` node |
+| `gate.land` | Each `model` node with job `builder` | The `land` node of its scope | Its `prove`, `verify`, and `review` nodes |
 
 A row whose target does not exist in the flow holds trivially. A row
 whose target exists but whose required node does not is an error.
@@ -485,7 +534,12 @@ increments k. Reaching the target with k below the number required is a
 violation. The error names the exit used on the last edge into the
 target, from the shortest counterexample path. The search is finite
 because there are at most nodes × (required + 1) pairs. Stops and the
-manager re-run the stopped node, so they add no flow edges. The land
+manager re-run the stopped node, so they add no flow edges. An env
+re-entry ([Build-environment gate](#build-environment-gate)) is not a
+flow edge either: it enters only the chunk builder node or the Spec
+node, after every item already passed `gate.spec` and `gate.env`, and
+from there follows flow edges back through the `env` gate and the chunk
+land before any item runs again. The land
 node's internal re-runs reach Review only through its `prove`, `verify`,
 and `review` nodes, which are flow edges.
 
@@ -501,26 +555,34 @@ and `review` nodes, which are flow edges.
 | `refine` | Brief | Brief | model | refiner | — | `brief` [pass] → `brief-gate`. Back to Gather: `operator` with `needs_input` |
 | `brief-gate` | Brief | Brief | gate | — | tag `brief`; ask: "Confirm the brief as the refiner left it, or say what to revise. Quote the refiner's proposed cuts and open points from its last `result.md`." | `confirmed` [pass] → `comparables`; `revise` [fail] → `refine` |
 | `comparables` | Plan | Plan | model | architect | `{design}/comparables.md` | `hld` [pass] → `hld` |
-| `hld` | Plan | Plan | model | architect | `{design}/hld.md` | `ux` [pass] → `ux` |
+| `hld` | Plan | Plan | model | architect | `{design}/hld.md`; checks `test-env` | `ux` [pass] → `ux` |
 | `ux` | Plan | Plan | model | designer | `{design}/ux.md`, `{design}/user-stories.md` | `review` [pass] → `ux-review` |
 | `ux-review` | Plan | Plan | model | ux-reviewer | — | `accept` [pass] → `ux-gate`; `fix` [fail] → `ux` |
 | `ux-gate` | Plan | Plan | gate | — | tag `ux`; ask: "Accept `{design}/ux.md` and `{design}/user-stories.md`, waive the UX review in writing, or say what to revise. Quote the UX reviewer's verdict and open findings, and each open UX question with the designer's recommendation." | `accepted` [pass] → `plan-gate`; `waived` [pass] → `plan-gate`; `revise` [fail] → `ux` |
-| `plan-gate` | Plan | Plan | gate | — | tag `plan`; ask: "Accept `{design}/hld.md`, or say what to revise. Quote each item under its `## Open` heading with the HLD's default or recommendation." | `accept` [pass] → `trial-gate`; `revise` [fail] → `hld` |
+| `plan-gate` | Plan | Plan | gate | — | tag `plan`; ask: "Accept `{design}/hld.md`, or say what to revise. Quote each item under its `## Open` heading with the HLD's default or recommendation, and summarize its test harness and environment section: each dependency and integration the build needs." | `accept` [pass] → `trial-gate`; `revise` [fail] → `hld` |
 | `trial-gate` | Trial | Trial | gate | — | tag `trial`; ask: "Run a Trial before Spec? Quote each unconfirmed fact and the recommendation from the `## Trial question` section of `{design}/hld.md`. On yes, the driver writes the Trial kickoff prompt to a file and prints its path." | `trial` [pass] → `trial-done`, extract `{design}/hld.md` heading `Trial kickoff prompt` to `trial-kickoff.md`, say `Trial kickoff prompt written: {{extracted}}`; `skip` [pass] → `spec` |
 | `trial-done` | Trial | Trial | gate | — | tag `trial-done`; ask: "Is the Trial done, with each verdict recorded under `{design}/poc/`? Quote each verdict and any HLD change the Trial report recommends." | `done` [pass] → `spec`; `revise` [fail] → `hld` |
-| `spec` | Spec | Spec | model | architect | `{design}/lld.md` | `mockups` [pass] → `mockups` |
+| `spec` | Spec | Spec | model | architect | `{design}/lld.md`; `envSpec` | `mockups` [pass] → `mockups` |
 | `mockups` | Spec | Spec | model | designer | `outputDirs` `{design}/mockups/` | `none` [pass] → `security`, exit check `no-screen`; `review` [pass] → `mockup-review` |
 | `mockup-review` | Spec | Spec | model | ux-reviewer | — | `accept` [pass] → `mockup-gate`; `fix` [fail] → `mockups` |
 | `mockup-gate` | Spec | Spec | gate | — | tag `mockup`; ask: "Accept the mockups under `{design}/mockups/`, or say what to revise. Quote the UX reviewer's verdict and open findings." | `accepted` [pass] → `security`; `revise` [fail] → `mockups` |
-| `security` | Spec | Spec | model | security | checks `authz`, `secrets`, `egress`, `data-class`, `writers` | `accept` [pass] → `spec-gate`; `fix` [fail] → `spec` |
-| `spec-gate` | Spec | Spec | gate | — | tag `spec`; ask: "Accept `{design}/lld.md`, and accept in writing each residual its trust-boundary section lists under operator must accept; or say what to revise. Quote security's findings with severities, and each open operator question with the LLD's recommendation." | `accept` [pass] → `groom`; `revise` [fail] → `spec` |
+| `security` | Spec | Spec | model | security | checks `authz`, `secrets`, `egress`, `data-class`, `writers`, `env-commands` | `accept` [pass] → `spec-gate`; `fix` [fail] → `spec` |
+| `spec-gate` | Spec | Spec | gate | — | tag `spec`; ask: "Accept `{design}/lld.md`, and accept in writing each residual its trust-boundary section lists under operator must accept; or say what to revise. Quote security's findings with severities, each open operator question with the LLD's recommendation, and the build-environment block's dependencies and `credentials` names." | `accept` [pass] → `env-prep`; `revise` [fail] → `spec` |
+| `env-prep` | Env | Build | model | env-builder | — | `prove` [pass, fail] → `env-prove`; `respec` [needs_input] → `respec-gate` |
+| `respec-gate` | Env | Spec | gate | — | tag `respec`; ask: "The env-builder says the LLD's build environment cannot be built as written. Route back to Spec for an LLD change, or tell the env-builder how to go on. Quote its reasons from its last `result.md`." | `spec` [pass] → `spec`; `retry` [fail] → `env-prep` |
+| `env-prove` | Env | Build | command | — | `commands: "env"` | `baseline` [pass] → `env-baseline`; `fix` [fail] → `env-prep` |
+| `env-baseline` | Env | Build | command | — | `commands: "env-test"` | `green` [pass] → `env-verify`; `known` [fail] → `env-verify` |
+| `env-verify` | Env | Build | model | env-verifier | checks `env-proof`, `baseline` | `review` [pass] → `env-review`; `fix` [fail] → `env-prep` |
+| `env-review` | Env | Review | model | env-reviewer | checks `intake`, `sha-pins`, `trust-boundary`, `env-harness` | `gate` [pass] → `env-gate`; `fix` [fail] → `env-prep` |
+| `env-gate` | Env | Build | gate | — | tag `env`; ask: "Accept the build and test environment, send it back to the env-builder, or route back to Spec for an LLD change. Quote the env-verifier's `env-proof` and `baseline` findings, the baseline status with any pre-existing failures, and the env-reviewer's verdict." | `accept` [pass] → `env-land`; `revise` [fail] → `env-prep`; `spec` [fail] → `spec` |
+| `env-land` | Env | Build | land | — | builder `env-prep`, prove `env-prove`, verify `env-verify`, review `env-review` | `done` [pass] → `groom` |
 | `groom` | Groom | Groom | model | architect | `{design}/groom.md` | `review` [pass] → `groom-review` |
 | `groom-review` | Groom | Groom | model | groom-reviewer | — | `file` [pass] → `file-tickets`; `fix` [fail] → `groom` |
 | `file-tickets` | Groom | Groom | model | manager | `{design}/groom.md` (the frozen copy) | `items` [pass] → `@items` |
 | `build` | Build | Build | model | builder | — | `prove` [pass, fail] → `prove` |
 | `prove` | Build | Build | command | — | `commands: "groom"` | `verify` [pass] → `verify`; `fix` [fail] → `build` |
 | `verify` | Verify | Build | model | verifier | checks `dod` | `review` [pass] → `review`; `fix` [fail] → `build` |
-| `review` | Review | Review | model | reviewer | checks `intake`, `sha-pins`, `trust-boundary` | `land` [pass] → `land`; `fix` [fail] → `build` |
+| `review` | Review | Review | model | reviewer | checks `intake`, `sha-pins`, `trust-boundary`, `env-harness` | `land` [pass] → `land`; `fix` [fail] → `build` |
 | `land` | Land | Build | land | — | builder `build`, prove `prove`, verify `verify`, review `review` | `done` [pass] → `@done` |
 
 A builder `fail` still goes to the proving commands: the commands, not
@@ -537,6 +599,15 @@ is not a check sending the item back.
   the gate result's run folder (`operator/run-N/`) and prints its path,
   and `skip` continues to Spec. `gate.plan` and `gate.trial` together
   keep the run from reaching Spec without both answers.
+- **Env nodes** (`env-prep` to `env-land`) are the
+  [build-environment gate](#build-environment-gate). `env-baseline`
+  takes `known` on a red baseline and still goes to the env-verifier,
+  which records the pre-existing failures; the env-builder is not sent
+  back for them. `gate.env` keeps Groom and every item behind the
+  `env` gate and the env land.
+- **`env-harness`** on both Review nodes: the change adds no test
+  harness, service, dependency start, or toolchain outside the accepted
+  `json sdlc-env` block, or the finding names it.
 
 #### SDLC personas and prompts
 
@@ -549,22 +620,42 @@ is not a check sending the item back.
 | `security` | security | chunk | yes | read set | `security-hardening` | `mint`, `resume` |
 | `groom-reviewer` | groom-reviewer | chunk | yes | read set | `sdlc-artifacts` | `mint`, `resume` |
 | `manager` | manager | chunk | no | all seven | `sdlc-artifacts` | `mint`, `stop`, `gate`, `apply-answer`, `node-file-tickets` |
-| `builder-<suffix>` | builder | item | no | all seven | `tdd`, `yagni`, `debug`, `docs-google-style`, plus the item's `skills` from `groom.md`; `test-failure-handler` on the first `test-failure` prompt | `mint`, `resume`, `test-failure`, `fix`, `merge-tip`, `handoff` |
+| `env-builder` | builder | chunk | no | all seven | `tdd`, `yagni`, `debug`, `docs-google-style`, `security-hardening`; `test-failure-handler` on the first `test-failure` prompt | `node-env-prep`, `resume`, `test-failure`, `fix`, `merge-tip` |
+| `env-verifier` | verifier | chunk | yes | read set | `verify-before-done` | `mint`, `recheck`, `land-recheck` |
+| `env-reviewer` | reviewer | chunk | yes | read set | `pr-review`, `security-hardening` | `mint`, `rereview` |
+| `builder-<suffix>` | builder | item | no | all seven | `tdd`, `yagni`, `debug`, `docs-google-style`, plus the item's `skills` from `groom.md`; `test-failure-handler` on the first `test-failure` prompt | `mint`, `resume`, `test-failure`, `fix`, `merge-tip` |
 | `verifier-<suffix>` | verifier | item | yes | read set | `verify-before-done`, `docs-google-style` | `mint`, `recheck`, `land-recheck`, `post-land` |
 | `reviewer-<suffix>` | reviewer | item | yes | read set | `pr-review`, `security-hardening` | `mint`, `rereview` |
 
 Every persona has `tracker: true`. The read set is
 `read,bash,grep,find,ls`. The driver always adds the extension tools
-`sdlc_write` and `sdlc_result`. Every persona may also receive `repair`
-and `answer` prompts; those two are fixed by the driver, not the bundle.
+`sdlc_write` and `sdlc_result`. Every persona may also receive `repair`,
+`answer`, and `rehydrate` prompts; those three are fixed by the driver,
+not the bundle. The packed skills of a persona's `skills` front matter
+are in its [boot file](#boot-files); the others in this column are
+packed per stage.
+
+**Why a separate `env-builder`.** The architect wrote the LLD's
+environment section; proving it with the same session would grade its
+own design, and would give a design persona write access to a code
+worktree. The env work is build work (TDD, debugging, failing logs), so
+it gets a builder-job persona with its own session, and its own
+verifier and reviewer, as an item does.
+
+**Harness rule** (every builder, verifier, and reviewer prompt, and
+`test-failure-handler`): use only the test harness, dependencies, and
+toolchain of the accepted `json sdlc-env` block; never install, start,
+or write a new one. A change that needs one ends with `needs_input`,
+`choice: operator`, and an `env-capability: <one line>` check
+(candidate rule 10).
 
 `state.md` templates (the body section `## State template`):
 
 | Persona | Template headings and lines |
 | --- | --- |
-| builder | `## Corrected errors` (`- <what broke> → <fix> (<run>)`), `## Open findings` (`- <id> <criticality> <one line> (<source>)`), `## Do not repeat` (`- <approach> — <why it failed>`), `## Next` (one line) |
-| verifier | `## Ledger` (table: `Id`, `Criticality`, `Status`, `Issue`, `Raised`, `Fixed`), `## Nits` (recorded, not sent back), `## Last commands seen` (`- <prove run>: <status>`) |
-| reviewer | `## Verdicts` (`- <run> <range> <verdict>`), `## Open review comments`, `## Security reads` (`intake`, `sha-pins`, `trust-boundary`, one line each) |
+| builder, env-builder | `## Corrected errors` (`- <what broke> → <fix> (<run>)`), `## Open findings` (`- <id> <criticality> <one line> (<source>)`), `## Do not repeat` (`- <approach> — <why it failed>`), `## Next` (one line) |
+| verifier, env-verifier | `## Ledger` (table: `Id`, `Criticality`, `Status`, `Issue`, `Raised`, `Fixed`), `## Nits` (recorded, not sent back), `## Last commands seen` (`- <prove run>: <status>`) |
+| reviewer, env-reviewer | `## Verdicts` (`- <run> <range> <verdict>`), `## Open review comments`, `## Security reads` (`intake`, `sha-pins`, `trust-boundary`, one line each) |
 | architect | `## Node`, `## Decisions`, `## Open`, `## Outputs written` |
 | refiner | `## Brief version`, `## Cuts proposed`, `## Open` |
 | designer, ux-reviewer | `## Work`, `## Findings` (`- <id> open or fixed <one line>`), `## Open` |
@@ -586,12 +677,14 @@ builder. A verifier `pass` requires no `open` entry above `nit`.
 | Kind | Sent when | Must tell the worker |
 | --- | --- | --- |
 | `mint` / `node-<id>` | First run of the persona, or first run of that node | The role, the node's task, `{{outputs}}`, `{{exits}}`, `{{checks}}` |
+| `node-hld` | The HLD node | Also: a required `## Test harness and environment` section: each dependency to run (for example a database engine, a single-node Kafka, or an existing platform such as AD, with the operator's integration instructions from the brief or an ask), build tools and toolchains, and the test harness; checks `test-env` |
+| `node-spec` | The Spec node | Also: a required `## Build environment` section with one [`json sdlc-env` block](#the-json-sdlc-env-block): each dependency's setup (clone, configure, auth by variable name only), start, ready, reset, and stop lines, the toolchain version lines, the proving lines, and the repo test command; the driver rejects a `pass` without it (candidate rule 9) |
+| `node-env-prep` | First env-prep run, or a re-entry | Build the harness and environment that `{{envSpec}}` defines, nothing more; commit harness code on `{{branch}}`; do not edit the LLD; `respec` with reasons when the section cannot be built as written; on a re-entry, `{{capability}}` |
 | `resume` | Later run of the same node | Only what changed |
 | `test-failure` | Proving commands failed | Load `test-failure-handler`; open `{{log}}`; `{{repair}}` |
 | `fix` | Verifier or reviewer sent the item back | Fix the open findings in the facts; do not move the ticket |
 | `merge-tip` | Land step 1, tip moved | Merge `{{tip}}` into `{{branch}}` with a merge commit; never rebase; `blocked` if a conflict cannot be resolved |
-| `handoff` | Replacement mint the operator approved | The short handoff: paths, decisions, open failures |
-| `recheck`, `land-recheck` | Verifier re-check, before or inside land | Confirm committed issues; new issues only if breaking or critical |
+| `recheck`, `land-recheck` | Verifier re-check, before or inside land | Confirm committed issues; new issues only if breaking or critical. The env-verifier also checks every env block line has evidence (`env-proof`) and records pre-existing baseline failures in `baseline.json` (`baseline`) |
 | `post-land` | Land step 4 | Read `{{landResult}}` at `{{landSha}}`; `done` or back to `in_progress` |
 | `rereview` | Review again | `{{range}}` and the open review comments only |
 | `paperwork` | After the driver commits the HLD or LLD | Post `{{commentText}}` on `{{epic}}`; write nothing else; finish with `posted` |
@@ -619,7 +712,10 @@ block with the info string `json sdlc-item`:
 - `prove`: non-empty array of command lines, each at most 1,000
   characters, no newline.
 
-The groom reviewer checks that the block agrees with the prose. At
+The groom reviewer checks that the block agrees with the prose, and
+that every `prove` line uses only the harness and dependencies of the
+accepted `json sdlc-env` block and allows for the recorded baseline
+failures; Groom runs after the env land, so both are known. At
 freeze, the manager fills the `Tickets:` line as
 `` `G1` = `der-a530`, `G2` = `der-a531` ``; the driver parses only that
 line and the blocks.
@@ -631,7 +727,9 @@ in the prompt; find the first failure; load `debug` and find the root
 cause; write a failing test when the cause is in code (`tdd`); fix;
 commit; add one `## Corrected errors` line and, for an approach that
 failed, one `## Do not repeat` line to `state.md`. Never edit the
-proving commands or `groom.md`. Never move the ticket.
+proving commands, `groom.md`, or the LLD's env block. Never add a
+harness (the [harness rule](#sdlc-personas-and-prompts)). Never move the
+ticket.
 
 #### Tracker wiring and `bundle-runs.md`
 
@@ -670,15 +768,26 @@ in the same folder, `fsync`, `rename`. The driver refuses a run root
 that is inside a git worktree, that is a symbolic link, or whose mode
 grants any group or other permission; it creates the run root `0700`.
 
+The run root has a durable part and a local part. At the `pushed` and
+`local` [durability levels](#durable-run-state), the driver mirrors the
+durable part (marked **D** below) into the state branch after each
+stage. The local part is never committed: volatile, large, or
+secret-bearing, or regenerated from the pinned commit. Unmarked entries
+are local, including everything under `driver/`, `repo.git/`, and
+`worktrees/`.
+
 ```text
 RUN_ROOT/
-  run.json             # kickoff writes; the operator confirms at the first /sdlc
-  driver.json          # driver only
-  index.jsonl          # driver only; one line per event (UX Q3)
-  checklist.md         # kickoff
-  plan/items.json      # driver, after ticket filing
-  asks/ask-N.json      # driver: ask and answer, machine copy
-  asks/ask-N.md        # driver: the same, for people
+  run.json             # D; Run prep writes; the operator confirms at the first /sdlc
+  machine.json         # local; Run prep writes: toolbox path, harness paths, host id, backup folder
+  driver.json          # D; driver only
+  index.jsonl          # D; driver only; one line per event (UX Q3)
+  checklist.md         # D; Run prep
+  plan/items.json      # D; driver, after ticket filing
+  asks/ask-N.json      # D; driver: ask and answer, machine copy
+  asks/ask-N.md        # D; driver: the same, for people
+  boot/<persona>.md    # local; driver: compiled boot files, regenerated from the pinned commit
+  env-data/            # local; the env commands' data folder (SDLC_ENV_DIR); outside the snapshot walk
   driver/lock          # run-root lock
   driver/console.log   # every console line
   driver/snapshot.json # pre-stage hashes of the stage in flight
@@ -691,19 +800,24 @@ RUN_ROOT/
   repo.git/            # driver's bare clone of the product repo
   worktrees/integrate/ # integration worktree, detached at project-main
   worktrees/<suffix>/  # one item worktree
-  gatherer/run-1/      # kickoff: brief.md, gather session copy
-  <persona>/opencode.db              # OpenCode: the persona's session database, with its -wal and -shm files
-  <persona>/session.jsonl            # Pi: the persona's session file
-  <persona>/run-N/     # see Run folder
-  prove-<suffix>/run-N/  land-<suffix>/run-N/  commands/run-N/  operator/run-N/
+  worktrees/env/       # the env-builder's worktree, on env/<chunk-slug>-<pass>
+  worktrees/state/     # the state branch's worktree; the driver only (pushed, local)
+  gatherer/run-1/      # Gather: brief.md (D); the Gather session copy (local)
+  <persona>/opencode.db              # local; OpenCode: the persona's session database, with its -wal and -shm files
+  <persona>/session.jsonl            # local; Pi: the persona's session file
+  <persona>/run-N/     # see Run folder; D files listed there
+  prove-<suffix>/run-N/  land-<suffix>/run-N/  land-env/run-N/  commands/run-N/  operator/run-N/
 ```
 
 `repo.git/` and the folder names keyed by suffix refine the HLD layout:
-item worktrees and the integration worktree share one bare clone whose
+item worktrees, the env worktree, the state worktree, and the
+integration worktree share one bare clone whose
 git directory sits inside the hashed run root
 ([Post-stage checks](#post-stage-checks)). The driver's command folders
 (`prove-`, `land-`, `commands`) and `operator/` (gate results) are not
-personas and never write to the tracker.
+personas and never write to the tracker. Chunk command nodes
+(`env-prove`, `env-baseline`) use `commands/`; the env land uses
+`land-env/`.
 
 #### `run.json`
 
@@ -711,18 +825,18 @@ personas and never write to the tracker.
 {
   "schemaVersion": 1,
   "chunk": {"slug": "solo-dlc", "epic": "der-e421"},
-  "bundle": {"id": "sdlc", "home": "/abs/path/to/skills-home", "commit": "<40-hex>"},
+  "bundle": {"id": "sdlc", "commit": "<40-hex>"},
   "repo": {"origin": "git@github.com:OWNER/REPO.git", "trunk": "main",
-           "projectMain": "integrate/solo-dlc", "designDir": "maintainers/design/solo-dlc"},
+           "projectMain": "integrate/solo-dlc", "designDir": "maintainers/design/solo-dlc",
+           "test": "npm test"},
   "tracker": {"backend": "local", "skill": ".agents/tracker/SKILL.md",
               "keyPattern": "^der-[a-z0-9]{4}$", "local": {"branch": "tickets"}},
   "mode": "enforced",
+  "state": {"level": "pushed", "branch": "sdlc/run/solo-dlc"},
   "harness": {"name": "opencode", "package": "opencode-ai", "version": "1.19.3",
-              "bin": "/abs/path/to/opencode", "node": "/abs/path/to/node",
               "integrity": {"opencode-ai": "sha512-<base64>", "opencode-linux-x64": "sha512-<base64>"},
               "treeSha256": "<hex>",
               "providers": {"local": {"npm": "@ai-sdk/openai-compatible",
-                                      "options": {"baseURL": "<local model endpoint>"},
                                       "models": {"qwen-coder": {"limit": {"context": 131072, "output": 16384}}}}}},
   "models": {"default": {"model": "local/qwen-coder", "contextWindow": 131072, "paid": false}},
   "spending": null,
@@ -737,37 +851,50 @@ personas and never write to the tracker.
 - `repo.origin` must carry no user info (`://user@` with a password, or
   a token) and no query string. SSH and plain HTTPS forms are allowed.
 - `tracker.backend`: driven runs support `local` only in this chunk
-  (security ruling S1). Kickoff refuses any other backend, and `/sdlc`
+  (security ruling S1). Run prep refuses any other backend, and `/sdlc`
   refuses to start a run root whose `run.json` names one, with the line
   `tracker backend <name> is not supported for driven runs yet; use local`.
   Linear for driven runs, both the driver's reads and the workers'
   writes, is the later item G9 with its own security gate
   ([Groom split](#groom-split-proposal), O5).
 - `harness.name` is `opencode` (item 7, the first harness) or `pi`
-  (item 6). `harness.bin` is the absolute path of the `opencode` or `pi`
-  executable. `harness.node` is the Node binary for the detached
-  driver: required for OpenCode, whose TUI runs on its own compiled
-  runtime, and for Pi's compiled binary; optional for Pi on Node.
+  (item 6). The executable and Node paths are machine-local, in
+  [`machine.json`](#machinejson).
+- `repo.test`: the repo's test command as Run prep found it, or `null`
+  for a repo without one yet. After the env land, the accepted env
+  block's `test` line replaces it in the boot files
+  ([Boot files](#boot-files)).
+- `state.level`: `pushed` (default), `local`, or `plain`;
+  `state.branch`: `sdlc/run/<chunk-slug>`
+  ([Durable run state](#durable-run-state)). A `plain` run has no
+  branch.
+- **Portable.** `run.json` holds no absolute path, host name, address,
+  or credential, so it can be mirrored to the state branch and read on
+  another machine. Run prep refuses to write one that fails the
+  [scan patterns](#scan-patterns).
 - **Harness pin.** `harness.package` and `harness.version` name the
   release. OpenCode: `opencode-ai` 1.19.3, the version
   [opencode-server.md](opencode-server.md) was read at. Pi: the text
   supports both `@mariozechner/pi-coding-agent` 0.73.1 and
   `@earendil-works/pi-coding-agent` 1.x, and the operator picks one
-  (O6). Kickoff installs that exact version with npm, which checks the
+  (O6). Run prep installs that exact version with npm, which checks the
   registry's `dist.integrity` of each package while it installs, and
   records those values in `harness.integrity`, keyed by package name:
   for OpenCode, `opencode-ai` and the platform package whose binary its
-  `postinstall` copies into `bin/`. Kickoff then records
-  `harness.treeSha256`: when `harness.bin` is a compiled binary, as
+  `postinstall` copies into `bin/`. Run prep then records
+  `harness.treeSha256`: when the harness executable is a compiled binary, as
   OpenCode's is, the SHA-256 of that file; otherwise the SHA-256 of the
   sorted list of `<path> <sha256>` lines for every regular file under
   the installed package folder, its `node_modules/` included. An
   installed package keeps no tarball to re-check `integrity` against,
-  so the [Start](#start) check uses `treeSha256`.
+  so the [Start](#start) check uses `treeSha256`. A restore on another
+  machine of the same platform finds the same hash; another platform is
+  a re-pin that the restore summary shows.
 - `harness.providers` (OpenCode only): the `provider` entries that the
-  model slots name, copied by kickoff from the operator's resolved
-  OpenCode config. Kickoff refuses an entry whose `options` hold
-  `apiKey` or any header value; credentials stay in OpenCode's own
+  model slots name, copied by Run prep from the operator's resolved
+  OpenCode config, without `options`, which are machine-local
+  (`machine.json` `harness.providerOptions`). Run prep refuses an entry
+  whose `options` hold `apiKey` or any header value; credentials stay in OpenCode's own
   store (Model credentials in [Trust boundaries](#trust-boundaries)).
   It also refuses an entry whose `npm` package is not one the pinned
   binary bundles, so no provider package is downloaded at run time.
@@ -777,17 +904,22 @@ personas and never write to the tracker.
   set `limit.input` must not exceed `contextWindow`.
 - `models.<slot>.model` is the harness `--model` value,
   `provider/model` for both harnesses. A slot with
-  `"paid": true` requires `spending` = `{"askId": "kickoff-1",
+  `"paid": true` requires `spending` = `{"askId": "prep-1",
   "approvedAt": "<UTC>", "text": "<the operator's words>"}`.
 - `env.scrubExtra`: variable names added to the fixed denylist in
   [Environment scrub](#environment-scrub). It can only add names.
-- At the first `/sdlc`, and whenever its hash changes, the plugin shows
-  a summary of `run.json` (bundle commit, repo, tracker, harness pin,
-  OpenCode providers, models, spending, labels) and records the operator's yes as
-  `runJsonSha256` in `driver.json`. No yes, no run.
+- `gather.sessions`: run-root-relative paths of the Gather session
+  copies. The files stay local; the brief is mirrored.
+- At the first `/sdlc`, and whenever either hash changes, the plugin shows
+  a summary of `run.json` and `machine.json` (bundle commit, toolbox
+  path, repo, tracker, durability level, harness pin and paths,
+  OpenCode providers, models, spending, labels, backup folder) and
+  records the operator's yes as `runJsonSha256` and `machineJsonSha256`
+  in `driver.json`. No yes, no run.
 - **Bundle commit outside reviewed history (S9, N2, N4).** The driver
   derives the reviewed refs itself and never reads them from
-  `run.json`. They are two refs in the skills home:
+  `run.json`. They are two refs in the toolbox (`<home>` below is
+  `machine.json` `toolbox`):
   `origin/<trunk>`, where `<trunk>` is the branch that
   `git -C <home> symbolic-ref refs/remotes/origin/HEAD` names, and
   `origin/<projectMain>`, with `run.json` `repo.projectMain`, used only
@@ -815,17 +947,56 @@ personas and never write to the tracker.
   the typed-SHA path above, even when the commit is an ancestor of a
   derived ref, and the summary names the extra refs.
 
+#### `machine.json`
+
+Machine-local settings, mode `0600`, never mirrored. Run prep writes it,
+and writes a new one at a restore on another machine.
+
+```json
+{"schemaVersion": 1,
+ "hostId": "<32-hex, random per run root and machine>",
+ "toolbox": "/abs/path/to/toolbox",
+ "harness": {"bin": "/abs/path/to/opencode", "node": "/abs/path/to/node",
+             "providerOptions": {"local": {"baseURL": "<local model endpoint>"}}},
+ "backup": {"dir": null},
+ "createdAt": "<UTC>"}
+```
+
+- `toolbox`: the toolbox checkout. Run prep and every [Start](#start)
+  require `git -C <toolbox> cat-file -e <bundle.commit>^{commit}`.
+- `harness.bin`: the `opencode` or `pi` executable. `harness.node`: the
+  Node binary for the detached driver; required for OpenCode, whose TUI
+  runs on its own compiled runtime, and for Pi's compiled binary;
+  optional for Pi on Node.
+- `harness.providerOptions`: the `options` of each `run.json`
+  `harness.providers` entry, with the same refusals; the worker config
+  merges them.
+- `backup.dir`: `null`, or an absolute folder outside every git
+  worktree, not a symbolic link, mode `0700`, for the optional
+  [session backup](#sessions-and-rehydrate).
+- `hostId`: names this machine in the state branch's lease without a
+  host name.
+
 #### `driver.json`
 
 ```json
 {
   "schemaVersion": 1,
   "runJsonSha256": "<hex>",
-  "bundle": {"commit": "<40-hex>", "checkedAt": "<UTC>"},
+  "machineJsonSha256": "<hex>",
+  "bundle": {"commit": "<40-hex>", "checkedAt": "<UTC>",
+             "history": [{"from": "<40-hex>", "to": "<40-hex>", "at": "<UTC>"}]},
   "worker": {"extension": "driver/worker-ext/sdlc-worker-1a2b3c4d5e6f.ts",
              "sha256": "<hex>", "harnessVersion": "1.19.3"},
+  "state": {"seq": 41, "tip": "<sha>", "pushedTip": "<sha>", "restore": null},
+  "boot": {"architect": "<sha256>", "builder-der-a530": "<sha256>"},
   "chunk": {"node": "spec", "state": "active", "stop": null, "askId": null,
-            "pendingRoute": null, "unposted": null},
+            "pendingRoute": null, "unposted": null, "reentry": null,
+            "land": null, "landReentry": false, "repairs": 0, "sentBack": false,
+            "fixPending": false, "lastPushed": null, "reviewBase": null},
+  "env": {"lld": "maintainers/design/solo-dlc/lld.md", "specCommit": "<sha>",
+          "commandsSha256": "<hex>", "pass": 1, "branch": "env/solo-dlc-1",
+          "landCommit": null, "baseline": null, "test": null},
   "groom": {"path": "maintainers/design/solo-dlc/groom.md", "recordCommit": "<sha>",
             "reviewedCommit": "<sha>", "frozenCommit": "<sha>", "commandsSha256": "<hex>"},
   "items": {
@@ -835,7 +1006,8 @@ personas and never write to the tracker.
                  "stop": null, "askId": null}
   },
   "sessions": {"builder-der-a530": {"path": "builder-der-a530/opencode.db", "id": "ses_<id>",
-               "state": "live", "packed": ["tdd", "yagni", "debug"]}},
+               "state": "live", "packed": ["tdd", "yagni", "debug"], "boot": "<sha256>",
+               "rehydratePending": false, "backup": null}},
   "runs": {"builder-der-a530": 5, "prove-der-a530": 4},
   "inFlight": null,
   "projectMainSeen": "<sha>",
@@ -851,14 +1023,22 @@ personas and never write to the tracker.
 | `chunk.node`, `items.*.node` | Current node id, or `@items` / `@done` |
 | `chunk.pendingRoute` | `null`, or `{"node", "choice", "run", "record", "commit"}` from the end of an HLD or Spec stage whose design record was committed until its paperwork stage returns `posted`: the node and `choice` to route, the node's run, the record path, and the pushed commit ([Design-record commits](#design-record-commits) step 7) |
 | `chunk.unposted` | `null`, or `{"node", "record", "commit"}`: a design record an interrupted HLD or Spec run pushed before its stage ended ([Start](#start) step 5). Cleared when [Stage pipeline](#stage-pipeline) step 11 sets `chunk.pendingRoute` |
-| `items.*.land` | `null` outside the land node, else `{"phase", "p1", "p2", "cleanTree", "cleanCommit", "landCommit"}`; `phase` is one of the [Land](#land-sub-machine) rows |
-| `items.*.landReentry` | `true` from L3b or L6r until the item next enters the land node at L1; selects the console label ([Land](#land-sub-machine)) |
-| `repairs`, `sentBack`, `fixPending` | [Repair counter](#repair-counter) |
-| `lastPushed` | Item branch tip the driver last pushed |
+| `items.*.land`, `chunk.land` | `null` outside the land node, else `{"phase", "p1", "p2", "cleanTree", "cleanCommit", "landCommit"}`; `phase` is one of the [Land](#land-sub-machine) rows. `chunk.land` is the env land |
+| `items.*.landReentry`, `chunk.landReentry` | `true` from L3b or L6r until the scope next enters the land node at L1; selects the console label ([Land](#land-sub-machine)) |
+| `repairs`, `sentBack`, `fixPending` | [Repair counter](#repair-counter), per item and, for env-prep, on `chunk` |
+| `lastPushed` | Item or env branch tip the driver last pushed |
+| `chunk.reentry` | `null`, or `{"from", "node", "askId"}` while an env re-entry runs: the stopped item, `env-prep` or `spec`, and the ask ([Build-environment gate](#build-environment-gate)) |
+| `env` | The accepted env block: the LLD path, the `specCommit` that the `spec` gate accepted, `commandsSha256`, the env pass number and branch, the env land commit, the baseline `{"run", "status"}` (`green` or `known`), and the accepted `test` line |
+| `state` | `seq` and `tip` of the last state commit, `pushedTip` of the last accepted push; `restore` is `{"tip", "confirmed"}` from a restore until the operator confirms it ([Durable run state](#durable-run-state)) |
+| `boot` | SHA-256 of each persona's current [boot file](#boot-files) |
+| `bundle.history` | Every [repin](#repin-the-toolbox), oldest first |
 | `reviewBase` | Item `HEAD` at the last Review pass, or the clean merge commit after a row-1 classification |
 | `stop` | `{"kind", "run", "operatorOnly", "resumeWith"}` while the manager handles a stop. `resumeWith` is `{"persona", "prompt", "log"}`: who the driver resumes, and with which prompt kind, when the answer is `resume` |
-| `sessions.*.state` | `live`, `lost` (stopped; ask open), `replaced` (minted again on the operator's answer; the old file is kept as `session.lost-<UTC>.jsonl`) |
-| `sessions.*.packed` | Skill ids already in that session's transcript |
+| `sessions.*.state` | `live`, `lost` (stopped; ask open), `rehydrated` (a fresh session from the boot file, `state.md`, and facts), `replaced` (minted again on the operator's answer; the old file is kept as `session.lost-<UTC>.jsonl`) |
+| `sessions.*.packed` | Skill ids already in that session's transcript: the boot file's skills at the mint or rehydrate, plus every skill packed since |
+| `sessions.*.boot` | The boot file hash the session last received; a different `boot` entry sends the changed parts at the next prompt ([Boot files](#boot-files)) |
+| `sessions.*.rehydratePending` | `true` from a rehydrate until that persona's next valid result |
+| `sessions.*.backup` | `null`, or `{"sha256", "at"}` of the last [session backup](#sessions-and-rehydrate) |
 | `sessions.*.path`, `sessions.*.id` | The persona's session file: the OpenCode database or the Pi `session.jsonl`. `id`: the OpenCode session id the adapter read at the mint; `null` for Pi, whose file is the session |
 | `groom.recordCommit` | The last `groom.md` commit the driver pushed ([Design-record commits](#design-record-commits) step 6) |
 | `inFlight` | `{"run", "scope", "node", "kind", "prompt", "repairOf", "invalidRepairs", "recordCommit", "pid", "startedAt"}` while a stage runs. `kind` is `model` or `command`. `invalidRepairs` is `1` on an invalid-result repair stage, else `0`; `repairOf` names the run it repairs. `recordCommit` is `null` until [Design-record commits](#design-record-commits) step 5 sets it, before each push, to the commit that push sends; it is the only value the [pushed record exception](#start) trusts |
@@ -877,7 +1057,7 @@ One JSON object per line, appended with `O_APPEND`, at most 4 KiB:
 ```
 
 `event` is `start`, `end`, `stop`, `ask`, `answer`, `push`, `land`,
-`interrupted`, or `found`. Resume never reads this file; it is history
+`interrupted`, `found`, `rehydrate`, `restore`, or `repin`. Resume never reads this file; it is history
 for people ([ux.md](ux.md) Q3). If the operator rejects Q3, the driver
 writes no `index.jsonl` and nothing else changes.
 
@@ -912,8 +1092,11 @@ never reads proving commands from it.
 `kind` is `gate` (choices = the gate's exit names), `lost-session`
 (choices `replace`, `defer`), `scan-hit` (choices `allow`, `revise`),
 `scan-secret` (choices `revise`, `defer`; never `allow`), `pi-dir` or
-`opencode-dir` (choices `allow`, `defer`), or `operator-stop` (free
-text). An answer is
+`opencode-dir` (choices `allow`, `defer`), `env-capability` (choices
+`env`, `spec`, `deny`, `defer`), `state-scan` (choices `allow`,
+`exclude`, `defer`), `state-secret` (choices `exclude`, `defer`; never
+`allow`), `state-push` (choices `retry`, `local`, `defer`), or
+`operator-stop` (free text). An answer is
 `{"choice": "<one of choices or null>", "text": "<verbatim>", "at": "<UTC>"}`.
 `ask-N.md` renders the same fields with the message and the answer
 verbatim. Answers are recorded only by the plugin's `/sdlc` handler, in
@@ -923,22 +1106,25 @@ the operator's interactive session, while no driver holds the lock
 
 #### Run folder
 
+**D** marks the files the state branch mirrors
+([Durable run state](#durable-run-state)); the others stay local.
+
 | File | Writer | Notes |
 | --- | --- | --- |
-| `meta.json` | driver | Node, scope, persona, `new` or `resumed`, prompt kind, `repairOf`, start and end times, the worker argv; `recordCommit`, a copy for people of `inFlight.recordCommit` ([Design-record commits](#design-record-commits) step 5). A worker can write this file through `bash`, so no driver step reads `recordCommit` from it |
-| `prompt.md` | driver | The prompt sent on stdin |
-| `candidate.json` | worker | Through `sdlc_result` or `sdlc_write` |
-| `result.json` | driver | The validated result, or a driver-authored one |
-| `result.md` | worker | Prose |
-| `state.md` | worker | Copied by the driver from the persona's previous run, or from the template, before the run starts |
-| `ledger.json` | verifier | [Verifier ledger](#sdlc-personas-and-prompts) |
-| `ask-human.md` | manager | On `escalate` |
-| `out/` | worker | Files for the repo, at their repo-relative paths |
-| `commands.json` | driver | Command stages: one entry per command: index, line, exit code, duration, log path |
-| `check.json` | driver | Command stages only: the post-stage check that failed, when one did |
-| `<extract>.md` | driver | Gate results only: the section an exit's `extract` copied, such as `trial-kickoff.md` |
-| `logs/` | driver, extension | `worker.jsonl` (the harness's JSON stream: `opencode run --format json` or Pi's `--mode json`), `worker.stderr`, `ext.json` (extension or worker-plugin load marker; missing → `check failed: extension`), `prove-K.log` |
-| `interrupted.json` | driver | Present when the run was interrupted; such a folder never gets `result.json` and is never reused. Holds `recordCommit`, for people, when the pushed record exception's pushed case applied ([Start](#start) step 5) |
+| `meta.json` | driver | Local. Node, scope, persona, `new` or `resumed`, prompt kind, `repairOf`, start and end times, the worker argv; `recordCommit`, a copy for people of `inFlight.recordCommit` ([Design-record commits](#design-record-commits) step 5). A worker can write this file through `bash`, so no driver step reads `recordCommit` from it |
+| `prompt.md` | driver | Local. The prompt sent on stdin |
+| `candidate.json` | worker | Local. Through `sdlc_result` or `sdlc_write` |
+| `result.json` | driver | D. The validated result, or a driver-authored one |
+| `result.md` | worker | D. Prose; paths relative to the run root or the repo, never absolute (the run contract says so) |
+| `state.md` | worker | D. Copied by the driver from the persona's previous run, or from the template, before the run starts |
+| `ledger.json`, `baseline.json` | verifier | D. [Verifier ledger](#sdlc-personas-and-prompts) |
+| `ask-human.md` | manager | D. On `escalate` |
+| `out/` | worker | D. Files for the repo, at their repo-relative paths |
+| `commands.json`, `env-evidence.json` | driver | D. Command stages: one entry per command: index, line, exit code, duration, log path. `env-evidence.json` (env command stages): each toolchain line with the first 200 characters of its output, each dependency step, and the baseline status |
+| `check.json` | driver | D. Command stages only: the post-stage check that failed, when one did |
+| `<extract>.md` | driver | D. Gate results only: the section an exit's `extract` copied, such as `trial-kickoff.md` |
+| `logs/` | driver, extension | Local. `worker.jsonl` (the harness's JSON stream: `opencode run --format json` or Pi's `--mode json`), `worker.stderr`, `ext.json` (extension or worker-plugin load marker; missing → `check failed: extension`), `prove-K.log` |
+| `interrupted.json` | driver | D. Present when the run was interrupted; such a folder never gets `result.json` and is never reused. Holds `recordCommit`, for people, when the pushed record exception's pushed case applied ([Start](#start) step 5) |
 
 #### Driver facts
 
@@ -976,11 +1162,11 @@ folder are `<persona-id>-<suffix>`; the longest SDLC persona id is
 | `plain` | The ticket id lowercased. Valid only if it matches `^[a-z0-9][a-z0-9-]{0,22}$` |
 | `short` | The ticket id lowercased, every character outside `[a-z0-9-]` replaced with `-`, cut to 12 characters, then `-` and the first 8 hex digits of the SHA-256 of the ticket id: at most 21 characters |
 
-1. **Kickoff** reads the tracker's key pattern and the longest id it
+1. **Run prep** reads the tracker's key pattern and the longest id it
    allows. `local` ids (`<prefix>-xxxx`, at most 11 characters) fit
    `plain`. A pattern that allows ids longer than 23
    characters, or characters outside `[A-Za-z0-9-]`, sets `short`, and
-   kickoff says so on the checklist.
+   Run prep says so on the checklist.
 2. **Driver**, when it writes `plan/items.json`, computes each suffix.
    In `plain` mode, an id that does not fit is a `fail`, `operator`
    stop that asks to switch to `short`; no item persona exists yet, so
@@ -988,6 +1174,179 @@ folder are `<persona-id>-<suffix>`; the longest SDLC persona id is
    extend both hashes to 12 hex digits.
 3. The suffix never changes after an item persona exists. Comments
    still carry the full ticket id.
+
+#### Durable run state
+
+Run prep asks for the durability level (`run.json` `state.level`). The
+default is `pushed`.
+
+| Level | Where the durable part lives | Survives | Restore drill |
+| --- | --- | --- | --- |
+| `pushed` (default) | The state branch, committed in `worktrees/state/` and pushed to `origin` at every persist point | The loss of the machine | From a fresh clone of `origin` |
+| `local` | The state branch, committed in `repo.git` and never pushed | A damaged or wrongly edited run-root file; not the loss of the machine | From a fresh clone of `repo.git` |
+| `plain` | The run root only, as before this revision | Crashes and restarts on this machine | None; `n/a` on the checklist |
+
+On a public repo the state branch is public: the brief, result prose,
+`state.md` files, and asks with the operator's verbatim answers. Run prep
+says so before the first push, as it does for the `tickets` branch, and
+offers `local` and `plain`; a public repo has no default
+([O12](#questions-for-the-operator)).
+
+**State branch.** `sdlc/run/<chunk-slug>`, an orphan branch: its first
+commit has no parent and shares no history with trunk. Nothing merges it
+into project-main or trunk, and the land path never names it, so no
+file has to be stripped from either. It holds the **D** files of
+[Behavior 4](#behavior-4-run-root-formats) at their run-root paths, plus
+`sdlc-state.json`:
+
+```json
+{"schemaVersion": 1, "seq": 41, "prev": "<previous state commit, or null>",
+ "level": "pushed", "event": "end", "run": "verifier-der-a530/run-3",
+ "pin": "<40-hex>", "lease": {"holder": "<hostId>", "since": "<UTC>"},
+ "files": {"driver.json": "<sha256>", "verifier-der-a530/run-3/result.json": "<sha256>"},
+ "excluded": [{"path": "<run-root path>", "askId": "ask-7"}]}
+```
+
+`files` is the hash ledger: the SHA-256 of every other file in the
+commit. `lease` is absent at `local`.
+
+**Persist points.** The driver persists: once at the end of Run prep
+(`sdlc-driver state-init`); at every stage start, after pipeline step 4
+writes `inFlight` and before the pre-stage snapshot, so the pushed state
+carries the in-flight marker and the `refs` snapshot already holds the
+push; at every stage end, on every finish path, after the end line;
+after each driver push to project-main outside a stage (land L8); and at
+a start that finds a **D** file changed since the last state commit,
+such as the brief after Gather or recorded answers.
+
+**Persist procedure,** in `worktrees/state/`:
+
+1. `HEAD` equals `state.tip` and `git status --porcelain` is empty;
+   otherwise `check failed: state`, an `operator` stop.
+2. Copy every **D** file whose bytes differ from the state tip's copy.
+   Never delete a file from the branch. A file from a stage is copied
+   only after that stage's post-stage checks passed.
+3. Scan each copied file with the [scan patterns](#scan-patterns),
+   every class, with the literal run root and every `machine.json` path
+   as `path` patterns. A hit: no commit; the driver writes the ask
+   itself, naming `<file>:<line> <class>`, as for a
+   [design-record scan](#design-record-commits). Credential class: stop
+   kind `state scan hit: credential`, ask kind `state-secret` (`exclude`,
+   `defer`). Other classes: `state scan hit`, ask kind `state-scan`
+   (`allow`, `exclude`, `defer`). `allow` commits the file as is;
+   `exclude` keeps that path local for the rest of the run and lists it
+   in `excluded`. Until the answer, the driver starts no stage, because
+   every later persist carries the same file: it prints the summary and
+   returns.
+4. Write `sdlc-state.json` with `seq` + 1, `prev`, and the hash of every
+   file in the tree.
+5. Commit, hooks off, author and committer
+   `sdlc-driver <sdlc-driver@sdlc.invalid>`, message
+   `[<epic>] state <seq>: <event> <run>`. Write `state.seq` and
+   `state.tip` through the [ledger](#driver-file-ledger).
+6. `pushed` only: push `HEAD:refs/heads/<state.branch>` without force.
+   Exit `0`: set `state.pushedTip`. Non-zero: fetch the state branch.
+   If its tip is not `state.pushedTip`, the run has another driver:
+   print `state lease lost`, start nothing more, release the lock, and
+   exit; only a restore continues. Otherwise stop kind
+   `state push failed`, a driver-written ask `state-push` (`retry`,
+   `local`, `defer`); the driver returns. `local` lowers the level for
+   this run through a `run.json` change the operator confirms.
+
+**Lease.** At `pushed`, `lease.holder` is the `machine.json` `hostId` of
+the machine that drives the run. Every [Start](#start) fetches the state
+branch: a tip equal to `state.pushedTip` with this machine as holder goes
+on; a local tip ahead of it is pushed first; any other tip is
+`state lease lost`. Every state push is a fast-forward without force,
+so when two machines race, the second push is rejected and that driver
+exits. Only a restore, with the operator's typed confirmation, moves the
+lease.
+
+**Restore.** `sdlc-driver restore RUN_ROOT [--from <url or path>]`, run
+in Run prep's restore mode; the default source is `origin`:
+
+1. `RUN_ROOT` must be absent or empty; it is created `0700`.
+2. Create `repo.git` and `worktrees/integrate/` as at a first
+   [Start](#start), fetch, and add `worktrees/state/` at the state
+   branch tip.
+3. Verify the hash ledger: `sdlc-state.json` passes the strict reader;
+   every file in the tree is listed with its hash, and every listed file
+   exists. Walk `prev` to the first commit: each commit's tree passes the
+   same check, and `seq` falls by one per commit. Any failure refuses
+   the restore and names the commit and path. Commits whose author or
+   committer is not the driver identity are listed, not refused: anyone
+   who can push can forge that identity.
+4. Copy the files into the run root and create the driver ledger for the
+   driver files. The Run prep session writes a new `machine.json`. Set
+   `state.restore` to `{"tip", "confirmed": false}`.
+
+The first `/sdlc` then shows the restore summary in the plugin's dialog:
+the state tip and `seq`; the last event and run; `inFlight`, if set; the
+lease holder and since when; the listed commits; the pin; the harness
+pin with this machine's tree-hash result; and every remote ref that
+differs from `projectMainSeen`, `lastPushed`, or `lands`. The operator
+types the first 12 hex digits of the state tip; anything else, no run.
+The driver then writes `interrupted.json` with `"restored": true` for an
+in-flight run, persists with this machine as lease holder, clears
+`state.restore`, and starts. Start step 5's interrupted-stage checks
+need the lost machine's snapshot, so they cannot run after a restore;
+the typed confirmation stands in for them. Missing worktrees are
+recreated at Start step 3.
+
+**Restore drill.** Run prep's last step at `pushed` and `local`:
+`sdlc-driver drill RUN_ROOT` clones the state branch from `origin`
+(`pushed`) or `repo.git` (`local`) into a new temporary folder, mode
+`0700`, restores it there with no lease, no push, and a copy of
+`machine.json`, runs `sdlc-driver status` on both run roots, and
+compares their found reports and every mirrored file's hash. Pass:
+checklist line `restore drill: done`. Any difference: the line names it,
+and Run prep does not print the start line. The temporary folder is
+removed either way.
+
+**Who removes the branch.** The driver never deletes the state branch.
+When the run reaches `@done`, the console prints its name and says it is
+the operator's to keep or delete. The operator removes it once
+project-main has landed on trunk, or keeps it longer for audit
+([O15](#questions-for-the-operator)).
+
+#### Boot files
+
+One file per persona, `boot/<persona>.md`: local, a
+[driver file](#driver-file-ledger), never committed. The driver renders
+the chunk personas' files at `state-init`, each item persona's when it
+writes `plan/items.json`, and every file again after a
+[repin](#repin-the-toolbox) and after the env land.
+
+```text
+# Boot: <persona> (<job>, <scope>), bundle <id>@<sha12>
+## Role
+<the persona's ## Role>
+## Repo facts
+- Repo <origin>; trunk <trunk>; project-main <projectMain>; design folder <designDir>
+- Tracker <backend>; Epic <epic>; key pattern <keyPattern>[; ticket <ticket>; branch <branch>]
+- Test command: <env.test, else repo.test, else "none yet; env-prep sets it">
+- Environment: <after the env land: each dependency and the env block's prove lines; else "not built yet">
+## Packed skill <id> — do not reload
+<the skill body at the pinned commit>
+```
+
+- It packs the persona's front-matter `skills` and, for an item
+  builder, the item's `skills` from `groom.md`. It leaves out what
+  changes per stage: the repo tracker skill (packed per prompt from
+  project-main, as before), node skills, `test-failure-handler`, the run
+  folder, and the facts. Those stay in the prompt kinds and the run
+  contract, so a worker starts with one read and no routing lookups.
+- It holds no absolute path, so it renders the same on every machine.
+  `driver.json` `boot` keeps each hash, and the state branch therefore
+  records the pin and every boot hash, never the file.
+- A missing file is rendered again from the pinned commit and the run
+  state; a hash that differs from `boot` is `check failed: boot`, an
+  `operator` stop.
+- A mint's `prompt.md` starts with the boot file; `sessions.*.packed`
+  starts as its skill ids and `sessions.*.boot` as its hash. When the
+  persona's `boot` entry later differs, its next prompt carries a
+  `# Boot update` block: the changed repo facts, and each changed skill
+  under `# Packed skill <id> — replaces the earlier copy`.
 
 ### Behavior 5: core driver (item 5)
 
@@ -1001,6 +1360,7 @@ interface HarnessAdapter {
   checkVersion(pinned: string): Promise<string>;  // returns the actual version
   installWorkerExtension(runRoot: string): Promise<{path: string; sha256: string}>;
   sessionLooksValid(session: SessionRef, cwd: string): Promise<boolean>;
+  missingModels(models: string[]): Promise<string[]>; // no model call: OpenCode `models`, Pi `--list-models`
   preflight(spec: WorkerSpec): Promise<Preflight>; // before each spawn; no model call
   runWorker(spec: WorkerSpec, signal: AbortSignal): Promise<WorkerExit>;
   ui: {line(text: string): void; notify(kind: "stop" | "ask" | "done", text: string): void};
@@ -1028,8 +1388,8 @@ until the operator allows it (Pi: `.pi/` in the cwd; OpenCode:
 `~/.opencode/` or `/etc/opencode/`), and `harness-config` when the
 harness would load configuration the driver did not write. The
 [stage pipeline](#stage-pipeline) step 5 turns them into stops.
-`sessionMissing` makes the stage a `session lost` stop, like a failed
-pipeline step 2.
+`sessionMissing` makes the stage a `session lost` stop, like a present
+but invalid file at pipeline step 2.
 
 The core API is `prepare(runRoot, adapter)` (lock check, validation,
 the found report, pending asks) and `run(runRoot, adapter)` (the loop).
@@ -1061,6 +1421,19 @@ it refuses while any driver holds the lock.
    (a removed file), and reuses the cached hash only for a file whose
    path and stat both match. The cache file is a driver file, so the
    ledger covers it.
+
+   Then the start preflight, the cheap subset of Run prep's
+   [readiness checks](#behavior-8-run-prep-and-later-items-0-4-8), with
+   no model call and no push: check `machineJsonSha256`; refuse a run
+   root that is a symbolic link or grants group or other permission; the
+   toolbox at `machine.json` `toolbox` is a git checkout in which the
+   pinned commit exists (`check failed: toolbox` names the path and the
+   commit); `adapter.missingModels` is empty for every model slot; a set
+   `backup.dir` passes its `machine.json` rules, else one warning line;
+   `gatherer/run-1/brief.md` exists, else the line
+   `no brief yet: finish Gather first` and no run. While
+   `state.restore.confirmed` is `false`, the start waits for the
+   [restore](#durable-run-state) confirmation.
 3. On the first start, before any fetch, when `repo.git` does not
    exist: `git init --bare --initial-branch=empty repo.git`; set
    `origin` from `run.json` with no force option and fetch refspec
@@ -1074,6 +1447,18 @@ it refuses while any driver holds the lock.
    `git -C repo.git update-ref -d refs/heads/integrate-empty`. Then run
    the bundle check at the pinned commit; any error stops the start
    with the error lines.
+
+   Run prep's `state-init` runs this first-start part, because the
+   state worktree needs `repo.git`. After the fetch, on every start: at
+   `pushed`, apply the [lease](#durable-run-state) rule to the fetched
+   state branch; at `pushed` and `local`, check `worktrees/state/` as
+   persist step 1 does. Recreate a missing item or env worktree at
+   `lastPushed`, after checking that the remote branch tip equals it; a
+   difference is an `operator` stop. Render each missing
+   [boot file](#boot-files) and compare every boot file with `boot`.
+   Report each live session whose file is missing as
+   `will restore from backup` or `will rehydrate`
+   ([Sessions and rehydrate](#sessions-and-rehydrate)).
 4. Install the worker extension; if its hash differs from
    `driver.json`, print one line and record the new hash.
 5. If `inFlight` is set, the previous driver died mid-stage: write
@@ -1122,7 +1507,33 @@ it refuses while any driver holds the lock.
    `operator` stop, whatever any run folder holds.
 6. Print the found report ([Console](#console-lines)); any `deferred`
    scope becomes `active`.
-7. Enter the loop.
+7. Persist when a **D** file changed since the last state commit (the
+   brief after Gather, recorded answers, a repin, a restore); then enter
+   the loop.
+
+After a [restore](#durable-run-state), step 5 runs no post-stage check
+for the in-flight run, whose snapshot stayed on the lost machine; the
+operator's typed confirmation of the restore summary stands in for it.
+
+#### Repin the toolbox
+
+`/sdlc-repin` is a plugin command, like `/sdlc`, and runs only while no
+driver holds the lock: between stages, never inside one. OpenCode asks
+for the run root and the new commit in dialogs; Pi takes
+`/sdlc-repin RUN_ROOT COMMIT`.
+
+1. The commit exists in the toolbox. The bundle check passes at it, and
+   the [reviewed-refs rule](#runjson) applies as for a new run: a commit
+   outside reviewed history needs the full SHA typed back.
+2. Show `git -C <toolbox> diff --stat <old> <new> -- bundles/<id> skills/ docs/INTAKE.md`,
+   then the full diff of `flow.json` and the personas.
+3. Refuse when a scope's current node is gone from the new flow, or a
+   persona with a session changes its job or scope.
+4. On the operator's yes, `core.repin` writes `run.json`
+   `bundle.commit`, appends `bundle.history`, records `runJsonSha256`,
+   renders the boot files again, appends a `repin` event, and persists.
+   Each live session gets the changed parts at its next prompt
+   ([Boot files](#boot-files)).
 
 #### Loop
 
@@ -1139,10 +1550,18 @@ it refuses while any driver holds the lock.
 4. Run the scope's current node ([Node routing](#node-routing)). For
    the chunk with `chunk.pendingRoute` set, run the architect's
    paperwork stage instead
-   ([Design-record commits](#design-record-commits) step 7).
-5. Repeat.
+   ([Design-record commits](#design-record-commits) step 7). The chunk
+   at `env-prep` creates the env branch first
+   ([Build-environment gate](#build-environment-gate) point 2).
+5. After the stage finishes, by any path: persist
+   ([Durable run state](#durable-run-state)) unless `state.level` is
+   `plain`, then back up the stage persona's session file when
+   `backup.dir` is set ([Sessions and rehydrate](#sessions-and-rehydrate)).
+6. Repeat.
 
-One stage runs at a time, model or command, across all scopes.
+One stage runs at a time, model or command, across all scopes. A chunk
+in an env re-entry is runnable before every item, so items wait for the
+new environment.
 
 #### Stage pipeline
 
@@ -1153,18 +1572,19 @@ worker-only checks.
 
 1. **Run folder.** N = `runs[folder] + 1`. If `<folder>/run-N/` already
    exists and holds a `meta.json`, increment N again. An empty folder
-   (kickoff's `refiner/run-1/`) is used as is.
+   (Run prep's `refiner/run-1/`) is used as is.
 2. *(model)* **Session.** If `sessions[persona]` exists, this is a
-   resume: the file must exist and `adapter.sessionLooksValid` must
-   pass, else a `lost-session` stop. If it does not exist, this is a
-   mint: the file must not exist, else an `operator` stop
-   (`unexpected session file`).
+   resume: a present file must pass `adapter.sessionLooksValid`, else a
+   `lost-session` stop; a missing file is restored from its backup or
+   rehydrated ([Sessions and rehydrate](#sessions-and-rehydrate)). If
+   it does not exist, this is a mint: the file must not exist, else an
+   `operator` stop (`unexpected session file`).
 3. **Files.** *(model)* Copy `state.md` from the persona's previous run,
    or the template; write `prompt.md` ([Prompts](#prompts)); write the
    facts file. Every stage: write `meta.json`.
 4. **Snapshot.** Set `inFlight` (with `kind`, `prompt`, `repairOf`,
    `invalidRepairs`, and `recordCommit: null`), write `driver.json`,
-   then take the pre-stage
+   persist at `pushed` and `local` (the in-flight marker), then take the pre-stage
    snapshot that the [post-stage checks](#post-stage-checks) for this
    stage kind need, and write `driver/snapshot.json`.
 5. **Run.** Print the start line, except a proving-command stage
@@ -1227,7 +1647,9 @@ worker-only checks.
    and the session file now exists, record `sessions[persona]`, with
    `WorkerExit.sessionId` as `id` for OpenCode; if the file does not
    exist (Pi writes it only after the first assistant message), or
-   OpenCode reported no id, the next run is a mint again.
+   OpenCode reported no id, the next run is a mint again. A rehydrate
+   counts as a mint here, and a valid result clears
+   `sessions[persona].rehydratePending`.
 9. *(model)* **Builder push.** After a builder run: check `lastPushed`
    is an ancestor of `HEAD`, push the item branch without force, and
    record `lastPushed`. Not an ancestor: finish this stage (clear
@@ -1265,12 +1687,59 @@ worker-only checks.
     - While `items.*.land` is set, the land sub-machine consumes the
       result and this step does not take the flow route.
 
+#### Sessions and rehydrate
+
+A harness session file is never committed. When a resume finds the
+persona's session file missing, for example after a restore on another
+machine, the driver does not stop:
+
+1. **Backup.** If `sessions[persona].backup` is set and `backup.dir`
+   holds that persona's backup with the same SHA-256, restore the file
+   and check it with `adapter.sessionLooksValid`. Pass: resume as usual.
+   An OpenCode session stores its `--dir`, so a backup restored under
+   another run-root path may fail the check; then go to point 2.
+2. **Rehydrate.** Otherwise mint a new session with the `rehydrate`
+   prompt, set `state: rehydrated` and `rehydratePending: true`, append
+   a `rehydrate` event, and say `rehydrated` in the start line. The
+   stage's exits are those of the prompt kind it wraps.
+
+The `rehydrate` prompt is fixed by the driver: the persona's
+[boot file](#boot-files); the line `Rehydrated session: your earlier
+session is gone; your memory is the state.md below, the driver facts,
+and the run folders listed`; the persona's latest `state.md`; the
+run-root paths of its last three run folders and, for a verifier, its
+latest `ledger.json`; then the prompt kind the stage would have sent,
+the run contract, and the facts. `sessions[persona].packed` restarts
+from the boot file.
+
+The driver still stops where a fresh session would be unsafe:
+
+| Case | Why it stops | Stop |
+| --- | --- | --- |
+| The file exists but fails `sessionLooksValid`, or OpenCode reports `Session not found` for an existing database | The file is damaged or is not the persona's own session; it is kept for the operator, never overwritten | `session lost: <file>`, ask kind `lost-session` |
+| The file is missing again while `rehydratePending` is `true` | A second loss before one valid result would loop | `session lost: <file>` |
+| A mint finds a file already there | Unchanged: `unexpected session file` | `check failed`, `operator` |
+
+**Session backup** (optional, best effort). When `machine.json`
+`backup.dir` is set, after each stage's persist the driver compresses
+that stage persona's session file with Node `zlib` (OpenCode: the
+database with its `-wal` and `-shm` files, after the worker's process
+group is gone) to `<backup.dir>/<chunk-slug>/<persona>.gz` through a
+temporary name and a rename, and records its SHA-256 in
+`sessions[persona].backup`, which the state branch mirrors. A failure
+prints one line and never stops the run. A backup holds a transcript:
+operator-private, outside every repo.
+
 #### Command body
 
 1. Read the commands: for `"groom"`, from the frozen `groom.md` blob
-   ([Proving commands](#proving-commands)); else the bundle's
-   `scripts/` files at the pinned commit, copied into the run folder.
-2. Run each command in order in the stage's worktree (the item
+   ([Proving commands](#proving-commands)); for `"env"` and
+   `"env-test"`, from the accepted env block
+   ([Build-environment gate](#build-environment-gate) point 3); else the
+   bundle's `scripts/` files at the pinned commit, copied into the run
+   folder. For `"groom"` and land L6, first run the dependency
+   pre-steps (same section, point 8).
+2. Run each command in order in the stage's worktree (the item or env
    worktree, or `worktrees/integrate` for land L6), stopping at the
    first non-zero exit. Each command runs as
    `bash --noprofile --norc -c <line>` in its own process group, with the
@@ -1297,16 +1766,21 @@ minus:
   `_TOKEN`, or `_SECRET`;
 - each name in `run.json` `env.scrubExtra`.
 
+Command stages, and only they, keep each name the accepted env block
+lists in `passEnv` ([The `json sdlc-env` block](#the-json-sdlc-env-block)),
+even a denylisted one; the operator accepts that list at the `spec`
+gate. Workers never get them.
+
 This is hygiene, not a boundary. A worker or a proving command can still
 read any credential file the operator can read and can use the
 operator's git credential helper or SSH agent. The harness reads model
 credentials from its own store: OpenCode from `auth.json` in its data
 folder, which the worker environment leaves at the operator's default;
 Pi from its configuration. A model slot whose key comes
-from a scrubbed variable cannot start, and the kickoff's model line
+from a scrubbed variable cannot start, and Run prep's model line
 checks each slot's key source and stops with that reason. Proving lines
-come only from the frozen `groom.md` blob and the pinned bundle's
-`defaults.prove` ([Proving commands](#proving-commands)).
+come only from the frozen `groom.md` blob, the accepted env block, and
+the pinned bundle's `defaults.prove` ([Proving commands](#proving-commands)).
 
 #### Node routing
 
@@ -1317,12 +1791,18 @@ come only from the frozen `groom.md` blob and the pinned bundle's
 | any | `choice: operator` | Manager stop, `escalate` only |
 | `gate` node | (reached) | Manager stop of kind `gate`, `escalate` only; ask kind `gate` |
 | `land` node | (reached) | [Land sub-machine](#land-sub-machine) |
-| `prove`, `verify`, or `review` node sends the item back (`fail` exit to the builder node) | — | [Repair counter](#repair-counter) first; third failed fix → `operator` stop instead of the builder |
+| `prove`, `verify`, or `review` node of a land node sends the scope back (`fail` exit to the builder node) | — | [Repair counter](#repair-counter) first; third failed fix → `operator` stop instead of the builder |
 | `file-tickets` `pass` | — | [Ticket filing](#ticket-filing) before `@items` |
+| `spec` gate `pass` | — | Record the accepted env block ([Build-environment gate](#build-environment-gate) point 1) |
+| Chunk `land` node `done` while `chunk.reentry` is set | — | `@items`, not the exit's target; resume the stopped item (point 9 there) |
 
 #### Repair counter
 
-Per item: `repairs` (never reset), `sentBack`, and `fixPending`.
+Per item, and on `chunk` for env-prep: `repairs` (never reset),
+`sentBack`, and `fixPending`. For env-prep, read `env-prove`,
+`env-verify`, `env-review`, and `env-builder` for `prove`, `verify`,
+`review`, and `builder-<suffix>` below. `env-baseline` never sends the
+scope back.
 
 | Event | Effect |
 | --- | --- |
@@ -1342,7 +1822,9 @@ with `sentBack` true, so each further failed fix stops again.
 #### Land sub-machine
 
 The item enters the land node after a Review `pass`. `T` is the fetched
-project-main tip. `H` is the item `HEAD`.
+project-main tip. `H` is the item `HEAD`. The env land runs the same
+rows on the `chunk` fields and the env branch, with the changes in
+[Build-environment gate](#build-environment-gate) point 7.
 
 | Row | State and condition | Action | Next |
 | --- | --- | --- | --- |
@@ -1414,6 +1896,134 @@ Rules this table encodes:
    with `proveSha256`. A mismatch is a `fail`, `operator` stop.
 3. It reads commands from no other copy.
 
+#### Build-environment gate
+
+Once per chunk, after the `spec` gate and before Groom, the env nodes
+build and prove the build and test environment that the accepted LLD
+defines: `env-prep` → `env-prove` → `env-baseline` → `env-verify` →
+`env-review` → `env` gate → `env-land` → `groom`
+([SDLC flow](#sdlc-flow)).
+
+**Why Groom comes after.** Groom freezes each item's proving commands
+by hash at ticket filing, and they must run in this environment. After
+the env land, the groom reviewer checks them against a proven harness
+and a recorded baseline instead of a description, and Groom sizes items
+knowing what the harness already does. Env-prep needs no ticket: it is a
+chunk stage that comments on the Epic. Before Groom, a failure costs no
+groomed work, and routes back to Spec while the LLD is still fresh.
+
+1. **Accepted env block.** At the Spec node's design-record commit
+   (step 6), the driver records the pushed commit as `env.specCommit`.
+   At the `spec` gate's `pass`, it reads `lld.md` at that commit with
+   `GIT_NO_REPLACE_OBJECTS=1 git -C repo.git cat-file blob`, checks the
+   commit is an ancestor of `origin/<projectMain>`, parses the block,
+   and records `env.commandsSha256`, the SHA-256 of its canonical JSON.
+   A failure is `check failed: env-block`, an `operator` stop.
+2. **Env branch.** On entering `env-prep` with no env worktree, the
+   driver fetches and creates `env/<chunk-slug>-<env.pass>` from the
+   project-main tip in `worktrees/env/`, pushes it without force, and
+   sets `chunk.lastPushed`. The env-builder's writable set is its run
+   folder and `worktrees/env/`; pipeline step 9's builder push applies.
+3. **Env command stages.** Before every run, the driver reads the block
+   again from `env.specCommit` and compares its hash with
+   `env.commandsSha256`; a mismatch is a `fail`, `operator` stop.
+   `"env"` runs, in `worktrees/env` (or `worktrees/integrate` at land
+   L6): each `toolchain` line; for each dependency, `setup`, `start`,
+   `ready` (again every 5 seconds until it exits `0` or
+   `defaults.commandTimeoutSec` passes), and `reset`; then the `prove`
+   lines. The [command body](#command-body) rules apply, with
+   `SDLC_ENV_DIR` set to `RUN_ROOT/env-data/` and the `passEnv` names
+   kept. It writes `env-evidence.json`.
+4. **Baseline.** `"env-test"` runs each dependency's `reset`, then the
+   `test` line. Exit `0` takes `green`; any other exit takes `known`.
+   Both go to the env-verifier, which reads the log and writes
+   `baseline.json` (`{"status", "failing": ["<test name>"], "log"}`);
+   its `baseline` check lists every failure and says whether the env
+   branch caused any, which is a `fix`. `env.baseline` records the run
+   and status. Later failures of those tests are not blamed on a
+   builder: Groom's proving lines allow for them, and verifiers receive
+   the path as a fact.
+5. **Verify and review** as for an item: the env-verifier's `env-proof`
+   check needs evidence for every block line; the env-reviewer takes
+   the range versus project-main with the three security reads and
+   `env-harness`. Send-backs count on the chunk's
+   [repair counter](#repair-counter).
+6. **Gate.** The `env` gate is the operator's acceptance after the
+   agent gate of step 5: the env-verifier and env-reviewer have passed
+   before the operator is asked. Exits: `accept` lands; `revise` sends
+   the env-builder the answer; `spec` re-enters Spec for an LLD change.
+   Agent acceptance alone is not offered: every later check trusts
+   this environment.
+7. **Env land.** The [land sub-machine](#land-sub-machine) rows L1–L7
+   on the `chunk` fields, with `worktrees/env`, the env branch, `env-prove`
+   as the proving commands (L3a, L6), the env-verifier's
+   `land-recheck`, merge message `[<epic>] Land <env branch>`, and the
+   trailer `Reviewed-by: env-reviewer (<verdict>)`. No ticket and no
+   post-land verifier: in place of L8–L9, after the push the driver sets
+   `env.landCommit`, appends it to `lands`, persists, deletes the remote
+   env branch (the only remote deletion besides L9), removes
+   `worktrees/env/`, sets `env.test` from the block, renders the
+   [boot files](#boot-files) again, and takes the `done` exit. An env
+   branch with no commit beyond its base skips L5: L6 runs on the tip,
+   which becomes `env.landCommit`.
+8. **Dependencies during Build.** Before every `"groom"` proving stage
+   and land L6, for each dependency: `ready`; if it fails, `start`, then
+   `ready`; then `reset`. A failure writes a driver-authored command
+   `fail` with `choice: operator`, stop kind
+   `environment not ready: <dep>`. It is not a send-back and does not
+   count toward the repair budget. At the chunk's `@done` the driver
+   runs every `stop` line; `/sdlc-stop` leaves dependencies running.
+9. **Re-entry.** A builder, verifier, or reviewer that needs a
+   capability the environment lacks stops with `env-capability:`
+   (candidate rule 10). The driver stops with kind `env capability`,
+   `escalate` only, ask kind `env-capability`, choices:
+
+   | Choice | When | Driver then |
+   | --- | --- | --- |
+   | `env` | The capability is inside the accepted block | Sets `chunk.reentry`, the chunk node to `env-prep` with the request as `{{capability}}`, and `env.pass` + 1 |
+   | `spec` | It needs an LLD change | Sets `chunk.reentry` and the chunk node to `spec`; the run passes `security`, the `spec` gate, and env-prep again |
+   | `deny` | Work with the accepted environment | Resumes the stopped persona with the answer |
+   | `defer` | Not now | Leaves the item `waiting` |
+
+   The chunk is then runnable before every item. When its land takes
+   `done` with `chunk.reentry` set, the chunk returns to `@items`, the
+   driver clears `reentry`, and it resumes the stopped persona with the
+   `answer` prompt naming `env.landCommit`. Frozen proving commands do
+   not change; a change that needs new or different items is
+   [O16](#questions-for-the-operator).
+
+#### The `json sdlc-env` block
+
+The LLD's `## Build environment` section holds exactly one fenced block
+with the info string `json sdlc-env`, read by the strict reader:
+
+```json
+{"schemaVersion": 1,
+ "toolchain": ["node --version", "docker --version"],
+ "deps": [{"name": "postgres",
+           "setup": ["docker pull postgres@sha256:<hex>"],
+           "start": ["docker run -d --name sdlc-pg postgres@sha256:<hex>"],
+           "ready": ["docker exec sdlc-pg pg_isready"],
+           "reset": ["docker exec sdlc-pg psql -U postgres -c 'drop schema public cascade; create schema public'"],
+           "stop": ["docker rm -f sdlc-pg"]}],
+ "passEnv": ["AD_BIND_DN", "AD_BIND_PASSWORD"],
+ "prove": ["npm run test:integration -- --grep env-smoke"],
+ "test": "npm test"}
+```
+
+| Field | Rule |
+| --- | --- |
+| `toolchain` | Command lines that print versions; their output goes to `env-evidence.json` |
+| `deps` | Array; `name` matches `^[a-z][a-z0-9-]{0,31}$`, unique. `setup` (clone, configure, auth through `passEnv` names only), `start`, `ready`, `reset`, `stop`: arrays of command lines, each may be empty; `ready` is non-empty when `start` is |
+| `passEnv` | Variable names, `^[A-Z][A-Z0-9_]{0,63}$`: credentials and endpoints of an existing platform, such as AD, that command stages keep ([Environment scrub](#environment-scrub)). The operator's integration instructions in the HLD say where each value comes from |
+| `prove` | Non-empty: the proving lines that show the environment works |
+| `test` | One line: the repo's test command, run as the baseline and named in the boot files |
+
+Every command line is at most 1,000 characters with no newline, as in
+`groom.md`. No line holds a credential, host name, address, or absolute
+path; the design-record scan of `lld.md` enforces it, and a value the
+environment needs comes through `passEnv`.
+
 #### Ticket filing
 
 After `file-tickets` passes and its frozen `groom.md` is committed:
@@ -1475,7 +2085,8 @@ For a chunk `model` node with `outputs` or `outputDirs`, after a valid
 6. `inFlight.recordCommit` is the pushed commit. For `groom`, the
    `driver.json` write after exit `0` also sets `groom.recordCommit` to
    it, and `groom.recordCommit` becomes `groom.reviewedCommit` when the
-   next `groom-review` passes. No step reads `recordCommit` from
+   next `groom-review` passes. For the `envSpec` node, the same write
+   sets `env.specCommit`. No step reads `recordCommit` from
    `meta.json`.
 7. For the HLD node and the Spec node, paperwork is a separate stage
    that starts only after the parent stage has finished: `inFlight`
@@ -1559,9 +2170,9 @@ step 4) records what each check compares.
 
 | Check | After | How |
 | --- | --- | --- |
-| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file (OpenCode: `opencode.db` and its `-wal` and `-shm` files), `worktrees/`, `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
-| `worktrees` | every stage | For each worktree outside the stage's writable set: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `inFlight.recordCommit` in `driver.json`, never a value from the run folder ([Start](#start) step 5) |
-| `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns. A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `inFlight.recordCommit` in `driver.json` ([Start](#start) step 5) |
+| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file (OpenCode: `opencode.db` and its `-wal` and `-shm` files), `worktrees/`, `env-data/` (a running dependency writes there), `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
+| `worktrees` | every stage | For each worktree outside the stage's writable set, `worktrees/state/` always among them: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `inFlight.recordCommit` in `driver.json`, never a value from the run folder ([Start](#start) step 5) |
+| `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns, and the state branch, which must equal `state.pushedTip` after the stage whatever the snapshot holds (the stage-start persist moves it before the snapshot). A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `inFlight.recordCommit` in `driver.json` ([Start](#start) step 5) |
 | `tickets` | every stage | [Tickets content check](#tickets-content-check) |
 | `ancestry` | builder stages | `lastPushed` is an ancestor of `HEAD` (pipeline step 9) |
 | `project-main` | every worker stage | Fetch; let `M0` be `projectMainSeen` and `M1` the fetched tip. For each active item with `HEAD` `H`, no commit in `git rev-list H ^M0 ^<each commit in lands>` is also in `git rev-list M1 ^M0`. Then `projectMainSeen = M1` |
@@ -1585,7 +2196,7 @@ the stat cache. Compared with the pre-stage snapshot, they would fail
 every stage. They are compared with the driver's own record instead.
 
 **Driver files** are `driver.json`, `index.jsonl`, and every file under
-`plan/`, `asks/`, and `driver/`, except `driver/snapshot.json`,
+`plan/`, `asks/`, `boot/`, and `driver/`, except `driver/snapshot.json`,
 `driver/ledger.json`, and `driver/driver.stderr`. Only the driver and
 the plugin write them ([Who may write what](#trust-boundaries)). Every
 other path in the walk, such as `run.json`, other persona folders, and
@@ -1742,7 +2353,9 @@ path so the operator can tell a colleague's write from a worker's.
 
 Every git call by the driver sets `GIT_CONFIG_COUNT` to disable hooks
 (`core.hooksPath=/dev/null`), sets `GIT_NO_REPLACE_OBJECTS=1`, and has
-no force option in its code path. The only deletion of a remote product branch is L9. The first-start
+no force option in its code path. The only deletions of a remote
+branch are L9's item branch and the env land's env branch
+([Build-environment gate](#build-environment-gate) point 7). The first-start
 local ref `integrate-empty` is removed with `git update-ref -d` after
 the detach, only if that ref still exists, and it is never pushed.
 
@@ -1756,11 +2369,17 @@ the detach, only if that ref still exists, and it is never pushed.
 | `paperwork failed` | Design-record step 7 | `resume`, `defer`, `escalate` | `operator-stop` |
 | `operator gate: <tag>` | A gate node | `escalate` | `gate` |
 | `operator: <question>` | Worker chose `operator` | `escalate` | `operator-stop` |
+| `env capability: <line>` | Worker chose `operator` with an `env-capability:` check (candidate rule 10) | `escalate` | `env-capability` |
+| `environment not ready: <dep>` | Dependency pre-steps of a proving stage ([Build-environment gate](#build-environment-gate) point 8) | `escalate` | `operator-stop` |
 | `repair budget exhausted` | Repair counter | `escalate` | `operator-stop` |
-| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), the pre-spawn `harness` re-check, the pre-spawn `harness-config` preflight, `extract`, `unexpected session file`, `pushed history rewritten` | `escalate` | `operator-stop` |
+| `check failed: <check>` | A post-stage check (`snapshot`, `worktrees`, `refs`, `tickets`, `ancestry`, `project-main`, `extension`, `tracker-state`, `tracker-read`), the pre-spawn `harness` re-check, the pre-spawn `harness-config` preflight, `extract`, `unexpected session file`, `pushed history rewritten`, and the run-state checks `state`, `boot`, `toolbox`, `env-block` | `escalate` | `operator-stop` |
 | `scan hit` | Design-record step 3, no credential hit | Not resumed: the driver writes the ask | `scan-hit` |
 | `scan hit: credential` | Design-record step 3, a credential hit | Not resumed: the driver writes the ask | `scan-secret` |
-| `session lost: <file>` | Pipeline step 2, or `WorkerExit.sessionMissing` | `escalate` | `lost-session` |
+| `state scan hit` | Persist step 3, no credential hit | Not resumed: the driver writes the ask and returns | `state-scan` |
+| `state scan hit: credential` | Persist step 3, a credential hit | Not resumed: the driver writes the ask and returns | `state-secret` |
+| `state push failed` | Persist step 6, the remote tip unchanged | Not resumed: the driver writes the ask and returns | `state-push` |
+| `state lease lost` | Start, or persist step 6 with a moved remote tip | None: the driver exits; only a restore continues | — |
+| `session lost: <file>` | A present session file fails its check, `WorkerExit.sessionMissing`, or a second loss while `rehydratePending` ([Sessions and rehydrate](#sessions-and-rehydrate)) | `escalate` | `lost-session` |
 | `OpenCode config folder: <path>` | `~/.opencode/` or `/etc/opencode/` exists ([OpenCode adapter](#opencode-adapter-and-worker-command-line)) | `escalate` | `opencode-dir` |
 | `project Pi files: <path>` | `.pi/` in a worker cwd ([Pi adapter](#pi-adapter-and-worker-command-line)) | `escalate` | `pi-dir` |
 | `post-land verify failed` | L9 | `escalate` | `operator-stop` |
@@ -1769,8 +2388,8 @@ the detach, only if that ref still exists, and it is never pushed.
    the stopped persona and the `answer` prompt (the budget stop names
    the builder and its pending prompt kind; see
    [Repair counter](#repair-counter)), prints the `STOP` line, and
-   resumes `manager` with the `stop` prompt (or `gate`). Scan stops
-   skip the manager, as their rows say.
+   resumes `manager` with the `stop` prompt (or `gate`). Scan and state
+   stops skip the manager, as their rows say.
 2. Manager exits are the [driver-fixed](#driver-fixed-exits) `resume`
    [`pass`], `defer` [`pass`], `escalate` [`needs_input`]. A `pass`
    needs one `evidence.checks` entry
@@ -1794,11 +2413,15 @@ the detach, only if that ref still exists, and it is never pushed.
 | Ask kind | Answer | Driver then |
 | --- | --- | --- |
 | `gate` | A gate exit + text | Writes the gate node's result in `operator/run-N/`: `status` = that exit's status, `choice` = the exit, `findings` = the text verbatim, `evidence.checks` = `["operator-answer: asks/ask-N"]` for `pass`. Routes |
-| `lost-session` | `replace` | Moves the old file to `session.lost-<UTC>.jsonl` if present, mints a new session with the `handoff` prompt (last `state.md`, facts, the answer) |
+| `lost-session` | `replace` | Moves the old file to `session.lost-<UTC>.jsonl` if present, mints a new session with the `rehydrate` prompt and the answer |
 | `lost-session` | `defer` | Leaves the scope `waiting` |
 | `scan-hit` | `allow` or `revise` | [Design-record commits](#design-record-commits) step 3 |
 | `scan-secret` | `revise` or `defer` | `revise`: as for `scan-hit`. `defer`: leaves the scope `waiting`. There is no `allow` |
 | `operator-stop` | Text | Resumes `manager` with `apply-answer`; exits `resume`, `defer`, `escalate` as in steps 3–5 |
+| `env-capability` | `env`, `spec`, `deny`, or `defer`, + text | [Build-environment gate](#build-environment-gate) point 9 |
+| `state-scan` | `allow`, `exclude`, or `defer` | [Persist](#durable-run-state) step 3; `defer` leaves the run stopped |
+| `state-secret` | `exclude` or `defer` | The same; there is no `allow` |
+| `state-push` | `retry`, `local`, or `defer` | Persist step 6 |
 
 An empty answer records nothing; the ask stays pending (never proceed
 after silence).
@@ -1807,14 +2430,18 @@ after silence).
 
 The driver builds `prompt.md` in this order:
 
-1. The persona's `## Role` (mint only).
+1. On a mint, the persona's [boot file](#boot-files); on a rehydrate,
+   the [`rehydrate`](#sessions-and-rehydrate) header block, which starts
+   with the boot file; on a resume whose `boot` entry changed, the
+   `# Boot update` block.
 2. Packed skills not yet in `sessions[persona].packed`, each under
    `# Packed skill <id> — do not reload`, read from the pinned commit,
    or, for the repo tracker skill, from `origin/<projectMain>` at the
    last fetch.
 3. The prompt kind's text with placeholders filled.
 4. The run contract, fixed by the driver: the run folder; the files the
-   worker may write; `state.md` limits; the allowed exits with their
+   worker may write; paths in prose relative to the run root or the
+   repo; `state.md` limits; the allowed exits with their
    statuses; the required checks and outputs; the tracker steps from
    [Tracker calls](#behavior-7-tracker-calls-per-persona) with the exact comment
    text; "Finish with `sdlc_result`."
@@ -1855,7 +2482,7 @@ As the HLD says, the driver reads ticket state with the repo tracker
 skill's `read` recipe, run as a command with no model. In this chunk
 only the `local` backend has such a recipe, and it is a git read
 ([local adapter Reads](../../../skills/tracker-sdlc/adapters/local.md#reads)).
-Kickoff's checklist requires the repo skill to carry that recipe and
+Run prep's checklist requires the repo skill to carry that recipe and
 stops without it. The driver runs the recipe's git calls as fixed argv
 in `repo.git`, so no shell string from a repo file runs:
 
@@ -1870,7 +2497,7 @@ in `repo.git`, so no shell string from a repo file runs:
 Every id is checked against `tracker.keyPattern` before use. A read
 that fails after three attempts (2, 4, and 8 seconds apart) is
 `check failed: tracker-read` with a redacted message. Any backend other
-than `local` is refused at kickoff and at `/sdlc` start
+than `local` is refused at Run prep and at `/sdlc` start
 ([`run.json`](#runjson)); Linear for driven runs is G9.
 
 #### Console lines
@@ -1880,9 +2507,9 @@ id for the chunk. `<L>` is the node `label`, padded to 7.
 
 | Event | Line |
 | --- | --- |
-| Header | `<slug>  bundle <id>@<sha7>  mode enforced  root <RUN_ROOT>` |
-| Found | `found  last finished  <S> <L> <run> <status>`; `found  interrupted  <run> (kept)`; `found  will resume  <personas>`; `found  next run  <run>`; `found  pending ask  ask-N  <S> <L>: <stop kind>` |
-| Start | `<S> <L>  <persona>  new or resumed  <run>  started[  <note>]`; notes: `merge tip`, `fix`, `re-run`, `re-review`, `repair` |
+| Header | `<slug>  bundle <id>@<sha7>  mode enforced  state <level>  root <RUN_ROOT>` |
+| Found | `found  last finished  <S> <L> <run> <status>`; `found  interrupted  <run> (kept)`; `found  will resume  <personas>`; `found  will rehydrate  <personas>`; `found  will restore from backup  <personas>`; `found  next run  <run>`; `found  pending ask  ask-N  <S> <L>: <stop kind>`; `found  state  <level>  seq <n>  <tip7>  lease ok` |
+| Start | `<S> <L>  <persona>  new, resumed, or rehydrated  <run>  started[  <note>]`; notes: `merge tip`, `fix`, `re-run`, `re-review`, `repair` |
 | End | `<S> <L>  <status>  choice <choice>  artifact <path>[  <extra>]`; extra for Verify `ledger <fixed> fixed, <open> open, <nits> nit`, for Review `reads <packed skills>` |
 | Command fail | `<S> <L>  fail  proving command K of N failed  log <path>  repair N/3` |
 | Invalid | `<S> <L>  invalid result  <run>  repair 1/1` |
@@ -1892,6 +2519,7 @@ id for the chunk. `<L>` is the node `label`, padded to 7.
 | Manager answered | `       manager answered from <source>  <S> continues` |
 | Ask | The full `ask-human.md` text between `--- ask-N ---` lines |
 | Say | `<S> <L>  <say text>` |
+| State | Only on a problem: `STATE  <stop kind>  <file>:<line> <class>` or `STATE  lease lost  remote <tip7>, expected <tip7>`; and at `@done`: `done  state branch <branch> is yours to keep or delete` |
 | Summary | OpenCode: `idle  <n> pending asks  <n> waiting  <n> deferred  pick /sdlc, then enter RUN_ROOT to continue`; Pi: `idle  <n> pending asks  <n> waiting  <n> deferred  type /sdlc RUN_ROOT to continue` |
 
 `driver/console.log` holds every line. No color carries meaning, and no
@@ -1932,8 +2560,10 @@ turn. Neither takes an argument, so each asks for the run root.
    `api.ui.DialogAlert`, say that answers are recorded when it is idle
    or after `/sdlc-stop`, and return.
 3. `core.prepare`: show validation errors in `DialogAlert`; the
-   `run.json` confirmation in `DialogConfirm`, or in `DialogPrompt`
-   when the answer must equal the full bundle SHA; the found report;
+   `run.json` and `machine.json` confirmation in `DialogConfirm`, or in
+   `DialogPrompt` when the answer must equal the full bundle SHA; an
+   unconfirmed [restore](#durable-run-state) summary in `DialogPrompt`,
+   whose answer must equal the state tip's first 12 hex digits; the found report;
    and each pending ask in full. For each ask, `DialogSelect` offers its
    choices plus `not now`, then `DialogPrompt` takes the text;
    `core.recordAnswer` stores it.
@@ -1994,7 +2624,8 @@ TypeScript directly. The README checks the lines on 1.19.3.
   [driver file](#driver-file-ledger)), and passes the same text in
   `OPENCODE_CONFIG_CONTENT`. It holds the keys the note's
   [Chosen shape](opencode-server.md#chosen-shape) lists, the providers
-  from `run.json` `harness.providers`, and one agent named for the
+  from `run.json` `harness.providers` with their `options` from
+  `machine.json`, and one agent named for the
   persona label with the permission rules of the note's
   [Tools per persona](opencode-server.md#tools-per-persona), built from
   the persona's `tools` and `readOnly`. The `external_directory` allow
@@ -2025,7 +2656,7 @@ TypeScript directly. The README checks the lines on 1.19.3.
   | `SDLC_RUN_DIR` | Absolute run folder |
   | `SDLC_RUN_REL` | Run folder relative to the run root |
   | `SDLC_PERSONA`, `SDLC_JOB`, `SDLC_TICKET`, `SDLC_STEP` | The invocation |
-  | `SDLC_WRITABLE` | JSON array of absolute paths: the run folder, plus the item worktree for the builder |
+  | `SDLC_WRITABLE` | JSON array of absolute paths: the run folder, plus the item worktree for an item builder or `worktrees/env/` for the env-builder |
   | `SDLC_EXITS` | JSON array of `{"name", "statuses"}`, reserved exits included as the worker may use them |
   | `SDLC_CHECKS`, `SDLC_OUTPUTS` | JSON arrays from the node |
   | `SDLC_FACTS`, `SDLC_FACTS_SHA256` | [Driver facts](#driver-facts) |
@@ -2085,7 +2716,7 @@ the [driver-file ledger](#driver-file-ledger).
    error throws.
 3. **`sdlc_write`.** Parameters `{path, content}`. `path` is relative to
    the run folder and matches
-   `^(candidate\.json|result\.md|state\.md|ledger\.json|ask-human\.md|out/[A-Za-z0-9._/-]+)$`
+   `^(candidate\.json|result\.md|state\.md|ledger\.json|baseline\.json|ask-human\.md|out/[A-Za-z0-9._/-]+)$`
    with no `.` or `..` segment. Parent folders are created one by one
    and checked to be real folders. The file opens with
    `O_WRONLY|O_CREAT|O_TRUNC|O_NOFOLLOW`, mode `0600`. Content at most
@@ -2152,8 +2783,10 @@ under [Trial-dependent decisions](#trial-dependent-decisions).
 2. Resolve `RUN_ROOT` to an absolute path. If a live driver holds the
    lock: show its status and pending asks, say that answers are
    recorded when it is idle or after `/sdlc-stop`, and return.
-3. `core.prepare`: show validation errors, the `run.json` confirmation
-   (`ctx.ui.confirm`) when needed, the found report, and each pending
+3. `core.prepare`: show validation errors, the `run.json` and
+   `machine.json` confirmation (`ctx.ui.confirm`) when needed, an
+   unconfirmed restore summary (`ctx.ui.input`, the state tip's first
+   12 hex digits), the found report, and each pending
    ask in full (`ctx.ui.custom` text view). For each ask, `ctx.ui.select`
    offers its choices plus `not now`, then `ctx.ui.input` takes the text;
    `core.recordAnswer` stores it.
@@ -2307,13 +2940,13 @@ changes a line stops the run.
 | Reviewer, every pass | `claim`; claim step 5, then `transition` `in_review`; `comment` with the verdict as `Status` | `reviewer-<suffix>` |
 | Verifier, post-land, `pass` | `claim`; `transition` `done`; `comment` plus `Land`, `Result`, `Review` | `verifier-<suffix>` |
 | Verifier, post-land, not `pass` | `claim`; `transition` `in_progress`; `comment` | `verifier-<suffix>` |
-| Refiner, architect, designer, ux-reviewer, security, groom-reviewer | `comment` on the Epic | The persona folder name, such as `architect` |
+| Refiner, architect, designer, ux-reviewer, security, groom-reviewer, env-builder, env-verifier, env-reviewer | `comment` on the Epic; no claim | The persona folder name, such as `architect` |
 | Architect, `paperwork` | `comment` on the Epic plus `Record` | `architect` |
 | Manager, `file-tickets` | Groom File steps 2–6: `create` each item (title `G<n>: <title>`, body copied from its `### G<n>` section), `set-blocker` each planned blocker, `transition` each item `ready`, `transition` the Epic `in_progress`, `comment` on the Epic plus `Record: <groom.md path>`. Then the freeze edit in `out/` | `manager` |
 | Manager, stops | `comment` on the stopped ticket or the Epic | `manager` |
 
 **Backend and shell recipes.** Driven runs use the `local` adapter only
-in this chunk; kickoff and `/sdlc` refuse any other backend
+in this chunk; Run prep and `/sdlc` refuse any other backend
 ([`run.json`](#runjson)). Workers have no MCP server: Pi has no MCP
 client, and the OpenCode worker config lists none. So every recipe
 in the repo skill must run from `bash`; the `local` recipes do. This
@@ -2321,7 +2954,95 @@ repo's Linear skill uses MCP, so Linear for driven runs needs shell
 recipes, a no-model read recipe, and its own security gate: G9
 ([O5](#questions-for-the-operator)).
 
-### Behavior 8: later items (4, 8)
+### Behavior 8: Run prep and later items (0, 4, 8)
+
+#### Item 0, `sdlc-kickoff`: Run prep, Gather, restore
+
+One skill with three modes, each run by the operator in a normal
+interactive session. None starts the driver or a worker.
+
+**Run prep** (`prep`), stage 0. A small session that asks only the
+setup questions a run needs, never product questions:
+
+1. Toolbox checkout and pin: default the checkout the skill was loaded
+   from, at its `origin/<trunk>` tip.
+2. Product repo checkout and `origin`; trunk; project-main name.
+3. Chunk slug and a one-line Epic title.
+4. Tracker: `local` only for driven runs; the public-tickets warning of
+   [ux.md](ux.md) J2.
+5. Harness and its pinned version; model slots; a paid slot needs the
+   spending answer.
+6. Run root, default `$XDG_STATE_HOME/sdlc/<chunk-slug>/`.
+7. Durability level, default `pushed`; on a public repo, the
+   public-state warning and no default
+   ([Durable run state](#durable-run-state)).
+8. Session backup folder: optional, default none.
+
+It then shows the readiness checklist, one line per check, each `done`,
+`to do`, `deferred`, or `n/a`, and writes nothing before the operator
+replies to it:
+
+| # | Check | How |
+| --- | --- | --- |
+| R1 | Tracker | Onboarding; `local` backend; the repo skill's shell recipes and no-model `read` recipe ([Tracker reads](#tracker-reads-no-model)) |
+| R2 | Branches | Trunk exists; project-main exists or is cut from trunk and pushed on the operator's yes |
+| R3 | Push permission | `git push --dry-run` of project-main to itself, which authenticates without moving a ref; at `pushed`, `state-init`'s first push also proves branch creation |
+| R4 | Branch protection and CI | CI config at the project-main tip (`.github/workflows/`, `.gitlab-ci.yml`, and the like): `present` or `absent`, noted for the HLD's environment section. Protection on project-main and trunk through `gh api`, when `gh` is installed and logged in for that host; else `unknown`, which the operator confirms. A rule that blocks the driver's direct, non-force push to project-main is `to do` |
+| R5 | Harness | Installed at the pinned version; `integrity`; `treeSha256`; OpenCode `harness.providers` ([`run.json`](#runjson)) |
+| R6 | Models | `adapter.missingModels` is empty for every slot; each slot's key source is not a scrubbed variable; a paid slot has its spending record |
+| R7 | Toolbox | A git checkout; the pinned commit exists; the bundle check passes at it |
+| R8 | Run root | Parent outside every git worktree, not a symbolic link; the root is created `0700` |
+| R9 | Labels | The `labels.mode` that the key pattern needs ([Labels](#labels)) |
+| R10 | State | The level; at `pushed` and `local`, `state-init` and the restore drill pass |
+
+Then Run prep files the Epic through `tracker-sdlc`, writes `run.json`,
+`machine.json`, `checklist.md`, an empty `refiner/run-1/`, and an empty
+`gatherer/run-1/`, and runs the driver's deterministic steps:
+
+| Command | Does |
+| --- | --- |
+| `sdlc-driver readiness RUN_ROOT` | R5–R9 with no question, one checklist line each |
+| `sdlc-driver state-init RUN_ROOT` | Start step 3's first-start part; the state branch's first commit, pushed at `pushed`; the chunk personas' [boot files](#boot-files) |
+| `sdlc-driver drill RUN_ROOT` | The [restore drill](#durable-run-state) |
+| `sdlc-driver status RUN_ROOT` | The found report, read-only, without the lock |
+
+`state-init` and `restore` refuse when `SDLC_RUN_DIR` is set or a driver
+holds the lock. Run prep ends by printing the Gather line, `next:
+Gather; open a new session and load sdlc-kickoff in gather mode for
+RUN_ROOT`. Its session is then discarded: no copy is kept, and its
+decisions live in `run.json`, `machine.json`, and `checklist.md`.
+
+**Gather** (`gather`), after Run prep, in a new session. It runs
+`discover-the-idea` on the operator's brain dump, ends with a brief the
+operator confirms in words, writes `gatherer/run-1/brief.md`, copies the
+Gather session file next to it, lists that copy in `run.json`
+`gather.sessions`, and prints the run root and the start line for the
+harness: in OpenCode, "pick `/sdlc`, then enter RUN_ROOT"; in Pi,
+`/sdlc RUN_ROOT`. Gather comes after Run prep, not inside it, because:
+
+- the kept Gather transcript then holds no setup chatter (paths, hosts,
+  credentials questions), which the manager would read later;
+- the brief lands in a ready run root and reaches the state branch at
+  the first `/sdlc` (Start step 7);
+- a readiness failure surfaces before the operator spends time on the
+  interview.
+
+**Restore** (`restore`), on a machine without the run root. It asks the
+machine-local questions (toolbox path, harness paths, run-root
+location, backup folder), runs R5–R8, runs `sdlc-driver restore`, and
+prints the start line; the first `/sdlc` shows the restore summary
+([Durable run state](#durable-run-state)).
+
+**Build order.** Item 0 lands first. It fixes the Run prep procedure,
+the readiness checks, and the formats in `docs/sdlc/run-state.md`. R1–R9
+use only git, `gh`, and the harness CLIs, so they work from the skill
+as soon as it lands. `readiness`, `state-init`, `drill`, `status`,
+`restore`, and boot rendering are `sdlc-driver` subcommands that item 5
+builds against those formats; until item 5 lands, the skill names
+those steps as not available yet. Item 5's tests run the skill's command
+sequence on a fixture repo ([O14](#questions-for-the-operator)).
+
+#### Items 4 and 8
 
 Both items start after the first harness, OpenCode (item 7), works.
 
@@ -2344,33 +3065,27 @@ Both items start after the first harness, OpenCode (item 7), works.
   Open a new session, paste the prompt file, and come back when result.json exists.
   ```
 
-- **Item 8, `sdlc-kickoff`.** Runs the readiness checklist (tracker and
-  onboarding, with `local` the only backend for driven runs; the
-  shell-recipe check; the `local` read recipe; project-main from trunk;
-  the run root's parent; labels mode; the harness install, OpenCode
-  first: `integrity`, `treeSha256`, and for OpenCode the providers
-  copied into `harness.providers`; models, each slot's key source, and
-  the spending gate),
-  Gather, the Epic, then writes `run.json`,
-  `checklist.md`, `gatherer/run-1/` (brief and a copy of the Gather
-  session), and an empty `refiner/run-1/`. It prints the run root and
-  the start line for the harness: in OpenCode, "pick `/sdlc`, then
-  enter RUN_ROOT"; in Pi, `/sdlc RUN_ROOT`.
+  A mint's `prompt.md` starts with the persona's
+  [boot file](#boot-files), so the new session needs one read.
+  Followed mode has no driver to persist, so its runs are `plain`;
+  Run prep offers only that level for a followed run.
 
 ### Trust boundaries
 
 **Actors.** The operator (trusted; holds every gate); the driver and the
 plugin (trusted code from the pinned commit and the installed package);
 workers (untrusted model output with the operator's shell rights); the
-manager (a worker); the kickoff session model (untrusted; writes
-`run.json`); the tracker, git remote, and model provider (external).
+manager (a worker); the Run prep, Gather, and restore session models
+(untrusted; write `run.json`, `machine.json`, and the brief); the
+env commands (shell lines from the accepted LLD); the tracker, git
+remote, and model provider (external).
 
 | # | Boundary | What crosses | Control | Kind |
 | --- | --- | --- | --- | --- |
-| TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, answers | User commands only, never a tool; refused inside a worker. OpenCode: the commands exist only in the TUI plugin, so no headless path starts the driver; refused when the TUI has a server listener; a server command named `sdlc` never exists. Pi: refused without UI. Answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
+| TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, `/sdlc-repin`, answers, the restore confirmation | User commands only, never a tool; refused inside a worker. OpenCode: the commands exist only in the TUI plugin, so no headless path starts the driver; refused when the TUI has a server listener; a server command named `sdlc` never exists. Pi: refused without UI. Answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
 | TB1a | Operator's session → model while a driver runs | The operator's own prompts | OpenCode: the server plugin's `chat.message` throw while a lock is held and for typed `/sdlc` text (O-T8). Pi: the `input` handler | Enforced if O-T8 holds; else notify only, operator question [O11](#questions-for-the-operator) |
-| TB2 | Kickoff model → `run.json` | Paths, models, tracker, spending, harness pin | Strict schema; `local` backend only; the operator confirms a summary at the first `/sdlc` and on every change; reviewed refs derived by the driver, never read from `run.json`; a bundle commit outside them, or a `run.json` naming another ref, needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at a reviewed ref | Enforced; the refs are local, not fetched (residual) |
-| TB3 | Bundle → driver | Flow, personas, skills, scripts | Pinned commit read with `git show`; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
+| TB2 | Run prep model → `run.json`, `machine.json` | Paths, models, tracker, spending, harness pin, durability level, backup folder | Strict schema; `local` backend only; `run.json` scanned as portable; the operator confirms a summary of both files at the first `/sdlc` and on every change; reviewed refs derived by the driver, never read from `run.json`; a bundle commit outside them, or a `run.json` naming another ref, needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at a reviewed ref | Enforced; the refs are local, not fetched (residual) |
+| TB3 | Bundle → driver | Flow, personas, skills, scripts | Pinned commit read with `git show` from the toolbox checkout, never copied into the product repo; the checkout and the commit checked at Run prep and every start; a new pin only through `/sdlc-repin` between stages, with the diff shown and the bundle check passed; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
 | TB3a | Harness → driver | The OpenCode binary or the Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` of each package at install. OpenCode: self-update off in the worker config and environment; provider packages only from those bundled in the binary | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
 | TB3b | Operator's harness config → worker | OpenCode: plugins, tools, agents, MCP servers, instructions, remote and organization config. Pi: `.pi/` project files | OpenCode: `XDG_CONFIG_HOME` pointed at an empty unwritable folder, project config off, `~/.opencode/` and `/etc/opencode/` refused until allowed, a `tool/` or `tools/` folder in either refused even after an allow, and `debug config` compared with the worker config before every spawn. Pi: `--no-extensions`, `--no-skills`, `-nc`, and the `.pi/` refusal | Enforced before each spawn (OpenCode: O-T2); config that changes between the compare and the spawn is residual |
 | TB4 | Driver → worker | Prompt, facts, env, OpenCode worker config | Prompt built from driver state; model or operator text fenced as data; facts hash; extension or worker-plugin copy hashed; worker config kept as a driver file; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
@@ -2379,10 +3094,15 @@ manager (a worker); the kickoff session model (untrusted; writes
 | TB7 | Worker → result | `candidate.json` | Strict validation; only validated fields route; prose never routes | Enforced |
 | TB8 | Worker → tracker | Every verb, full access to the `tickets` branch | Tracker-state check on state and assignee; tickets content check on every commit (driver-set author and committer), path, front-matter key and value, comment body, and filed ticket body, plus a scan of every touched file | Detected after the stage; the write is public before the check runs (operator accepts in writing) |
 | TB9 | Driver → tracker | One read per check | The repo skill's `local` read recipe as fixed git argv; ids checked against the key pattern | Enforced |
-| TB10 | Driver and workers → git remote | Pushes with the operator's credentials | Driver code has no force option; pushes only item branches and project-main; L9 is the only remote deletion; moved tips decided by `merge-base --is-ancestor`; the `refs` check compares every remote ref around every stage | Enforced for the driver; worker pushes detected after the stage, public before it (operator accepts in writing) |
+| TB10 | Driver and workers → git remote | Pushes with the operator's credentials | Driver code has no force option; pushes only item branches, the env branch, project-main, and the state branch; L9 and the env land are the only remote deletions; moved tips decided by `merge-base --is-ancestor`; the `refs` check compares every remote ref around every stage | Enforced for the driver; worker pushes detected after the stage, public before it (operator accepts in writing) |
 | TB11 | Worker → model provider | Prompt, repo content, tool output | Local model by default; a paid slot requires the spending record | Enforced at start |
-| TB12 | Proving commands | Shell lines | Only from the frozen, reviewed `groom.md` blob and the pinned bundle; hash per run | Enforced |
-| TB13 | Run root → git | Design records | Only declared outputs, regular files, scanned; the operator may allow a non-credential hit; a credential hit is revise-only | Enforced |
+| TB12 | Proving commands | Shell lines | Only from the frozen, reviewed `groom.md` blob, the accepted env block, and the pinned bundle; hash per run | Enforced |
+| TB13 | Run root → project-main | Design records | Only declared outputs, regular files, scanned; the operator may allow a non-credential hit; a credential hit is revise-only | Enforced |
+| TB14 | Driver → state branch | The **D** files: results, prose, `state.md`, asks with verbatim answers, plan, brief, env evidence | Only the mirror set, never sessions, logs, prompts, or `machine.json`; scanned before every commit, credential hits never committed; driver-set identity; fast-forward push without force; the lease; the operator picks the level, warned on a public repo | Enforced for the driver. At `pushed` the mirror set is on the remote, public on a public repo |
+| TB15 | State branch → driver, at restore | The whole durable state | Hash ledger and `prev` chain verified; commits by another identity listed; the operator types the state tip back before the first stage; the lease moves only then | Detected for inconsistency only: anyone who can push, a worker included, can write a consistent forged state (operator accepts in writing) |
+| TB16 | Env block → command stages | Dependency, toolchain, `prove`, and `test` lines; `passEnv` names | Only from the LLD at `env.specCommit`, which **security** reviewed (`env-commands`) and the operator accepted with its `passEnv` list at the `spec` gate; hash per run; `passEnv` values reach command stages only | Enforced; the commands run with the operator's rights, like proving commands |
+| TB17 | Driver → session backup folder | Compressed session files: transcripts | Only when the operator sets `backup.dir`; folder outside every git worktree, not a link, `0700`; hash in the state; best effort | Enforced at write; the folder's privacy is the operator's |
+| TB18 | Worker → env worktree, dependencies | Harness code; running services | The env-builder writes only its run folder and `worktrees/env/`; harness code reaches project-main only through env-prove, env-verify, env-review, the `env` gate, and the env land; services write `env-data/` or outside the run root | Enforced and detected as for item work; service writes outside the run root are residual (operator accepts in writing, item 1) |
 
 **Secrets.**
 
@@ -2390,25 +3110,35 @@ manager (a worker); the kickoff session model (untrusted; writes
 | --- | --- | --- | --- |
 | Worker tracker credential | `local`: the operator's git credentials. No other backend in this chunk; Linear is G9 | Workers | Run root files the driver writes |
 | Git credentials | The operator's credential helper or SSH agent | Driver and workers | `run.json` (origin URL without user info) |
-| Model credentials | The harness's own store: OpenCode's `auth.json` in its data folder; Pi's configuration | The harness | Run root files the driver writes; the scrubbed environment; `run.json` `harness.providers`, which kickoff refuses with an `apiKey` or header |
+| Model credentials | The harness's own store: OpenCode's `auth.json` in its data folder; Pi's configuration | The harness | Run root files the driver writes; the scrubbed environment; `run.json` `harness.providers` and `machine.json` `providerOptions`, which Run prep refuses with an `apiKey` or header |
+| Integration credentials (`passEnv`) | The operator's environment when the driver starts | Command stages only | Workers' environment; the LLD and every run-root file the driver writes; the state branch |
 
 The driver holds no tracker key in this chunk. A worker can still print
-a secret it can read into a log or `out/`: logs stay in the run root
-(`0700`); `out/` is scanned before commit, and a credential-shaped hit
-there can only be revised.
+a secret it can read into a log, `out/`, or prose: logs stay in the run
+root (`0700`) and are never mirrored; `out/` is scanned before commit,
+and a credential-shaped hit there can only be revised; prose and
+`state.md` are scanned before every state commit, and a
+credential-shaped hit there is excluded or deferred, never committed.
 
 **Egress.** The git remote (which also carries the `local` tickets
-branch), the model provider (local by default), and whatever a
+branch and, at `pushed`, the state branch), the session backup folder
+when set, the model provider (local by default), and whatever a
 worker's `bash` or a proving command reaches. Workers can read any file
 the operator can and can reach the network through `bash`. With a paid
 reviewer this is also the spending and egress gate in `run.json`.
 
-**Data class.** The run root holds prompts, transcripts, logs, and tool
-output: operator-private, never committed or published. Tracker
+**Data class.** The run root's local part holds prompts, transcripts,
+logs, and tool output: operator-private, never committed or published.
+Its durable part (the **D** files: briefs, result prose, `state.md`,
+plans, asks with the operator's verbatim answers, env evidence) is
+operator-private at `plain` and `local`; at `pushed` it is on the
+remote's state branch, readable by everyone who can read the repo, and
+public on a public repo. Run prep says so before the first push. Session
+backups are transcripts, operator-private, outside every repo. Tracker
 comments are public: only the template in
 [Tracker calls](#behavior-7-tracker-calls-per-persona), enforced after
 the fact by the [tickets check](#tickets-content-check). A `local`
-tickets branch on a public repo is public; kickoff warns before the
+tickets branch on a public repo is public; Run prep warns before the
 first write. OpenCode workers also write OpenCode's own logs, and the
 full text of long tool outputs, under the operator's OpenCode data
 folder, outside the run root: the same operator-private class, never
@@ -2420,9 +3150,13 @@ committed or published, and not covered by the run root's `0700`.
 | --- | --- | --- | --- | --- |
 | Own current run folder (worker files) | — | yes | yes | — |
 | Item worktree | merges, resets of its own worktrees | its own item | no (detected) | — |
+| `worktrees/env` | merges, resets | the env-builder only | no (detected) | — |
 | `worktrees/integrate`, project-main | commits, merges, pushes | no (detected) | no (detected) | — |
-| `run.json` | no | no | no | no; kickoff writes it |
-| `driver.json`, `index.jsonl`, `plan/`, `driver/`, other persona folders | yes | no (detected) | no (detected) | `driver.json` confirmation and `asks/` answers, while no driver runs, through the [ledger](#driver-file-ledger) |
+| `worktrees/state`, state branch | commits, pushes | no (detected) | no (detected) | — |
+| `run.json` | no | no | no | `bundle.commit` at a repin, the level at a `state-push` `local` answer, both through `core`; Run prep writes the rest |
+| `machine.json` | no | no | no | no; Run prep writes it |
+| `driver.json`, `index.jsonl`, `plan/`, `boot/`, `driver/`, other persona folders | yes | no (detected) | no (detected) | `driver.json` confirmation, the restore confirmation, and `asks/` answers, while no driver runs, through the [ledger](#driver-file-ledger) |
+| `env-data/` | env command stages, unchecked | no | no | — |
 | Tracker | read only | per table | per table | — |
 
 **What a restart trusts.** The current run folder is in the worker's
@@ -2440,6 +3174,32 @@ push that `driver.json` does not name is an `operator` stop, whatever
 here: tracker comment text and writes to other tickets are now detected
 by the tickets check, and worker pushes by the `refs` check, both after
 the stage.
+
+**Changed by the run-state revision, for security's re-read.**
+
+1. **Run root never published (Data class, TB13).** No longer true at
+   `pushed`: the mirror set is pushed to the state branch (TB14).
+   Logs, prompts, transcripts, and `machine.json` stay local at every
+   level. On a public repo the operator chooses the level with no
+   default ([O12](#questions-for-the-operator)).
+2. **Driver pushes and deletions (TB10).** The driver now also pushes
+   the env branch and the state branch, and deletes the env branch
+   after the env land. Still no force option.
+3. **Environment scrub (S7).** Command stages keep the accepted env
+   block's `passEnv` names, denylisted or not; workers still never get
+   them. The list is quoted at the `spec` gate.
+4. **Lost session (HLD Fallback rule change; T3, P3, scenario 9).** A
+   missing file is rehydrated, not a stop; a present but unloadable
+   file stays a stop ([Sessions and rehydrate](#sessions-and-rehydrate)).
+5. **`run.json` (TB2).** Split into the portable `run.json` and the
+   machine-local `machine.json`; both are confirmed.
+6. **Restore trust (accepted residual 5, below).** A restore trusts the
+   state branch as found once its hash chain holds and the operator
+   confirms it: a new residual, operator item 4 below.
+7. **Proving commands (TB12).** Now also from the accepted env block
+   (TB16).
+8. **New code paths reaching project-main.** Env harness code, through
+   the same prove, verify, review, and land path as item work (TB18).
 
 **New with OpenCode first, for security's re-read.** None of these
 changes the three residuals the operator accepted (O9).
@@ -2516,6 +3276,15 @@ recorded verbatim in `asks/`):
    comment, is public on the remote before the post-stage check stops
    the run; the check limits how long it goes unnoticed, not whether it
    is published.
+4. **The state branch is writable by workers** (new with the run-state
+   revision; [O17](#questions-for-the-operator)). Workers hold the
+   operator's git credentials, so they can push the state branch, as
+   they can push project-main. During a stage the `refs` check and the
+   lease catch it. A push from an escaped process after the driver
+   stopped, or before a restore on another machine, is caught only if
+   it breaks the hash chain; a forged, consistent state is found only
+   by the operator reading the restore summary, which lists commits by
+   any other identity.
 
 ### Mockups
 
@@ -2529,8 +3298,9 @@ text. UX acceptance of [ux.md](ux.md) by the operator is pending.
 
 | Item | Unit | Fixture and integration | Proving commands (Groom writes the final lines) |
 | --- | --- | --- | --- |
+| 0 | — | A walk-through of the skill's R1–R4 lines on a fixture repo with a bare origin; after item 5 lands, item 5's Run prep test covers the rest | `K1`, `K7`; `wc -l skills/sdlc-kickoff/SKILL.md` ≤ 250; `wc -l docs/sdlc/run-state.md` ≤ 150 |
 | 1 | — | `docs/sdlc/fixtures/results/` holds one fixture per error code and three valid examples | `K1` and `K7` from the [writing standard](../../writing-standard.md#checks); `test "$(wc -l < docs/sdlc/stage-result.md)" -le 150`; `ls docs/sdlc/fixtures/results/*.expect.json` |
-| 2 | — | `docs/sdlc/fixtures/flows/` holds one fixture per bundle-check code, including each `gate.*` row's counterexample (`gate.trial` among them), exit `checks`, `extract`, and a script without an intake bullet, and `fixtures/bundles/minimal/` | `K1`, `K7`; `wc -l docs/sdlc/bundle-spec.md docs/sdlc/flow-spec.md` ≤ 150 each |
+| 2 | — | `docs/sdlc/fixtures/flows/` holds one fixture per bundle-check code, including each `gate.*` row's counterexample (`gate.trial` and `gate.env` among them), exit `checks`, `extract`, a chunk land, `envSpec`, a valid and an invalid `json sdlc-env` block, and a script without an intake bullet, and `fixtures/bundles/minimal/` | `K1`, `K7`; `wc -l docs/sdlc/bundle-spec.md docs/sdlc/flow-spec.md` ≤ 150 each |
 | 3 | — | `bundles/sdlc/` follows the spec; rule maps; the S5 claim-condition diff | `K1`–`K7`; `node packages/sdlc-driver/src/cli.ts check bundles/sdlc`, which needs G5's bundle check on project-main, hence the land order in [Groom split](#groom-split-proposal) |
 | 5 | `node:test` per module: strict reader, result and candidate rules, front matter, bundle check, labels, groom parser, facts, scan, console | Every fixture under `docs/sdlc/fixtures/`; driver tests with the fake worker against a temporary bare origin with a `local` tickets branch | `npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check` (`tsc -p . && node --test`) |
 | 7 | Argv, env, and worker-config builder (permission rules per persona; read-only personas get no edit tool); preflight; worker plugin with a fake plugin API: path guard for `write`, `edit`, and `apply_patch` (links, `..`, `.git`, `~`), `sdlc_write`, `sdlc_result` on the shared fixtures, the three compaction hooks, `shell.env` | The item 5 driver suite through the OpenCode adapter against a fake `opencode` that records argv, env, and the worker config | `npm --prefix packages/opencode-sdlc ci && npm --prefix packages/opencode-sdlc run check`; acceptance runs the OpenCode checks below, O-T1–O-T10 first |
@@ -2585,7 +3355,13 @@ Driver scenarios, each a test:
    and skips the worker-only checks.
 8. Crash: kill the driver mid-stage, model and command, restart,
    `interrupted.json`, found report, next run number.
-9. Lost session → `lost-session` ask → `replace` mints with `handoff`.
+9. Missing session file → rehydrate: the start line says `rehydrated`,
+   `prompt.md` holds the boot file, the latest `state.md`, and the
+   pending prompt kind; a second loss before a valid result →
+   `lost-session` ask → `replace` mints with `rehydrate`. A present but
+   damaged file → `lost-session` at once. With `backup.dir` set, a
+   matching backup is restored and resumed; a backup with another hash
+   is ignored and the persona rehydrates.
 10. Proving commands edited in the item worktree have no effect; a
     `groom.md` changed after review stops ticket filing.
 11. First start creates `repo.git` and `worktrees/integrate` before any
@@ -2669,6 +3445,42 @@ Driver scenarios, each a test:
     the file write, and one between the file write and the promotion,
     each restart with the ledger check passing. An answer that `/sdlc`
     records while no driver runs passes the next start.
+20. Durable state at `pushed`, against a temporary bare origin: a commit
+    and push at each stage start (with `inFlight`) and end; only **D**
+    files in the tree; `sdlc-state.json` lists each file's hash; a
+    `result.md` with a run-root path → `state-scan`, `exclude` keeps it
+    local and lists it; a credential-shaped `state.md` line →
+    `state-secret` with no `allow`; a worker push to the state branch
+    → `check failed: refs`; a second driver on another run root that
+    pushed first → `state lease lost`, and the first exits.
+21. Restore and drill: `state-init` then `drill` pass; restoring into a
+    new root and confirming the typed tip resumes at the same node with
+    every item worktree recreated at `lastPushed`; a state tree with an
+    edited file, a missing file, or a broken `prev` chain is refused; a
+    commit by another identity is listed; a wrong typed tip starts
+    nothing; `local` restores from `repo.git`; `plain` skips the drill.
+22. Boot files: rendered at `state-init` and ticket filing, identical
+    across two run roots; a deleted file is rendered again with the same
+    hash; an edited file → `check failed: boot`; a repin that changes a
+    skill sends `# Boot update` to the live session once.
+23. Env-prep on a fixture LLD with one fake dependency: env branch,
+    `env-prove` runs toolchain, `setup`, `start`, `ready`, `reset`, then
+    `prove`; a red baseline takes `known` and reaches the env-verifier;
+    an env-verify `fix` counts on the chunk's repair counter; `env`
+    gate `accept` lands with a `Reviewed-by` trailer, deletes the env
+    branch, and re-renders boot files with the `test` line; Groom
+    starts only then. An edited block after the gate → `fail`,
+    `operator` stop. A `passEnv` variable reaches the command stage and
+    no worker.
+24. Re-entry: a builder's `env-capability:` stop → `env-capability` ask;
+    `env` re-enters `env-prep` while the item waits, the env land
+    returns to `@items`, and the builder resumes with the land commit;
+    `spec` re-runs Spec, security, and the `spec` gate first; a
+    dependency whose `ready` fails before an item's proving commands →
+    `environment not ready`, no repair counted.
+25. `/sdlc-repin`: refused while a driver runs and when a current node
+    is gone from the new flow; otherwise `bundle.history` grows and the
+    next start uses the new pin.
 
 **OpenCode checks** (item 7 acceptance, run first, on the operator's
 machine with OpenCode 1.19.3 and one local model; manual, gated by
@@ -2698,8 +3510,8 @@ Trial questions as tests; each failure switches to its fallback in
 - P1 (T1): `/sdlc` on a fixture run root starts the detached driver, the
   widget shows lines, and the `input` guard holds while it runs.
 - P2 (T2): `pi -p "/sdlc RUN_ROOT"` refuses.
-- P3 (T3): three resumed passes keep context; a missing session file is
-  a `session lost` stop.
+- P3 (T3): three resumed passes keep context; a missing session file
+  rehydrates (scenario 9), and a damaged one is a `session lost` stop.
 - P4 (T4): with a high `reserveTokens` in an isolated
   `PI_CODING_AGENT_DIR`, compaction fires in `-p` mode and the summary
   holds `state.md` and the facts; removing a fact from `state.md` does
@@ -2742,7 +3554,7 @@ second harness, read at 0.73.1:
 | T1 TUI during a long handler | Detached driver; the handler returns at once; widget and notify show lines; `input` guard | Handlers can spawn children; `setWidget`, `notify`, and `input` events exist. Not confirmed: that the widget timer and `notify` render after the handler returns | Lines only in `driver/console.log`; the handler prints `tail -f RUN_ROOT/driver/console.log`. If T1 instead shows the TUI stays usable during an awaited handler and the operator accepts UX Q1's console reply, item 6 may run `core.run` in process with the same adapter, and record answers from `ctx.ui` while it runs |
 | T2 Headless `/sdlc` | Refused: the handler requires `ctx.hasUI` | Yes: `hasUI` is false in `-p` and JSON modes; `pi -p "/cmd"` does reach the handler | None needed |
 | T3 `--session` resume | One session file per persona, resumed with `--session`; existence and header check first | Missing file → new session at that path; written after the first assistant message | Keep each item persona's Pi process alive in `--mode rpc` with the same session file, one prompt per pass; idle processes make no model call, so one large-model session still runs at a time |
-| T4 Extension under `--no-extensions`; `session_before_compact` in `-p` | `--no-extensions --extension <file>`; custom summary from the hook | Explicit `-e` loads under `-ne`; the hook is fired from the mode-independent session core (read, not run) | Extension not loaded: run workers with an isolated `PI_CODING_AGENT_DIR` whose `settings.json` lists only the worker extension, keeping the `.pi/` refusal. Hook not fired in `-p`: try `--mode rpc` (fallback T3); if it never fires headless, disable auto-compaction in the isolated settings and stop with an `operator` stop when the session nears `contextWindow - reserveTokens`, so the operator can approve a `handoff` mint built from the same summary text |
+| T4 Extension under `--no-extensions`; `session_before_compact` in `-p` | `--no-extensions --extension <file>`; custom summary from the hook | Explicit `-e` loads under `-ne`; the hook is fired from the mode-independent session core (read, not run) | Extension not loaded: run workers with an isolated `PI_CODING_AGENT_DIR` whose `settings.json` lists only the worker extension, keeping the `.pi/` refusal. Hook not fired in `-p`: try `--mode rpc` (fallback T3); if it never fires headless, disable auto-compaction in the isolated settings and stop with an `operator` stop when the session nears `contextWindow - reserveTokens`, so the operator can approve a `rehydrate` mint, which carries the same `state.md` and facts |
 | T5 Result validity | `sdlc_result` tool with exits as an enum and in-turn errors, plus one driver repair | — (needs the local model) | Below 8 of 10 valid after one repair: ask the operator for another local model or a provider mode that enforces the tool schema; the brief's one-repair limit stays |
 | T6 Write controls | `--tools` allowlist, fail-closed path guard, `sdlc_write` | Yes for all three APIs | `--tools` ignored: the path guard alone limits `write` and `edit` to the writable set. Guard ineffective: detection only, reported to **security** as residual. Extension tools missing: read-only personas write their files with `bash` in the run folder; detection covers the rest |
 
@@ -2772,7 +3584,7 @@ second harness, read at 0.73.1:
     `bash`: Pi has no MCP client, and the OpenCode worker config lists
     no MCP server.
 11. Driven runs support only the `local` backend in this chunk (security
-    ruling S1). This is the HLD's own rule applied: the kickoff stops
+    ruling S1). This is the HLD's own rule applied: Run prep stops
     without a no-model `read` recipe, and only `local` has one. The
     draft clarification that tracker reads use built-in readers is
     withdrawn. The HLD's read-command sentence stands, and this LLD
@@ -2820,29 +3632,78 @@ second harness, read at 0.73.1:
     "picks `/sdlc`, then enters RUN_ROOT" in OpenCode
     ([O10](#questions-for-the-operator)).
 
+Clarifications 19–25 apply the operator's decisions of 2026-10-19 for a
+solo operator who runs one harness session at a time; none assumes
+parallel sessions or a supervising agent.
+
+19. **Run prep first (decision A).** The HLD's
+    [Kickoff](hld.md#run-prep-and-gather) and the brief's Start had one
+    kickoff session that readied the repo, ran Gather, and kept a copy
+    of that session. Now Run prep is stage 0: a discarded session that
+    asks only setup questions, runs R1–R10, prepares the run root and
+    state, and ends with the restore drill. Gather is its own step
+    after it, and its session is kept. `sdlc-kickoff` keeps its id and
+    moves from item 8 to item 0, first in the build order
+    ([Behavior 8](#item-0-sdlc-kickoff-run-prep-gather-restore)).
+20. **Toolbox beside the product repo (decision A).** The rule that a
+    product repo never carries a bundle copy is kept and widened to
+    boot files. Run prep and every start check the toolbox checkout and
+    the pinned commit. `/sdlc-repin` is a new user command, not a tool,
+    so HLD Goal 4 holds.
+21. **Boot files (decision A).** The mint prompt starts with a compiled
+    boot file instead of the role and the packed skills one by one;
+    `sessions.*.packed` starts from it. Boot files are local and
+    regenerated; the state branch keeps their hashes.
+22. **Durable run state (decision B).** The HLD's run root "is not
+    committed or published" and "a lost run root loses the worker
+    sessions" change: at `pushed` and `local` the durable part is
+    committed to the state branch, at `pushed` also pushed, and a lost
+    machine loses only the local part. `run.json` splits into the
+    portable `run.json` and the local `machine.json`.
+23. **Sessions (decision C).** The HLD's "a lost or unloadable session
+    file is a stop; the driver mints a replacement only on the
+    operator's recorded answer" becomes: a missing file is restored
+    from a backup or rehydrated without a stop; an unloadable one is
+    still a stop. The brief's "resumed across passes and never
+    replaced" still holds for context pressure: rehydrate happens only
+    when the file is gone. The `handoff` prompt kind is replaced by
+    `rehydrate`.
+24. **Build-environment gate (decision D).** New nodes under existing
+    steps and jobs: no new SDLC step, role, tracker state, or verb, so
+    the HLD non-goal holds. The general multi-agent SDLC gets the same
+    gate separately, as DER-565; this chunk changes no general SDLC
+    document for it.
+25. **Harness rule (decision D).** Builders, verifiers, and reviewers use
+    only the accepted environment; a need for more is the
+    `env capability` stop, not a new harness inside the Build loop.
+
 ### Groom split (proposal)
 
 | G | Item | Blocked by | Reason |
 | --- | --- | --- | --- |
+| G0 | `sdlc-kickoff` (Run prep, Gather, restore modes) and `docs/sdlc/run-state.md` | — | First in the build order (decision A). Fixes the formats item 5 builds against; R1–R9 work from the skill at once ([O14](#questions-for-the-operator)) |
 | G1 | Result format (DER-529) | — | — |
 | G2 | Bundle and flow spec, fixtures | G1 | Candidate and `choice` rules extend item 1's fields |
 | G5 | Core driver | G1, G2 | Implements both specs; its tests read their fixtures |
-| G3 | SDLC bundle, `test-failure-handler`, tracker wiring, `bundle-runs.md` | G2, G5 | Written in the spec's format. Land order: G5 lands before G3, because G3's proving commands run G5's bundle check on `bundles/sdlc`. Differs from the HLD: [clarification](#clarifications-of-the-hld-made-here) 15 |
-| G7 | OpenCode plugin, worker plugin, OpenCode checks (O-T1–O-T10 first, then O-E2E) | G3, G5 | First harness: the operator's first tests run in OpenCode. Hosts the core; the smoke runs `bundles/sdlc`. Order: [clarification](#clarifications-of-the-hld-made-here) 16 |
+| G3 | SDLC bundle (with the env nodes and the `env-builder`, `env-verifier`, `env-reviewer` personas), `test-failure-handler`, tracker wiring, `bundle-runs.md` | G2, G5 | Written in the spec's format. Land order: G5 lands before G3, because G3's proving commands run G5's bundle check on `bundles/sdlc`. Differs from the HLD: [clarification](#clarifications-of-the-hld-made-here) 15 |
+| G7 | OpenCode plugin (with `/sdlc-repin` and the restore confirmation), worker plugin, OpenCode checks (O-T1–O-T10 first, then O-E2E) | G3, G5 | First harness: the operator's first tests run in OpenCode. Hosts the core; the smoke runs `bundles/sdlc`. Order: [clarification](#clarifications-of-the-hld-made-here) 16 |
 | G6 | Pi plugin, worker extension, Pi checks (P1–P7) | G7 | Second harness. Blocked by G7 so it reuses G7's adapter tests, fake-harness pattern, and smoke fixture, and items stay one at a time. Pi version: O6 |
 | G4 | `bundle-authoring` | G7 | After the first harness works |
-| G8 | `sdlc-followed-mode`, `sdlc-kickoff` | G7 | After the first harness works |
+| G8 | `sdlc-followed-mode` | G7 | After the first harness works |
 | G9 | Linear for driven runs: a no-model read recipe for the driver and shell write recipes for workers. Not groomed in this pass: it needs its own LLD addendum and its own **security** gate | G7 | Security ruling S1; carries S1 and S2 (below). Not an HLD item: [clarification](#clarifications-of-the-hld-made-here) 17 |
 
-Waves: 1: G1; 2: G2; 3: G5; 4: G3; 5: G7; 6: G6, G4, G8. G9 is
+Waves: 1: G0, G1; 2: G2; 3: G5; 4: G3; 5: G7; 6: G6, G4, G8. G9 is
 groomed later, after its own LLD addendum. No gate items. Item 5 is
 the largest for a 100k-token builder. Groom may split it into G5a
 (strict reader, result and candidate rules, front matter, bundle check;
 ← G1, G2), G5b (run root, state machine, stage pipeline, stops, fake
 worker; ← G5a), and G5c (git, land, proving commands, snapshot, refs
-and tickets checks, tracker read, scan; ← G5b). With the split, G3 ←
-G2, G5a (land order G5a before G3), so G3 can build beside G5b and G5c,
-and G7 ← G3, G5c; G6 stays ← G7.
+and tickets checks, tracker read, scan; ← G5b). The run-state revision
+adds G5d (durable state, lease, restore and drill, `status`, boot files,
+rehydrate, session backup, start preflight, repin; ← G5b) and G5e (env
+block, env command stages, dependency pre-steps, chunk land, re-entry;
+← G5c). With the split, G3 ← G2, G5a (land order G5a before G3), so G3
+can build beside G5b–G5e, and G7 ← G3, G5d, G5e; G6 stays ← G7.
 
 **G9 carries** from the security review of 34e1278: S1, the Linear read
 key, with the constraints **security** set (the key file's content must
@@ -2868,6 +3729,7 @@ credentials for Linear on each harness.
 | N2 | Reviewed refs | Derived by the driver, never read from `run.json`; any other ref named forces the typed SHA | [`run.json`](#runjson) |
 | N3 | INTAKE record for an unreviewed bundle commit | Record and hash must be in `docs/INTAKE.md` at a derived reviewed ref; one inside the bundle commit does not count | [Bundle layout](#bundle-layout-and-bundlemd) |
 | N4 | Low residuals | Local refs, no fetch; `treeSha256` re-checked per spawn from a stat cache; `harness.node` not hashed | [Trust boundaries](#trust-boundaries) |
+| Run state | Changes from the run-state revision, 2026-10-19 | S7 widened for `passEnv` (command stages only); TB10 adds the env and state branches and the env branch deletion; TB13's "run root never published" no longer holds at `pushed`; TB14–TB18 are new; operator item 4 is a new residual. All await **security**'s re-read | [Changed by the run-state revision](#trust-boundaries) |
 | Harness pin | Harness supply chain | npm `integrity` recorded at install; `treeSha256` (binary hash, or package-tree hash) recorded in `run.json` and checked at every start. Ruled for Pi; OpenCode 1.19.3 (binary hash; integrity of `opencode-ai` and its platform package; self-update off) follows the same ruling and awaits **security**'s re-read. Pi 0.73.1 or 1.x is O6 | [`run.json`](#runjson), [Start](#start) |
 
 ### Questions for the operator
@@ -2875,16 +3737,24 @@ credentials for Linear on each harness.
 | # | Question | Recommendation |
 | --- | --- | --- |
 | O1 | Run a Trial before Build? | **Accepted by the operator, 2026-10-18: no separate Trial.** Every harness fact sits behind the adapter and the worker plugin or extension, so a fallback changes item 7 or item 6, not item 5's shape. Item 7 runs O-T1–O-T10 first; item 6 runs T1–T6 as P1–P6 first |
-| O2 | UX Q1–Q3 | Accept the recommended defaults this LLD assumes: replies at the next `/sdlc` (Q1); the handoff block in [Behavior 8](#behavior-8-later-items-4-8) (Q2); `index.jsonl` (Q3) |
+| O2 | UX Q1–Q3 | Accept the recommended defaults this LLD assumes: replies at the next `/sdlc` (Q1); the handoff block in [Behavior 8](#items-4-and-8) (Q2); `index.jsonl` (Q3) |
 | O3 | Ticket filing end state: Groom says `ready` and Epic `in_progress`; the HLD table says `backlog` | Follow Groom; the HLD row gets a clarification |
-| O4 | Same-item claim rule: contract v2 or v3 | Settled by security ruling S5: v2, with kickoff checking the repo skill for the same-item sentence. No answer needed |
+| O4 | Same-item claim rule: contract v2 or v3 | Settled by security ruling S5: v2, with Run prep checking the repo skill for the same-item sentence. No answer needed |
 | O5 | Linear for driven runs | Driven runs use `local` only in this chunk. Linear, driver reads and worker writes, becomes G9, blocked by G7, with its own LLD addendum and security gate; it carries S1 and S2. Accept |
 | O6 | **Open; gates only G6, the second harness.** Pi version: `@mariozechner/pi-coding-agent` 0.73.1 (every Pi fact here was read in it; the registry marks it deprecated) or `@earendil-works/pi-coding-agent` 1.x (the maintained line; facts not yet checked). G7 pins OpenCode 1.19.3 and does not wait for this answer | Pin 0.73.1 for G6. Record npm `integrity` at install and `treeSha256` in `run.json`; check `treeSha256` at every start. The Pi facts table and the T1–T6 fallbacks were read at 0.73.1. Moving to 1.x is a later item that re-reads the facts table at 1.x and reruns P1–P7. If the operator picks 1.x now, G6's first task is that re-read; nothing else in this LLD names the package |
-| O7 | Skill ids `test-failure-handler`, `bundle-authoring`, `sdlc-followed-mode`, `sdlc-kickoff` | Accept |
-| O8 | Item 5 split into G5a–G5c | Let Groom split it; with the split, G3 waits only for G5a |
-| O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | **Accepted in writing by the operator, 2026-10-18: "Risks are acceptable."** The three residuals do not depend on the harness, and OpenCode first adds none to them; its new items are listed for **security** under Trust boundaries. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal |
-| O10 | In OpenCode, `/sdlc` takes the run root in a dialog instead of as an argument ([clarification](#clarifications-of-the-hld-made-here) 18); kickoff prints the run root and "pick `/sdlc`, then enter RUN_ROOT" ([item 8](#behavior-8-later-items-4-8)), and the OpenCode [Summary console line](#console-lines) ends `pick /sdlc, then enter RUN_ROOT to continue`. Pi keeps the typed `/sdlc RUN_ROOT` in both | Accept. A plugin slash command in OpenCode 1.19.3 takes no argument, and typed `/sdlc RUN_ROOT` would reach the model; the dialog keeps the start model-free |
+| O7 | Skill ids `test-failure-handler`, `bundle-authoring`, `sdlc-followed-mode`, `sdlc-kickoff`. **Changed 2026-10-19:** `sdlc-kickoff` is item 0 with three modes (Run prep, Gather, restore) | Accept; the id stays, so no route changes |
+| O8 | Item 5 split into G5a–G5c. **Changed 2026-10-19:** G5d and G5e added | Let Groom split it; with the split, G3 waits only for G5a |
+| O9 | The three residuals under "Operator must accept in writing" in [Trust boundaries](#trust-boundaries) | **Accepted in writing by the operator, 2026-10-18: "Risks are acceptable."** **Changed 2026-10-19:** a fourth item, the writable state branch, needs its own answer ([O17](#questions-for-the-operator)); the three stand. The three residuals do not depend on the harness, and OpenCode first adds none to them; its new items are listed for **security** under Trust boundaries. Removing them needs a sandbox for `bash` and network, which the HLD lists as a non-goal |
+| O10 | In OpenCode, `/sdlc` takes the run root in a dialog instead of as an argument ([clarification](#clarifications-of-the-hld-made-here) 18); Gather prints the run root and "pick `/sdlc`, then enter RUN_ROOT" ([item 0](#item-0-sdlc-kickoff-run-prep-gather-restore)), and the OpenCode [Summary console line](#console-lines) ends `pick /sdlc, then enter RUN_ROOT to continue`. Pi keeps the typed `/sdlc RUN_ROOT` in both. **Changed 2026-10-19:** Gather, after Run prep, prints the start line | Accept. A plugin slash command in OpenCode 1.19.3 takes no argument, and typed `/sdlc RUN_ROOT` would reach the model; the dialog keeps the start model-free |
 | O11 | If O-T8 fails, OpenCode cannot stop the operator's own prompt while a worker runs: one large-model session at a time becomes the operator's discipline in that session, with a toast and the console warning | Accept that fallback for item 7 only, decided now so item 7 does not stop on it. A second session costs speed or memory on the local model; it does not skip a gate or a check. Item 6 keeps Pi's enforced `input` guard |
+| O12 | Durability on a public repo: at `pushed` the state branch, with the brief, prose, and verbatim answers, is public | No default on a public repo: Run prep warns and the operator picks `pushed`, `local`, or `plain`. A separate private remote for the state branch is a later item; it would need a second credential and a second `refs` baseline |
+| O13 | `docs/sdlc/run-state.md` is a new `docs/sdlc/` file: standard 9 makes it an operator ask | Accept. `bundle-runs.md` cannot hold the rule changes and the run-state formats within 150 lines |
+| O14 | Item 0 lands first, but `state-init`, `drill`, `status`, `restore`, and boot rendering need item 5's code | Accept: item 0 fixes the procedure and formats as items 1 and 2 fix theirs; R1–R9 work from the skill at once; the full Run prep is tested in item 5 |
+| O15 | Who removes the state branch, and when | The operator, after project-main lands on trunk; the driver never deletes it and says so at `@done`. Keep an archive tag only when audit needs it |
+| O16 | An env re-entry whose LLD change needs new or changed items, whose proving commands are frozen | Out of scope for this chunk: the `env-capability` ask offers `defer`, and the operator amends Groom by hand or opens a new chunk. A driven Groom amendment is a later item |
+| O17 | Accept in writing operator item 4: workers can write the state branch; a consistent forged state is found only by reading the restore summary | Accept. Per-remote or per-branch credentials are not generally available (as for the tracker); the alternative, a separate state remote, is O12's later item |
+| O18 | The `env` gate: operator acceptance after the agent gate (env-verifier and env-reviewer), or the operator alone | Agent gate, then operator acceptance, as designed: the agents check evidence line by line and the security reads; the operator accepts what every later check will trust |
+| O19 | `passEnv` values reach command stages only, so a builder cannot run integration tests that need them in its own worktree | Accept: builders run unit tests and the dependencies the env started; the proving commands run the integration tests. Giving builders the values would widen what a worker's `bash` can send |
 
 ### Rollout / rollback
 
@@ -2892,4 +3762,5 @@ The chunk adds new files and routes; existing runs that use sub-agents
 are unaffected except by the same-item claim rule, which applies only
 inside bundle runs. Rollback is reverting the items' land commits on
 project-main before Trunk; run roots are outside git and need no
-cleanup.
+cleanup. State branches never reach project-main or trunk; the operator
+removes them ([O15](#questions-for-the-operator)).

@@ -7,23 +7,32 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - Brief: DER-421 brief v3, confirmed 2026-10-18 (tracker copy: a comment on DER-421)
 - HLD: `maintainers/design/solo-dlc/hld.md` (Plan, same step)
 - Stories: [user-stories.md](user-stories.md)
-- Date: `2026-10-18`
+- Date: `2026-10-18`; run-state revision `2026-10-19` (the operator's
+  decisions A–D: Run prep first, durable run state, rehydrated
+  sessions, the build-environment gate)
 - Agent review (requirements only): round 1 failed; fix round 1 done;
   re-check raised one major; fix round 2 done; round 3 review raised
-  two majors; fix round 3 done, re-check pending
+  two majors; fix round 3 done, re-check pending; the run-state
+  revision is not yet reviewed
 - Operator: pending
 
 ## People
 
-- **Operator.** Owns the repo and the tracker. Runs the kickoff skill
-  and Gather in an interactive session, runs the start command, answers
-  escalated questions, and holds every operator gate (SD-26).
+- **Operator.** Works alone, one harness session at a time. Owns the
+  repo and the tracker. Runs Run prep, then Gather, each in its own
+  interactive session, runs the start command, answers escalated
+  questions, and holds every operator gate (SD-26).
+- **Run prep session.** A short interactive session that sets up the
+  run itself: setup questions, readiness checks, run root, durable
+  state. It is discarded when it ends.
 - **Manager session.** The agent session the driver resumes when a stage
   stops. Answers from what the project holds, or escalates.
 - **Workers.** One harness process per persona invocation: builder,
   verifier, reviewer, and the step personas (architect, designer, and
-  so on). The builder, verifier, and reviewer of an item are resumed
-  across passes, never replaced.
+  so on), and the env-builder, env-verifier, and env-reviewer that
+  build and check the build environment. The builder, verifier, and
+  reviewer of an item are resumed across passes, never replaced; a
+  persona whose session file is gone is rehydrated.
 - **Bundle author.** Any person or agent writing a second bundle with
   the bundle-authoring skill.
 - **Followed-mode agent.** An agent on a harness with no plugin that
@@ -41,15 +50,29 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **Start command**: how the operator starts or resumes the driver. In
   OpenCode, start and resume use a dialog: pick `/sdlc`, then enter
   RUN_ROOT. In Pi, type `/sdlc RUN_ROOT`.
+- **Durability level**: how the run's state survives. `pushed`
+  (default): a state branch in the product repo, pushed after every
+  stage, so another machine can take over. `local`: the same branch,
+  never pushed. `plain`: the run root only.
+- **State branch**: `sdlc/run/<chunk-slug>`, the driver's own branch,
+  never merged.
+- **Rehydrate**: start a fresh session for a persona whose session file
+  is gone, from its boot file, `state.md`, and the driver's facts.
+- **Env gate**: after the Spec gate, the operator accepts the build and
+  test environment that env-prep built and proved.
 
 ## Journeys
 
-- **J1 Kickoff to first command (happy path).** Interactive session →
-  operator loads the kickoff skill → readiness checklist (tracker,
-  branches, plumbing) → Gather interviews the operator on a brain dump →
-  operator confirms the brief → kickoff initializes the run root →
-  console prints the run root and the exact start command for
-  the harness → operator runs it.
+- **J1 Run prep, Gather, first command (happy path).** Interactive
+  session → operator loads the kickoff skill → Run prep asks the setup
+  questions only (toolbox, repo and branches, chunk, tracker, harness
+  and models, run root, durability, backup folder) → readiness
+  checklist, each line done, to do, deferred, or n/a → operator replies
+  → Run prep prepares the run root and the state branch, runs the
+  restore drill, and prints the Gather line; the session is discarded
+  → new session: Gather interviews the operator on a brain dump →
+  operator confirms the brief → console prints the run root and the
+  exact start command for the harness → operator runs it.
 - **J2 Public tickets warning.** No tracker connected → kickoff offers
   the `local` adapter (a `tickets` branch) → the repo is public → kickoff
   says, before anything is written, that ticket titles, bodies, and
@@ -86,9 +109,10 @@ Human gate: operator accepts, or writes `UX verification not required`.
 - **J8 Crash or reboot.** Harness dies mid-stage → operator runs
   the start command again → console reports what it found: last finished
   stage, the interrupted run folder (kept), sessions it will resume, and
-  the next run folder → continues. A missing session file stops the
-  resume with a clear message; the driver never resumes into a blank
-  session.
+  the next run folder → continues. A persona whose session file is
+  missing is reported as `will rehydrate` and starts a fresh session
+  from its boot file, `state.md`, and facts; a session file that is
+  there but does not load stops with a clear message.
 - **J9 Second bundle.** Bundle author loads the bundle-authoring skill
   → writes the flow file, personas, skills, and scripts in one folder →
   runs the driver's bundle check → fixes errors that name the step and
@@ -113,11 +137,33 @@ Human gate: operator accepts, or writes `UX verification not required`.
   verifier → `done`. A conflict the builder cannot resolve is a stop
   (J5), and the item does not merge.
 - **J12 Operator gate.** A stage reaches an operator gate: accepting
-  the Plan or the Spec, a waiver, a security severity, three failed
+  the Plan, the Spec, or the build environment, a waiver, a security severity, three failed
   fixes, a destructive action, or spending → driver resumes the manager,
   which may only escalate → console and the manager's run folder hold
   the full `ask-human.md` message; in followed mode it says `followed,
   not enforced` → operator replies as in J5. The Trial question is J6.
+- **J13 Machine lost.** The machine dies → on another machine, the
+  operator loads the kickoff skill in restore mode → it asks only the
+  machine-local questions and restores the run root from the state
+  branch → start command → the console shows the restore summary (last
+  stage, in-flight run, lease holder, any commit not made by the
+  driver) → the operator types the first 12 characters of the state tip
+  → the run continues; personas rehydrate or restore from the backup.
+  The old machine, if it comes back, refuses to drive the run.
+- **J14 Env gate.** Spec gate accepted → env-builder builds the harness
+  and environment from the LLD → the driver runs its commands and a
+  baseline of the test command → env-verifier and env-reviewer pass →
+  the operator gets an `ask-human.md`: accept, send back, or route to
+  Spec, with the evidence and any pre-existing test failures → accept
+  lands the harness code → Groom starts.
+- **J15 Item needs a new environment capability.** A builder needs a
+  service the environment lacks → it stops instead of inventing one →
+  the operator's ask offers: re-enter env-prep, route to Spec for an
+  LLD change, deny, or defer → after the new environment lands, the
+  item resumes where it stopped.
+- **J16 Move the toolbox pin.** Between stages, the operator runs
+  `/sdlc-repin` → the console shows the diff of the bundle and skills →
+  the operator confirms → the next stages use the new pin.
 
 ## Stories
 
@@ -125,8 +171,8 @@ In [user-stories.md](user-stories.md):
 
 | Person | Stories |
 | --- | --- |
-| Operator, start | SD-1 ready the repo, SD-2 tracker and public tickets, SD-3 Gather, SD-4 run root and start line, SD-5 only the operator starts |
-| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager, SD-26 operator gates, SD-27 Build → Verify → Review, SD-28 land on a moved tip |
+| Operator, start | SD-1 Run prep, SD-2 tracker and public tickets, SD-29 durability, SD-3 Gather, SD-4 run root and start line, SD-5 only the operator starts |
+| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager, SD-26 operator gates, SD-27 Build → Verify → Review, SD-28 land on a moved tip, SD-30 another machine, SD-31 env gate, SD-32 new env capability, SD-33 move the toolbox pin |
 | Bundle author | SD-14 write a bundle, SD-15 errors by step and exit |
 | Followed mode | SD-16 followed, not enforced, SD-17 separate-agent steps, SD-18 same exit rule |
 | Workers | SD-19 builder with failing log, SD-20 builder after compaction, SD-21 verifier ledger, SD-22 post-land verifier, SD-23 reviewer re-review, SD-24 claim and comment |
@@ -134,25 +180,50 @@ In [user-stories.md](user-stories.md):
 
 ## High-level UX
 
-**Kickoff (interactive).** A normal conversation. The kickoff skill
-shows a short readiness checklist and marks each line done, to do, or
-deferred. Tracker choice is one `ask-human.md` message. Gather is the
-existing `discover-the-idea` interview. The session ends with two lines
-the operator can copy: the run root and the start command, in OpenCode
-"pick `/sdlc`, then enter RUN_ROOT", in Pi `/sdlc RUN_ROOT`. If the
-operator asks the model to start the run, the model says `/sdlc` is a
-command only the operator can run, and repeats the line.
+**Run prep (interactive).** A short conversation about the run, not the
+product. It asks one question at a time, each with its default:
+toolbox and pin, repo and branches, chunk slug and Epic title, tracker,
+harness and models, run root, durability, backup folder. The
+durability question reads:
+
+```text
+How should this run's state survive?
+  pushed (default): a state branch sdlc/run/<chunk-slug> in this repo,
+    pushed after every stage; another machine can take over.
+  local: the same branch, never pushed; survives a damaged file, not a lost machine.
+  plain: the run root only; survives crashes on this machine.
+```
+
+On a public repo it adds that the state branch, with the brief, results,
+and your answers, would be public, and offers no default. Then it shows
+the readiness checklist and marks each line done, to do, deferred, or
+n/a. Tracker choice is one `ask-human.md` message. It ends with the
+restore drill's line and the Gather line; the session is then
+discarded.
+
+**Gather (interactive).** A new session: the existing
+`discover-the-idea` interview. It ends with two lines the operator can
+copy: the run root and the start command, in OpenCode "pick `/sdlc`,
+then enter RUN_ROOT", in Pi `/sdlc RUN_ROOT`. If the operator asks the
+model to start the run, the model says `/sdlc` is a command only the
+operator can run, and repeats the line.
 
 **Driver console.** Terse and line-based; worker transcripts go to log
 files, not the console. Rough sketch, exact text belongs to Spec:
 
 ```text
-solo-dlc  bundle sdlc  mode enforced  root RUN_ROOT
+solo-dlc  bundle sdlc  mode enforced  state pushed  root RUN_ROOT
+found  will rehydrate  verifier-abc-12
+EPIC-1 Env     env-builder  new  env-builder/run-1  started
+EPIC-1 Env     pass     choice prove  artifact env-builder/run-1/result.md
+EPIC-1 Env     fail     choice known  artifact commands/run-2/commands.json
+EPIC-1 Env     env-verifier  new  env-verifier/run-1  started
+EPIC-1 Env     pass     choice review  ledger 0 open
 ABC-12 Build   builder  resumed  builder/run-4  started
 ABC-12 Build   fail     proving command 2 of 3 failed  log builder/run-4/logs/prove-2.log  repair 1/3
 ABC-12 Build   builder  resumed  builder/run-5  started
 ABC-12 Build   pass     choice verify  artifact builder/run-5/result.md
-ABC-12 Verify  verifier resumed  verifier/run-3  started
+ABC-12 Verify  verifier rehydrated  verifier/run-3  started
 ABC-12 Verify  pass     choice review  ledger 2 fixed, 0 open, 1 nit
 ABC-12 Review  reviewer resumed  reviewer/run-2  started
 ABC-12 Review  pass     choice land  reads pr-review, security-hardening
@@ -207,11 +278,21 @@ while other unblocked items continue. The next start command shows
 the ask before any stage starts, and the operator's next line is the
 reply (open question Q1).
 
-**Operator gates.** Accepting the Plan, accepting the Spec, waivers,
+**Operator gates.** Accepting the Plan, accepting the Spec, accepting
+the build environment, waivers,
 security severity, three failed fixes, destructive actions, and spending
 always reach the operator. The manager may only escalate them. In
 followed mode the ask also says `followed, not enforced`. The Trial
 question at the end of HLD is its own ask (SD-9).
+
+**Env gate.** After the Spec gate and the agent checks, one
+`ask-human.md` message: "Accept the build and test environment, send it
+back to the env-builder, or route back to Spec." It quotes the
+env-verifier's evidence findings, the baseline status with each test
+that was already failing, and the env-reviewer's verdict, and
+recommends one choice. An item that later needs more from the
+environment gets its own ask: re-enter env-prep, route to Spec, deny,
+or defer.
 
 **Tracker comments.** Public comments carry only the ticket id, the
 status, and the run folder relative to the run root. Any comment may add
@@ -229,7 +310,11 @@ and the prose are enough.
 OpenCode, pick `/sdlc`, then enter RUN_ROOT in its dialog; in Pi, type
 `/sdlc RUN_ROOT`.
 No flags to remember. The first lines report what the driver found
-before it starts anything.
+before it starts anything, including the state branch and any persona
+it will rehydrate. On another machine, the kickoff skill's restore mode
+rebuilds the run root first, and the start command then asks the
+operator to confirm the restore summary by typing the start of the
+state tip.
 
 **Followed mode.** Same run root, same files, same exit rule. The
 difference is stated, not hidden: the first line, each stage's prose,

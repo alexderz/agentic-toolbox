@@ -2,7 +2,9 @@
 
 Shape: `skills/sdlc-artifacts/templates/user-story.md`, one job each.
 UX: [ux.md](ux.md). HLD: `maintainers/design/solo-dlc/hld.md`.
-Brief: DER-421 brief v3, confirmed 2026-10-18.
+Brief: DER-421 brief v3, confirmed 2026-10-18; the operator's
+decisions of 2026-10-19 (Run prep first, durable run state, rehydrated
+sessions, the build-environment gate).
 
 `RUN_ROOT` is the run root; `ABC-12` is an example ticket id. Each
 story's **Done when** is checkable from console output, run-root files,
@@ -10,22 +12,32 @@ git, or tracker state.
 
 ## Operator: start
 
-### SD-1 Ready the repo before Gather
+### SD-1 Prepare the run before Gather
 
-- **As** the operator **I want** the kickoff skill to ready the repo and
-  the plumbing first **so that** the run starts on a ready repo, with
-  the tracker chosen now or after Gather.
+- **As** the operator **I want** a short Run prep session to set up the
+  run first **so that** the run starts on a ready repo and a durable run
+  root, before I spend time on the brief.
 - **Done when:**
-  - The kickoff skill runs in a normal interactive session; no driver
-    and no plugin are required.
-  - It shows a checklist covering the tracker, each branch the run uses
-    (trunk, project-main, and the `tickets` branch when the `local`
-    adapter is chosen), and the run root's parent folder. Each line is
-    marked `done`, `to do`, or `deferred`.
+  - Run prep runs in a normal interactive session; no driver is
+    running.
+  - It asks only setup questions (toolbox and pin, repo and branches,
+    chunk slug and Epic title, tracker, harness and models, run root,
+    durability, backup folder), each with its default, and no product
+    question.
+  - It shows a checklist covering the tracker and its `read` command,
+    each branch the run uses (trunk, project-main, and the `tickets`
+    branch when the `local` adapter is chosen), the harness at its
+    pinned version, every model slot, push permission, branch
+    protection and CI, the toolbox checkout and pinned commit, and the
+    run root's parent folder. Each line is marked `done`, `to do`,
+    `deferred`, or `n/a`.
   - The `local` adapter is an allowed tracker choice.
   - The tracker line can be `deferred` until after Gather. A deferred
     choice is asked again before the first tracker write (SD-2).
   - It writes nothing before the operator replies to the checklist.
+  - It ends with a restore drill line (`done`, or `n/a` at `plain`)
+    and the line that starts Gather. No copy of the Run prep session is
+    kept.
 - **Out of scope:** installing the harness or the plugin.
 
 ### SD-2 Choose a tracker, warned about public tickets
@@ -50,10 +62,13 @@ git, or tracker state.
 - **As** the operator **I want** Gather to run on my brain dump in the
   same session **so that** I do not restate it elsewhere.
 - **Done when:**
-  - Gather follows `discover-the-idea` and ends with a brief the
-    operator confirms in words.
-  - The Gather session is saved where the manager can read it later.
-  - No run root exists before the confirmation.
+  - Gather runs in a new session after Run prep, follows
+    `discover-the-idea`, and ends with a brief the operator confirms in
+    words.
+  - The brief is written into the run root that Run prep prepared, and
+    the Gather session is saved there where the manager can read it
+    later; the session copy is never committed.
+  - The driver refuses to start before the brief exists.
 - **Out of scope:** changing the Gather interview itself.
 
 ### SD-4 Get the run root and the start line
@@ -61,10 +76,11 @@ git, or tracker state.
 - **As** the operator **I want** the run root and the exact command
   printed **so that** I can start the run without searching.
 - **Done when:**
-  - After confirmation, the run root exists outside the checkout with
-    one folder per persona and the first run folders.
-  - The last lines of the session are the absolute run root and the
-    line `/sdlc RUN_ROOT` with the real path.
+  - After the brief is confirmed, the run root exists outside the
+    checkout with the first run folders.
+  - The last lines of the Gather session are the absolute run root and
+    the start command with the real path: in OpenCode "pick `/sdlc`,
+    then enter RUN_ROOT", in Pi `/sdlc RUN_ROOT`.
 - **Out of scope:** the plugin finding the run root by itself.
 
 ### SD-5 Start the driver myself
@@ -77,6 +93,25 @@ git, or tracker state.
     can type `/sdlc`, and repeats the line from SD-4.
 - **Out of scope:** headless start; `pi -p "/sdlc …"` is not confirmed.
 
+### SD-29 Choose how durable the run is
+
+- **As** the operator **I want** to choose how the run's state survives,
+  with a safe default **so that** losing a machine does not lose the
+  run, and I decide what reaches the remote.
+- **Done when:**
+  - Run prep offers `pushed`, `local`, and `plain`, with `pushed` as the
+    default; on a public repo it states that the state branch would be
+    public and offers no default.
+  - At `pushed`, after every stage the remote branch
+    `sdlc/run/<chunk-slug>` has a new commit, and it never appears in
+    project-main or trunk.
+  - The branch holds results, `state.md` files, the plan, asks, and the
+    brief, and no session file, log, prompt, or absolute path.
+  - A file with a local path, an address, or a credential-shaped string
+    stops the run before it is committed, naming the file, line, and
+    class, never the text.
+- **Out of scope:** a private second remote for the state.
+
 ## Operator: run
 
 ### SD-6 See which persona runs where
@@ -85,7 +120,7 @@ git, or tracker state.
   **so that** I know what runs and where its files are.
 - **Done when:**
   - The first line names the bundle, the mode (`enforced` or
-    `followed, not enforced`), and the run root.
+    `followed, not enforced`), the durability level, and the run root.
   - Each start line names the item, the step, the persona, `new` or
     `resumed`, and the run folder.
   - Each end line names the status, the `choice`, and the `artifact`
@@ -169,9 +204,13 @@ git, or tracker state.
     will resume, and the next run folder.
   - The interrupted run folder is kept, marked interrupted, and never
     reused; the next invocation gets a new `run-N`.
-  - If a session file to resume is missing, the driver stops and names
-    the file; it never starts a blank session in its place.
-- **Out of scope:** resuming a run root on another machine.
+  - If a session file to resume is missing, the found report names the
+    persona as `will rehydrate`, and its next start line says
+    `rehydrated`: a fresh session that begins from its boot file, its
+    last `state.md`, and the driver's facts, never a blank one.
+  - If a session file is present but does not load, the driver stops
+    and names the file.
+- **Out of scope:** resuming on another machine, which is SD-30.
 
 ### SD-12 Stop a run on purpose
 
@@ -184,6 +223,68 @@ git, or tracker state.
     has finished and is checked out.
   - No push uses force, and stopping needs no push.
 - **Out of scope:** pausing a single item while others continue.
+
+### SD-30 Continue a run on another machine
+
+- **As** the operator **I want** to restore a run on another machine
+  **so that** a lost machine costs only the stage that was running.
+- **Done when:**
+  - The kickoff skill's restore mode asks only the machine-local
+    questions and rebuilds the run root from the state branch.
+  - A state with an edited or missing file is refused, naming it.
+  - The start command shows the restore summary and starts nothing
+    until the operator types the start of the state tip.
+  - Personas resume from the session backup when one matches, else are
+    rehydrated (SD-11).
+  - The old machine, started again, refuses to drive the run.
+- **Out of scope:** two machines driving one run.
+
+### SD-31 Accept the build environment before Groom
+
+- **As** the operator **I want** the build and test environment built
+  and proven before items are groomed **so that** builders never invent
+  harnesses and failures are not blamed on the wrong change.
+- **Done when:**
+  - The HLD has a test harness and environment section, and the LLD a
+    build environment section whose block names each dependency's
+    setup, start, ready, reset, and stop commands, the proving
+    commands, and the test command.
+  - After the Spec gate, the console shows env-prep lines: the
+    env-builder, the environment commands, a baseline of the test
+    command, the env-verifier, and the env-reviewer.
+  - A red baseline lists the failing tests as pre-existing and still
+    reaches the env gate.
+  - The env gate asks to accept, send back, or route back to Spec; no
+    Groom line appears before acceptance and the env land.
+- **Out of scope:** the same gate in the general SDLC (DER-565).
+
+### SD-32 Route an item back for a new environment capability
+
+- **As** the operator **I want** an item that needs more from the
+  environment to stop and ask me **so that** the environment stays the
+  one I accepted.
+- **Done when:**
+  - The item's stop names the capability, and the ask offers
+    re-entering env-prep, routing to Spec, deny, or defer.
+  - After a re-entry, the env lines and the env gate appear again, and
+    the item resumes only after the new env lands.
+  - No item adds a harness, service, or toolchain outside the accepted
+    environment without a Review finding.
+- **Out of scope:** changing frozen proving commands.
+
+### SD-33 Move the toolbox pin between stages
+
+- **As** the operator **I want** to upgrade the toolbox of a running
+  chunk on purpose **so that** a skill fix reaches the run without a
+  silent change.
+- **Done when:**
+  - `/sdlc-repin` works only while no driver runs, and shows the diff
+    of the bundle and skills before asking.
+  - After the yes, `run.json` names the new commit and the history
+    records the old and new commits.
+  - Without the command, every start uses the pinned commit, and a
+    product repo never holds a copy of the toolbox.
+- **Out of scope:** pinning per item.
 
 ### SD-13 See items land without waking the manager
 
@@ -206,8 +307,9 @@ git, or tracker state.
   **so that** no agent makes a decision the SDLC keeps for me.
 - **Done when:**
   - Each of these gates stops its stage and comes to the operator:
-    accepting the Plan, accepting the Spec, a waiver, a security
-    severity, three failed fixes, a destructive action, and spending.
+    accepting the Plan, accepting the Spec, accepting the build
+    environment, a waiver, a security severity, three failed fixes, a
+    destructive action, and spending.
   - The manager may not answer a gate. Its result for a gate is always
     an escalation, even when the project holds an answer.
   - The console shows the full `ask-human.md` message, and the same
