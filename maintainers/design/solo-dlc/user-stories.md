@@ -306,10 +306,15 @@ git, or tracker state.
     to `.git/info/exclude`; `git status` of the checkout is unchanged.
   - Each persona's compiled file is in `.sdlc/compiled/`, and the
     worker's first prompt names it by path.
-  - A changed, unpinned, or writable clone, or an edited compiled file,
-    stops the run before the next stage with a line naming what
-    differs; the driver does not repair it.
-- **Out of scope:** two runs sharing one checkout (LLD O21).
+  - A changed, unpinned, or writable clone, an edited compiled file, a
+    removed exclude line, or a clone pointing at another remote stops
+    the run before the next stage with a line naming what differs; the
+    driver does not repair it.
+  - I type the toolbox remote myself at the first `/sdlc`; a model never
+    picks it, and a restore asks for it again from my note.
+  - When the chunk is done, `.sdlc/` is removed, so the next chunk's Run
+    prep in the same checkout starts clean.
+- **Out of scope:** two runs sharing one checkout at once (LLD O21).
 
 ### SD-13 See items land without waking the manager
 

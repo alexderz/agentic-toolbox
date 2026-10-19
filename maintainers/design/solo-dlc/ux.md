@@ -74,7 +74,10 @@ Human gate: operator accepts, or writes `UX verification not required`.
   restore drill, and prints the Gather line; the session is discarded
   → new session: Gather interviews the operator on a brain dump →
   operator confirms the brief → console prints the run root and the
-  exact start command for the harness → operator runs it.
+  exact start command for the harness → operator runs it → the first
+  start asks the operator to type the toolbox remote, then prints the
+  genesis note (genesis commit and toolbox remote) to keep off the
+  machine.
 - **J2 Public tickets warning.** No tracker connected → kickoff offers
   the `local` adapter (a `tickets` branch) → the repo is public → kickoff
   says, before anything is written, that ticket titles, bodies, and
@@ -150,9 +153,11 @@ Human gate: operator accepts, or writes `UX verification not required`.
   branch, and re-clones the toolbox at the pin → start command → the console shows the restore summary (last
   stage, in-flight run, lease holder, any commit not made by the
   driver, the commits it names on project-main, the `run.json`
-  summary) → the operator types the first 12 characters of the genesis
-  commit from the note Run prep told them to keep, and of the state tip
-  → the run continues; personas rehydrate or restore from the backup.
+  summary, the diff from the first pin to the current one) → the
+  operator types, from the genesis note, the first 12 characters of the
+  genesis commit and the full toolbox remote, then the first 12 of the
+  state tip, and the full current pin if it moved since the first →
+  the run continues; personas rehydrate or restore from the backup.
   The old machine, if it comes back, refuses to drive the run.
 - **J14 Env gate.** Spec gate accepted → env-builder builds the harness
   and environment from the LLD → the driver runs its commands and a
@@ -172,8 +177,10 @@ Human gate: operator accepts, or writes `UX verification not required`.
   use the new pin.
 - **J17 Toolbox clone changed.** Something edits `.sdlc/` between
   stages → the next stage does not start; the console names the part
-  that differs (mode, head, status, compiled file, exclude) → the
-  operator inspects, then rebuilds the clone at the recorded pin.
+  that differs (owner, mode, git, remote, files, compiled file,
+  exclude, tree) → the operator inspects, then rebuilds the clone at
+  the recorded pin. A remote that differs from the one the operator
+  typed never runs.
 
 ## Stories
 
@@ -315,7 +322,7 @@ before it starts anything, including the state branch and any persona
 it will rehydrate. On another machine, the kickoff skill's restore mode
 rebuilds the run root first, and the start command then asks the
 operator to confirm the restore summary by typing the start of the
-genesis commit and of the state tip.
+genesis commit, the toolbox remote, and the start of the state tip.
 
 **Followed mode.** Same run root, same files, same exit rule. The
 difference is stated, not hidden: the first line, each stage's prose,

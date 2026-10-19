@@ -313,30 +313,39 @@ from decision B's `pushed` default that the operator confirms (LLD O12).
   one run. A restore verifies the state, checks the commits it names
   against project-main and the toolbox, re-clones the toolbox at the
   pin, and waits for the operator's confirmation: the operator types
-  the genesis state commit from the note Run prep told them to keep off
-  the machine, and the tip (LLD O20). Run prep ends with a restore
+  the genesis state commit and the toolbox remote from the note kept
+  off the machine, and the tip (LLD O20, O22). Run prep ends with a restore
   drill.
 
 **Toolbox.** Run prep clones the toolbox into the operator checkout's
 `.sdlc/toolbox/` at a recorded tag or commit (the pin, in `run.json`, so
 on the state branch too) and ignores `.sdlc/` through
-`.git/info/exclude`, which every worktree of the checkout shares. It
+`.git/info/exclude`, which every worktree of the checkout shares. The
+toolbox remote is an `https` or `ssh` URL that the operator types at the
+first `/sdlc`, never one a model chose; it is fixed for the run and kept
+with the genesis commit in the operator's off-machine note.
+`.sdlc/owner` names the one run that uses the folder; the driver
+removes `.sdlc/` when the chunk is done. It
 writes no product-repo change, and no commit ever carries `.sdlc/`. The
 driver, the bundle check, the INTAKE checks, and skill packing read only
-that clone. Before every stage and at every start the driver checks
-that the clone is read-only, sits at the pin, and is clean, and that the
-compiled files match their hashes; any difference is an operator stop.
+that clone, and check each file's hash against the pin as they read it.
+Before every stage and at every start the driver checks that the clone
+is read-only, still points at the confirmed remote, sits at the pin
+with every file equal to the pin's objects, and that the compiled files
+match their hashes; any difference is an operator stop.
 `.sdlc/` is in the pre- and post-stage hash check and in no worker's
 writable set. Moving the pin is the operator's `/sdlc-repin` between
-stages: it fetches in the clone, checks out the new tag, shows the
-diff, recompiles, and records it in the history. A restore on another
+stages: it fetches in the clone, checks the new commit and shows the
+diff without checking it out, and only on the operator's yes checks it
+out, recompiles, and records it in the history. A restore on another
 machine re-clones the recorded remote at the pin. The general SDLC gets
 the same clone as DER-570.
 
 The run root and `.sdlc/` hold different things. The run root, outside
 every git worktree and `0700`, holds the run's state, sessions, logs,
 and worktrees. `.sdlc/` holds only what the pin and the repo facts
-determine, so it carries no secret and can be rebuilt at any time.
+determine, so it carries no secret and can be rebuilt at any time
+while the remote holds the pin.
 
 **Compiled files.** The driver compiles one file per persona,
 `.sdlc/compiled/<persona>.md`, from the clone at the pin: the persona's
@@ -827,13 +836,15 @@ node.
   state names for proving and env commands to be on project-main and
   the bundle commit to pass the toolbox's reviewed-ref rule, and shows
   them for the operator's confirmation, which needs the genesis commit
-  from the operator's own note (LLD O20). Residual risk: anyone who can
+  and the toolbox remote from the operator's own note (LLD O20); a pin
+  other than the genesis pin also needs its full commit id typed. Residual risk: anyone who can
   push project-main can still plant such a commit there and a
   consistent state naming it, and so choose commands the restored run
   executes, unless the operator spots it in the summary.
 - The toolbox is read only from the clone at the pin, checked before
   every stage; a new pin needs the operator's `/sdlc-repin` between
-  stages. Workers can write the operator checkout through `bash`; the
+  stages. Residual risk: anyone who can push the toolbox trunk at the
+  confirmed remote can put a commit on the reviewed ref (LLD O22). Workers can write the operator checkout through `bash`; the
   hash check detects a write to `.sdlc/`, and the rest of the checkout
   stays a residual risk.
 - The build environment's commands come only from the accepted LLD,
@@ -917,7 +928,7 @@ and points at the flow spec instead.
 | Product code, docs, changelog | Git: item branches, then project-main | Pushed as built; pushed after each land |
 | Epic, items, blockers, claims, comments, `done` | Tracker through `tracker-sdlc` (any backend; `local` = `tickets` branch) | The board |
 | Driver position, results, `state.md`, asks, plan, brief, env evidence (the D files) | Run root, mirrored to the state branch at `local` and `pushed` | Kept across crashes; at `pushed`, across the loss of the machine |
-| Toolbox clone, compiled files | `.sdlc/` in the operator checkout, ignored, never committed | Rebuilt from the recorded remote at the pin |
+| Toolbox clone, compiled files, owner line | `.sdlc/` in the operator checkout, ignored, never committed | Rebuilt from the confirmed remote at the pin; removed when the chunk is done |
 | Sessions, prompts, logs, worktrees | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
 
 If git and the run root disagree, git and the tracker win for what

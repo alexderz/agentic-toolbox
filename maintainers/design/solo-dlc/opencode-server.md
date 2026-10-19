@@ -79,7 +79,7 @@ last matching rule wins. `edit` covers `edit`, `write`, and
 | `find`, `ls` | `glob`: `allow` (1.19.3 registers no `list` tool) |
 | `edit`, `write` | `edit`: `allow`; read-only personas get no rule, so the `*` deny removes all three edit tools |
 | run-folder tools | `sdlc_write`, `sdlc_result`: `allow` |
-| — | `external_directory`: `allow` for the run root, the system temporary folder, and the persona's compiled file `<checkout>/.sdlc/compiled/<persona>.md`, `deny` elsewhere |
+| — | `external_directory`: `allow` for the run root, the system temporary folder, and the compiled files folder `<checkout>/.sdlc/compiled/*` (the rules match folder globs; O-T10 checks whether a single file path matches in `tool/external-directory.ts`), `deny` elsewhere |
 
 ### Worker plugin hooks
 
