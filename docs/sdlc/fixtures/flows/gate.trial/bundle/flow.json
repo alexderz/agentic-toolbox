@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "bundle",
+  "entry": "plan",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "plan",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "plan",
+      "ask": "Accept the plan?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ],
+      "outputs": [
+        "{design}/lld.md"
+      ]
+    }
+  ]
+}

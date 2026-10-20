@@ -1,0 +1,29 @@
+{
+  "schemaVersion": 1,
+  "id": "bundle",
+  "entry": "envbuild",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "envbuild",
+      "label": "EnvBuild",
+      "step": "Build",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-builder",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ]
+    }
+  ]
+}

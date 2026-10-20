@@ -7,6 +7,7 @@ Newest first. Skip empty sections.
 ### Added
 
 - Add the `sdlc-kickoff` skill (Run prep, Gather, restore) and `docs/sdlc/run-state.md`, the owner of the run-root formats (`DER-421` G0).
+- Specify bundle layout, flow exits, bundle check B1–B14, chunk land, re-entry, and the `json sdlc-env` block (`DER-421`).
 
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
 

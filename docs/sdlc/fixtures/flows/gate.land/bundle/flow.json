@@ -1,0 +1,348 @@
+{
+  "schemaVersion": 1,
+  "id": "bundle",
+  "entry": "plan",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "plan",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "plan",
+      "ask": "Accept the plan?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "trial"
+        }
+      ]
+    },
+    {
+      "id": "trial",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "trial",
+      "ask": "Run a Trial?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "secure"
+        }
+      ],
+      "outputs": [
+        "{design}/lld.md"
+      ],
+      "envSpec": true
+    },
+    {
+      "id": "secure",
+      "label": "Secure",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "security",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "sgate"
+        }
+      ]
+    },
+    {
+      "id": "sgate",
+      "label": "Sgate",
+      "step": "Spec",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "spec",
+      "ask": "Accept the spec?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envgate"
+        }
+      ]
+    },
+    {
+      "id": "envgate",
+      "label": "EnvGate",
+      "step": "Build",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "env",
+      "ask": "Accept the environment?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envbuild"
+        }
+      ]
+    },
+    {
+      "id": "envbuild",
+      "label": "EnvBuild",
+      "step": "Build",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-builder",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envprove"
+        }
+      ]
+    },
+    {
+      "id": "envprove",
+      "label": "EnvProve",
+      "step": "Build",
+      "kind": "command",
+      "scope": "chunk",
+      "commands": "env",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envverify"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "envbuild"
+        }
+      ]
+    },
+    {
+      "id": "envverify",
+      "label": "EnvVerify",
+      "step": "Build",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-verifier",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envreview"
+        }
+      ]
+    },
+    {
+      "id": "envreview",
+      "label": "EnvReview",
+      "step": "Review",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-reviewer",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "envland"
+        }
+      ],
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary"
+      ]
+    },
+    {
+      "id": "envland",
+      "label": "EnvLand",
+      "step": "Build",
+      "kind": "land",
+      "scope": "chunk",
+      "builder": "envbuild",
+      "prove": "envprove",
+      "verify": "envverify",
+      "review": "envreview",
+      "exits": [
+        {
+          "name": "done",
+          "statuses": [
+            "pass"
+          ],
+          "to": "release"
+        }
+      ]
+    },
+    {
+      "id": "release",
+      "label": "Release",
+      "step": "Build",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "release",
+      "ask": "Release the environment?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@items"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "step": "Build",
+      "kind": "model",
+      "scope": "item",
+      "persona": "builder",
+      "exits": [
+        {
+          "name": "skip",
+          "statuses": [
+            "pass"
+          ],
+          "to": "land"
+        },
+        {
+          "name": "go",
+          "statuses": [
+            "pass"
+          ],
+          "to": "prove"
+        }
+      ]
+    },
+    {
+      "id": "prove",
+      "label": "Prove",
+      "step": "Build",
+      "kind": "command",
+      "scope": "item",
+      "commands": "groom",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "verify"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "build"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "label": "Verify",
+      "step": "Build",
+      "kind": "model",
+      "scope": "item",
+      "persona": "verifier",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "review"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "label": "Review",
+      "step": "Review",
+      "kind": "model",
+      "scope": "item",
+      "persona": "reviewer",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "land"
+        }
+      ],
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary"
+      ]
+    },
+    {
+      "id": "land",
+      "label": "Land",
+      "step": "Build",
+      "kind": "land",
+      "scope": "item",
+      "builder": "build",
+      "prove": "prove",
+      "verify": "verify",
+      "review": "review",
+      "exits": [
+        {
+          "name": "done",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ]
+    }
+  ],
+  "itemEntry": "build"
+}

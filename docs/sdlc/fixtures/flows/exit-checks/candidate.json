@@ -1,0 +1,15 @@
+{
+  "schemaVersion": 1,
+  "step": "Brief",
+  "status": "pass",
+  "choice": "accept",
+  "ticket": "DER-421",
+  "artifact": "ask/run-1/result.md",
+  "evidence": {
+    "kind": "model",
+    "checks": [
+      "dod: stated"
+    ]
+  },
+  "findings": ""
+}
