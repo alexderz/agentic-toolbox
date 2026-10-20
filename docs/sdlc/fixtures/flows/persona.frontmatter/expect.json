@@ -1,0 +1,7 @@
+{
+  "valid": false,
+  "codes": [
+    "persona.frontmatter"
+  ],
+  "phase": "bundle"
+}

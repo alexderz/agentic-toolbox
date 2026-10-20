@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "id": "bundle",
+  "entry": "trial",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "trial",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "trial",
+      "ask": "Run a Trial?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ],
+      "outputs": [
+        "{design}/lld.md"
+      ]
+    }
+  ]
+}

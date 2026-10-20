@@ -1,0 +1,26 @@
+schemaVersion: 1
+id: refiner
+job: refiner
+scope: chunk
+readOnly: true
+model: local
+tools: [read, bash, grep, find, ls]
+skills: []
+tracker: true
+bad: "q"
+## Role
+Do the job.
+
+## State template
+## Brief version
+- none
+## Cuts proposed
+- none
+## Open
+- none
+
+## Prompt: mint
+Do mint.
+
+## Prompt: resume
+Do resume.

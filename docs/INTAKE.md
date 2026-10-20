@@ -1,12 +1,10 @@
 # Third-party skill intake
 
 Checklist before any third-party skill **body** lands in this repo.
-**security** owns this gate. Workers — remote agents, local CLIs,
-mirrors — go through it and do not bypass it.
+**security** owns this gate. Workers — remote agents, local CLIs, mirrors — go through it and do not bypass it.
 
 First-party files are written in this repo, for example this checklist,
-`skills/security-hardening/SKILL.md` and language guides. They are not
-vendor intake. Ship them without secrets and without `scripts/`.
+`skills/security-hardening/SKILL.md`, and language guides. Not vendor intake. Ship them without secrets and without `scripts/`.
 
 ## Checklist
 
@@ -18,8 +16,7 @@ vendor intake. Ship them without secrets and without `scripts/`.
    install, postinstall, or bootstrap scripts. Drop executable skill
    helpers as untrusted; keep one only if **security** clears it.
 3. **Scan the candidate.** Run one or more of: SkillSpector, cisco
-   skill-scanner, a **verified** obielin skillguard. **Verify the GitHub
-   org** of the tool before you trust its binary or action. A matching
+   skill-scanner, a **verified** obielin skillguard. **Verify the GitHub org** of the tool before you trust its binary or action. A matching
    name is not a clear.
 4. **Pin SHA in [SOURCES.md](../SOURCES.md) before the body.** Write the
    row first: upstream, SHA, license, notes. If the SHA cell is empty,
@@ -33,29 +30,26 @@ vendor intake. Ship them without secrets and without `scripts/`.
 
 ## Workers
 
-A remote-agent PR into this repo **still needs a security clear**.
-Remote authoring is not an exemption. Build DoD still requires the diff
-to match the pinned SHA. For first-party prose, the pin is `first-party`.
+A remote-agent PR **still needs a security clear**. Remote authoring is not an exemption.
+The diff matches the pinned SHA. First-party prose uses pin `first-party`.
 
-A product-repo `.agents/tracker/SKILL.md` needs no SOURCES row. This
-covers every one that a governing `## Tracker` names: at the root, or in
+A product-repo `.agents/tracker/SKILL.md` needs no SOURCES row. This covers every one that a governing `## Tracker` names: at the root, or in
 a subdirectory whose `AGENTS.md` the root `AGENTS.md` or `CLAUDE.md`
 names. **security** reads the change that adds or edits one:
 1. **security** fails the read if it holds tokens, `scripts/` files, or
    executable blocks other than the fenced shell recipe from
    `skills/tracker-sdlc/adapters/local.md`.
-2. **security** compares that recipe with the adapter's current text;
-   only placeholder fills and baked-in adapter gotchas may differ.
+2. **security** compares that recipe with the adapter's current text; only placeholder fills and baked-in adapter gotchas may differ.
 3. **security** fails the read on any other executable content.
 
 ## Layout-only exception
 
-An empty skill directory that holds only `.gitkeep` is layout: no
-`SKILL.md`, no scripts. It is **OK without scan**. Start intake and the
-scanners when a body, script, or third-party file would land.
+A directory that holds only `.gitkeep` is **OK without scan**. Start intake when a body, script, or third-party file would land.
+
+## Script records
+
+None cleared. **security** appends one line per bundle script. The shape is owned by [Script records](sdlc/bundle-spec.md#script-records).
 
 ## Dev dependencies
 
-Ruling S8. An exact pin and a lockfile. No runtime dependency.
-
-- `typescript` `5.9.3` — devDependency of `packages/sdlc-driver` only. Lockfile `packages/sdlc-driver/package-lock.json`. Install with `npm ci` inside that package. The driver does not import it.
+Ruling S8. Exact pin and lockfile. No runtime dependency. `typescript` `5.9.3` is a devDependency of `packages/sdlc-driver` only. Lockfile `packages/sdlc-driver/package-lock.json`. Install with `npm ci` in that package. The driver does not import it.
