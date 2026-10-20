@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "id": "sample",
+  "id": "bundle",
   "entry": "trial",
   "defaults": {
     "prove": [],

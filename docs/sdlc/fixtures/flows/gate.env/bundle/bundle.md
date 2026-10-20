@@ -1,4 +1,4 @@
-# Bundle — sample
+# Bundle — bundle
 
 ## What it is
 A fixture bundle for the checker.
