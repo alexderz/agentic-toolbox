@@ -108,7 +108,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - **Acceptance** —
   - `bundle-spec.md` (≤150) owns bundle layout, `bundle.md`, persona files, prompt kinds, and placeholders.
   - `flow-spec.md` (≤200, O13) owns `flow.json`, exits, reserved exits, driver-fixed exits and route, candidate rules, bundle check B1–B14, the `gate.*` rows including `gate.trial` and `gate.env`, chunk land and re-entry, the `json sdlc-env` block, and the error codes.
-  - `docs/sdlc/fixtures/flows/` holds one fixture per bundle-check code, including each `gate.*` counterexample (`gate.trial` and `gate.env` among them), exit `checks`, `extract`, a chunk land, `envSpec`, a valid and an invalid `json sdlc-env` block, and a script without an intake bullet. `docs/sdlc/fixtures/bundles/minimal/` is a bundle that passes the check.
+  - `docs/sdlc/fixtures/flows/` holds one fixture per bundle-check code, including each `gate.*` counterexample (`gate.trial` and `gate.env` among them), exit `checks`, `extract`, a chunk land, `envSpec`, a valid and an invalid `json sdlc-env` block, and a script without an intake bullet. `docs/sdlc/fixtures/bundles/minimal/` passes the check. Its flow has exactly two nodes: `refine` (model, persona `refiner`, exit `next` on `pass` to `ask`) and `ask` (gate `brief`, exit `accept` on `pass` to `@done`, exit `revise` on `fail` to `refine`). A passing followed walk of that flow writes `docs/sdlc/fixtures/followed/minimal/refiner/run-1/result.json` for `refine` and `docs/sdlc/fixtures/followed/minimal/operator/run-1/result.json` for `ask`.
   - `docs/INTAKE.md` gains a `## Script records` section: one line per bundle script security has cleared.
   - Candidate and `choice` rules extend G1's fields; they do not redefine them.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
@@ -247,7 +247,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - Implements `state.ts`, `toolbox.ts`, `compiled.ts`, `backup.ts`, the `repin` export in `index.ts`, and CLI `readiness`, `toolbox`, `state-init`, `status`, `persist`, `restore`, and `drill`.
   - `state-init` refuses a second run root for a chunk slug whose state branch already exists (O21(a)).
   - Run prep's command sequence from the G0 skill is tested here on a fixture repo: R5–R10, including `toolbox`, `readiness`, `state-init`, and `drill` (O14).
-  - These Verify scenarios are tests here: 9 (rehydrate and session backup), 11 (the `backend: linear` refusal and the changed harness-tree stop, using G5c's git API), 14 (bundle commit outside trunk, typed SHA, INTAKE record not satisfied by the bundle commit itself), 17 (pre-spawn harness re-check for an edited, added, or removed file), 20 (durable state at `pushed` against a temporary bare origin, every case in that scenario), 21 (restore and drill, every case, including the typed remote and the genesis pin), 22 (toolbox copy and compiled files, every case), and 25 (`/sdlc-repin` refusals and the three kill cases).
+  - These Verify scenarios are tests here: 9 (rehydrate and session backup), 11 (the `backend: linear` refusal and the changed harness-tree stop; both are Start step 2, before `repo.git`), 14 (bundle commit outside trunk, typed SHA, INTAKE record not satisfied by the bundle commit itself), 17 (pre-spawn harness re-check for an edited, added, or removed file), 20 (durable state at `pushed` against a temporary bare origin, every case in that scenario), 21 (restore and drill, every case, including the typed remote and the genesis pin), 22 (toolbox copy and compiled files, every case), and 25 (`/sdlc-repin` refusals and the three kill cases).
   - The drill writes nothing outside its `<tmp>`, including when it fails.
   - `README.md` stays ≤200 lines and now covers `driver.json`, `driver/state.json`, `driver/ledger.json`, `index.jsonl`, and `plan/items.json`.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
@@ -333,7 +333,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 ## Optional
 
-- Clarification 15 and O8: this item waits for G5a only, so it can build beside G5b–G5e. The wait is a blocker because the prove command executes G5a's CLI, not a separate land-order edge.
+- Clarification 15 and O8: this item waits for G0, G2, and G5a, and still builds beside G5b–G5e. The G5a wait is a blocker because the prove command executes G5a's CLI, not a separate land-order edge.
 
 ### G7: OpenCode plugin, first harness
 
@@ -439,7 +439,8 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 ```json sdlc-item
 {"slug": "followed-mode", "blockedBy": ["G2", "G5a"], "skills": [],
  "prove": ["node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal",
-           "one `validate` per written result.json, with that result's node: node packages/sdlc-driver/src/cli.ts validate <run-folder>/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node <that node>"]}
+           "node packages/sdlc-driver/src/cli.ts validate docs/sdlc/fixtures/followed/minimal/refiner/run-1/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node refine",
+           "node packages/sdlc-driver/src/cli.ts validate docs/sdlc/fixtures/followed/minimal/operator/run-1/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node ask"]}
 ```
 
 - Type: Task
@@ -454,10 +455,10 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - The skill states the loop, the stage pipeline without process isolation, the same run folders and `result.json`, and the exit rule. The first line, every stage's prose, and every stop contain `followed, not enforced`.
   - At each separate-agent step it prints the handoff block from the LLD (UX Q2) and stops. A mint names the persona's compiled file. Runs are `plain`; Run prep offers only that level for a followed run.
   - It restates no rule that `bundle-spec.md` or `flow-spec.md` owns.
-  - A walk-through of `docs/sdlc/fixtures/bundles/minimal/` writes run folders whose `result.json` files pass `validate`.
+  - A walk-through of `docs/sdlc/fixtures/bundles/minimal/` writes exactly two results: `docs/sdlc/fixtures/followed/minimal/refiner/run-1/result.json` for node `refine`, and `docs/sdlc/fixtures/followed/minimal/operator/run-1/result.json` for node `ask`. Each `validate` command below exits 0.
   - A `SOURCES.md` row exists for `sdlc-followed-mode`.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
-- **Verify** — K1 and K7. `node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal`. One `validate` per written result.json, with that result's node: `node packages/sdlc-driver/src/cli.ts validate <run-folder>/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node <that node>` exits 0.
+- **Verify** — K1 and K7. `node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal`. `node packages/sdlc-driver/src/cli.ts validate docs/sdlc/fixtures/followed/minimal/refiner/run-1/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node refine`. `node packages/sdlc-driver/src/cli.ts validate docs/sdlc/fixtures/followed/minimal/operator/run-1/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node ask`.
 - **Blocked by** — `G2` — the walk-through uses `fixtures/bundles/minimal/`; `G5a` — prove runs `check` and `validate`
 - **Blocks** — `none`
 - **Out of scope** — A driver, a persist step, or any harness plugin. The LLD says this item starts after the first harness works; that is not a blocker, because the skill does not read the plugin. `DER-565`, `DER-570`, and `G9`.
@@ -465,10 +466,6 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - **Removal alternative** — `n/a — split from accepted Spec`
 - **Pick** — `n/a — split from accepted Spec`
 - **Plan / Spec** — `n/a — split from accepted Spec`
-
-## Optional
-
-- The second prove line is one `validate` per written result.json, with that result's node, because the LLD does not name the nodes inside `fixtures/bundles/minimal/`. Gap note: see the Graph.
 
 ## Graph
 
@@ -486,8 +483,6 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - Wave 9: G6 ← G7
 
 O6 (Pi version) is answered: Alex, 2026-10-20: use the latest Pi at G6 build time and pin that version then. It gates only G6 and is not a blocker. No operator question is open: O1–O22 are answered in the LLD, and the accepted residuals are not build blockers.
-
-Gap note: G8's `validate` prove lines depend on the node names in `fixtures/bundles/minimal/`, which the LLD does not name. G8 writes one `validate` per written result.json, with that result's node. G2 owns the node names.
 
 Not groomed: G9.
 
