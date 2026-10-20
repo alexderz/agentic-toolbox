@@ -1,0 +1,1 @@
+{"schemaVersion": 1, "step": "Build", "status": "fail", "choice": "fix", "ticket": "DER-529", "artifact": "build-1/commands.json", "evidence": {"kind": "command", "command": "npm test", "exit_code": 1}, "findings": ""}
