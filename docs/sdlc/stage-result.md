@@ -135,7 +135,7 @@ separately for diagnosis. Missing files remain reader failures.
 ```
 
 ```json
-{"schemaVersion": 1, "step": "Brief", "status": "needs_input", "choice": "ask",
+{"schemaVersion": 1, "step": "Brief", "status": "needs_input", "choice": "accept",
   "ticket": "DER-529", "artifact": "brief-1/result.md",
   "evidence": {"kind": "model",
     "question": "Stop the retry after 3 attempts, or after 30 seconds?"},
@@ -146,4 +146,3 @@ separately for diagnosis. Missing files remain reader failures.
 
 This spec does not define the Pi command or session resume. The flow
 file and `choice` routing are in `flow-spec.md` (G2; see [Behavior 2](../../maintainers/design/solo-dlc/lld.md#behavior-2-bundle-and-flow-spec-item-2)).
-Fixtures: [results/README.md](fixtures/results/README.md).
