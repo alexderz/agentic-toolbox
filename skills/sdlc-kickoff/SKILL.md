@@ -131,11 +131,12 @@ repo answer (`origin` below). Read only, until the operator's reply.
   trunk, else `to do` and stop. Project-main: `done` if it exists on
   `origin`; else `to do`, and after the reply
   `git push origin <trunk>:refs/heads/<project-main>`, never `--force`.
-- **R3 Push permission.** `git push --dry-run origin
-  <project-main>:refs/heads/<project-main>`: exit `0` is `done`; it
-  authenticates without moving a ref. With project-main not yet cut,
-  dry-run the push from trunk and say the first real push also proves
-  branch creation.
+- **R3 Push permission.** `git fetch origin`, then `git push --dry-run
+  origin refs/remotes/origin/<project-main>:refs/heads/<project-main>`:
+  exit `0` is `done`; it authenticates without moving a ref. With
+  project-main not yet cut, dry-run `refs/remotes/origin/<trunk>` to the
+  project-main name and say the first real push also proves branch
+  creation.
 - **R4 Protection and CI.** CI config at the project-main tip
   (`.github/workflows/`, `.gitlab-ci.yml`, or the repo's own): `present`
   or `absent`. Protection on project-main and trunk: with `gh auth
