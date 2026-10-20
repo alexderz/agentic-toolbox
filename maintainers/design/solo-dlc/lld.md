@@ -3437,7 +3437,9 @@ password, which **security** rules on before item 7 uses it.
    `typed: true` entry any commit on the remote), whose `scripts/` the
    next Start runs; at `plain` always, at `local` when it also commits
    that pin to the local state branch, at `pushed` only with a push of
-   such a state commit, which stays on the remote. Operator item 1 now
+   such a state commit to the remote and a matching rewrite of the tip
+   record's `pushedTip`; any other fetched tip is `state lease lost`
+   ([Persist](#durable-run-state) step 5). Operator item 1 now
    lists it for the `spec` gate. A same-uid process while the driver
    runs stays residual: between the byte check and a git call it can
    edit `config` or add an alternates file, and between the fetch and the
