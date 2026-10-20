@@ -1,0 +1,1 @@
+{"schemaVersion": 1, "step": "Spec", "status": "pass", "choice": "review", "ticket": "DER-529", "artifact": "spec-1/", "evidence": {"kind": "model", "checks": ["dod holds"]}, "findings": ""}

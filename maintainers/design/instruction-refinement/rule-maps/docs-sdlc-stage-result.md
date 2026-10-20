@@ -51,3 +51,20 @@ The final independent review found no Important or Critical findings.
 Apply its two optional suggestions: separate the example headings with
 a blank line and scope missing/invalid model-output fallback to model
 stages. Command stages retain their wrapper verdict and evidence.
+
+## G1 change map (DER-529, epic DER-421)
+
+Old: `docs/sdlc/stage-result.md` at be49bf7, lines 1–150. New: same path, 148 lines.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 37 | Four required top-level fields | kept; now every field | Schema |
+| 40–45 | Field table | kept; add `schemaVersion`, `choice`, `ticket`, `artifact` rows. `choice` is the pattern only; this file does not check a flow exit | Schema |
+| 77–78 | Rule 4: harness fixes `step`, `evidence.kind` | kept; extended to `schemaVersion`, `ticket`, fill when omitted, reject mismatch | Rules, rule 4 |
+| after 78 | Command wrapper sets `choice` and `artifact` | new rule 5 | Rules, rule 5 |
+| 101–145 | Five examples with headings | kept; headings cut, new fields added, braces folded. The `needs_input` example `choice` is `accept` | Examples |
+| 149–150 | Out of scope | kept; names `flow-spec.md` in backticks and links LLD Behavior 2. No fixture line, leaving one line for item 3 under the 150 cap | Out of scope |
+
+## Meaning questions
+
+None.

@@ -34,13 +34,17 @@ see [Asking the operator](../SDLC.md#asking-the-human).
 
 The file is UTF-8 JSON: one object and no trailing text. Reject duplicate
 keys at every nesting level as a failure; do not keep the last value.
-The four top-level fields are required. An unknown key or a null value
+Every top-level field is required. An unknown key or a null value
 is a failure. An empty string or array does not meet a non-empty rule.
 
 | Field | Type | Rule |
 | --- | --- | --- |
+| `schemaVersion` | integer | Exactly `1`; not `"1"`, not `1.0`. |
 | `step` | string | A step name in [Names](../SDLC.md#names). |
 | `status` | string | One of the four statuses. |
+| `choice` | string | Matches `^[a-z][a-z0-9-]{0,31}$`. This spec checks the pattern only; the flow rules are in the flow spec. |
+| `ticket` | string | Matches `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`: the tracker id, any backend. Chunk stages use the Epic id. It must equal the invocation ticket (`result.ticket-mismatch`). |
+| `artifact` | string | One run-root-relative path of `[A-Za-z0-9._-]+` segments; no `.`, `..`, leading `/`, or `\` (`result.artifact-path`). It names the result document or output folder in the stage's own run folder (`result.artifact-outside-run` otherwise) and must exist (`result.artifact-missing`). A folder ends in `/`. |
 | `evidence` | object | Stage evidence. |
 | `findings` | string | The prose. It may be empty, except when `status` is `fail` or `blocked`: then it must be non-empty. |
 
@@ -74,8 +78,10 @@ Disagreement alone does not authorize opening prose.
 1. **Stage harness** persists `result.json` before returning on every path.
 2. **Stage harness** replaces the file; do not append a second object.
 3. **Stage harness** persists output for agents that do not write files.
-4. **Stage harness** fixes `step` and `evidence.kind` from the invocation;
-   the reader rejects either field when it mismatches that invocation.
+4. **Stage harness** fills `schemaVersion`, `step`, `ticket`, and `evidence.kind` from
+   the invocation when omitted, and rejects any that mismatches it; never overwrite.
+5. A command stage's `choice` is set by the command wrapper: the node's `pass` exit
+   when `exit_code` is `0`, else its `fail` exit. Its `artifact` names its `commands.json`.
 
 | Actor and stage kind | Output authority |
 | --- | --- |
@@ -100,51 +106,43 @@ separately for diagnosis. Missing files remain reader failures.
 
 ## Examples
 
-### `pass`
-
 ```json
-{"step": "Build", "status": "pass",
+{"schemaVersion": 1, "step": "Build", "status": "pass", "choice": "review",
+  "ticket": "DER-529", "artifact": "build-1/commands.json",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 0},
   "findings": ""}
 ```
 
 ```json
-{"step": "Spec", "status": "pass",
+{"schemaVersion": 1, "step": "Spec", "status": "pass", "choice": "review",
+  "ticket": "DER-529", "artifact": "spec-1/result.md",
   "evidence": {"kind": "model", "checks": ["Schema matches acceptance"]},
-  "findings": ""
-}
+  "findings": ""}
 ```
 
-### `fail`
-
 ```json
-{"step": "Build", "status": "fail",
+{"schemaVersion": 1, "step": "Build", "status": "fail", "choice": "fix",
+  "ticket": "DER-529", "artifact": "build-2/commands.json",
   "evidence": {"kind": "command", "command": "npm test", "exit_code": 1},
   "findings": "npm test exited 1. test/retry.js expected 3 and got 0."}
 ```
 
-### `blocked`
-
 ```json
-{"step": "Build", "status": "blocked",
+{"schemaVersion": 1, "step": "Build", "status": "blocked", "choice": "wait",
+  "ticket": "DER-529", "artifact": "build-3/result.md",
   "evidence": {"kind": "model", "blocker": "ABC-12"},
-  "findings": "ABC-12 is an open blocker, so this stage stops."
-}
+  "findings": "ABC-12 is an open blocker, so this stage stops."}
 ```
 
-### `needs_input`
-
 ```json
-{"step": "Brief", "status": "needs_input",
-  "evidence": {
-    "kind": "model",
-    "question": "Stop the retry after 3 attempts, or after 30 seconds?"
-  },
-  "findings": ""
-}
+{"schemaVersion": 1, "step": "Brief", "status": "needs_input", "choice": "accept",
+  "ticket": "DER-529", "artifact": "brief-1/result.md",
+  "evidence": {"kind": "model",
+    "question": "Stop the retry after 3 attempts, or after 30 seconds?"},
+  "findings": ""}
 ```
 
 ## Out of scope
 
-This spec does not define the flow file, the Pi command, or session
-resume.
+This spec does not define the Pi command or session resume. The flow
+file and `choice` routing are in `flow-spec.md` (G2; see [Behavior 2](../../maintainers/design/solo-dlc/lld.md#behavior-2-bundle-and-flow-spec-item-2)).

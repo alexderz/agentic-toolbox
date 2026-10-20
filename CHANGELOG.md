@@ -14,6 +14,8 @@ Newest first. Skip empty sections.
   conditional prose reading, and migration of in-flight sessions
   (`DER-529`; land `9bb4d96`).
 
+- Stage result v1: `schemaVersion`, `choice`, `ticket`, and `artifact` fields, the command-wrapper `choice` rule, and fixtures for every result error code plus three valid examples (`DER-529`).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing
