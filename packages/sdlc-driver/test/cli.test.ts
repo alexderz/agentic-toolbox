@@ -109,3 +109,41 @@ test("validate: flow-aware errors, one per line, exit 1", () => {
   assert.match(run(["validate", file, "--flow", flow, "--node", "review"]).out, /: step: result\.step: /);
   assert.equal(run(["validate", file, "--flow", flow, "--node", "ghost"]).status, 2);
 });
+
+// The fixed manager invocation is outside flow.nodes. Its original node is
+// explicit so a result cannot choose its own stage or bypass a human gate.
+function managerFixture() {
+  const root = mkdtempSync(join(tmpdir(), "sdlc-manager-"));
+  const folder = join(root, "manager/run-1");
+  mkdirSync(folder, { recursive: true });
+  writeFileSync(join(folder, "result.md"), "Operator decision required.\n");
+  const file = join(folder, "result.json");
+  const flow = join(import.meta.dirname, "../../../docs/sdlc/fixtures/bundles/minimal/flow.json");
+  const result = { schemaVersion: 1, step: "Brief", status: "needs_input", choice: "escalate", ticket: "der-a530",
+    artifact: "manager/run-1/result.md", evidence: { kind: "model", question: "Accept this brief?" }, findings: "Operator decision required." };
+  return { file, flow, result };
+}
+
+test("validate: fixed manager gate escalation requires original-node context", () => {
+  const { file, flow, result } = managerFixture();
+  writeFileSync(file, JSON.stringify(result));
+  const args = ["validate", file, "--flow", flow, "--node", "manager"];
+  assert.equal(run(args).status, 2);
+  assert.equal(run([...args, "--for-node", "ghost"]).status, 2);
+  assert.deepEqual(run([...args, "--for-node", "ask"]), { status: 0, out: "", err: "" });
+  writeFileSync(file, JSON.stringify({ ...result, step: "Build" }));
+  assert.match(run([...args, "--for-node", "ask"]).out, /result.step/);
+  writeFileSync(file, JSON.stringify({ ...result, choice: "resume", status: "pass", evidence: { kind: "model", checks: ["source: gather brief.md"] } }));
+  assert.match(run([...args, "--for-node", "ask"]).out, /flow.choice-not-allowed/);
+});
+
+test("validate: fixed manager resume needs a recognized source finding", () => {
+  const { file, flow, result } = managerFixture();
+  const pass = { ...result, status: "pass", choice: "resume", evidence: { kind: "model", checks: ["source: gather brief.md"] } };
+  const args = ["validate", file, "--flow", flow, "--node", "manager", "--for-node", "refine"];
+  writeFileSync(file, JSON.stringify(pass));
+  assert.equal(run(args).status, 0);
+  writeFileSync(file, JSON.stringify({ ...pass, evidence: { kind: "model", checks: ["source: guess nowhere"] } }));
+  assert.match(run(args).out, /flow.check-missing/);
+  assert.equal(run(["validate", file, "--flow", flow, "--node", "refine", "--for-node", "refine"]).status, 2);
+});

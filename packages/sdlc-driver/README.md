@@ -11,6 +11,7 @@ Node `>=22.18`. `npm run check` is `tsc -p . && node --test`.
 ```text
 sdlc-driver check BUNDLE_DIR [--at COMMIT]
 sdlc-driver validate RESULT --flow F --node N [--ticket TICKET] [--authored worker|driver]
+sdlc-driver validate RESULT --flow F --node manager --for-node STOPPED_NODE
 ```
 
 `check` reads the working tree, or one commit with `--at`. One error per
@@ -22,6 +23,10 @@ line, then exit `0` when clean and `1` when not:
 ```
 
 The field form is used when no node applies. A usage error exits `2`.
+
+The fixed manager is outside the graph. `--for-node` supplies its stopped node,
+fixing the expected step; a human gate permits only `escalate` / `needs_input`.
+A manager `pass` requires a source finding naming a brief, plan, spec, tracker, or Gather record.
 
 `validate` checks `result.json` against stage-result v1 and the node's
 exits. It prints the same line shape and uses the same exit codes. It

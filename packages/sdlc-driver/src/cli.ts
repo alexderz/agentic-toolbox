@@ -7,7 +7,7 @@
 import { readFileSync } from "node:fs";
 import { dirname, relative, resolve } from "node:path";
 import { checkBundle } from "./check.ts";
-import { readFlow } from "./flow.ts";
+import { readFlow, type FlowNode } from "./flow.ts";
 import { formatIssue, type Issue } from "./issue.ts";
 import { validateResult } from "./result.ts";
 
@@ -42,20 +42,36 @@ function check(args: string[]): Issue[] {
 }
 
 function validate(args: string[]): Issue[] {
-  const { positional, opts } = options(args, ["flow", "node", "ticket", "authored"]);
+  const { positional, opts } = options(args, ["flow", "node", "ticket", "authored", "for-node"]);
   if (positional.length !== 1 || opts.flow === undefined || opts.node === undefined) throw new Usage("validate takes RESULT --flow F --node N");
   if (opts.authored !== undefined && opts.authored !== "worker" && opts.authored !== "driver") throw new Usage("authored must be worker or driver");
   const flowFile = opts.flow;
   const read = readFlow(readFileSync(flowFile), flowFile);
   if (!read.flow) return read.issues;
-  const node = read.flow.nodes.find((n) => n.id === opts.node);
+  const isManager = opts.node === "manager" && !read.flow.nodes.some((n) => n.id === "manager");
+  let node: FlowNode | undefined = read.flow.nodes.find((n) => n.id === opts.node);
+  if (isManager) {
+    const stopped = read.flow.nodes.find((n) => n.id === opts["for-node"]);
+    if (!stopped) throw new Usage("manager validation requires --for-node with the stopped flow node");
+    // The manager is a driver-fixed invocation, never a graph edge. A gate
+    // permits escalation only; it cannot be accepted by a manager decision.
+    node = { id: "manager", label: "Manager", step: stopped.step, kind: "model",
+      scope: "chunk", persona: "manager", exits: [
+        ...(stopped.kind === "gate" ? [] : [
+          { name: "resume", statuses: ["pass"] as const, to: "@repeat", checks: ["source"] },
+          { name: "defer", statuses: ["pass"] as const, to: "@stop", checks: ["source"] },
+        ]).map((e) => ({ ...e, statuses: [...e.statuses] })),
+        { name: "escalate", statuses: ["needs_input"], to: "@stop" },
+      ] };
+  } else if (opts["for-node"] !== undefined) throw new Usage("--for-node is only valid for the fixed manager invocation");
   if (!node) throw new Usage(`${flowFile} has no node ${opts.node}`);
   // RUN_ROOT/<label>/run-N/result.json
   const file = positional[0]!;
   const folder = dirname(resolve(file));
   const runRoot = dirname(dirname(folder));
   const kind = node.kind === "command" ? "command" : node.kind === "land" ? undefined : "model";
-  return validateResult(readFileSync(file), {
+  const raw = readFileSync(file);
+  const issues = validateResult(raw, {
     step: node.step,
     ...(kind ? { kind } : {}),
     ...(opts.ticket !== undefined ? { ticket: opts.ticket } : {}),
@@ -65,6 +81,13 @@ function validate(args: string[]): Issue[] {
     checks: node.checks ?? [],
     driverAuthored: opts.authored === "driver",
   }, file).issues;
+  if (isManager && issues.length === 0) {
+    const result = JSON.parse(raw.toString("utf8"));
+    if (result.status === "pass" && !result.evidence.checks.some((s: string) => /^source: (brief|plan|spec|tracker|gather) \S/.test(s))) {
+      issues.push({ file, code: "flow.check-missing", field: "evidence.checks", message: "manager pass requires source: <brief|plan|spec|tracker|gather> <path or run folder>" });
+    }
+  }
+  return issues;
 }
 
 function main(argv: string[]): number {
