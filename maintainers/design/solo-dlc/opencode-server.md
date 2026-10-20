@@ -79,7 +79,7 @@ last matching rule wins. `edit` covers `edit`, `write`, and
 | `find`, `ls` | `glob`: `allow` (1.19.3 registers no `list` tool) |
 | `edit`, `write` | `edit`: `allow`; read-only personas get no rule, so the `*` deny removes all three edit tools |
 | run-folder tools | `sdlc_write`, `sdlc_result`: `allow` |
-| — | `external_directory`: `allow` for the run root, the system temporary folder, and the compiled files folder `<checkout>/.sdlc/compiled/*` (the rules match folder globs; O-T10 checks whether a single file path matches in `tool/external-directory.ts`), `deny` elsewhere |
+| — | `external_directory`: `allow` for the run root, which holds the compiled files, and the system temporary folder, `deny` elsewhere |
 
 ### Worker plugin hooks
 
@@ -181,4 +181,4 @@ its fallback.
 | O-T7 `/sdlc` | The TUI command runs with no model turn; `DialogPrompt`, `DialogSelect`, and `DialogConfirm` work when called as functions without JSX; the detached driver starts under `harness.node`; the TUI stays usable; toasts show `STOP` and ask lines | A terminal command, `node packages/opencode-sdlc/src/cli.ts RUN_ROOT`, with the same steps on its own terminal: still no model, outside OpenCode |
 | O-T8 Input guard | A `chat.message` throw stops a prompt with no model call while the lock is held, and stops typed `/sdlc` text; the operator sees the reason | A toast only: the operator's own session can start a model call while a worker runs. Operator question O11 in the LLD |
 | O-T9 Agent | The marker names the persona's agent | None needed: a wrong agent fails the marker check, an `operator` stop |
-| O-T10 Paths | The `external_directory` rules let the `local` tracker recipes, `git` reads, and a `read` of the compiled file in the operator checkout run | `external_directory: allow`: Pi's posture, writes outside are detected only |
+| O-T10 Paths | The `external_directory` rules let the `local` tracker recipes, `git` reads, and a `read` of the compiled file in the run root run | `external_directory: allow`: Pi's posture, writes outside are detected only |

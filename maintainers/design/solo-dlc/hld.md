@@ -11,10 +11,10 @@
   decisions A–D: Run prep first, durable run state in the product repo,
   rehydrated sessions, and the build-environment gate
 - Status: **accepted by the operator at 021f81d, 2026-10-19** (Plan,
-  with UX and Spec). The pinned-clone revision of the same day applies
-  the operator's toolbox-clone decision ([Toolbox](#run-root-and-state))
-  and awaits the operator's acceptance with the LLD's pinned-clone
-  revision.
+  with UX and Spec). The toolbox-copy revision of the same day applies
+  the operator's decision to keep a pinned toolbox copy in the run root
+  ([Toolbox](#run-root-and-state)) and awaits the operator's acceptance
+  with the LLD's toolbox-copy revision.
 
 ## Required
 
@@ -311,51 +311,40 @@ from decision B's `pushed` default that the operator confirms (LLD O12).
   hit is never committed.
 - A lease and fast-forward-only pushes keep two machines from driving
   one run. A restore verifies the state, checks the commits it names
-  against project-main and the toolbox, re-clones the toolbox at the
-  pin, and waits for the operator's confirmation: the operator types
-  the genesis state commit and the toolbox remote from the note kept
-  off the machine, and the tip (LLD O20, O22). Run prep ends with a restore
+  against project-main and the toolbox, and waits for the operator's
+  confirmation: the operator types the genesis state commit and the
+  toolbox remote from the note kept off the machine, the toolbox is
+  re-cloned at the pin, and the operator types the tip (LLD O20, O22). Run prep ends with a restore
   drill.
 
-**Toolbox.** Run prep clones the toolbox into the operator checkout's
-`.sdlc/toolbox/` at a recorded tag or commit (the pin, in `run.json`, so
-on the state branch too) and ignores `.sdlc/` through
-`.git/info/exclude`, which every worktree of the checkout shares. The
-toolbox remote is an `https` or `ssh` URL that the operator types at the
-first `/sdlc`, never one a model chose; it is fixed for the run and kept
-with the genesis commit in the operator's off-machine note.
-`.sdlc/owner` names the one run that uses the folder; the driver
-removes `.sdlc/` when the chunk is done. It
-writes no product-repo change, and no commit ever carries `.sdlc/`. The
-driver, the bundle check, the INTAKE checks, and skill packing read only
-that clone, and check each file's hash against the pin as they read it.
-Before every stage and at every start the driver checks that the clone
-is read-only, still points at the confirmed remote, sits at the pin
-with every file equal to the pin's objects, and that the compiled files
-match their hashes; any difference is an operator stop.
-`.sdlc/` is in the pre- and post-stage hash check and in no worker's
-writable set. Moving the pin is the operator's `/sdlc-repin` between
-stages: it fetches in the clone, checks the new commit and shows the
-diff without checking it out, and only on the operator's yes checks it
-out, recompiles, and records it in the history. A restore on another
-machine re-clones the recorded remote at the pin. The general SDLC gets
-the same clone as DER-570.
-
-The run root and `.sdlc/` hold different things. The run root, outside
-every git worktree and `0700`, holds the run's state, sessions, logs,
-and worktrees. `.sdlc/` holds only what the pin and the repo facts
-determine, so it carries no secret and can be rebuilt at any time
-while the remote holds the pin.
+**Toolbox.** Run prep clones the toolbox bare into the run root,
+`RUN_ROOT/toolbox.git`, and records a tag or commit (the pin, in
+`run.json`, so on the state branch too). Nothing from it is copied into
+the product repo or the operator's checkout. The toolbox remote is an
+`https` or `ssh` URL that the operator types at the first `/sdlc`,
+never one a model chose; it is fixed for the run and kept with the
+genesis commit in the operator's off-machine note. The driver, the
+bundle check, the INTAKE checks, and skill packing read only that
+copy's object store at the pin, never a working tree, and check each
+object's hash as they read it. Driver git there runs hardened, and at
+every start the driver byte-checks the copy's config and checks that it
+still points at the confirmed remote; any difference is an operator
+stop. Moving the pin is the operator's `/sdlc-repin` between stages: it
+fetches into the copy, checks the new commit and shows the diff from
+the object store, and only on the operator's yes records it,
+recompiles, and adds it to the history. A restore on another machine
+re-clones the typed remote at the pin. The general SDLC's version,
+DER-570, follows this layout.
 
 **Compiled files.** The driver compiles one file per persona,
-`.sdlc/compiled/<persona>.md`, from the clone at the pin: the persona's
-role, its packed skills inline, and the repo facts (test command,
-branches, tracker ids, project-main). Each records the pin and a hash
-of its sources. A worker's first prompt names it by absolute path, so a
-session begins with one read and no routing lookups; per-stage parts
-stay in the prompt kinds. Item worktrees hold no `.sdlc/`. A missing
-or stale file is compiled again from the clone; the state branch
-records only the pin and each file's hash.
+`RUN_ROOT/compiled/<persona>.md`, from the copy at the pin: the
+persona's role, its packed skills inline, and the repo facts (test
+command, branches, tracker ids, project-main). Each records the pin and
+a hash of its sources. A worker's first prompt names it by absolute
+path, so a session begins with one read and no routing lookups;
+per-stage parts stay in the prompt kinds. A missing or stale file is
+compiled again; the state branch records only the pin and each file's
+hash.
 
 - Chunk personas use their role name (`architect`, `refiner`,
   `designer`, `ux-reviewer`, `security`, `groom-reviewer`, `manager`).
@@ -785,7 +774,7 @@ Gather.
 2. It runs the readiness checks: the tracker and its `read` command,
    project-main cut from trunk, the harness at the pinned version,
    every model slot resolving, push permission to the remote, branch
-   protection and CI presence, and the toolbox clone at the pin.
+   protection and CI presence, and the toolbox copy at the pin.
 3. It files the Epic and prepares the run root and the state branch,
    persists the state, and runs the restore drill.
 4. It prints the Gather line. No copy of the Run prep session is kept;
@@ -841,12 +830,12 @@ node.
   push project-main can still plant such a commit there and a
   consistent state naming it, and so choose commands the restored run
   executes, unless the operator spots it in the summary.
-- The toolbox is read only from the clone at the pin, checked before
-  every stage; a new pin needs the operator's `/sdlc-repin` between
-  stages. Residual risk: anyone who can push the toolbox trunk at the
-  confirmed remote can put a commit on the reviewed ref (LLD O22). Workers can write the operator checkout through `bash`; the
-  hash check detects a write to `.sdlc/`, and the rest of the checkout
-  stays a residual risk.
+- The toolbox is read only from the run root's copy at the pin, each
+  object hash-checked; a new pin needs the operator's `/sdlc-repin`
+  between stages. Residual risk, accepted in writing with branch
+  protection on the toolbox `main`: anyone who can push the toolbox
+  trunk at the confirmed remote can put a commit on the reviewed ref
+  (LLD O22).
 - The build environment's commands come only from the accepted LLD,
   re-hashed before each run. Credentials an integration needs reach
   command stages by variable name, never workers.
@@ -928,8 +917,7 @@ and points at the flow spec instead.
 | Product code, docs, changelog | Git: item branches, then project-main | Pushed as built; pushed after each land |
 | Epic, items, blockers, claims, comments, `done` | Tracker through `tracker-sdlc` (any backend; `local` = `tickets` branch) | The board |
 | Driver position, results, `state.md`, asks, plan, brief, env evidence (the D files) | Run root, mirrored to the state branch at `local` and `pushed` | Kept across crashes; at `pushed`, across the loss of the machine |
-| Toolbox clone, compiled files, owner line | `.sdlc/` in the operator checkout, ignored, never committed | Rebuilt from the confirmed remote at the pin; removed when the chunk is done |
-| Sessions, prompts, logs, worktrees | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
+| Sessions, prompts, logs, worktrees, the toolbox copy, compiled files | Run root only, outside the checkout | Kept across crashes; the driver deletes no run folder; sessions optionally backed up to a private folder |
 
 If git and the run root disagree, git and the tracker win for what
 landed; the run root wins for what ran. A lost run root at `pushed`
@@ -1034,8 +1022,8 @@ items 3 and 5.
   state branch as a residual to accept in writing; the env gate's
   agent-plus-operator shape; integration credentials for command stages
   only.
-- From the pinned-clone revision (the LLD's O21, open): one run per
-  operator checkout.
+- From the toolbox-copy revision (the LLD's O21, open): how many runs,
+  each in its own run root, may be active at once.
 
 ## Optional
 
@@ -1094,11 +1082,14 @@ flowchart LR
   Names; nodes carry existing step names instead.
 - **Committing the toolbox or compiled files to the product repo**: two
   copies drift, and a product repo would carry another project's
-  instructions; the clone stays ignored and pinned instead.
+  instructions; the copy stays in the run root instead.
 - **Reading the operator's own toolbox checkout with `git show`**: the
-  earlier design. Replaced by the pinned clone (operator, 2026-10-19):
-  one self-contained folder beside the repo that a restore rebuilds
-  from the recorded remote, and that workers can read by path.
+  earlier design. Replaced by the toolbox copy (operator, 2026-10-19):
+  a restore rebuilds it from the typed remote at the pin.
+- **The toolbox copy in an ignored `.sdlc/` in the operator checkout**:
+  a draft of the same day. Dropped after review: it needed an exclude,
+  an owner and release, read-only modes, and a working-tree check, for
+  no protection the run root lacks.
 - **Committing session transcripts**: large, and they hold tool output
   and private text; rehydrate and the optional private backup cover a
   lost session.

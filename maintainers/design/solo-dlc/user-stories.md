@@ -28,7 +28,7 @@ git, or tracker state.
     each branch the run uses (trunk, project-main, and the `tickets`
     branch when the `local` adapter is chosen), the harness at its
     pinned version, every model slot, push permission, branch
-    protection and CI, the toolbox clone at its tag or commit, and the
+    protection and CI, the toolbox copy at its tag or commit, and the
     run root's parent folder. Each line is marked `done`, `to do`,
     `deferred`, or `n/a`.
   - The tracker answer is required: Run prep files the Epic, so the
@@ -288,33 +288,28 @@ git, or tracker state.
 - **Done when:**
   - `/sdlc-repin` works only while no driver runs, and shows the diff
     of the bundle and skills before asking.
-  - It fetches in the toolbox clone and checks out the new tag; after
-    the yes, `run.json` names the new commit and tag, the history
-    records the old and new commits, and the compiled files are
-    rebuilt. A no leaves the clone at the old pin.
-  - Without the command, every start uses the pinned commit, and no
-    product-repo commit holds a copy of the toolbox.
+  - It fetches into the run's toolbox copy; after the yes, `run.json`
+    names the new commit and tag, the history records the old and new
+    commits, and the compiled files are rebuilt. A no leaves the old
+    pin.
+  - Without the command, every start uses the pinned commit, and the
+    product repo never holds a copy of the toolbox.
 - **Out of scope:** pinning per item.
 
-### SD-34 Keep the pinned toolbox beside the repo
+### SD-34 Keep the pinned toolbox in the run root
 
-- **As** the operator **I want** the run's toolbox cloned at its pin
-  inside my checkout but out of git **so that** I can read exactly what
-  the workers follow, and nothing changes it unseen.
+- **As** the operator **I want** the run's toolbox copied at its pin
+  into the run root **so that** the workers follow exactly what I
+  pinned, nothing changes it unseen, and my checkout stays untouched.
 - **Done when:**
-  - Run prep clones the toolbox into `.sdlc/toolbox/` and adds `.sdlc/`
-    to `.git/info/exclude`; `git status` of the checkout is unchanged.
-  - Each persona's compiled file is in `.sdlc/compiled/`, and the
-    worker's first prompt names it by path.
-  - A changed, unpinned, or writable clone, an edited compiled file, a
-    removed exclude line, or a clone pointing at another remote stops
-    the run before the next stage with a line naming what differs; the
-    driver does not repair it.
+  - Run prep clones the toolbox into `RUN_ROOT/toolbox.git`, and each
+    persona's compiled file is in `RUN_ROOT/compiled/`; the worker's
+    first prompt names it by path.
+  - A changed copy, an edited compiled file, or a copy pointing at
+    another remote stops the run with a line naming what differs.
   - I type the toolbox remote myself at the first `/sdlc`; a model never
     picks it, and a restore asks for it again from my note.
-  - When the chunk is done, `.sdlc/` is removed, so the next chunk's Run
-    prep in the same checkout starts clean.
-- **Out of scope:** two runs sharing one checkout at once (LLD O21).
+- **Out of scope:** how many runs may be active at once (LLD O21).
 
 ### SD-13 See items land without waking the manager
 

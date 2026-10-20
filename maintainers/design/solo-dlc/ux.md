@@ -14,9 +14,9 @@ Human gate: operator accepts, or writes `UX verification not required`.
   re-check raised one major; fix round 2 done; round 3 review raised
   two majors; fix round 3 done, re-check passed; the run-state
   revision reviewed and re-checked
-- Operator: accepted at 021f81d, 2026-10-19. The pinned-clone revision
+- Operator: accepted at 021f81d, 2026-10-19. The toolbox-copy revision
   (J1, J13, J16, J17, SD-34) awaits acceptance with the LLD's
-  pinned-clone revision.
+  toolbox-copy revision.
 
 ## People
 
@@ -69,8 +69,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
   questions only (toolbox and tag, repo and branches, chunk, tracker,
   harness and models, run root, durability, backup folder) → readiness
   checklist, each line done, to do, deferred, or n/a → operator replies
-  → Run prep clones the toolbox into the checkout's ignored `.sdlc/`,
-  prepares the run root and the state branch, runs the
+  → Run prep prepares the run root with its toolbox copy and the state
+  branch, runs the
   restore drill, and prints the Gather line; the session is discarded
   → new session: Gather interviews the operator on a brain dump →
   operator confirms the brief → console prints the run root and the
@@ -149,14 +149,15 @@ Human gate: operator accepts, or writes `UX verification not required`.
   not enforced` → operator replies as in J5. The Trial question is J6.
 - **J13 Machine lost.** The machine dies → on another machine, the
   operator loads the kickoff skill in restore mode → it asks only the
-  machine-local questions, restores the run root from the state
-  branch, and re-clones the toolbox at the pin → start command → the console shows the restore summary (last
+  machine-local questions and restores the run root from the state
+  branch → start command → the operator types, from the genesis note,
+  the first 12 characters of the genesis commit and the full toolbox
+  remote → the toolbox is cloned again at the pin → the console shows
+  the restore summary (last
   stage, in-flight run, lease holder, any commit not made by the
   driver, the commits it names on project-main, the `run.json`
   summary, the diff from the first pin to the current one) → the
-  operator types, from the genesis note, the first 12 characters of the
-  genesis commit and the full toolbox remote, then the first 12 of the
-  state tip, and the full current pin if it moved since the first →
+  operator types the first 12 characters of the state tip, and the full current pin if it moved since the first →
   the run continues; personas rehydrate or restore from the backup.
   The old machine, if it comes back, refuses to drive the run.
 - **J14 Env gate.** Spec gate accepted → env-builder builds the harness
@@ -171,14 +172,13 @@ Human gate: operator accepts, or writes `UX verification not required`.
   LLD change, deny, or defer → after the new environment lands, the
   item resumes where it stopped.
 - **J16 Move the toolbox pin.** Between stages, the operator runs
-  `/sdlc-repin` → it fetches in the toolbox clone and checks out the
-  new tag → the console shows the diff of the bundle and skills → the
+  `/sdlc-repin` → it fetches the new tag into the run's toolbox copy →
+  the console shows the diff of the bundle and skills → the
   operator confirms → the compiled files are rebuilt → the next stages
   use the new pin.
-- **J17 Toolbox clone changed.** Something edits `.sdlc/` between
-  stages → the next stage does not start; the console names the part
-  that differs (owner, mode, git, remote, files, compiled file,
-  exclude, tree) → the operator inspects, then rebuilds the clone at
+- **J17 Toolbox copy changed.** Something edits the run's toolbox copy
+  or a compiled file while the driver is down → the next start stops;
+  the console names what differs → the operator rebuilds the copy at
   the recorded pin. A remote that differs from the one the operator
   typed never runs.
 
@@ -189,7 +189,7 @@ In [user-stories.md](user-stories.md):
 | Person | Stories |
 | --- | --- |
 | Operator, start | SD-1 Run prep, SD-2 tracker and public tickets, SD-29 durability, SD-3 Gather, SD-4 run root and start line, SD-5 only the operator starts |
-| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager, SD-26 operator gates, SD-27 Build → Verify → Review, SD-28 land on a moved tip, SD-30 another machine, SD-31 env gate, SD-32 new env capability, SD-33 move the toolbox pin, SD-34 pinned toolbox clone |
+| Operator, run | SD-6 progress lines, SD-7 stop and manager first, SD-8 escalation, SD-9 Trial question, SD-10 find outputs, SD-11 resume, SD-12 stop on purpose, SD-13 land without the manager, SD-26 operator gates, SD-27 Build → Verify → Review, SD-28 land on a moved tip, SD-30 another machine, SD-31 env gate, SD-32 new env capability, SD-33 move the toolbox pin, SD-34 pinned toolbox copy |
 | Bundle author | SD-14 write a bundle, SD-15 errors by step and exit |
 | Followed mode | SD-16 followed, not enforced, SD-17 separate-agent steps, SD-18 same exit rule |
 | Workers | SD-19 builder with failing log, SD-20 builder after compaction, SD-21 verifier ledger, SD-22 post-land verifier, SD-23 reviewer re-review, SD-24 claim and comment |
