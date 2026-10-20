@@ -35,6 +35,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - **Outcome** — `skills/sdlc-kickoff/SKILL.md` is the Run prep, Gather, and restore procedure, and `docs/sdlc/run-state.md` is the owner of the run-root formats item 5 builds against. Neither starts the driver.
 - **Acceptance** —
   - The skill has three modes: `prep`, `gather`, and `restore`. None starts the driver or a worker.
+  - For a followed run, Run prep offers only the `plain` durability level; `pushed` and `local` are not offered.
   - Run prep asks the SD-1 setup questions, toolbox remote first with no default, and refuses a remote that fails the remote rule before any clone or fetch. The tracker answer is `local` only, with the ux.md J2 warning.
   - The readiness checklist is a preview until the operator replies. R1–R4 are the skill's own git, `gh`, and tracker steps and are walkable on a fixture repo with a bare origin. R5–R10 and the `sdlc-driver` subcommands (`readiness`, `toolbox`, `state-init`, `drill`, `persist`, `status`, `restore`) are named as not available until item 5 (O14).
   - After the reply, the procedure files the Epic, writes `run.json`, `machine.json`, `checklist.md`, and empty `refiner/run-1/` and `gatherer/run-1/`, and prints the only genesis note (typed remote and trunk) in the `state-init` turn.
@@ -45,7 +46,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — K1 and K7 on the two new files. Walk R1–R4 on a fixture repo with a bare origin. `test "$(wc -l < skills/sdlc-kickoff/SKILL.md)" -le 250` and `test "$(wc -l < docs/sdlc/run-state.md)" -le 250`. R5–R10 are not this item's prove; item 5's Run prep test covers them.
 - **Blocked by** — `none`
-- **Blocks** — `G5b` — the run-root implementation is written against `run-state.md`
+- **Blocks** — `G5b` — the run-root implementation is written against `run-state.md`; `G3` — `bundle-runs.md` routes to `run-state.md`
 - **Out of scope** — The driver subcommands and R5–R10 execution (`G5d`). `DER-565`, `DER-570`, and `G9`.
 - **Proposed fix** — `n/a — split from accepted Spec`
 - **Removal alternative** — `n/a — split from accepted Spec`
@@ -138,7 +139,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - **Outcome** — `packages/sdlc-driver` exists and can check a bundle and validate a stage result, with no harness import and no runtime dependency.
 - **Acceptance** —
   - Package layout matches the LLD: private ESM, `engines` Node `>=22.18`, strict `tsconfig` with `erasableSyntaxOnly` and `noEmit`. `npm run check` is `tsc -p . && node --test`.
-  - Shipped in this item: `json.ts` (duplicate keys, nulls, trailing text), `result.ts` (stage-result v1 and candidate rules), `frontmatter.ts`, `flow.ts`, `bundle.ts`, `check.ts`, and CLI `check BUNDLE_DIR [--at COMMIT]` and `validate RESULT --flow F --node N`.
+  - Shipped in this item: `json.ts` (duplicate keys, nulls, trailing text), `result.ts` (stage-result v1 and candidate rules), `frontmatter.ts`, `flow.ts`, `bundle.ts`, `check.ts`, and `index.ts` exporting `checkBundle` and `validateResult`, and CLI `check BUNDLE_DIR [--at COMMIT]` and `validate RESULT --flow F --node N`.
   - `check` prints one error per line in the LLD's format and exits `0` only when clean. Rules B1–B14 and every `gate.*` row hold, including the counterexamples in G2's fixtures.
   - Every fixture under `docs/sdlc/fixtures/results/`, `flows/`, and `bundles/` is a `node:test`, including the three valid results and `bundles/minimal/`.
   - `README.md` ≤200 lines and names the driver-only formats this package owns, even if later items fill them in.
@@ -174,7 +175,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 - **Outcome** — The driver can open a run root, walk a flow with a fake worker, and stop on the pipeline's own failures, without git land, durable state, or env-prep.
 - **Acceptance** —
-  - Implements `runroot.ts`, `machine.ts`, `stage.ts`, `prompts.ts`, `console.ts`, `labels.ts`, and the fake worker at `packages/sdlc-driver/test/fake-worker.ts`. The fake worker performs the scripted actions and misbehaviors in the Verify "Fake worker" paragraph and records argv and environment.
+  - Implements `adapter.ts` (the `HarnessAdapter` interface), `facts.ts` (the driver-facts writer), `runroot.ts`, `machine.ts`, `stage.ts`, `prompts.ts`, `console.ts`, `labels.ts`, `index.ts` exporting `prepare` and `run` (extending G5a's exports), and the fake worker at `packages/sdlc-driver/test/fake-worker.ts`. The fake worker performs the scripted actions and misbehaviors in the Verify "Fake worker" paragraph and records argv and environment.
   - Run-root files the driver owns match `run-state.md` and the LLD: `driver.json`, `driver/state.json` only as far as the loop needs it, `index.jsonl`, `plan/items.json`, `asks/`, run folders, and the lock. `state-init`, `persist`, and `restore` still refuse when `SDLC_RUN_DIR` is set or the lock is held, once those commands exist; this item implements the lock those commands share.
   - Console lines match the LLD's fixed text, including the OpenCode summary ending `pick /sdlc, then enter RUN_ROOT to continue`.
   - These Verify scenarios are tests in this item: 3 (invalid candidate and repair run folder), 4 (manager `resume`, `defer`, `escalate`, invalid manager, operator-only stops), 5 (gate answer, `trial-gate`, paperwork `posted`), 8 (crash mid-stage and restart), and 16 (paperwork ends the stage before it starts, and a kill during paperwork replays).
@@ -210,12 +211,12 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - Implements `git.ts` (hooks and fsmonitor off, replace objects off, no force option), `land.ts` (L1–L9 for item land), `prove.ts`, `snapshot.ts` including the driver-file ledger, `tracker.ts` (the local read recipe as fixed git argv), `scan.ts`, and `groom.ts` (frozen `groom.md` parser).
   - Proving lines come only from the frozen `groom.md` blob and pinned defaults. A copy edited in the item worktree has no effect.
   - These Verify scenarios are tests here, against a temporary bare origin with a `local` tickets branch: 1 (two-item flow, blocker, both `done`, `project-main` check), 2 (the land-red event counts exactly once, on top of G5b's repair tests), 6 (every land row named in the scenario), 7 (each post-stage check, including `refs`, `tickets`, and `extension`; command stages skip worker-only checks), 10 (worktree edits to proving commands do nothing; a `groom.md` changed after review stops filing), 12 (credential-shaped design record is `scan-secret` with no `allow`; a path hit is `scan-hit` and `allow` commits; text never shown), 13 (proving command and worker see none of the denylisted variables), 15 (N1 tickets cases), 18 (crash after a design-record push, and the worker-push case), and 19 (driver-file ledger).
-  - Scenario 11's creation of `repo.git` and `worktrees/integrate` before any fetch is this item's git API. The `backend: linear` refusal and the harness-tree stop are G5d's start preflight, which calls this API.
+  - Scenario 11's creation of `repo.git` and `worktrees/integrate` before any fetch is this item's git API. The `backend: linear` refusal and the harness-tree stop are Start step 2, before `repo.git` exists; they are not this API's callers. `state-init` (G5d) is the caller.
   - `README.md` stays ≤200 lines.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — `npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check`. `test "$(wc -l < packages/sdlc-driver/README.md)" -le 200`.
 - **Blocked by** — `G5b` — land and the checks run inside the stage pipeline and on its run root
-- **Blocks** — `G5e` — env command stages, chunk land, and re-entry extend this land sub-machine
+- **Blocks** — `G5d` — `state-init` runs this item's first-start git; `G5e` — env command stages, chunk land, and re-entry extend this land sub-machine
 - **Out of scope** — Durable state, toolbox copy, repin (`G5d`). The env block and chunk env land (`G5e`). Tracker writes and Linear (`G9`). `DER-565` and `DER-570`.
 - **Proposed fix** — `n/a — split from accepted Spec`
 - **Removal alternative** — `n/a — split from accepted Spec`
@@ -224,12 +225,12 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 ## Optional
 
-- G5c and G5d both edit `packages/sdlc-driver` and both touch Start. That is file overlap, not a blocker. Scenario 11 is split as the acceptance says.
+- Scenario 11 is split as the acceptance says. G5d waits on G5c because `state-init` runs G5c's first-start git. Other shared edits to `packages/sdlc-driver` are file overlap, not blockers.
 
 ### G5d: Driver state — toolbox copy, lease, restore, repin
 
 ```json sdlc-item
-{"slug": "driver-state", "blockedBy": ["G5b"], "skills": ["lang-js-ts"],
+{"slug": "driver-state", "blockedBy": ["G5b", "G5c"], "skills": ["lang-js-ts"],
  "prove": ["npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check",
            "test \"$(wc -l < packages/sdlc-driver/README.md)\" -le 200"]}
 ```
@@ -243,16 +244,16 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 - **Outcome** — A run can be prepared, persisted, drilled, restored, and repinned from the run root, and Start refuses a tampered toolbox copy.
 - **Acceptance** —
-  - Implements `state.ts`, `toolbox.ts`, `compiled.ts`, `backup.ts`, and CLI `readiness`, `toolbox`, `state-init`, `status`, `persist`, `restore`, and `drill`.
+  - Implements `state.ts`, `toolbox.ts`, `compiled.ts`, `backup.ts`, the `repin` export in `index.ts`, and CLI `readiness`, `toolbox`, `state-init`, `status`, `persist`, `restore`, and `drill`.
   - `state-init` refuses a second run root for a chunk slug whose state branch already exists (O21(a)).
   - Run prep's command sequence from the G0 skill is tested here on a fixture repo: R5–R10, including `toolbox`, `readiness`, `state-init`, and `drill` (O14).
-  - These Verify scenarios are tests here: 9 (rehydrate and session backup), 11 (the `backend: linear` refusal and the changed harness-tree stop, using G5c's git setup), 14 (bundle commit outside trunk, typed SHA, INTAKE record not satisfied by the bundle commit itself), 17 (pre-spawn harness re-check for an edited, added, or removed file), 20 (durable state at `pushed` against a temporary bare origin, every case in that scenario), 21 (restore and drill, every case, including the typed remote and the genesis pin), 22 (toolbox copy and compiled files, every case), and 25 (`/sdlc-repin` refusals and the three kill cases).
+  - These Verify scenarios are tests here: 9 (rehydrate and session backup), 11 (the `backend: linear` refusal and the changed harness-tree stop, using G5c's git API), 14 (bundle commit outside trunk, typed SHA, INTAKE record not satisfied by the bundle commit itself), 17 (pre-spawn harness re-check for an edited, added, or removed file), 20 (durable state at `pushed` against a temporary bare origin, every case in that scenario), 21 (restore and drill, every case, including the typed remote and the genesis pin), 22 (toolbox copy and compiled files, every case), and 25 (`/sdlc-repin` refusals and the three kill cases).
   - The drill writes nothing outside its `<tmp>`, including when it fails.
   - `README.md` stays ≤200 lines and now covers `driver.json`, `driver/state.json`, `driver/ledger.json`, `index.jsonl`, and `plan/items.json`.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — `npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check`. `test "$(wc -l < packages/sdlc-driver/README.md)" -le 200`.
-- **Blocked by** — `G5b` — persist, restore, and repin sit on the run root and the loop. G0 is already required through G5b; the skill text is on project-main before this item starts.
-- **Blocks** — `G7` — the OpenCode host's start, restore confirmation, and `/sdlc-repin` call this driver
+- **Blocked by** — `G5b` — persist, restore, and repin sit on the run root and the loop. G0 is already required through G5b; the skill text is on project-main before this item starts; `G5c` — `state-init` runs Start's first-start git (`repo.git`, `worktrees/integrate`), which is G5c's `git.ts`
+- **Blocks** — `G5e` — chunk land re-renders compiled files with this item's `compiled.ts`; `G7` — the OpenCode host's start, restore confirmation, and `/sdlc-repin` call this driver
 - **Out of scope** — Env-prep (`G5e`). The kickoff skill text (`G0`). `DER-565`, `DER-570`, and `G9`.
 - **Proposed fix** — `n/a — split from accepted Spec`
 - **Removal alternative** — `n/a — split from accepted Spec`
@@ -266,7 +267,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 ### G5e: Driver env — env block, chunk land, re-entry
 
 ```json sdlc-item
-{"slug": "driver-env", "blockedBy": ["G5c"], "skills": ["lang-js-ts"],
+{"slug": "driver-env", "blockedBy": ["G5c", "G5d"], "skills": ["lang-js-ts"],
  "prove": ["npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check",
            "test \"$(wc -l < packages/sdlc-driver/README.md)\" -le 200"]}
 ```
@@ -288,7 +289,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - `README.md` stays ≤200 lines.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — `npm --prefix packages/sdlc-driver ci && npm --prefix packages/sdlc-driver run check`. `test "$(wc -l < packages/sdlc-driver/README.md)" -le 200`. Scenarios 23 and 24 use a fixture LLD and a fake dependency, not a real service.
-- **Blocked by** — `G5c` — env stages and chunk land extend the land sub-machine and the proving wrapper
+- **Blocked by** — `G5c` — env stages and chunk land extend the land sub-machine and the proving wrapper; `G5d` — chunk land re-renders compiled files with `compiled.ts`
 - **Blocks** — `G7` — the first harness hosts a driver that already implements env-prep and re-entry
 - **Out of scope** — Filing an env-prep gate for building this chunk (no such gate). `DER-565` and `DER-570`. A driven amendment of `groom.md` when an env re-entry needs new items (O16). `G9`.
 - **Proposed fix** — `n/a — split from accepted Spec`
@@ -299,7 +300,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 ### G3: SDLC bundle, tracker claim rule, `bundle-runs.md`
 
 ```json sdlc-item
-{"slug": "sdlc-bundle", "blockedBy": ["G2", "G5a"], "skills": ["shell-safety"],
+{"slug": "sdlc-bundle", "blockedBy": ["G0", "G2", "G5a"], "skills": ["shell-safety"],
  "prove": ["test \"$(wc -l < docs/sdlc/bundle-runs.md)\" -le 150",
            "test \"$(wc -l < skills/test-failure-handler/SKILL.md)\" -le 60",
            "node packages/sdlc-driver/src/cli.ts check bundles/sdlc"]}
@@ -322,7 +323,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - `node packages/sdlc-driver/src/cli.ts check bundles/sdlc` exits 0. That CLI is G5a's; this item does not reimplement it.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — K1–K7, with the one expected K5 difference recorded in the rule map. `test "$(wc -l < docs/sdlc/bundle-runs.md)" -le 150`. `test "$(wc -l < skills/test-failure-handler/SKILL.md)" -le 60`. `node packages/sdlc-driver/src/cli.ts check bundles/sdlc`.
-- **Blocked by** — `G2` — the bundle is written in the bundle and flow specs; `G5a` — the prove command runs G5a's `check` on `bundles/sdlc`
+- **Blocked by** — `G0` — the `bundle-runs.md` route to run-root formats targets `run-state.md`; `G2` — the bundle is written in the bundle and flow specs; `G5a` — the prove command runs G5a's `check` on `bundles/sdlc`
 - **Blocks** — `G7` — the OpenCode end-to-end smoke runs `bundles/sdlc`
 - **Out of scope** — Driver implementation (`G5b`–`G5e`), including env-prep code. `G4` and `G8`. `DER-565`, `DER-570`, and `G9`. Not blocked by G5b–G5e: their outputs are not inputs to this bundle.
 - **Proposed fix** — `n/a — split from accepted Spec`
@@ -369,7 +370,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 ## Optional
 
 - The manual smoke is acceptance, not a `prove` line: it needs the operator's machine and must not run inside `npm run check`.
-- O6 does not block this item.
+- O6 (Pi version) is answered and gates only G6; it does not block this item.
 
 ### G6: Pi plugin, second harness
 
@@ -385,19 +386,19 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 ## Required
 
-- **Outcome** — Pi, at the version the operator names in O6, can start a detached run with `/sdlc RUN_ROOT` and can enforce the input guard.
+- **Outcome** — Pi, at the latest version at G6 build time, can start a detached run with `/sdlc RUN_ROOT` and can enforce the input guard.
 - **Acceptance** —
-  - Does not start until O6 is answered in writing. The LLD recommendation is `@mariozechner/pi-coding-agent` 0.73.1. If the operator picks `@earendil-works/pi-coding-agent` 1.x, the first task is to re-read the Pi facts table at 1.x and rerun P1–P7; nothing else in the LLD names that package.
+  - O6 is answered (Alex, 2026-10-20): use the latest Pi at G6 build time and pin that version then. The first task is to look up the latest Pi release, pin it, re-read the Pi facts table at that version (it was read at `@mariozechner/pi-coding-agent` 0.73.1, now deprecated), and rerun P1–P7. O6 gates only this item.
   - `packages/pi-sdlc` matches the file table. The worker extension is not in the Pi package manifest. `pi-types.ts` replaces a dependency on the Pi package.
   - `/sdlc` takes `RUN_ROOT` as a typed argument (O10). `pi -p "/sdlc RUN_ROOT"` refuses.
   - Unit tests: argv and env builder; worker path guard (links, `..`, `.git`, `~`); `sdlc_write` and `sdlc_result` on the shared fixtures; compaction summary. Plugin and adapter run against a fake `pi` that records argv and env.
-  - P1–P7 run on the operator's machine at the O6 version, one local model, gated by `SDLC_PI_SMOKE=1`, spending no money. Each failure uses the fallback in Trial-dependent decisions. P7 is O-E2E's fixture and pass conditions under the Pi adapter.
+  - P1–P7 run on the operator's machine at the pinned version, one local model, gated by `SDLC_PI_SMOKE=1`, spending no money. Each failure uses the fallback in Trial-dependent decisions. P7 is O-E2E's fixture and pass conditions under the Pi adapter.
   - npm `integrity` recorded at install; `treeSha256` in `run.json`, checked at every start.
   - Definition of done: this acceptance, the prove line green, P1–P7 green, package README current, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
 - **Verify** — `npm --prefix packages/pi-sdlc ci && npm --prefix packages/pi-sdlc run check`. Then P1–P7 with `SDLC_PI_SMOKE=1`.
-- **Blocked by** — `G7` — reuses its adapter tests, fake-harness pattern, and smoke fixture; `operator O6` — the Pi version is still open and gates only this item. O6 is not a G id, so the json block lists G ids only.
+- **Blocked by** — `G7` — reuses its adapter tests, fake-harness pattern, and smoke fixture
 - **Blocks** — `none`
-- **Out of scope** — OpenCode fallbacks (`G7`). `G9`, `DER-565`, and `DER-570`. Moving the pinned Pi line to 1.x later, if O6 chooses 0.73.1.
+- **Out of scope** — OpenCode fallbacks (`G7`). `G9`, `DER-565`, and `DER-570`. Choosing the Pi version before G6's build time (O6: latest at build time).
 - **Proposed fix** — `n/a — split from accepted Spec`
 - **Removal alternative** — `n/a — split from accepted Spec`
 - **Pick** — `n/a — split from accepted Spec`
@@ -438,7 +439,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 ```json sdlc-item
 {"slug": "followed-mode", "blockedBy": ["G2", "G5a"], "skills": [],
  "prove": ["node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal",
-           "node packages/sdlc-driver/src/cli.ts validate RESULT --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node NODE"]}
+           "one `validate` per written result.json, with that result's node: node packages/sdlc-driver/src/cli.ts validate <run-folder>/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node <that node>"]}
 ```
 
 - Type: Task
@@ -456,7 +457,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
   - A walk-through of `docs/sdlc/fixtures/bundles/minimal/` writes run folders whose `result.json` files pass `validate`.
   - A `SOURCES.md` row exists for `sdlc-followed-mode`.
   - Definition of done: this acceptance, the prove lines green, one `CHANGELOG.md` line under `## Unreleased` citing the ticket, and a rule map for every edited agent file.
-- **Verify** — K1 and K7. `node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal`. For each `result.json` the walk-through writes: `node packages/sdlc-driver/src/cli.ts validate RESULT --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node NODE` exits 0, with `NODE` the flow node that wrote it.
+- **Verify** — K1 and K7. `node packages/sdlc-driver/src/cli.ts check docs/sdlc/fixtures/bundles/minimal`. One `validate` per written result.json, with that result's node: `node packages/sdlc-driver/src/cli.ts validate <run-folder>/result.json --flow docs/sdlc/fixtures/bundles/minimal/flow.json --node <that node>` exits 0.
 - **Blocked by** — `G2` — the walk-through uses `fixtures/bundles/minimal/`; `G5a` — prove runs `check` and `validate`
 - **Blocks** — `none`
 - **Out of scope** — A driver, a persist step, or any harness plugin. The LLD says this item starts after the first harness works; that is not a blocker, because the skill does not read the plugin. `DER-565`, `DER-570`, and `G9`.
@@ -467,7 +468,7 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 
 ## Optional
 
-- The second prove line keeps `RESULT` and `NODE` because the LLD does not name the nodes inside `fixtures/bundles/minimal/`. The verifier substitutes one command per written result. See the gap note in the graph.
+- The second prove line is one `validate` per written result.json, with that result's node, because the LLD does not name the nodes inside `fixtures/bundles/minimal/`. Gap note: see the Graph.
 
 ## Graph
 
@@ -475,21 +476,23 @@ Each item below is the ticket body. The `json sdlc-item` block is the driver's c
 - Wave 2: G2 ← G1
 - Wave 3: G5a ← G1, G2
 - Wave 4: G5b ← G0, G5a
-- Wave 4: G3 ← G2, G5a
+- Wave 4: G3 ← G0, G2, G5a
 - Wave 4: G4 ← G2, G5a
 - Wave 4: G8 ← G2, G5a
 - Wave 5: G5c ← G5b
-- Wave 5: G5d ← G5b
-- Wave 6: G5e ← G5c
-- Wave 7: G7 ← G3, G5d, G5e
-- Wave 8: G6 ← G7
+- Wave 6: G5d ← G5b, G5c
+- Wave 7: G5e ← G5c, G5d
+- Wave 8: G7 ← G3, G5d, G5e
+- Wave 9: G6 ← G7
 
-G6 is also blocked by operator question O6 (open; not a G id). It does not start until that answer is written. No other operator question is open: O1–O5 and O7–O22 are answered in the LLD, and the accepted residuals are not build blockers.
+O6 (Pi version) is answered: Alex, 2026-10-20: use the latest Pi at G6 build time and pin that version then. It gates only G6 and is not a blocker. No operator question is open: O1–O22 are answered in the LLD, and the accepted residuals are not build blockers.
+
+Gap note: G8's `validate` prove lines depend on the node names in `fixtures/bundles/minimal/`, which the LLD does not name. G8 writes one `validate` per written result.json, with that result's node. G2 owns the node names.
 
 Not groomed: G9.
 
 Gates: `none`. No review items. G5a is the checker later prove commands run, not an integration gate.
 
-Land order beyond these blockers: none. G3 waits on G5a only (clarification 15, O8), so it builds beside G5b–G5e.
+Land order beyond these blockers: none.
 
-Not used as blockers, on purpose: G4 and G8 do not wait on G7. The LLD's "after the first harness works" is not an output those skills need (Blockers rule 1). Same-file edits inside `packages/sdlc-driver` are not blockers (rule 2).
+Not used as blockers, on purpose: G4 and G8 do not wait on G7. The LLD's "after the first harness works" is not an output those skills need (Blockers rule 1). G3 does not wait on G5b–G5e (clarification 15, O8). Same-file edits inside `packages/sdlc-driver` are not blockers (rule 2).
