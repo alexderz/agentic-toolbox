@@ -53,3 +53,9 @@ names. **security** reads the change that adds or edits one:
 An empty skill directory that holds only `.gitkeep` is layout: no
 `SKILL.md`, no scripts. It is **OK without scan**. Start intake and the
 scanners when a body, script, or third-party file would land.
+
+## Dev dependencies
+
+Ruling S8. An exact pin and a lockfile. No runtime dependency.
+
+- `typescript` `5.9.3` — devDependency of `packages/sdlc-driver` only. Lockfile `packages/sdlc-driver/package-lock.json`. Install with `npm ci` inside that package. The driver does not import it.

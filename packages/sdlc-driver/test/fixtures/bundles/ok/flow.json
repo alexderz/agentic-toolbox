@@ -1,0 +1,400 @@
+{
+  "schemaVersion": 1,
+  "id": "ok",
+  "entry": "plan",
+  "itemEntry": "build",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "plan",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "plan",
+      "ask": "Approve the HLD in {design}/hld.md; quote its summary.",
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "trial"
+        }
+      ]
+    },
+    {
+      "id": "trial",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "trial",
+      "ask": "Approve the trial plan.",
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec",
+          "extract": {
+            "from": "{design}/hld.md",
+            "heading": "Trial kickoff",
+            "to": "trial-kickoff.md"
+          },
+          "say": "Trial kickoff: {{extracted}}"
+        }
+      ]
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "envSpec": true,
+      "outputs": [
+        "{design}/lld.md"
+      ],
+      "checks": [
+        "test-env"
+      ],
+      "exits": [
+        {
+          "name": "written",
+          "statuses": [
+            "pass"
+          ],
+          "to": "security"
+        }
+      ]
+    },
+    {
+      "id": "security",
+      "label": "Security",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "security",
+      "exits": [
+        {
+          "name": "cleared",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec-gate"
+        },
+        {
+          "name": "findings",
+          "statuses": [
+            "fail"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "spec-gate",
+      "label": "SpecGate",
+      "step": "Spec",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "spec",
+      "ask": "Accept the LLD.",
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-build"
+        },
+        {
+          "name": "reject",
+          "statuses": [
+            "fail"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "env-build",
+      "label": "EnvBuild",
+      "step": "Build",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-builder",
+      "exits": [
+        {
+          "name": "ready",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-prove"
+        }
+      ]
+    },
+    {
+      "id": "env-prove",
+      "label": "EnvProve",
+      "step": "Build",
+      "kind": "command",
+      "scope": "chunk",
+      "commands": "env",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-verify"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "env-build"
+        }
+      ]
+    },
+    {
+      "id": "env-verify",
+      "label": "EnvVerify",
+      "step": "Build",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-verifier",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-review"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "env-build"
+        }
+      ]
+    },
+    {
+      "id": "env-review",
+      "label": "EnvReview",
+      "step": "Review",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "env-reviewer",
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary"
+      ],
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-gate"
+        },
+        {
+          "name": "changes",
+          "statuses": [
+            "fail"
+          ],
+          "to": "env-build"
+        }
+      ]
+    },
+    {
+      "id": "env-gate",
+      "label": "EnvGate",
+      "step": "Build",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "env",
+      "ask": "Accept the build environment.",
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "env-land"
+        }
+      ]
+    },
+    {
+      "id": "env-land",
+      "label": "EnvLand",
+      "step": "Build",
+      "kind": "land",
+      "scope": "chunk",
+      "builder": "env-build",
+      "prove": "env-prove",
+      "verify": "env-verify",
+      "review": "env-review",
+      "exits": [
+        {
+          "name": "done",
+          "statuses": [
+            "pass"
+          ],
+          "to": "groom"
+        }
+      ]
+    },
+    {
+      "id": "groom",
+      "label": "Groom",
+      "step": "Groom",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "outputs": [
+        "{design}/groom.md"
+      ],
+      "exits": [
+        {
+          "name": "planned",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@items"
+        }
+      ]
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "step": "Build",
+      "kind": "model",
+      "scope": "item",
+      "persona": "builder",
+      "skills": [
+        "ok-notes"
+      ],
+      "exits": [
+        {
+          "name": "ready",
+          "statuses": [
+            "pass"
+          ],
+          "to": "prove"
+        }
+      ]
+    },
+    {
+      "id": "prove",
+      "label": "Prove",
+      "step": "Build",
+      "kind": "command",
+      "scope": "item",
+      "commands": "groom",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "verify"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "build"
+        }
+      ]
+    },
+    {
+      "id": "verify",
+      "label": "Verify",
+      "step": "Build",
+      "kind": "model",
+      "scope": "item",
+      "persona": "verifier",
+      "exits": [
+        {
+          "name": "ok",
+          "statuses": [
+            "pass"
+          ],
+          "to": "review"
+        },
+        {
+          "name": "fix",
+          "statuses": [
+            "fail"
+          ],
+          "to": "build"
+        }
+      ]
+    },
+    {
+      "id": "review",
+      "label": "Review",
+      "step": "Review",
+      "kind": "model",
+      "scope": "item",
+      "persona": "reviewer",
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary"
+      ],
+      "exits": [
+        {
+          "name": "approve",
+          "statuses": [
+            "pass"
+          ],
+          "to": "land",
+          "checks": [
+            "sha-pins"
+          ]
+        },
+        {
+          "name": "changes",
+          "statuses": [
+            "fail"
+          ],
+          "to": "build"
+        }
+      ]
+    },
+    {
+      "id": "land",
+      "label": "Land",
+      "step": "Build",
+      "kind": "land",
+      "scope": "item",
+      "builder": "build",
+      "prove": "prove",
+      "verify": "verify",
+      "review": "review",
+      "exits": [
+        {
+          "name": "done",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ]
+    }
+  ]
+}
