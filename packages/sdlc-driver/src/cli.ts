@@ -11,7 +11,7 @@ import { readFlow } from "./flow.ts";
 import { formatIssue, type Issue } from "./issue.ts";
 import { validateResult } from "./result.ts";
 
-const USAGE = "usage: sdlc-driver check BUNDLE_DIR [--at COMMIT]\n       sdlc-driver validate RESULT --flow F --node N\n";
+const USAGE = "usage: sdlc-driver check BUNDLE_DIR [--at COMMIT]\n       sdlc-driver validate RESULT --flow F --node N [--ticket TICKET] [--authored worker|driver]\n";
 
 class Usage extends Error {}
 
@@ -42,8 +42,9 @@ function check(args: string[]): Issue[] {
 }
 
 function validate(args: string[]): Issue[] {
-  const { positional, opts } = options(args, ["flow", "node"]);
+  const { positional, opts } = options(args, ["flow", "node", "ticket", "authored"]);
   if (positional.length !== 1 || opts.flow === undefined || opts.node === undefined) throw new Usage("validate takes RESULT --flow F --node N");
+  if (opts.authored !== undefined && opts.authored !== "worker" && opts.authored !== "driver") throw new Usage("authored must be worker or driver");
   const flowFile = opts.flow;
   const read = readFlow(readFileSync(flowFile), flowFile);
   if (!read.flow) return read.issues;
@@ -57,11 +58,12 @@ function validate(args: string[]): Issue[] {
   return validateResult(readFileSync(file), {
     step: node.step,
     ...(kind ? { kind } : {}),
+    ...(opts.ticket !== undefined ? { ticket: opts.ticket } : {}),
     runRoot,
     runFolder: `${relative(runRoot, folder)}/`,
     exits: node.exits,
     checks: node.checks ?? [],
-    driverAuthored: true,
+    driverAuthored: opts.authored === "driver",
   }, file).issues;
 }
 

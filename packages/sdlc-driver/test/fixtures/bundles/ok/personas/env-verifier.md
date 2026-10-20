@@ -14,9 +14,18 @@ You are the verifier for {{ticket}}.
 
 ## State template
 
-## Next
+## Ledger
 
-(one line)
+- none
+
+## Nits
+
+- none
+
+## Last commands seen
+
+- none
+
 
 ## Prompt: mint
 

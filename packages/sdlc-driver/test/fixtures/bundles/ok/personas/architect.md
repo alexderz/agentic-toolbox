@@ -14,15 +14,36 @@ You are the architect for {{ticket}}.
 
 ## State template
 
-## Next
+## Node
 
-(one line)
+- none
+
+## Decisions
+
+- none
+
+## Open
+
+- none
+
+## Outputs written
+
+- none
+
 
 ## Prompt: mint
 
 Run {{node}} on {{ticket}}. Exits: {{exits}}.
 
 ## Prompt: resume
+
+Run {{node}} on {{ticket}}. Exits: {{exits}}.
+
+## Prompt: node-comparables
+
+Run {{node}} on {{ticket}}. Exits: {{exits}}.
+
+## Prompt: node-hld
 
 Run {{node}} on {{ticket}}. Exits: {{exits}}.
 

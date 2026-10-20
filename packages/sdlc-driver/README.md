@@ -10,7 +10,7 @@ Node `>=22.18`. `npm run check` is `tsc -p . && node --test`.
 
 ```text
 sdlc-driver check BUNDLE_DIR [--at COMMIT]
-sdlc-driver validate RESULT --flow F --node N
+sdlc-driver validate RESULT --flow F --node N [--ticket TICKET] [--authored worker|driver]
 ```
 
 `check` reads the working tree, or one commit with `--at`. One error per
@@ -25,8 +25,12 @@ The field form is used when no node applies. A usage error exits `2`.
 
 `validate` checks `result.json` against stage-result v1 and the node's
 exits. It prints the same line shape and uses the same exit codes. It
-takes the node's step and exits from the flow. It treats the result path
-as `RUN_ROOT/<scope>/run-N/result.json`.
+takes the node's step, evidence kind, and exits from the flow. It treats
+the result path as `RUN_ROOT/<scope>/run-N/result.json`. `--ticket` is
+the invocation ticket; a different value is `result.ticket-mismatch`.
+Without it, only the ticket pattern is checked. `--authored` defaults to
+`worker`. A reserved exit with `fail` is `flow.reserved-status` unless
+`--authored driver`.
 
 ## What this item checks
 
@@ -39,8 +43,9 @@ as `RUN_ROOT/<scope>/run-N/result.json`.
 - Bundle rules B1–B14, including every `gate.*` row.
 
 Shared fixtures under `docs/sdlc/fixtures/results/`, `flows/`, and
-`bundles/` are tests when those directories exist. A missing directory
-skips, because those docs land in other items.
+`bundles/` are tests. Each result uses its context file. Each flow
+directory is one phase (`bundle`, `candidate`, or `env-block`) and an
+exact code set. The suite does not skip a landed fixture.
 
 ## Driver-only formats
 

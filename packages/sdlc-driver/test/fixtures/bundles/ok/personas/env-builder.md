@@ -14,11 +14,24 @@ You are the builder for {{ticket}}.
 
 ## State template
 
+## Corrected errors
+
+- none
+
+## Open findings
+
+- none
+
+## Do not repeat
+
+- none
+
 ## Next
 
-(one line)
+- none
 
-## Prompt: node-env-build
+
+## Prompt: node-env-prep
 
 Run {{node}} on {{ticket}}. Exits: {{exits}}.
 

@@ -93,6 +93,34 @@ export function gitTree(root: string, commit: string): Tree {
 
 export const JOBS = ["refiner", "architect", "designer", "ux-reviewer", "security", "groom-reviewer", "manager", "builder", "verifier", "reviewer"] as const;
 const READ_ONLY_JOBS = ["refiner", "ux-reviewer", "security", "groom-reviewer", "verifier", "reviewer"];
+/** Prompt kinds by job and scope. `repair`, `answer`, and `rehydrate` stay out of the file. */
+const PROMPT_KINDS: Record<string, readonly string[]> = {
+  "refiner:chunk": ["mint", "resume"],
+  "architect:chunk": ["mint", "resume", "node-comparables", "node-hld", "node-spec", "node-groom", "paperwork"],
+  "designer:chunk": ["mint", "resume", "node-mockups"],
+  "ux-reviewer:chunk": ["mint", "resume"],
+  "security:chunk": ["mint", "resume"],
+  "groom-reviewer:chunk": ["mint", "resume"],
+  "manager:chunk": ["mint", "stop", "gate", "apply-answer", "node-file-tickets"],
+  "builder:chunk": ["node-env-prep", "resume", "test-failure", "fix", "merge-tip"],
+  "builder:item": ["mint", "resume", "test-failure", "fix", "merge-tip"],
+  "verifier:chunk": ["mint", "recheck", "land-recheck"],
+  "verifier:item": ["mint", "recheck", "land-recheck", "post-land"],
+  "reviewer:chunk": ["mint", "rereview"],
+  "reviewer:item": ["mint", "rereview"],
+};
+const STATE_HEADINGS: Record<string, readonly string[]> = {
+  builder: ["## Corrected errors", "## Open findings", "## Do not repeat", "## Next"],
+  verifier: ["## Ledger", "## Nits", "## Last commands seen"],
+  reviewer: ["## Verdicts", "## Open review comments", "## Security reads"],
+  architect: ["## Node", "## Decisions", "## Open", "## Outputs written"],
+  refiner: ["## Brief version", "## Cuts proposed", "## Open"],
+  designer: ["## Work", "## Findings", "## Open"],
+  "ux-reviewer": ["## Work", "## Findings", "## Open"],
+  security: ["## Boundaries read", "## Findings", "## Open"],
+  "groom-reviewer": ["## Reviewed commit", "## Findings", "## Open"],
+  manager: ["## Stops handled", "## Pending asks", "## Parked"],
+};
 const TOOLS = ["read", "bash", "edit", "write", "grep", "find", "ls"];
 const PERSONA_KEYS = ["schemaVersion", "id", "job", "scope", "readOnly", "model", "tools", "skills", "tracker"];
 export const PLACEHOLDERS = [
@@ -195,19 +223,26 @@ function readPersona(stem: string, text: string, add: (code: string, message: st
   for (const k of ["readOnly", "tracker"]) if (f[k] !== undefined && typeof f[k] !== "boolean") bad(`${k} must be true or false`);
   if (f.model !== undefined && typeof f.model !== "string") bad("model must be a model slot name");
   for (const k of ["tools", "skills"]) if (f[k] !== undefined && !Array.isArray(f[k])) bad(`${k} must be a list`);
-  if (READ_ONLY_JOBS.includes(String(f.job)) && f.readOnly === false) bad(`job ${String(f.job)} must be readOnly: true`, "persona.read-only");
+  if (READ_ONLY_JOBS.includes(String(f.job)) && f.readOnly === false) bad(`job ${String(f.job)} must be readOnly: true`, "persona.readonly");
   if (Array.isArray(f.tools)) {
     for (const t of f.tools) if (!TOOLS.includes(t)) bad(`tool ${t} is not one of ${TOOLS.join(", ")}`, "persona.tools");
     if (f.readOnly === true && f.tools.some((t) => t === "edit" || t === "write")) bad("a read-only persona has no edit or write", "persona.tools");
   }
-  const prompts = body(fm.body, add);
+  const prompts = body(fm.body, add, typeof f.job === "string" ? f.job : "");
+  const row = typeof f.job === "string" && (f.scope === "chunk" || f.scope === "item") ? PROMPT_KINDS[`${f.job}:${f.scope}`] : undefined;
+  if (row === undefined && (JOBS as readonly string[]).includes(String(f.job)) && (f.scope === "chunk" || f.scope === "item")) {
+    bad(`job ${String(f.job)} has no prompt-kind row for scope ${String(f.scope)}`);
+  } else if (row !== undefined) {
+    const missing = row.filter((k) => !prompts.has(k));
+    if (missing.length > 0) bad(`missing ## Prompt: ${missing.join(", ")}`, "persona.prompt-missing");
+  }
   if (!ok) return undefined;
   return { id: stem, job: f.job as string, scope: f.scope as Scope, skills: f.skills as string[], prompts };
 }
 
 // The state template holds `##` headings of its own, so the body splits
 // only on `## Role`, `## State template`, and `## Prompt: <kind>`.
-function body(text: string, add: (code: string, message: string) => void): Set<string> {
+function body(text: string, add: (code: string, message: string) => void, job: string): Set<string> {
   const sections: { heading: string; lines: string[] }[] = [];
   const preamble: string[] = [];
   for (const line of text.split("\n")) {
@@ -216,21 +251,26 @@ function body(text: string, add: (code: string, message: string) => void): Set<s
     if (split) sections.push({ heading: h!, lines: [] });
     else (sections.at(-1)?.lines ?? preamble).push(line);
   }
-  if (preamble.some((l) => l.trim() !== "")) add("persona.body", "text before ## Role");
-  if (sections[0]?.heading !== "Role") add("persona.body", "the first section must be ## Role");
-  if (sections[1]?.heading !== "State template") add("persona.body", "the second section must be ## State template");
+  if (preamble.some((l) => l.trim() !== "")) add("persona.section", "text before ## Role");
+  if (sections[0]?.heading !== "Role") add("persona.section", "the first section must be ## Role");
+  if (sections[1]?.heading !== "State template") add("persona.section", "the second section must be ## State template");
   const kinds = new Set<string>();
   const state = sections[1]?.heading === "State template" ? sections[1].lines : [];
   while (state.length > 0 && state.at(-1)!.trim() === "") state.pop();
   while (state.length > 0 && state[0]!.trim() === "") state.shift();
-  if (state.length > 60) add("persona.body", `## State template has ${state.length} lines; the cap is 60`);
+  if (state.length > 60) add("persona.section", `## State template has ${state.length} lines; the cap is 60`);
+  const want = STATE_HEADINGS[job];
+  if (want !== undefined) {
+    const missing = want.filter((h) => !state.some((l) => l.trim() === h));
+    if (missing.length > 0) add("persona.section", `missing ${missing.join(", ")}`);
+  }
   for (const s of sections.slice(2)) {
     const m = /^Prompt: ([a-z][a-z0-9-]{0,31})$/.exec(s.heading);
     if (!m) {
-      add("persona.body", `## ${s.heading} is not ## Prompt: <kind>`);
+      add("persona.section", `## ${s.heading} is not ## Prompt: <kind>`);
       continue;
     }
-    if (kinds.has(m[1]!)) add("persona.body", `duplicate ## Prompt: ${m[1]}`);
+    if (kinds.has(m[1]!)) add("persona.section", `duplicate ## Prompt: ${m[1]}`);
     kinds.add(m[1]!);
     for (const p of s.lines.join("\n").matchAll(/\{\{([^{}]*)\}\}/g)) {
       if (!PLACEHOLDERS.includes(p[1]!)) add("persona.placeholder", `prompt ${m[1]}: {{${p[1]}}} is not a placeholder`);

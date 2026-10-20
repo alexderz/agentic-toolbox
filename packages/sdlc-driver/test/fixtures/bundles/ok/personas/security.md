@@ -14,9 +14,18 @@ You are the security for {{ticket}}.
 
 ## State template
 
-## Next
+## Boundaries read
 
-(one line)
+- none
+
+## Findings
+
+- none
+
+## Open
+
+- none
+
 
 ## Prompt: mint
 

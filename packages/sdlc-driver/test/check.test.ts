@@ -57,17 +57,39 @@ test("B6: persona exists, scope matches, prompt kinds exist", () => {
   assert.deepEqual(broken((d) => editFlow(d, (f) => (node(f, "groom").persona = "ghost"))), ["flow.persona"]);
   assert.deepEqual(broken((d) => editFlow(d, (f) => (node(f, "groom").persona = "builder"))), ["flow.persona"]);
   assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("## Prompt: merge-tip", "## Prompt: merge-later"))), ["persona.prompt-missing"]);
-  assert.deepEqual(broken((d) => editFile(d, "personas/env-builder.md", (t) => t.replace("## Prompt: node-env-build", "## Prompt: node-other"))), ["persona.prompt-missing"]);
+  assert.deepEqual(broken((d) => editFile(d, "personas/env-builder.md", (t) => t.replace("## Prompt: node-env-prep", "## Prompt: node-env-build"))), ["persona.prompt-missing"]);
 });
 
 test("B7: front matter, read-only rule, tools, placeholders, body", () => {
-  assert.deepEqual(broken((d) => editFile(d, "personas/security.md", (t) => t.replace("readOnly: true", "readOnly: false"))), ["persona.read-only"]);
+  assert.deepEqual(broken((d) => editFile(d, "personas/security.md", (t) => t.replace("readOnly: true", "readOnly: false"))), ["persona.readonly"]);
   assert.deepEqual(broken((d) => editFile(d, "personas/security.md", (t) => t.replace("tools: [read,", "tools: [edit, read,"))), ["persona.tools"]);
   assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("tools: [read,", "tools: [shell, read,"))), ["persona.tools"]);
   assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("Exits: {{exits}}", "Exits: {{exitz}}"))), ["persona.placeholder"]);
   assert.ok(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("job: builder", "job: 'builder'"))).includes("persona.frontmatter"));
   assert.ok(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("id: builder", "id: builder-x"))).includes("persona.frontmatter"));
-  assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("## Next", "## Next\n" + "- line\n".repeat(60)))), ["persona.body"]);
+  assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("## Next", "## Next\n" + "- line\n".repeat(60)))), ["persona.section"]);
+  assert.deepEqual(broken((d) => editFile(d, "personas/builder.md", (t) => t.replace("## Corrected errors\n", ""))), ["persona.section"]);
+  assert.deepEqual(broken((d) => editFile(d, "personas/security.md", (t) => t.replace(/## Prompt: resume\n\n[\s\S]*?(?=## Prompt:|$)/, ""))), ["persona.prompt-missing"]);
+});
+
+test("chunk builder prompt kinds are node-env-prep, not the node id", () => {
+  assert.deepEqual(broken((d) => editFile(d, "personas/env-builder.md", (t) => t.replace("## Prompt: node-env-prep", "## Prompt: node-env-build"))), ["persona.prompt-missing"]);
+});
+
+test("a refiner file needs resume even when mint is present", () => {
+  const refiner = [
+    "schemaVersion: 1", "id: refiner", "job: refiner", "scope: chunk", "readOnly: true", "model: local",
+    "tools: [read, bash, grep, find, ls]", "skills: []", "tracker: true",
+    "## Role", "Do the job.", "", "## State template", "## Brief version", "- none", "## Cuts proposed", "- none", "## Open", "- none", "",
+    "## Prompt: mint", "Do mint.", "",
+  ].join("\n");
+  assert.deepEqual(
+    broken((d) => {
+      writeFileSync(join(d, "personas/refiner.md"), refiner);
+      editFile(d, "bundle.md", (t) => t.replace("- `architect`\n", "- `architect`\n- `refiner`\n"));
+    }),
+    ["persona.prompt-missing"],
+  );
 });
 
 test("B8: skills resolve, have a SOURCES row or live in the bundle, and match ## Required skills", () => {

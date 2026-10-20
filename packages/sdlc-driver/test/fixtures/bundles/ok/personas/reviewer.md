@@ -14,9 +14,18 @@ You are the reviewer for {{ticket}}.
 
 ## State template
 
-## Next
+## Verdicts
 
-(one line)
+- none
+
+## Open review comments
+
+- none
+
+## Security reads
+
+- none
+
 
 ## Prompt: mint
 

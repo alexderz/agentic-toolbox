@@ -1,67 +1,99 @@
-// Every fixture under docs/sdlc/fixtures/bundles/ and flows/ (item 2) is a
-// test. A bundle fixture `bundles/NAME/` is clean unless
-// `bundles/NAME.expect.json` says otherwise. A flow fixture
-// `flows/NAME.json` replaces flow.json in a copy of `bundles/minimal/`.
-// Expect files are `{"valid": bool, "codes": [...]}`.
+// Every bundle and flow fixture is one case. A flow fixture is a
+// directory: `expect.json` names the phase and the exact code set.
+// `bundle` checks `bundle/`. `candidate` requires that bundle to pass,
+// then checks `candidate.json` against the node whose exit is `choice`.
+// `env-block` checks the one block in `block.md`. Nothing is skipped.
 
 import { test } from "node:test";
 import assert from "node:assert/strict";
-import { cpSync, existsSync, lstatSync, mkdtempSync, readdirSync, readFileSync, symlinkSync, writeFileSync } from "node:fs";
+import { existsSync, lstatSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
-import { tmpdir } from "node:os";
 import { checkBundle } from "../src/check.ts";
+import { readFlow } from "../src/flow.ts";
 import { formatIssue } from "../src/issue.ts";
+import { envSectionError, validateResult, type Exit } from "../src/result.ts";
 
 const repo = join(import.meta.dirname, "../../..");
 const fixtures = join(repo, "docs/sdlc/fixtures");
 const bundles = join(fixtures, "bundles");
 const flows = join(fixtures, "flows");
-// Candidate rule 9 (the env block) is checked on a stage result, not by
-// the bundle check; its fixtures belong to the env parser.
-const NOT_BUNDLE_CHECK = ["flow.env-block"];
 
-const expectOf = (file: string) => (existsSync(file) ? JSON.parse(readFileSync(file, "utf8")) : { valid: true, codes: [] });
-const result = (dir: string) => {
-  const issues = checkBundle(dir);
-  return { valid: issues.length === 0, codes: [...new Set(issues.map((i) => i.code))].sort(), lines: issues.map(formatIssue) };
-};
+interface Expect {
+  valid: boolean;
+  codes: string[];
+  phase?: string;
+}
 
-const bundleNames = existsSync(bundles) ? readdirSync(bundles).filter((n) => lstatSync(join(bundles, n))?.isDirectory()) : [];
-if (bundleNames.length === 0) test("docs/sdlc/fixtures/bundles", (t) => t.skip("no bundle fixtures yet: G2 has not landed docs/sdlc/fixtures/bundles/"));
+const codesOf = (issues: { code: string }[]) => [...new Set(issues.map((i) => i.code))].sort();
+const loadExpect = (file: string): Expect => JSON.parse(readFileSync(file, "utf8")) as Expect;
+
+const bundleNames = readdirSync(bundles).filter((n) => lstatSync(join(bundles, n))?.isDirectory() === true).sort();
+const flowNames = readdirSync(flows).filter((n) => lstatSync(join(flows, n))?.isDirectory() === true).sort();
+
+test("bundle and flow fixtures are the landed set", () => {
+  assert.deepEqual(bundleNames, ["minimal"]);
+  assert.equal(flowNames.length, 32);
+  assert.equal(flowNames.some((n) => !existsSync(join(flows, n, "expect.json"))), false);
+});
+
 for (const name of bundleNames) {
   test(`bundles/${name}`, () => {
-    const want = expectOf(join(bundles, `${name}.expect.json`));
-    const got = result(join(bundles, name));
-    assert.deepEqual({ valid: got.valid, codes: got.codes }, { valid: want.valid, codes: [...want.codes].sort() }, got.lines.join("\n"));
+    const want = loadExpect(join(bundles, `${name}.expect.json`));
+    const issues = checkBundle(join(bundles, name));
+    assert.deepEqual(
+      { valid: issues.length === 0, codes: codesOf(issues) },
+      { valid: want.valid, codes: [...want.codes].sort() },
+      issues.map(formatIssue).join("\n"),
+    );
   });
 }
 
-const flowNames = existsSync(flows) ? readdirSync(flows).filter((n) => n.endsWith(".json") && !n.endsWith(".expect.json")) : [];
-if (flowNames.length === 0) test("docs/sdlc/fixtures/flows", (t) => t.skip("no flow fixtures yet: G2 has not landed docs/sdlc/fixtures/flows/"));
-else if (!existsSync(join(bundles, "minimal"))) test("docs/sdlc/fixtures/flows", (t) => t.skip("flow fixtures need docs/sdlc/fixtures/bundles/minimal/"));
-else {
-  for (const name of flowNames) {
-    test(`flows/${name}`, (t) => {
-      const want = expectOf(join(flows, name.replace(/\.json$/, ".expect.json")));
-      if (want.codes.some((c: string) => NOT_BUNDLE_CHECK.includes(c))) return t.skip(`${want.codes.join(", ")} is not a bundle-check code`);
-      const bytes = readFileSync(join(flows, name));
-      let id = "minimal";
-      try {
-        const v = JSON.parse(bytes.toString("utf8")).id;
-        if (typeof v === "string" && /^[a-z][a-z0-9-]{0,31}$/.test(v)) id = v;
-      } catch {
-        // an unparsable flow keeps the minimal bundle's id
-      }
-      const root = mkdtempSync(join(tmpdir(), "sdlc-flow-fixture-"));
-      const dir = join(root, "bundles", id);
-      cpSync(join(bundles, "minimal"), dir, { recursive: true });
-      writeFileSync(join(dir, "flow.json"), bytes);
-      symlinkSync(join(repo, "skills"), join(root, "skills"));
-      cpSync(join(repo, "SOURCES.md"), join(root, "SOURCES.md"));
-      const md = readFileSync(join(dir, "bundle.md"), "utf8");
-      writeFileSync(join(dir, "bundle.md"), md.replace(/^# Bundle — .*$/m, `# Bundle — ${id}`));
-      const got = result(dir);
-      assert.deepEqual({ valid: got.valid, codes: got.codes }, { valid: want.valid, codes: [...want.codes].sort() }, got.lines.join("\n"));
-    });
+function flowCase(name: string): { valid: boolean; codes: string[]; lines: string[] } {
+  const root = join(flows, name);
+  const want = loadExpect(join(root, "expect.json"));
+  if (want.phase === "bundle") {
+    const issues = checkBundle(join(root, "bundle"));
+    return { valid: issues.length === 0, codes: codesOf(issues), lines: issues.map(formatIssue) };
   }
+  if (want.phase === "env-block") {
+    const why = envSectionError(readFileSync(join(root, "block.md"), "utf8"));
+    const codes = why === undefined ? [] : ["flow.env-block"];
+    return { valid: codes.length === 0, codes, lines: why === undefined ? [] : [why] };
+  }
+  if (want.phase === "candidate") {
+    const bundleIssues = checkBundle(join(root, "bundle"));
+    if (bundleIssues.length > 0) {
+      return { valid: false, codes: codesOf(bundleIssues), lines: ["bundle did not pass", ...bundleIssues.map(formatIssue)] };
+    }
+    const file = join(root, "candidate.json");
+    const bytes = readFileSync(file);
+    const choice = JSON.parse(bytes.toString("utf8")).choice;
+    const flowFile = join(root, "bundle/flow.json");
+    const read = readFlow(readFileSync(flowFile), flowFile);
+    if (!read.flow) return { valid: false, codes: codesOf(read.issues), lines: read.issues.map(formatIssue) };
+    const node = read.flow.nodes.find((n) => n.exits.some((e) => e.name === choice));
+    if (!node) return { valid: false, codes: ["fixture"], lines: [`no node has exit ${String(choice)}`] };
+    const kind = node.kind === "command" ? "command" : node.kind === "land" ? undefined : "model";
+    const exits: Exit[] = node.exits.map((e) => ({ name: e.name, statuses: e.statuses, ...(e.checks ? { checks: e.checks } : {}) }));
+    const v = validateResult(bytes, {
+      step: node.step,
+      ...(kind ? { kind } : {}),
+      exits,
+      checks: node.checks ?? [],
+    }, file);
+    return { valid: v.issues.length === 0, codes: codesOf(v.issues), lines: v.issues.map(formatIssue) };
+  }
+  return { valid: false, codes: ["fixture"], lines: [`unknown phase ${String(want.phase)}`] };
+}
+
+for (const name of flowNames) {
+  test(`flows/${name}`, () => {
+    const want = loadExpect(join(flows, name, "expect.json"));
+    const got = flowCase(name);
+    assert.deepEqual(
+      { valid: got.valid, codes: got.codes },
+      { valid: want.valid, codes: [...want.codes].sort() },
+      got.lines.join("\n"),
+    );
+  });
 }

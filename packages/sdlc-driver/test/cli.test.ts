@@ -71,6 +71,31 @@ test("validate: a result that holds for the node exits 0", () => {
   assert.deepEqual(run(["validate", file, "--flow", flow, "--node", "review"]), { status: 0, out: "", err: "" });
 });
 
+test("validate: ticket context and reserved fail follow authorship", () => {
+  const { root, flow } = runRoot();
+  const file = join(root, "reviewer-a530/run-1/result.json");
+  const body = (choice: string, status: string, ticket = "der-a530") => JSON.stringify({
+    schemaVersion: 1, step: "Review", status, choice, ticket,
+    artifact: "reviewer-a530/run-1/result.md",
+    evidence: status === "pass" ? { kind: "model", checks: ["intake: none", "sha-pins: pinned", "trust-boundary: unchanged"] } : { kind: "model" },
+    findings: status === "fail" || status === "blocked" ? "check failed" : "",
+  });
+  writeFileSync(file, body("approve", "pass"));
+  assert.equal(run(["validate", file, "--flow", flow, "--node", "review", "--ticket", "der-a530"]).status, 0);
+  const wrong = run(["validate", file, "--flow", flow, "--node", "review", "--ticket", "der-other"]);
+  assert.equal(wrong.status, 1);
+  assert.match(wrong.out, /result\.ticket-mismatch/);
+  writeFileSync(file, body("operator", "fail"));
+  const worker = run(["validate", file, "--flow", flow, "--node", "review"]);
+  assert.equal(worker.status, 1);
+  assert.match(worker.out, /flow\.reserved-status/);
+  assert.equal(run(["validate", file, "--flow", flow, "--node", "review", "--authored", "driver"]).status, 0);
+  writeFileSync(file, body("stop", "fail"));
+  assert.match(run(["validate", file, "--flow", flow, "--node", "review"]).out, /flow\.reserved-status/);
+  assert.equal(run(["validate", file, "--flow", flow, "--node", "review", "--authored", "driver"]).status, 0);
+  assert.equal(run(["validate", file, "--flow", flow, "--node", "review", "--authored", "guest"]).status, 2);
+});
+
 test("validate: flow-aware errors, one per line, exit 1", () => {
   const { root, flow } = runRoot();
   const file = join(root, "reviewer-a530/run-1/result.json");

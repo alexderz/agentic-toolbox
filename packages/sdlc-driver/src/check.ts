@@ -109,7 +109,6 @@ function flowRules(flow: Flow, bundle: Bundle, file: string, bundleMd: string): 
       continue;
     }
     if (p.scope !== n.scope) at(n.id, undefined, "flow.persona", `persona ${p.id} has scope ${p.scope}; the node has ${n.scope}`);
-    if (!p.prompts.has("mint") && !p.prompts.has(`node-${n.id}`)) at(n.id, undefined, "persona.prompt-missing", `persona ${p.id} has neither ## Prompt: mint nor ## Prompt: node-${n.id}`);
   }
   for (const [pid, kinds] of landRole) {
     const p = bundle.personas.get(pid);
