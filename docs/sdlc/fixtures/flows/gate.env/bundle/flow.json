@@ -1,0 +1,120 @@
+{
+  "schemaVersion": 1,
+  "id": "sample",
+  "entry": "plan",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "plan",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "plan",
+      "ask": "Accept the plan?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "trial"
+        }
+      ]
+    },
+    {
+      "id": "trial",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "trial",
+      "ask": "Run a Trial?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "spec"
+        }
+      ]
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "secure"
+        }
+      ],
+      "outputs": [
+        "{design}/lld.md"
+      ]
+    },
+    {
+      "id": "secure",
+      "label": "Secure",
+      "step": "Spec",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "security",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "sgate"
+        }
+      ]
+    },
+    {
+      "id": "sgate",
+      "label": "Sgate",
+      "step": "Spec",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "spec",
+      "ask": "Accept the spec?",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "groom"
+        }
+      ]
+    },
+    {
+      "id": "groom",
+      "label": "Groom",
+      "step": "Groom",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "groom-reviewer",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ]
+    }
+  ]
+}

@@ -5,8 +5,7 @@ Checklist before any third-party skill **body** lands in this repo.
 mirrors — go through it and do not bypass it.
 
 First-party files are written in this repo, for example this checklist,
-`skills/security-hardening/SKILL.md` and language guides. They are not
-vendor intake. Ship them without secrets and without `scripts/`.
+`skills/security-hardening/SKILL.md`, and language guides. Not vendor intake. Ship them without secrets and without `scripts/`.
 
 ## Checklist
 
@@ -33,9 +32,8 @@ vendor intake. Ship them without secrets and without `scripts/`.
 
 ## Workers
 
-A remote-agent PR into this repo **still needs a security clear**.
-Remote authoring is not an exemption. Build DoD still requires the diff
-to match the pinned SHA. For first-party prose, the pin is `first-party`.
+A remote-agent PR **still needs a security clear**. Remote authoring is not an exemption.
+The diff matches the pinned SHA. First-party prose uses pin `first-party`.
 
 A product-repo `.agents/tracker/SKILL.md` needs no SOURCES row. This
 covers every one that a governing `## Tracker` names: at the root, or in
@@ -50,6 +48,8 @@ names. **security** reads the change that adds or edits one:
 
 ## Layout-only exception
 
-An empty skill directory that holds only `.gitkeep` is layout: no
-`SKILL.md`, no scripts. It is **OK without scan**. Start intake and the
-scanners when a body, script, or third-party file would land.
+A directory that holds only `.gitkeep` is **OK without scan**. Start intake when a body, script, or third-party file would land.
+
+## Script records
+
+None cleared. **security** appends one line per bundle script. The shape is owned by [Script records](sdlc/bundle-spec.md#script-records).

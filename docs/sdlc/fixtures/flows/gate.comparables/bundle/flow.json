@@ -1,0 +1,32 @@
+{
+  "schemaVersion": 1,
+  "id": "sample",
+  "entry": "hld",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "hld",
+      "label": "Hld",
+      "step": "Plan",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "architect",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        }
+      ],
+      "outputs": [
+        "{design}/hld.md"
+      ]
+    }
+  ]
+}

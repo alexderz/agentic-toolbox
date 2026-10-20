@@ -1,0 +1,54 @@
+{
+  "schemaVersion": 1,
+  "id": "minimal",
+  "entry": "refine",
+  "defaults": {
+    "prove": [],
+    "commandTimeoutSec": 1800,
+    "workerTimeoutSec": 7200
+  },
+  "nodes": [
+    {
+      "id": "refine",
+      "label": "Brief",
+      "step": "Brief",
+      "kind": "model",
+      "scope": "chunk",
+      "persona": "refiner",
+      "exits": [
+        {
+          "name": "next",
+          "statuses": [
+            "pass"
+          ],
+          "to": "ask"
+        }
+      ]
+    },
+    {
+      "id": "ask",
+      "label": "Ask",
+      "step": "Brief",
+      "kind": "gate",
+      "scope": "chunk",
+      "gate": "brief",
+      "ask": "Accept the note or say what to revise.",
+      "exits": [
+        {
+          "name": "accept",
+          "statuses": [
+            "pass"
+          ],
+          "to": "@done"
+        },
+        {
+          "name": "revise",
+          "statuses": [
+            "fail"
+          ],
+          "to": "refine"
+        }
+      ]
+    }
+  ]
+}
