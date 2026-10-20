@@ -1,0 +1,1 @@
+{"schemaVersion": 1, "step": "Brief", "status": "needs_input", "choice": "accept", "ticket": "DER-529", "artifact": "brief-1/result.md", "evidence": {"kind": "model", "question": "3 attempts or 30 seconds?"}, "findings": ""}

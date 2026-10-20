@@ -1,0 +1,1 @@
+{"schemaVersion": 1, "step": "Build", "status": "pass", "choice": "review", "ticket": "DER-529", "artifact": "build-1/absent.md", "evidence": {"kind": "model", "checks": ["dod holds"]}, "findings": ""}
