@@ -835,8 +835,8 @@ node.
   executes, unless the operator spots it in the summary.
 - The toolbox is read only from the run root's copy at the pin, each
   object hash-checked; a new pin needs the operator's `/sdlc-repin`
-  between stages. Residual risk, accepted in writing with branch
-  protection on the toolbox `main`: anyone who can push the toolbox
+  between stages. Residual risk, accepted in writing (no branch
+  protection yet; the operator is the toolbox's only writer): anyone who can push the toolbox
   trunk at the confirmed remote can put a commit on the reviewed ref
   (LLD O22).
 - The build environment's commands come only from the accepted LLD,
@@ -1025,8 +1025,8 @@ items 3 and 5.
   state branch as a residual to accept in writing; the env gate's
   agent-plus-operator shape; integration credentials for command stages
   only.
-- From the toolbox-copy revision (the LLD's O21, open): how many runs,
-  each in its own run root, may be active at once.
+- From the toolbox-copy revision (the LLD's O21, accepted): any number
+  of runs, each in its own run root; in practice serial.
 
 ## Optional
 
