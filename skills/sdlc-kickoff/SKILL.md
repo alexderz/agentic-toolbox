@@ -198,7 +198,7 @@ argv array. Never paste an unquoted refspec into a command string.
   owner, one `/`, and one non-empty name, is `unknown` for both
   branches. Do not call `repos/OWNER/REPO/...`. Split a good value into
   `"$owner"` and `"$repo"`. For `"$b"` of `"$project_main"` and of
-  `"$trunk"`, run `api=(gh api --include -- "repos/${owner}/${repo}/branches/${b}/protection")`
+  `"$trunk"`, URL-encode `b`: `b_uri=$(node -p 'encodeURIComponent(process.argv[1])' "$b")`; run `api=(gh api --include -- "repos/${owner}/${repo}/branches/${b_uri}/protection")`
   then `"${api[@]}"`. The first line is the HTTP status. 403 is
   `unknown`. 404 is `unknown`. Do not record `none` for 403 or 404.
   Any other status than 200 is `unknown`, which the operator confirms.
