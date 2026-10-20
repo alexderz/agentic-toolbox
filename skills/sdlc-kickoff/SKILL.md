@@ -58,25 +58,37 @@ yet: <name> (item 5)` and carry on with what the skill can do.
       that starts with `-`. Run `fmt=(git check-ref-format --branch "$trunk")`
       then `"${fmt[@]}"`. A non-zero exit asks again.
    3. **`prep-pin`.** After that rule and the trunk check pass, resolve
-      the pin with the argv below. Do not clone. Do not fetch into the
-      product repo. `"$remote"` is the typed URL. `"$trunk"` already
-      passed `prep-trunk`. Tags, then the trunk tip. Show the 40-hex
-      commit. The answer is yes or ask again.
+      the pin from a clean temporary directory. Do not clone. Do not
+      fetch into the product repo. Do not read that repo's `.git/config`.
+      `"$remote"` is the typed URL. `"$trunk"` already passed
+      `prep-trunk`. Set `pin_dir` with `mktemp -d`. `git -C "$pin_dir"
+      rev-parse --is-inside-work-tree` must not print `true`. The loop
+      copies only `credential.*` and `core.sshCommand` into
+      `"$pin_dir/gitconfig"`. Do not copy `url.*.insteadOf` or any
+      other key. `GIT_CONFIG_GLOBAL` is that file only. The `env` line
+      unsets `GIT_DIR` and `GIT_WORK_TREE` and sets `GIT_CONFIG_COUNT=0`.
+      Tags, then the trunk tip. Show the 40-hex. The answer is yes or
+      ask again.
 
       ```sh
-      pin=(git -c protocol.file.allow=never -c protocol.ext.allow=never ls-remote --tags -- "$remote")
-      GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_ALLOW_PROTOCOL=https:ssh "${pin[@]}"
-      tip=(git -c protocol.file.allow=never -c protocol.ext.allow=never ls-remote -- "$remote" "refs/heads/$trunk")
-      GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL=/dev/null GIT_ALLOW_PROTOCOL=https:ssh "${tip[@]}"
+      : > "$pin_dir/gitconfig"
+      while IFS= read -r -d '' rec; do
+        git -C "$pin_dir" config --file "$pin_dir/gitconfig" --add "${rec%%$'\n'*}" "${rec#*$'\n'}"
+      done < <(GIT_CONFIG_NOSYSTEM=1 git -C "$pin_dir" config --global --null --get-regexp '^(credential\..*|core\.sshCommand)$' || true)
+      pin=(git -C "$pin_dir" -c protocol.file.allow=never -c protocol.ext.allow=never ls-remote --tags -- "$remote")
+      env -u GIT_DIR -u GIT_WORK_TREE GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL="$pin_dir/gitconfig" GIT_CONFIG_COUNT=0 GIT_ALLOW_PROTOCOL=https:ssh "${pin[@]}"
+      tip=(git -C "$pin_dir" -c protocol.file.allow=never -c protocol.ext.allow=never ls-remote -- "$remote" "refs/heads/$trunk")
+      env -u GIT_DIR -u GIT_WORK_TREE GIT_CONFIG_NOSYSTEM=1 GIT_CONFIG_GLOBAL="$pin_dir/gitconfig" GIT_CONFIG_COUNT=0 GIT_ALLOW_PROTOCOL=https:ssh "${tip[@]}"
       ```
 
-      A release tag name matches `^v[0-9]+(\.[0-9]+)*$`. Pass only
-      matching names as argv to `printf '%s\n'`, then pipe that stdout
-      to `sort -V`. Do not pass the names to `sort` as file operands.
-      The pin is the peeled 40-hex (`^{}` when that line exists) of the
-      last line. No such tag: the trunk command's 40-hex is the pin.
+      A release tag matches `^v[0-9]+(\.[0-9]+)*$`. Pass only matching
+      names as argv to `printf '%s\n'`, and pipe that stdout to `sort -V`.
+      Do not pass the names to `sort` as file operands. The pin is the
+      peeled 40-hex of the last line, the `^{}` line when it exists. No such tag: the trunk command's 40-hex is the pin.
    4. **`prep-repo`.** Origin name, repo trunk, project-main, design
-      folder, test command or `null`.
+      folder, test command or `null`. Run `git check-ref-format --branch`
+      on `"$origin"` the same way as `prep-trunk`. Refuse a non-zero
+      exit. Do not put a refused origin in a refspec.
    5. **`prep-slug`.** Chunk slug and Epic title. Accept the slug only
       when it matches `^[a-z0-9]+(-[a-z0-9]+)*$`. Then set
       `project_main=integrate/$slug`. Run `git check-ref-format --branch`
@@ -151,7 +163,8 @@ yet: <name> (item 5)` and carry on with what the skill can do.
 ### R1-R4 checks
 
 Run in the repo checkout. `"$origin"` is the remote name from
-`prep-repo`. Use `"$trunk"` and `"$project_main"` only after `prep-trunk`
+`prep-repo`, and only after `git check-ref-format --branch` on it
+exits 0. Use `"$trunk"` and `"$project_main"` only after `prep-trunk`
 and `prep-slug` pass. Read only, until the reply. Each git call is one
 argv array. Never paste an unquoted refspec into a command string.
 
@@ -177,14 +190,19 @@ argv array. Never paste an unquoted refspec into a command string.
   Then `"${dry[@]}"`. Exit `0` is `done`. It authenticates without
   moving a ref. When the branch is not cut yet, say the first real push
   also proves branch creation.
-- **R4 Protection and CI.** CI config at the project-main tip
-  (`.github/workflows/`, `.gitlab-ci.yml`, or the repo's own): `present`
-  or `absent`. Protection on project-main and trunk: with `gh auth
-  status` ok for the host, set `"$b"` to `"$project_main"` and to
-  `"$trunk"`, then `api=(gh api -- "repos/OWNER/REPO/branches/${b}/protection")`
-  and `"${api[@]}"`. A 404 is `none`. Else `unknown`, which the operator
-  confirms. A rule that
-  blocks a direct, non-force push to project-main is `to do`.
+- **R4 Protection and CI.** CI at the project-main tip
+  (`.github/workflows/`, `.gitlab-ci.yml`, or the repo's own) is
+  `present` or `absent`. When `gh auth status` is ok, run
+  `view=(gh repo view --json nameWithOwner --jq .nameWithOwner)` then
+  `"${view[@]}"`. A non-zero exit, or a value that is not one non-empty
+  owner, one `/`, and one non-empty name, is `unknown` for both
+  branches. Do not call `repos/OWNER/REPO/...`. Split a good value into
+  `"$owner"` and `"$repo"`. For `"$b"` of `"$project_main"` and of
+  `"$trunk"`, run `api=(gh api --include -- "repos/${owner}/${repo}/branches/${b}/protection")`
+  then `"${api[@]}"`. The first line is the HTTP status. 403 is
+  `unknown`. 404 is `unknown`. Do not record `none` for 403 or 404.
+  Any other status than 200 is `unknown`, which the operator confirms.
+  A 200 rule that blocks a direct, non-force push to project-main is `to do`.
 
 ## Mode: gather
 

@@ -13,11 +13,11 @@ rule below is **kept** in this path. No route, no drop.
 | — | R1-R4 are walkable from this skill. R5-R7 and R9 are `to do`. R8's parent-folder word comes from the hand check. `0700` is after the reply. R10 is `n/a` at `plain` | kept | Driver commands |
 | — | Ask `prep-mode` before `prep-level`. Ids: `prep-remote`, `prep-trunk`, `prep-pin`, `prep-repo`, `prep-slug`, `prep-tracker`, `prep-harness`, `prep-root`, `prep-mode`, `prep-level`, `prep-backup` | kept | Mode: prep |
 | — | Refuse a toolbox URL that breaks the remote rule before any fetch. Trunk passes `git check-ref-format --branch` and does not start with `-` | kept | `prep-remote`, `prep-trunk` |
-| — | After those checks, the pin is a quoted `git ls-remote` argv (tags, then trunk tip), not a clone into the product repo. Show the 40-hex commit | kept | `prep-pin` |
+| — | After those checks, the pin is a quoted `git ls-remote` from a clean temporary directory, with a global file that holds only `credential.*` and `core.sshCommand`. Not a clone into the product repo, and not that repo's `.git/config`. Show the 40-hex commit | kept | `prep-pin` |
 | — | Slug matches `^[a-z0-9]+(-[a-z0-9]+)*$`. `project_main` is `integrate/$slug` only after that match and `git check-ref-format --branch` | kept | `prep-slug` |
 | — | Tracker is required and `local` only for a driven run. A public repo has no default and is warned before any ticket write | kept | `prep-tracker` |
 | — | Followed, and any prep before item 5, sets `plain` without asking. A driven run after item 5 offers three levels with no default on a public repo, else default `pushed` | kept | `prep-level` |
-| — | Readiness preview writes nothing. R1-R4 use quoted argv arrays. No unquoted refspec. No `--force` | kept | Readiness preview, R1-R4 checks |
+| — | Readiness preview writes nothing. R1-R4 use quoted argv arrays. Origin passes `git check-ref-format --branch` before a refspec. R4 resolves owner and name with `gh repo view`, and 403 and 404 are `unknown`, not `none`. No unquoted refspec. No `--force` | kept | Readiness preview, R1-R4 checks |
 | — | R8: parent exists, is not a symbolic link, and is not inside a worktree. That word can be `done`. Creating mode `0700` is after the reply | kept | R8 hand check |
 | — | After the reply: approved R2 push, file the Epic, write the run files with a temporary file, `fsync`, and `rename`. While `plain`, skip `state-init`, drill, and the genesis note | kept | After the operator replies |
 | — | Gather starts only in a new session, and only after `run.json` exists. Until item 5, a level other than `plain` stops | kept | Mode: gather |
