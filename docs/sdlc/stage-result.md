@@ -41,10 +41,10 @@ is a failure. An empty string or array does not meet a non-empty rule.
 | --- | --- | --- |
 | `schemaVersion` | integer | Exactly `1`; not `"1"`, not `1.0`. |
 | `step` | string | A step name in [Names](../SDLC.md#names). |
-| `choice` | string | Matches `^[a-z][a-z0-9-]{0,31}$`. With a flow, a valid exit of the stage; without one, the pattern only. |
-| `ticket` | string | Matches `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`: the tracker id, any backend. Chunk stages use the Epic id. |
-| `artifact` | string | One run-root-relative path of `[A-Za-z0-9._-]+` segments; no `.`, `..`, leading `/`, or `\`. A folder ends in `/`. |
 | `status` | string | One of the four statuses. |
+| `choice` | string | Matches `^[a-z][a-z0-9-]{0,31}$`. This spec checks the pattern only; the flow rules are in the flow spec. |
+| `ticket` | string | Matches `^[A-Za-z0-9][A-Za-z0-9._-]{0,63}$`: the tracker id, any backend. Chunk stages use the Epic id. It must equal the invocation ticket (`result.ticket-mismatch`). |
+| `artifact` | string | One run-root-relative path of `[A-Za-z0-9._-]+` segments; no `.`, `..`, leading `/`, or `\` (`result.artifact-path`). It names the result document or output folder in the stage's own run folder (`result.artifact-outside-run` otherwise) and must exist (`result.artifact-missing`). A folder ends in `/`. |
 | `evidence` | object | Stage evidence. |
 | `findings` | string | The prose. It may be empty, except when `status` is `fail` or `blocked`: then it must be non-empty. |
 
@@ -145,4 +145,5 @@ separately for diagnosis. Missing files remain reader failures.
 ## Out of scope
 
 This spec does not define the Pi command or session resume. The flow
-file and `choice` routing are in [flow-spec.md](flow-spec.md).
+file and `choice` routing are in `flow-spec.md` (G2; see [Behavior 2](../../maintainers/design/solo-dlc/lld.md#behavior-2-bundle-and-flow-spec-item-2)).
+Fixtures: [results/README.md](fixtures/results/README.md).
