@@ -232,16 +232,18 @@ git, or tracker state.
   **so that** a lost machine costs only the stage that was running.
 - **Done when:**
   - The kickoff skill's restore mode asks only the machine-local
-    questions, rebuilds the run root from the state branch, and
-    re-clones the toolbox at the pin from the remote that `run.json`
-    records.
+    questions and rebuilds the run root from the state branch; it
+    clones nothing from the toolbox yet.
   - A state with an edited or missing file is refused, naming it.
   - A state that names a proving, env, or land commit not on
     project-main is refused, naming the field.
-  - The start command shows the restore summary, including the
-    `run.json` summary and each named commit, and starts nothing until
-    the operator types the start of the genesis commit from their own
-    note and of the state tip.
+  - The start command first asks me to type, from my own note, the
+    start of the genesis commit, the full toolbox remote, and its
+    trunk; only then does it clone the toolbox at the pin from that
+    typed remote. It then shows the restore summary, including the
+    `run.json` summary, each named commit, and the diff from the first
+    pin, and starts nothing until I type the start of the state tip,
+    and the full current pin when it moved since the first.
   - Personas resume from the session backup when one matches, else are
     rehydrated (SD-11).
   - The old machine, started again, refuses to drive the run.
@@ -302,13 +304,17 @@ git, or tracker state.
   into the run root **so that** the workers follow exactly what I
   pinned, nothing changes it unseen, and my checkout stays untouched.
 - **Done when:**
+  - Run prep asks me to type the toolbox remote, with no default,
+    before it clones anything; a model never proposes or picks it, and
+    a restore asks for it again from my note.
   - Run prep clones the toolbox into `RUN_ROOT/toolbox.git`, and each
     persona's compiled file is in `RUN_ROOT/compiled/`; the worker's
     first prompt names it by path.
   - A changed copy, an edited compiled file, or a copy pointing at
     another remote stops the run with a line naming what differs.
-  - I type the toolbox remote myself at the first `/sdlc`; a model never
-    picks it, and a restore asks for it again from my note.
+  - Every start fetches the toolbox trunk (`main` unless I named
+    another) and stops when the pin is neither on it nor a commit I
+    typed, even if every local file was changed to agree.
 - **Out of scope:** how many runs may be active at once (LLD O21).
 
 ### SD-13 See items land without waking the manager

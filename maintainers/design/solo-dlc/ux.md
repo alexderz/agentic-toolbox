@@ -69,15 +69,16 @@ Human gate: operator accepts, or writes `UX verification not required`.
   questions only (toolbox and tag, repo and branches, chunk, tracker,
   harness and models, run root, durability, backup folder) → readiness
   checklist, each line done, to do, deferred, or n/a → operator replies
-  → Run prep prepares the run root with its toolbox copy and the state
-  branch, runs the
-  restore drill, and prints the Gather line; the session is discarded
-  → new session: Gather interviews the operator on a brain dump →
-  operator confirms the brief → console prints the run root and the
-  exact start command for the harness → operator runs it → the first
-  start asks the operator to type the toolbox remote, then prints the
-  genesis note (genesis commit and toolbox remote) to keep off the
-  machine.
+  → Run prep has the operator type the toolbox remote, with no
+  default, before anything is cloned → operator replies → Run prep
+  prepares the run root with its toolbox copy and the state branch,
+  prints the genesis note (genesis commit, toolbox remote, and trunk)
+  to keep off the machine, runs the restore drill, and prints the
+  Gather line; the session is discarded → new session: Gather
+  interviews the operator on a brain dump → operator confirms the
+  brief → console prints the run root and the exact start command for
+  the harness → operator runs it → the first start shows the run
+  summary for a yes.
 - **J2 Public tickets warning.** No tracker connected → kickoff offers
   the `local` adapter (a `tickets` branch) → the repo is public → kickoff
   says, before anything is written, that ticket titles, bodies, and
@@ -151,8 +152,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
   operator loads the kickoff skill in restore mode → it asks only the
   machine-local questions and restores the run root from the state
   branch → start command → the operator types, from the genesis note,
-  the first 12 characters of the genesis commit and the full toolbox
-  remote → the toolbox is cloned again at the pin → the console shows
+  the first 12 characters of the genesis commit, the full toolbox
+  remote, and its trunk → the toolbox is cloned again at the pin → the console shows
   the restore summary (last
   stage, in-flight run, lease holder, any commit not made by the
   driver, the commits it names on project-main, the `run.json`
@@ -180,7 +181,8 @@ Human gate: operator accepts, or writes `UX verification not required`.
   or a compiled file while the driver is down → the next start stops;
   the console names what differs → the operator rebuilds the copy at
   the recorded pin. A remote that differs from the one the operator
-  typed never runs.
+  typed never runs, and a pin that is no longer on the toolbox trunk,
+  nor typed by the operator, stops the next start.
 
 ## Stories
 

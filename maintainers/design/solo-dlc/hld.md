@@ -74,10 +74,11 @@
 
 - **UX / stories** — [ux.md](ux.md) and
   [user-stories.md](user-stories.md) (designer). Agent review passed;
-  the operator accepted the UX page at 021f81d, 2026-10-19. UX questions Q1 (replying
-  to an escalation), Q2 (the followed-mode handoff form), and Q3 (the
-  chronological index) stay **open** until the operator accepts the UX
-  page. This HLD does not lock them; [Open](#open) lists each one with
+  the operator accepted the UX page at 021f81d, 2026-10-19, with UX
+  questions Q1 (replying to an escalation), Q2 (the followed-mode
+  handoff form), and Q3 (the chronological index) still **open**: the
+  build uses this HLD's defaults until the operator answers each. This
+  HLD does not lock them; [Open](#open) lists each one with
   the default this HLD assumes and what changes if the operator picks
   otherwise.
 
@@ -321,15 +322,17 @@ from decision B's `pushed` default that the operator confirms (LLD O12).
 `RUN_ROOT/toolbox.git`, and records a tag or commit (the pin, in
 `run.json`, so on the state branch too). Nothing from it is copied into
 the product repo or the operator's checkout. The toolbox remote is an
-`https` or `ssh` URL that the operator types at the first `/sdlc`,
-never one a model chose; it is fixed for the run and kept with the
+`https` or `ssh` URL that the operator types at Run prep before
+anything is cloned, never one a model proposed or chose; it and its
+trunk branch (default `main`) are fixed for the run and kept with the
 genesis commit in the operator's off-machine note. The driver, the
 bundle check, the INTAKE checks, and skill packing read only that
 copy's object store at the pin, never a working tree, and check each
 object's hash as they read it. Driver git there runs hardened, and at
 every start the driver byte-checks the copy's config and checks that it
-still points at the confirmed remote; any difference is an operator
-stop. Moving the pin is the operator's `/sdlc-repin` between stages: it
+still points at the confirmed remote, then fetches that trunk and
+requires the pin to be on it or a commit the operator typed; any
+difference is an operator stop. Moving the pin is the operator's `/sdlc-repin` between stages: it
 fetches into the copy, checks the new commit and shows the diff from
 the object store, and only on the operator's yes records it,
 recompiles, and adds it to the history. A restore on another machine
@@ -416,7 +419,7 @@ shell is caught only by the checks below.
 | Claim | Kind | How, and what happens |
 | --- | --- | --- |
 | A worker writes only its writable set, through `write` or `edit` | Enforced | Tool allowlist and path guard |
-| A worker writes only its writable set, through `bash` | Detected in the run root and item worktrees; residual elsewhere | Before each stage the driver hashes `run.json`, `driver.json`, `index.jsonl`, `plan/`, `asks/`, `driver/`, the worker extension file, and every persona folder except the current run folder and session file. After the stage it hashes them again. For each worktree outside the writable set, it compares `HEAD` and `git status --porcelain` before and after. Any change → `fail`, `operator` stop. Writes elsewhere on the machine are residual risk |
+| A worker writes only its writable set, through `bash` | Detected in the run root and item worktrees; residual elsewhere | Before each stage the driver records the run root as the LLD's `snapshot` check defines it: `run.json`, `driver.json`, `index.jsonl`, `plan/`, `asks/`, `driver/`, `compiled/`, `toolbox.git/`, the worker extension file, and every persona folder except the current run folder and session file. After the stage it records them again. A write under `toolbox.git/` or `compiled/` is detected, not residual. For each worktree outside the writable set, it compares `HEAD` and `git status --porcelain` before and after. Any change → `fail`, `operator` stop. Writes elsewhere on the machine are residual risk |
 | The verifier and reviewer leave the item worktree unchanged | Detected | `HEAD`, `git status --porcelain`, and the remote item branch tip are compared before and after each verifier and reviewer stage. Any change → `fail`, `operator` stop |
 | The builder does not change the proving commands | Enforced | The driver reads the commands only from the committed `groom.md` blob in its own integration worktree ([Verification](#verification-and-the-test-failure-path) step 2); an edit in the item worktree has no effect on what runs |
 | The builder does not rewrite pushed history | Detected | Before it pushes the item branch, the driver checks that the last pushed tip is an ancestor of the new `HEAD`. If not → `fail`, `operator` stop |

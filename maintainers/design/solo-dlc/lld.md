@@ -17,8 +17,8 @@
   operator's decisions A–D (clarifications 19–25), and its fix round
   applies the independent review of f0f389e; the toolbox-copy revision,
   2026-10-19, applies the operator's decisions on a pinned toolbox copy
-  in the run root (clarification 26), with the reviews of ed91909 and
-  ed16411
+  in the run root (clarification 26), with the reviews of ed91909,
+  ed16411, and 0047da2
 - Status: **Spec accepted by the operator at 021f81d, 2026-10-19**, with
   O12, O13, O17 (residual accepted in writing), O18, and O20 as
   recommended. The security re-review of de7c438 passed. The
@@ -57,8 +57,8 @@ Words used here as in the HLD: **run root** (`RUN_ROOT`), **run folder**
   ([Driver-fixed exits](#driver-fixed-exits)).
 - **Toolbox**: this skills home. A run reads it only from the toolbox
   copy; nothing from it is copied into a product repo.
-- **Toolbox copy**: `RUN_ROOT/toolbox.git`, a bare clone of `run.json`
-  `bundle.remote` as the operator typed it ([Toolbox copy](#toolbox-copy)).
+- **Toolbox copy**: `RUN_ROOT/toolbox.git`, a bare copy of `run.json`
+  `bundle.remote`'s trunk and tags, as the operator typed it at Run prep ([Toolbox copy](#toolbox-copy)).
 - **Pinned commit**: the toolbox commit recorded in `run.json`
   `bundle.commit`, with the optional tag `bundle.tag`. The driver reads
   `flow.json`, personas, scripts, and packed skill bodies only from the
@@ -794,7 +794,7 @@ RUN_ROOT/
   asks/ask-N.json      # D; driver: ask and answer, machine copy
   asks/ask-N.md        # D; driver: the same, for people
   compiled/<persona>.md # local; driver: compiled files, regenerated from the pin
-  toolbox.git/         # local; the toolbox copy, a bare clone at the pin
+  toolbox.git/         # local; the toolbox copy: trunk and tags, bare
   env-data/            # local; the env commands' data folder (SDLC_ENV_DIR); outside the snapshot walk
   driver/lock          # run-root lock
   driver/console.log   # every console line
@@ -830,7 +830,8 @@ personas and never write to the tracker. Chunk command nodes
 
 #### Toolbox copy
 
-`RUN_ROOT/toolbox.git` is a bare clone of `run.json` `bundle.remote`.
+`RUN_ROOT/toolbox.git` is a bare copy of `run.json` `bundle.remote`
+that holds only its trunk and tags.
 The driver reads every bundle, persona, skill, and script file, and
 `docs/INTAKE.md`, from its object store at the pin, never from a
 working tree. It is local, never mirrored, and rebuilt from the
@@ -842,78 +843,126 @@ URL, `ssh://host/path` or the scp form `[user@]host:path`. The host
 must not start with `-`, and the URL holds no whitespace or control
 character. Anything else is refused at Run prep and at every check of
 the copy: a `<transport>::` prefix (`ext::`, `fd::`), `file://`, a
-local path, user info with a password or token, or a query string. The
-Run prep model proposes it and never decides it. At the first `/sdlc`
-the operator types it in full, with no prefill, in a plugin dialog; it
-must equal `run.json` `bundle.remote`, and the driver records it as
-`driver.json` `bundleRemote`. A `run.json` whose `bundle.remote` later
-differs from `bundleRemote` is `check failed: toolbox`: a repin moves
-only the commit, and another remote is another run. A restore asks for
-it again from the genesis note ([Durable run state](#durable-run-state)).
+local path, user info with a password or token, or a query string. No
+model proposes it. Run prep asks the operator to type it in full, with
+no default or prefill, before anything is cloned or fetched; the skill
+passes the typed text to `toolbox --remote`, which requires it to equal
+`run.json` `bundle.remote` and records it as `driver.json`
+`bundleRemote`. A `run.json` whose `bundle.remote` later differs from
+`bundleRemote` is `check failed: toolbox`: a repin moves only the
+commit, and another remote is another run. A restore asks for it again
+from the genesis note ([Durable run state](#durable-run-state)).
 
-**Genesis note.** Right after the typed remote, the same dialog prints,
-from driver state, the only copy of the note:
-`keep off this machine: genesis <40-hex>  toolbox <bundle.remote>; a restore asks for both`.
+**Trunk.** `run.json` `bundle.trunk` names the reviewed branch, `main`
+unless the operator names another at Run prep; it passes
+`git check-ref-format --branch` and does not start with `-`. The
+reviewed ref is `refs/heads/<bundle.trunk>`, fetched by that name. The
+remote's `HEAD` is never read, so a remote whose `HEAD` names another
+branch changes nothing. The trunk is fixed for the run, like the remote.
+
+**Genesis note.** At `pushed` and `local`, Run prep prints the only
+copy, from driver state, in the turn that runs `state-init`:
+`keep off this machine: genesis <40-hex>  toolbox <bundle.remote>  trunk <bundle.trunk>; a restore asks for all three`.
+`plain` has no state branch and no note.
 
 **Driver git in the copy.** Every driver git call there is
 `git --git-dir=RUN_ROOT/toolbox.git --no-pager` with
-`-c core.fsmonitor= -c core.hooksPath=/dev/null`,
+`-c core.fsmonitor= -c core.hooksPath=/dev/null -c core.commitGraph=false`
+`-c core.multiPackIndex=false -c fetch.writeCommitGraph=false -c gc.auto=0`
+`-c maintenance.auto=false`,
 `GIT_ALLOW_PROTOCOL=https:ssh`, `GIT_CONFIG_NOSYSTEM=1`,
 `GIT_NO_REPLACE_OBJECTS=1`, `GIT_CONFIG_GLOBAL=driver/gitconfig`, and
-no other `GIT_*` variable from the operator's environment. Diffs add
-`--no-ext-diff --no-textconv`. `driver/gitconfig` is a local
+no other `GIT_*` variable from the operator's environment.
+`driver/gitconfig` is a local
 [driver file](#driver-file-ledger), never mirrored, that `toolbox`
 writes with only the operator's `credential.*` and `core.sshCommand`
 values. `GIT_ALLOW_PROTOCOL` already refuses `ext::`, `fd::`, and
 `file://`; `-c protocol.ext.allow=never -c protocol.file.allow=never`
-and `--no-local` stay as second layers, so removing one layer opens
-nothing. The driver needs git 2.32 or newer (`GIT_CONFIG_GLOBAL`);
-readiness R7 and every Start refuse an older one.
+stay as a second layer, so removing one layer opens nothing. Git runs
+in the copy only for `init`, `config`, fetch, `rev-parse <tag>^{commit}`,
+and `merge-base --is-ancestor`, never to read file bytes. The driver
+needs git 2.32 or newer (`GIT_CONFIG_GLOBAL`); readiness R7 and every
+Start refuse an older one.
 
-`sdlc-driver toolbox RUN_ROOT [--rebuild]` runs only while no driver
-holds the lock, at Run prep and at a restore; `--rebuild` first removes
-an existing copy, after a `check failed: toolbox`:
+`sdlc-driver toolbox RUN_ROOT --remote <typed> [--rebuild]` runs only
+while no driver holds the lock: at Run prep, in the drill, and at a
+restore, each after the operator typed the remote. `--rebuild` first
+removes an existing copy, without running git in it, after a
+`check failed: toolbox`:
 
-1. Check the remote rule and write `driver/gitconfig`. Then
-   `git clone --bare --no-local <bundle.remote> toolbox.git` as driver
-   git. `<trunk>` is the branch the copy's `HEAD` names.
-2. Record the SHA-256 of `toolbox.git/config` and `toolbox.git/HEAD` in
-   `driver.json` `toolbox`. `bundle.commit` must exist, and a set
-   `bundle.tag` must resolve to it (`rev-parse <tag>^{commit}`); else
-   `check failed: toolbox`.
+1. Check that `--remote` passes the remote rule and equals `run.json`
+   `bundle.remote` and, when set, `driver.json` `bundleRemote`; write
+   `driver/gitconfig`. Then, as driver git:
+   `git init --bare --template= --initial-branch=<trunk> toolbox.git`,
+   `config remote.origin.url <remote>`, and the check's step 3 fetch.
+2. Record `bundleRemote`, and in `driver.json` `toolbox` the SHA-256 of
+   `toolbox.git/config` and `toolbox.git/HEAD`. `bundle.commit` must
+   exist, a set `bundle.tag` must resolve to it, and the check's step 5
+   must pass on it; else `check failed: toolbox`. Its ancestry is shown
+   at the first `/sdlc` summary ([`run.json`](#runjson)).
 3. Compile each [compiled file](#compiled-files) that `driver.json`
    `compiled` lists (`state-init` records the chunk personas' later).
 
-**Check** (`toolbox`), at every [Start](#start) step 2 and at
-[repin](#repin-the-toolbox) step 1, in this order; the first two read
-files only, so no git command runs in the copy before they pass:
+**Check** (`toolbox`), at every [Start](#start) step 2, at the
+[`run.json` summary](#runjson), and at [repin](#repin-the-toolbox)
+step 1, in this order. Steps 1 and 2 read files only; no git command
+runs in the copy before they pass, on any path, the finish of a pending
+repin included:
 
 1. `toolbox.git` is a folder, not a link; `config` and `HEAD` have the
-   SHA-256 in `driver.json` `toolbox`; there is no `commondir`,
-   `objects/info/alternates`, or `info/attributes`.
+   SHA-256s in `driver.json` `toolbox`, and `HEAD` is one line
+   `ref: refs/heads/<name>`; none of these exists: `commondir`,
+   `shallow`, `info/attributes`, `info/grafts`, `objects/info/alternates`,
+   `objects/info/http-alternates`, `objects/info/commit-graph`,
+   `objects/info/commit-graphs/`, `objects/pack/multi-pack-index`,
+   `refs/replace/`, or a `packed-refs` line under `refs/replace/`.
 2. `remote.origin.url` in that config equals `driver.json`
-   `bundleRemote` (before the first `/sdlc`, `run.json`
-   `bundle.remote`) and passes the remote rule.
-3. `bundle.commit` exists, and the bundle check passes on it.
+   `bundleRemote` and passes the remote rule.
+3. `run.json` `bundle.remote` equals `bundleRemote`, and `HEAD` names
+   `refs/heads/<bundle.trunk>`. Fetch
+   `origin +refs/heads/<trunk>:refs/heads/<trunk> +refs/tags/*:refs/tags/*`.
+   A failed fetch or a missing trunk ref fails here, naming it; it is
+   never "not an ancestor".
+4. `bundle.commit` is an ancestor of the fetched `refs/heads/<trunk>`,
+   or equals the `to` of a `driver.json` `bundle.history` entry with
+   `typed: true`. Record the fetched tip as `bundle.trunkTip`. At the
+   summary, a pin that passes neither takes the typed-SHA path instead
+   of failing.
+5. Read every file the driver will use at `bundle.commit` (the bundle,
+   personas, scripts, packed skills, `docs/INTAKE.md`) with the object
+   hash checks of Reads, and run the bundle check on those bytes.
 
 A failure is `check failed: toolbox`, naming the step, an `operator`
-stop; the operator runs `toolbox --rebuild`. A fetch writes refs and
-objects, never `config` or `HEAD`, so their recorded hashes never
-change after the clone.
+stop; the operator runs `toolbox --rebuild`, or retries once the remote
+is reachable. A fetch writes refs and objects, never `config` or
+`HEAD`, so their recorded hashes never change after `toolbox`. A pin
+moved or a commit added while the driver is down therefore fails step
+4 at the next Start, however consistent `driver.json` and the ledger
+are.
 
-**Reads.** Each object the driver reads, from the pin's commit down
-the trees to each blob, is checked by hashing `<type> <size>\0<bytes>`
-against its id, so a replaced object file fails the read as
-`check failed: toolbox`. The bundle check, the INTAKE script-hash
+**Reads.** The driver reads toolbox objects in its own process, never
+with `git cat-file` or another git command, so no commit-graph,
+replace ref, graft, or alternate can change what it reads. It finds each
+object as a loose file or through a pack's `.idx`, reads those bytes on
+one open file descriptor, inflates them (deltas resolve only inside the
+same pack), and hashes `<type> <size>\0<bytes>` against the id; a
+mismatch is `check failed: toolbox`. It walks from the pin's commit
+down the trees to each blob. The bundle check, the INTAKE script-hash
 checks, the skill packing, and the [command body](#command-body) use
 only those bytes; a tree entry of type `160000` (a gitlink) under a
 read path fails the bundle check. The driver loads the bundle and
-personas into memory and rereads them only at the next Start or repin.
+personas into memory at check step 5 and rereads them only at the next
+Start or repin.
 
-The [`snapshot`](#post-stage-checks) walk covers `toolbox.git/` and
-`compiled/` like the rest of the run root, so a `bash` write there
-during a stage fails the stage. The general SDLC's version, DER-570,
-now follows this layout.
+The [`snapshot`](#post-stage-checks) walk covers `compiled/` like the
+rest of the run root. Under `toolbox.git/` it records every path's
+type, mode, and size, and hashes only `config`, `HEAD`, `packed-refs`,
+and the files under `refs/`, every time, with no stat cache: a `bash`
+write that adds, removes, or resizes a file there, or moves a ref,
+fails the stage. Object files are not hashed per stage: a rewritten
+object fails its next read, and a new commit matters only as a pin,
+which check step 4 tests on the fetched trunk. The general SDLC's
+version, DER-570, now follows this layout.
 
 #### `run.json`
 
@@ -922,7 +971,7 @@ now follows this layout.
   "schemaVersion": 1,
   "chunk": {"slug": "solo-dlc", "epic": "der-e421"},
   "bundle": {"id": "sdlc", "remote": "git@github.com:OWNER/agentic-toolbox.git",
-             "tag": "v0.9.0", "commit": "<40-hex>"},
+             "trunk": "main", "tag": "v0.9.0", "commit": "<40-hex>"},
   "repo": {"origin": "git@github.com:OWNER/REPO.git", "trunk": "main",
            "projectMain": "integrate/solo-dlc", "designDir": "maintainers/design/solo-dlc",
            "test": "npm test"},
@@ -950,10 +999,9 @@ now follows this layout.
   forms are allowed; `bundle.remote` follows the stricter
   [remote rule](#toolbox-copy).
 - `bundle.commit` is the pin; `bundle.tag` is the tag the operator
-  chose, or `null` for a bare commit. Run prep proposes `bundle.remote`
-  as the `origin` URL of the toolbox checkout the skill was loaded from,
-  when that URL passes the remote rule; the operator types it at the
-  first `/sdlc`, and it is fixed for the run
+  chose, or `null` for a bare commit. `bundle.remote` is the URL the
+  operator typed at Run prep, and `bundle.trunk` the reviewed branch,
+  default `main`; both are fixed for the run
   ([Toolbox copy](#toolbox-copy)).
 - `tracker.backend`: driven runs support `local` only in this chunk
   (security ruling S1). Run prep refuses any other backend, and `/sdlc`
@@ -1020,14 +1068,15 @@ now follows this layout.
   paths, OpenCode providers, models, spending, labels, `env.scrubExtra`,
   backup folder) and
   records the operator's yes as `runJsonSha256` and `machineJsonSha256`
-  in `driver.json`. No yes, no run. At the first `/sdlc` the typed
-  `bundle.remote` and the genesis note come first
-  ([Toolbox copy](#toolbox-copy)); a summary never asks for the remote
-  again, since it cannot change.
+  in `driver.json`. No yes, no run. The summary shows `bundle.remote`
+  and `bundle.trunk` and never asks for them: the operator typed the
+  remote at Run prep, and neither can change
+  ([Toolbox copy](#toolbox-copy)). It runs the toolbox check first, so
+  its ancestry result is on a trunk fetched for this summary.
 - **Bundle commit outside reviewed history (S9, N2, N4).** The driver
-  derives one reviewed ref in the [toolbox copy](#toolbox-copy), never
-  from `run.json`: the toolbox's trunk at the confirmed remote,
-  `refs/heads/<trunk>`, as of the clone or the last repin fetch. A
+  uses one reviewed ref in the [toolbox copy](#toolbox-copy):
+  `refs/heads/<bundle.trunk>` at the confirmed remote, as fetched by the
+  latest toolbox check; the remote's `HEAD` is never read. A
   commit only on the toolbox's own project-main takes the typed-SHA
   path. A missing trunk ref stops the start, naming it, and is never
   "not an ancestor". The summary shows the full 40-hex commit and its
@@ -1038,7 +1087,8 @@ now follows this layout.
   `docs/INTAKE.md` at the derived ref first fails the bundle check
   (`bundle.script-intake`, [Script records](#bundle-layout-and-bundlemd)).
   The confirmation is then `ctx.ui.input`: the answer must equal the
-  full SHA, else no run. A restore takes this path for any pin other
+  full SHA, else no run; the yes records the pin in `bundle.history`
+  with `typed: true`. A restore takes this path for any pin other
   than the genesis commit's ([Durable run state](#durable-run-state)).
 
 #### `machine.json`
@@ -1079,8 +1129,12 @@ and writes a new one at a restore on another machine.
   "schemaVersion": 1,
   "runJsonSha256": "<hex>",
   "machineJsonSha256": "<hex>",
-  "bundle": {"commit": "<40-hex>", "checkedAt": "<UTC>",
-             "history": [{"from": "<40-hex>", "to": "<40-hex>", "tag": "v0.9.1", "at": "<UTC>"}]},
+  "bundleRemote": "git@github.com:OWNER/agentic-toolbox.git",
+  "toolbox": {"config": "<sha256>", "head": "<sha256>"},
+  "bundle": {"commit": "<40-hex>", "trunkTip": "<40-hex>", "checkedAt": "<UTC>",
+             "history": [{"from": null, "to": "<40-hex>", "tag": "v0.9.0", "typed": false, "at": "<UTC>"},
+                         {"from": "<40-hex>", "to": "<40-hex>", "tag": "v0.9.1", "typed": false, "at": "<UTC>"}]},
+  "repinPending": null,
   "worker": {"extension": "driver/worker-ext/sdlc-worker-1a2b3c4d5e6f.ts",
              "sha256": "<hex>", "harnessVersion": "1.19.3"},
   "compiled": {"architect": "<sha256>", "builder-der-a530": "<sha256>"},
@@ -1126,10 +1180,11 @@ and writes a new one at a restore on another machine.
 | `env` | The accepted env block: the LLD path, the `specCommit` that the `spec` gate accepted, `commandsSha256`, the env pass number and branch, the env land commit, the baseline `{"run", "status"}` (`green` or `known`), and the accepted `test` line |
 | `unmirrored` | Run folders whose worker-written files the state branch never gets: a failed post-stage check or an interrupted run ([Persist](#durable-run-state) step 2). Rehydrate and a restore use the latest mirrored `state.md` |
 | `compiled` | SHA-256 of each persona's current [compiled file](#compiled-files) |
-| `repinPending` | `null`, or `{"old", "new", "tag"}` while a [repin](#repin-the-toolbox) writes `run.json`; the next Start rolls it forward or clears it |
-| `bundleRemote` | The toolbox remote the operator typed at the first `/sdlc`; `null` before it; fixed for the run |
-| `toolbox` | SHA-256 of the [toolbox copy](#toolbox-copy)'s `config` and `HEAD`, written only by `toolbox` |
-| `bundle.history` | Every [repin](#repin-the-toolbox), oldest first, with the new tag or `null` |
+| `repinPending` | `null`, or `{"old", "new", "tag", "typed", "compiled", "runJsonSha256"}` while a [repin](#repin-the-toolbox) writes `run.json`: the new pin, whether its SHA was typed, the new compiled hashes, and the new `run.json` hash; the next Start finishes or clears it from these alone |
+| `bundleRemote` | The toolbox remote the operator typed at Run prep, written by `toolbox`; fixed for the run |
+| `toolbox` | `{"config", "head"}`: the SHA-256 of the [toolbox copy](#toolbox-copy)'s `config` and of its `HEAD`, written only by `toolbox` |
+| `bundle.trunkTip` | The trunk tip the latest [toolbox check](#toolbox-copy) fetched |
+| `bundle.history` | The first pin (`from` `null`, at the first `/sdlc` summary) and every [repin](#repin-the-toolbox), oldest first, with the tag or `null`; `typed` is `true` when the operator typed the full SHA back |
 | `reviewBase` | Item `HEAD` at the last Review pass, or the clean merge commit after a row-1 classification |
 | `stop` | `{"kind", "run", "operatorOnly", "resumeWith"}` while the manager handles a stop. `resumeWith` is `{"persona", "prompt", "log"}`: who the driver resumes, and with which prompt kind, when the answer is `resume` |
 | `sessions.*.state` | `live`, `lost` (stopped; ask open), `rehydrated` (a fresh session from the compiled file, `state.md`, and facts), `replaced` (minted again on the operator's answer; the old file is kept with `.lost-<UTC>` appended to its name; OpenCode: the database and its `-wal` and `-shm` files) |
@@ -1295,7 +1350,8 @@ named by the land path, never deleted by the driver; at `@done` the
 console names it as the operator's ([O15](#questions-for-the-operator)).
 Its tree is the **D** files at their run-root paths plus
 `sdlc-state.json`: `schemaVersion`, `seq`, `prev`, `level`, `event`,
-`run`, `pin`, `lease` (`{"holder", "since"}`, `pushed` only), `files`
+`run`, `pin` (`{"commit", "trunkTip", "typed"}` from `driver.json`
+`bundle`), `lease` (`{"holder", "since"}`, `pushed` only), `files`
 (the hash ledger: SHA-256 of every other file), `excluded`
 (`[{"path", "askId"}]`), `skipped` (`[{"path", "bytes", "sha256"}]`).
 The tip record `driver/state.json` (`seq`, `tip`, `genesis`,
@@ -1375,10 +1431,11 @@ writes a new `machine.json`, then
 4. Copy the files in, create the driver ledger, write the tip record
    with `restore: {"tip", "confirmed": false}`.
 The first `/sdlc` first asks, from the [genesis note](#toolbox-copy)
-kept off this machine, the first 12 hex digits of the genesis commit and
-the full toolbox remote. The typed remote must pass the remote rule and
-equal the restored `run.json` `bundle.remote` and `driver.json`
-`bundleRemote`. Only then it runs `toolbox`, so no network call goes to
+kept off this machine, the first 12 hex digits of the genesis commit,
+the full toolbox remote, and the trunk. The typed remote must pass the
+remote rule and equal the restored `run.json` `bundle.remote` and
+`driver.json` `bundleRemote`, and the trunk `bundle.trunk`. Only then it
+runs `toolbox --remote <typed>`, so no network call goes to
 a remote the operator has not typed: the copy is cloned at the restored
 pin, and each compiled file's SHA-256 must equal the restored
 `driver.json` `compiled`; else `check failed: toolbox` or `compiled`.
@@ -1389,7 +1446,8 @@ commit with subject, author, and ancestry, the full
 [`run.json` summary](#runjson) under its reviewed-refs and typed-SHA
 rules, `bundle.tag` and the pin with the trunk ref's ancestry in the
 new copy, the genesis commit's own pin, and
-`git diff --stat` from that pin to the restored one over
+a diff stat, from objects read as in [Reads](#toolbox-copy), from that
+pin to the restored one over
 `bundles/<id>`, `skills/`, and `docs/INTAKE.md`, the harness and plugin pins with this
 machine's tree hash, the `excluded` and `skipped` paths, and
 every remote ref that differs from `projectMainSeen`, `lastPushed`, or
@@ -1411,11 +1469,14 @@ entries ([Persist](#durable-run-state) step 2).
 `sdlc-driver drill RUN_ROOT` restores the branch from its drill source
 into a temporary `0700` folder `<tmp>` with no lease and no push, and a
 copy of `machine.json` with `hostId` new and `backup.dir` `null`; the
-driver refuses any drill write outside `<tmp>`. It runs `toolbox` there
-with the run's remote and the toolbox check, then compares
+driver refuses any drill write outside `<tmp>`. It runs
+`toolbox --remote` there with the remote the operator typed at Run prep
+(`driver.json` `bundleRemote`, never a model's text), then the toolbox
+check, and fails when the temporary copy's `config` or `HEAD` SHA-256
+differs from the source `driver.json` `toolbox`. It then compares
 `sdlc-driver status` of both roots, ignoring the lease, the tip record's
-`restore` and `pushedTip`, the run-root path, `driver.json` `toolbox`,
-and the `excluded` and `skipped` paths, which stay local by design; then
+`restore` and `pushedTip`, the run-root path, `bundle.trunkTip` and
+`checkedAt`, and the `excluded` and `skipped` paths, which stay local by design; then
 each file the tip's ledger lists, and each compiled hash with
 `driver.json` `compiled`. Pass: `restore drill: done`; else the
 line names the difference and Run prep prints no Gather line. The
@@ -1544,8 +1605,10 @@ it refuses while any driver holds the lock.
    [ledger](#driver-file-ledger) entry without comparing it first.
 2. Run the ledger check ([Driver-file ledger](#driver-file-ledger)
    point 6) before reading `driver.json`; a mismatch stops the start.
-   Finish a pending [repin](#repin-the-toolbox). Validate `run.json`;
-   check `runJsonSha256`. Refuse a
+   Run the [toolbox check](#toolbox-copy)'s steps 1 and 2, which read
+   files only. Finish a pending [repin](#repin-the-toolbox) from
+   `driver.json` and `run.json` alone. Validate `run.json`; check
+   `runJsonSha256`. Refuse a
    `tracker.backend` other than `local` with the line in
    [`run.json`](#runjson). Check the harness version equals
    `harness.version` and the installed tree's hash equals
@@ -1562,9 +1625,10 @@ it refuses while any driver holds the lock.
    [readiness checks](#behavior-8-run-prep-and-later-items-0-4-8), with
    no model call and no push: check `machineJsonSha256`; refuse a run
    root that is a symbolic link or grants group or other permission; git
-   is 2.32 or newer; the [toolbox check](#toolbox-copy) passes (a start
-   never clones; the operator runs `sdlc-driver toolbox RUN_ROOT
-   --rebuild`); `adapter.missingModels` is empty for every model slot; a set
+   is 2.32 or newer; the [toolbox check](#toolbox-copy)'s steps 3–5
+   pass: the trunk fetch, the pin on it or typed, and the hash-checked
+   reads (a start never clones; the operator runs `sdlc-driver toolbox
+   RUN_ROOT --remote <typed> --rebuild`); `adapter.missingModels` is empty for every model slot; a set
    `backup.dir` passes its `machine.json` rules, else one warning line;
    `gatherer/run-1/brief.md` exists, else the line
    `no brief yet: finish Gather first` and no run; one warning line per `passEnv` variable whose value is
@@ -1661,10 +1725,9 @@ moves only the commit; `bundle.remote` stays the confirmed one. Every
 step reads the [toolbox copy](#toolbox-copy)'s object store; nothing is
 checked out.
 
-1. The [toolbox check](#toolbox-copy) passes at the old pin. Run
-   `fetch origin +refs/heads/<trunk>:refs/heads/<trunk> +refs/tags/*:refs/tags/*`
-   as driver git in the copy; `config` and `HEAD` keep their recorded
-   hashes. Resolve the new tag or commit to a 40-hex commit `N`.
+1. The [toolbox check](#toolbox-copy) passes at the old pin; its step
+   3 fetches the trunk and tags, and `config` and `HEAD` keep their
+   recorded hashes. Resolve the new tag or commit to a 40-hex commit `N`.
 2. Read `flow.json`, the personas, the scripts, the packed skills, and
    `docs/INTAKE.md` at `N` with the object hash checks of
    [Reads](#toolbox-copy); run the bundle check on those bytes; refuse
@@ -1672,26 +1735,42 @@ checked out.
    with a session changes its job or scope, or the plugin version
    differs from `harness.plugin` (the operator installs it first).
    Compute every compiled file at `N` in memory.
-3. Show `N` in full, `diff --stat <old> N -- bundles/<id> skills/ docs/INTAKE.md`,
-   and the full diff of `flow.json` and the personas, from the objects
-   step 2 checked. The [reviewed-refs rule](#runjson) applies as for a
-   new run, on the just-fetched trunk ref: a commit that is not an
-   ancestor needs the full SHA typed back. The yes confirms exactly `N`.
+3. Show `N` in full, the diff stat from `<old>` to `N` over
+   `bundles/<id>`, `skills/`, and `docs/INTAKE.md`, and the full diff of
+   `flow.json` and the personas, from the objects step 2 checked. The
+   [reviewed-refs rule](#runjson) applies as for a new run, on the
+   just-fetched trunk ref: a commit that is not an ancestor needs the
+   full SHA typed back. The yes confirms exactly `N`.
    A failure, a refusal, or a no changes nothing but the fetched refs
    and objects.
 4. On the yes, `core.repin`: write `driver.json` `repinPending` =
-   `{"old", "new": N, "tag"}`; write `run.json` with the new
-   `bundle.commit` and `bundle.tag`; in one `driver.json` write, record
-   `runJsonSha256`, append `bundle.history`, set `compiled` to the
-   step-2 hashes, and clear `repinPending`; write the compiled files;
-   append a `repin` event and persist. Each live session gets the
-   changed parts at its next prompt.
+   `{"old", "new": N, "tag", "typed", "compiled", "runJsonSha256"}`,
+   with step 2's compiled hashes and the hash of the new `run.json`;
+   write `run.json` with the new `bundle.commit` and `bundle.tag`; in
+   one `driver.json` write, record `runJsonSha256`, append
+   `bundle.history`, set `compiled` from `repinPending`, and clear it;
+   write the compiled files; append a `repin` event and persist. Each
+   live session gets the changed parts at its next prompt.
 
-**A kill** after step 4 began leaves `repinPending`. The next Start
-step 2, before it validates `run.json`, rolls forward when `run.json`
-names `new` (the `driver.json` write again; the compiled files follow
-from their rule at step 3), and otherwise clears the marker, since
-nothing else moved, and prints `repin interrupted; still at <old7>`.
+**A kill** in step 4 leaves one of three cases. Start step 2 settles it
+after the toolbox check's steps 1 and 2 and before it validates
+`run.json`, reading only `driver.json` and `run.json`, so it runs no git
+and reads no object:
+
+- `repinPending` set and `run.json` `bundle.commit` is `old`: clear the
+  marker; print `repin interrupted; still at <old7>`.
+- `repinPending` set and `run.json` names `new` with the marker's
+  `runJsonSha256`: do step 4's combined `driver.json` write from the
+  marker.
+- `repinPending` clear: nothing to finish; Start step 3 compiles each
+  file whose `pin` differs from `bundle.commit`, and each must equal its
+  `compiled` entry.
+
+Any other `run.json` with the marker set is `check failed: toolbox`.
+`repinPending` is the only repin marker: each `driver.json` write is
+already atomic through the [ledger](#driver-file-ledger)'s two phases,
+and `run.json` is not a driver file, so the ledger alone cannot tell
+which pin `run.json` holds.
 
 #### Loop
 
@@ -2302,7 +2381,7 @@ step 4) records what each check compares.
 
 | Check | After | How |
 | --- | --- | --- |
-| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file (OpenCode: `opencode.db` and its `-wal` and `-shm` files), `worktrees/`, `env-data/` (a running dependency writes there), `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files. Any difference is a failure |
+| `snapshot` | every stage | Walk `RUN_ROOT` without following symbolic links. Excluded: the current run folder, the current persona's session file (OpenCode: `opencode.db` and its `-wal` and `-shm` files), `worktrees/`, `env-data/` (a running dependency writes there), `driver/snapshot.json`, `driver/driver.stderr`, and everything under `repo.git/` except `config`, `hooks/`, and `info/`. Record path, type, mode, size, and SHA-256 (the target string for a link). A [driver file](#driver-file-ledger) is compared with its ledger entry, and `driver/ledger.json` with the driver's last ledger write; every other path is compared with the pre-stage snapshot. A cache keyed by inode, size, and `ctime` skips rehashing unchanged files, except under `toolbox.git/`, which the [toolbox copy](#toolbox-copy) rule covers. Any difference is a failure |
 | `worktrees` | every stage | For each worktree outside the stage's writable set, `worktrees/state/` always among them: `HEAD` and `git status --porcelain` equal before and after. A command stage's writable set is its run folder and the worktree it runs in. At restart only, an interrupted HLD or Spec stage's `worktrees/integrate` may sit at its `inFlight.recordCommit` in `driver.json`, never a value from the run folder ([Start](#start) step 5) |
 | `refs` | every stage | `git ls-remote origin` before and after: every ref name and tip equal, except `refs/heads/tickets`, which the `tickets` check owns, and the state branch, which must equal the tip record's `pushedTip` after the stage whatever the snapshot holds (the stage-start persist moves it before the snapshot). A ref added, deleted, or moved fails, whoever moved it. At restart only, an interrupted HLD or Spec stage's project-main may have fast-forwarded to its `inFlight.recordCommit` in `driver.json` ([Start](#start) step 5) |
 | `tickets` | every stage | [Tickets content check](#tickets-content-check) |
@@ -2349,8 +2428,8 @@ is compared with the pre-stage snapshot.
    The plugin writes only through `core.prepare` and
    `core.recordAnswer` (`runJsonSha256`, answers in `asks/`), so it uses
    the same function. Removing a file (the lock at release) removes its
-   entry. The first `/sdlc` creates an empty ledger before it writes any
-   driver file.
+   entry. Run prep's `toolbox` creates an empty ledger before it writes
+   any driver file.
 2. **Two phases.** Before a write, the function sets the entry's `next`
    to the `{size, sha256}` the file will have and writes the ledger;
    then it writes the file; then it moves `next` into the entry and
@@ -2657,7 +2736,7 @@ id for the chunk. `<L>` is the node `label`, padded to 7.
 | Ask | The full `ask-human.md` text between `--- ask-N ---` lines |
 | Say | `<S> <L>  <say text>` |
 | State | Only on a problem: `STATE  <stop kind>  <file>:<line> <class>` or `STATE  lease lost  remote <tip7>, expected <tip7>`; and at `@done`: `done  state branch <branch> is yours to keep or delete` |
-| Toolbox | `STOP   <S> <L>  check failed: toolbox  <step>` then `       sdlc-driver toolbox RUN_ROOT --rebuild`; the step names the file, the commit, or the two remotes; `check failed: compiled  <persona>`; at a cleared interrupted repin, `repin interrupted; still at <old7>` |
+| Toolbox | `STOP   <S> <L>  check failed: toolbox  <step>` then `       sdlc-driver toolbox RUN_ROOT --remote <remote from your note> --rebuild`; the step names the file, the commit, or the two remotes; `check failed: compiled  <persona>`; at a cleared interrupted repin, `repin interrupted; still at <old7>` |
 | Summary | OpenCode: `idle  <n> pending asks  <n> waiting  <n> deferred  pick /sdlc, then enter RUN_ROOT to continue`; Pi: `idle  <n> pending asks  <n> waiting  <n> deferred  type /sdlc RUN_ROOT to continue` |
 
 `driver/console.log` holds every line. No color carries meaning, and no
@@ -3102,11 +3181,11 @@ interactive session. None starts the driver or a worker.
 
 **Run prep** (`prep`), stage 0. It asks the setup questions of
 [SD-1](user-stories.md#sd-1-prepare-the-run-before-gather), never a
-product question, each with its default: the toolbox remote, the
-`origin` of the toolbox checkout the skill was loaded from when it
-passes the [remote rule](#toolbox-copy) (a proposal: the operator
-types the remote at the first `/sdlc`), at its newest release tag, else
-its `origin/<trunk>` tip; the run root
+product question, each with its default except the first: the toolbox
+remote, which the operator types in full with no default or prefill,
+and which must pass the [remote rule](#toolbox-copy), before anything
+is cloned or fetched; its trunk, default `main`; the pin at its newest
+release tag, else the trunk tip; the run root
 `$XDG_STATE_HOME/sdlc/<chunk-slug>/`; the [level](#durable-run-state);
 no backup folder. The tracker answer is required, `local` only for
 driven runs, with the [ux.md](ux.md) J2 warning; a paid model slot
@@ -3125,7 +3204,7 @@ push and R10 run.
 | R4 | Branch protection and CI | CI config at the project-main tip: `present` or `absent`, for the HLD's environment section. Protection on project-main and trunk through `gh api` when `gh` is logged in for that host, else `unknown`, which the operator confirms. A rule that blocks the driver's direct, non-force push to project-main is `to do` |
 | R5 | Harness and plugin | Harness installed at the pinned version; `integrity`; `treeSha256`; OpenCode `harness.providers`; the installed plugin's version equals `harness.plugin` ([`run.json`](#runjson)) |
 | R6 | Models | `adapter.missingModels` is empty for every slot; each slot's key source is not a scrubbed variable; a paid slot has its spending record |
-| R7 | Toolbox | Git 2.32 or newer; `toolbox` clones the proposed remote into `toolbox.git`; the toolbox check and the bundle check pass at the pin ([Toolbox copy](#toolbox-copy)) |
+| R7 | Toolbox | Git 2.32 or newer; `toolbox --remote` fetches only the remote the operator typed into `toolbox.git`; the toolbox check's byte steps and the bundle check pass at the pin ([Toolbox copy](#toolbox-copy)) |
 | R8 | Run root | Parent outside every git worktree, not a symbolic link; the root is created `0700` |
 | R9 | Labels | The `labels.mode` that the key pattern needs ([Labels](#labels)) |
 | R10 | State | The level; at `pushed` and `local`, `state-init` and `drill` pass |
@@ -3139,7 +3218,7 @@ and `gatherer/run-1/`; and runs:
 
 | Command | Does |
 | --- | --- |
-| `sdlc-driver toolbox RUN_ROOT [--rebuild]` | The [toolbox copy](#toolbox-copy): remote rule, bare clone, config hashes, pin, compile; `--rebuild` replaces a damaged copy |
+| `sdlc-driver toolbox RUN_ROOT --remote <typed> [--rebuild]` | The [toolbox copy](#toolbox-copy): remote rule against the typed remote, bare trunk copy, config and `HEAD` hashes, pin, compile; `--rebuild` replaces a damaged copy |
 | `sdlc-driver readiness RUN_ROOT` | R5–R9 with no question, one checklist line each |
 | `sdlc-driver state-init RUN_ROOT` | Start step 3's first-start part; the state branch's first commit, pushed at `pushed`; the tip record; the chunk personas' [compiled files](#compiled-files) |
 | `sdlc-driver drill RUN_ROOT` | The [restore drill](#durable-run-state) |
@@ -3147,9 +3226,9 @@ and `gatherer/run-1/`; and runs:
 | `sdlc-driver status RUN_ROOT` | The found report, read-only, without the lock |
 
 `state-init`, `persist`, and `restore` refuse when `SDLC_RUN_DIR` is set
-or a driver holds the lock. Run prep prints no genesis note; the first
-`/sdlc` prints the only one, after the typed remote
-([Genesis note](#toolbox-copy)). It prints the Gather line, `next: Gather; open a new session and load
+or a driver holds the lock. In the turn that runs `state-init`, Run
+prep prints the only [genesis note](#toolbox-copy), with the typed
+remote and the trunk. It prints the Gather line, `next: Gather; open a new session and load
 sdlc-kickoff in gather mode for RUN_ROOT`. The session is discarded;
 its decisions live in `run.json`, `machine.json`, and `checklist.md`.
 
@@ -3164,8 +3243,8 @@ OpenCode, "pick `/sdlc`, then enter RUN_ROOT"; in Pi, `/sdlc RUN_ROOT`.
 **Restore** (`restore`), on a machine without the run root. It asks the
 machine-local questions (harness paths, run-root location, backup
 folder), runs R5, R6, and R8, runs `sdlc-driver restore`, and prints the
-start line; the first `/sdlc` takes the typed remote, re-clones the
-toolbox at the pin (R7), and shows the restore summary
+start line; the first `/sdlc` takes the typed remote and trunk,
+re-clones the toolbox at the pin (R7), and shows the restore summary
 ([Durable run state](#durable-run-state)).
 
 **Build order.** Item 0 lands first and fixes the procedure, the checks,
@@ -3218,8 +3297,8 @@ remote, and model provider (external).
 | --- | --- | --- | --- | --- |
 | TB1 | Operator → driver | `/sdlc`, `/sdlc-stop`, `/sdlc-repin`, answers, the restore confirmation | User commands only, never a tool; refused inside a worker. OpenCode: the commands exist only in the TUI plugin, so no headless path starts the driver; refused when the TUI has a server listener; a server command named `sdlc` never exists. Pi: refused without UI. Answers recorded only in the interactive handler while no driver runs | Enforced; headless start blocked; a worker that fakes a terminal is residual |
 | TB1a | Operator's session → model while a driver runs | The operator's own prompts | OpenCode: the server plugin's `chat.message` throw while a lock is held and for typed `/sdlc` text (O-T8). Pi: the `input` handler | Enforced if O-T8 holds; else notify only, operator question [O11](#questions-for-the-operator) |
-| TB2 | Run prep model → `run.json`, `machine.json` | Paths, models, tracker, spending, harness pin, durability level, backup folder | Strict schema; `local` backend only; `run.json` scanned as portable; the operator confirms a summary of both files at the first `/sdlc` and on every change; `bundle.remote` only `https://`, `ssh://`, or scp form, and never decided by the model: the operator types it in full at the first `/sdlc`, it is recorded in `driver.json` `bundleRemote` and the off-machine genesis note, checked against the copy's `remote.origin.url` at every start and repin, and fixed for the run; the reviewed ref is the toolbox's trunk at that remote, derived by the driver, never named by `run.json`; a bundle commit not on it needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at the reviewed ref | Enforced; the ref is as of the last clone or repin fetch, and anyone who can push the toolbox trunk at the confirmed remote can put a commit on it (operator item 5) |
-| TB3 | Bundle → driver | Flow, personas, skills, scripts | Read only from the object store of the [toolbox copy](#toolbox-copy), a bare clone in the run root, each object checked by hash as read, never a working tree; its `config` and `HEAD` byte-checked before any git command, its remote confirmed; driver git there with fsmonitor and hooks off, no system config, a driver-written global config, and https or ssh only; never copied into the product repo; the copy and the pin checked at Run prep and every start; a new pin only through `/sdlc-repin` between stages, all its checks on the fetched objects, with the diff shown and the bundle check passed; compiled files are driver files, re-hashed right before each spawn; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope |
+| TB2 | Run prep model → `run.json`, `machine.json` | Paths, models, tracker, spending, harness pin, durability level, backup folder | Strict schema; `local` backend only; `run.json` scanned as portable; the operator confirms a summary of both files at the first `/sdlc` and on every change; `bundle.remote` only `https://`, `ssh://`, or scp form, and never proposed or decided by the model: the operator types it in full at Run prep before any clone or fetch, it is recorded in `driver.json` `bundleRemote` and the off-machine genesis note, checked against the copy's `remote.origin.url` at every start and repin, and fixed for the run; the reviewed ref is `refs/heads/<bundle.trunk>` at that remote (default `main`, fixed for the run), fetched by name, never the remote's `HEAD`; a bundle commit not on it needs the full SHA typed back, with `scripts/` and persona hashes shown and each script's INTAKE record found at the reviewed ref | Enforced; the ref is as of this start's or repin's fetch, and anyone who can push the toolbox trunk at the confirmed remote can put a commit on it (operator item 5) |
+| TB3 | Bundle → driver | Flow, personas, skills, scripts | Read only from the object store of the [toolbox copy](#toolbox-copy), a bare clone in the run root, each object checked by hash as read, never a working tree; its `config` and `HEAD` byte-checked, and commit-graph, replace, graft, alternates, and shallow files refused, before any git command, its remote confirmed; driver git there with fsmonitor, hooks, and commit-graph off, no system config, a driver-written global config, https or ssh only, and never used to read bytes; never copied into the product repo; at every start the trunk is fetched and the pin must be on it or a typed SHA in the history; a new pin only through `/sdlc-repin` between stages, all its checks on the fetched objects, with the diff shown and the bundle check passed; compiled files are driver files, re-hashed right before each spawn; bundle check; every `scripts/` file listed with its hash and INTAKE record; third-party bundles through INTAKE | Enforced; a malicious intake-passed bundle is out of scope; a same-uid process while the driver runs is residual (item 7) |
 | TB3a | Harness → driver | The OpenCode binary or the Pi package the workers run | `harness.version` and `harness.treeSha256` checked at every start, and the tree hash re-checked from a stat cache before each worker spawn; npm checked `integrity` of each package at install. OpenCode: self-update off in the worker config and environment; provider packages only from those bundled in the binary | Enforced at start and at each spawn; `harness.node` is not hashed (residual) |
 | TB3b | Operator's harness config → worker | OpenCode: plugins, tools, agents, MCP servers, instructions, remote and organization config. Pi: `.pi/` project files | OpenCode: `XDG_CONFIG_HOME` pointed at an empty unwritable folder, project config off, `~/.opencode/` and `/etc/opencode/` refused until allowed, a `tool/` or `tools/` folder in either refused even after an allow, and `debug config` compared with the worker config before every spawn. Pi: `--no-extensions`, `--no-skills`, `-nc`, and the `.pi/` refusal | Enforced before each spawn (OpenCode: O-T2); config that changes between the compare and the spawn is residual |
 | TB4 | Driver → worker | Prompt, facts, env, OpenCode worker config | Prompt built from driver state; model or operator text fenced as data; facts hash; extension or worker-plugin copy hashed; worker config kept as a driver file; fixed environment denylist | Enforced and detected; the denylist is hygiene, not a boundary |
@@ -3286,7 +3365,7 @@ tickets branch on a public repo is public, and Run prep warns first.
 | `machine.json` | no | no | no | no; Run prep writes it |
 | `driver.json`, `index.jsonl`, `plan/`, `compiled/`, `driver/`, other persona folders | yes | no (detected) | no (detected) | `driver.json` confirmation, the restore confirmation, and `asks/` answers, while no driver runs, through the [ledger](#driver-file-ledger) |
 | `env-data/` | env command stages, unchecked | no | no | — |
-| `toolbox.git/` | `toolbox` and a repin fetch; never inside a stage | no (detected) | no (detected) | a repin through `core` |
+| `toolbox.git/` | `toolbox`, and the fetch at Start and at a repin; never inside a stage | no (detected) | no (detected) | a repin through `core` |
 | Tracker | read only | per table | per table | — |
 
 **What a restart trusts.** `bash` can rewrite any file in the current
@@ -3302,9 +3381,10 @@ the stage.
 
 **Toolbox-copy revision, for security's re-read:** TB2, TB3, and TB15
 as changed in their rows above; residual item 7; operator item 5
-([O22](#questions-for-the-operator), accepted): the typed remote and
-its rule, the hardened copy git, object-hash reads, the object-store
-repin, and the drill.
+([O22](#questions-for-the-operator), accepted): the remote typed at Run
+prep and its rule, the fixed trunk, the hardened copy git, the trunk
+fetch and pin re-check at every Start, in-process object-hash reads,
+the object-store repin and its three crash cases, and the drill.
 
 **Run-state revision, accepted with the Spec at 021f81d:** TB2, TB10, TB12, TB13,
 and S7 as changed in their rows above; TB14–TB18; operator item 4; the
@@ -3348,19 +3428,23 @@ password, which **security** rules on before item 7 uses it.
    the ledger check. `driver/driver.stderr` (never read) is unchecked;
    `driver/lock` is replaced before the ledger check.
 6. N4 (re-review of de7c438, low): the reviewed-ref ancestry test and
-   INTAKE lookup use the toolbox copy's trunk ref, as of its clone or
-   last repin fetch; `harness.treeSha256`'s per-spawn re-check
+   INTAKE lookup use the toolbox copy's trunk ref, as of the last
+   Start's or repin's fetch; `harness.treeSha256`'s per-spawn re-check
    re-hashes added and stat-changed files and notices removed ones, so a
    change keeping inode, size, `mtime`, and `ctime` waits for the next
    start's full hash; `harness.node` is not hashed.
 7. Toolbox copy: the driver trusts the `git` binary, the operator's
    `credential.*` and `core.sshCommand` values it copies into
    `driver/gitconfig`, and SHA-1 object ids, with git's collision
-   detection. Run prep and the drill clone the remote the Run prep
-   model proposed before the operator types it at the first `/sdlc`: the
-   copy is data only until then, but that host gets a connection and the
-   operator's credential offers. A restore clones only after the typed
-   remote. A compiled file swapped between the pre-spawn re-hash and the
+   detection. Run prep, the drill, and a restore fetch only a remote
+   the operator typed. Start re-fetches the trunk and re-checks the
+   pin, so a pin moved while the driver is down fails; a typed pin is a
+   `driver.json` record, so forging one needs a ledger rewrite (item
+   5, covered by operator item 1). A same-uid process while the driver
+   runs stays residual: between the byte check and a git call it can
+   edit `config` or add an alternates file, and between the fetch and the
+   ancestry test it can move the trunk ref; a changed object still
+   fails its read. A compiled file swapped between the pre-spawn re-hash and the
    worker's read reaches the worker; the post-stage `snapshot` stops the
    run.
 
@@ -3395,9 +3479,9 @@ recorded verbatim in `asks/`):
 5. **The bundle pin follows the toolbox trunk** (review of ed91909;
    **accepted in writing by the operator, 2026-10-19**, with branch
    protection on the toolbox `main`; [O22](#questions-for-the-operator)). The toolbox remote itself
-   is fixed: the operator types it at the first `/sdlc` and at a
+   is fixed: the operator types it at Run prep and at a
    restore, from the off-machine genesis note. But the reviewed ref is
-   that remote's trunk, so anyone who can push it, workers included
+   that remote's trunk, `refs/heads/<bundle.trunk>`, so anyone who can push it, workers included
    when the toolbox is the product repo (as for this chunk), can put a
    commit there that a Run prep or repin takes without a typed SHA,
    whose `scripts/` the driver runs; a Run prep's first pin, an
@@ -3601,9 +3685,20 @@ Driver scenarios, each a test:
     command never runs; a replaced loose object file → `toolbox` at the
     read; a `run.json` `bundle.remote` other than `bundleRemote` →
     `toolbox`; a compiled file swapped after Start, before a spawn →
-    that stage does not spawn. Run prep refuses an `ext::`, `fd::`,
+    that stage does not spawn. While the driver is down, a commit added
+    to the copy and named by `run.json` `bundle.commit`, with
+    `driver.json` and the ledger rewritten to agree → `toolbox` at the
+    next Start's step 4, before any script runs; a `commit-graph`,
+    `multi-pack-index`, `shallow`, `info/grafts`, or `refs/replace/`
+    file → `toolbox` at step 1, before any git command; an unreachable
+    toolbox remote at Start → `toolbox` naming the fetch. A remote whose
+    `HEAD` names another branch → the copy holds only
+    `refs/heads/<bundle.trunk>`. Run prep runs no git against a toolbox
+    remote before the operator types it, and refuses an `ext::`, `fd::`,
     `file://`, local-path, or `-`-leading-host `bundle.remote`, and git
-    older than 2.32; the clone never hard-links a source repo.
+    older than 2.32. The drill fails when its copy's `config` or `HEAD`
+    hash differs from `driver.json` `toolbox`. No toolbox read runs
+    `git cat-file`.
 23. Env-prep on a fixture LLD with one fake dependency: env branch,
     `env-prove` runs toolchain, `setup`, `start`, `ready`, `reset`, then
     `prove`; a red baseline takes `known` and reaches the env-verifier;
@@ -3625,10 +3720,14 @@ Driver scenarios, each a test:
     `driver.json`, and the compiled files at the old pin; otherwise it
     fetches, shows the diff from the checked objects, `bundle.history`
     grows with the tag, the compiled files are compiled again, and the
-    next start uses the new pin. A kill in step 4 before `run.json` is
-    written → the next Start clears `repinPending` and prints
-    `repin interrupted`; after it → the next Start rolls forward to the
-    new pin and its compiled files.
+    next start uses the new pin. A kill in step 4, in each of the three
+    cases: `repinPending` set and `run.json` at the old pin → the next
+    Start clears the marker and prints `repin interrupted`; set and
+    `run.json` at the new pin → the next Start does the combined
+    `driver.json` write and compiles the new files; already clear → the
+    next Start compiles each file whose `pin` differs and each matches
+    `compiled`. In every case no git command runs in the copy before
+    the toolbox check's steps 1 and 2.
 
 **OpenCode checks** (item 7 acceptance, run first, on the operator's
 machine with OpenCode 1.19.3 and one local model; manual, gated by
@@ -3800,9 +3899,9 @@ solo operator who runs one harness session at a time.
     with `git show`": each run clones the toolbox remote bare into
     `RUN_ROOT/toolbox.git` and reads it only from the object store at
     the pin; compiled files are `RUN_ROOT/compiled/` driver files
-    ([Toolbox copy](#toolbox-copy)). The operator types the remote and
-    keeps it in the genesis note, and the reviewed ref is only that
-    remote's trunk, so a bundle commit only on the toolbox's own
+    ([Toolbox copy](#toolbox-copy)). The operator types the remote at
+    Run prep and keeps it in the genesis note, and the reviewed ref is
+    only that remote's trunk, `refs/heads/<bundle.trunk>`, so a bundle commit only on the toolbox's own
     project-main needs the typed SHA. An earlier draft that put the
     copy in an ignored `.sdlc/` in the operator checkout was dropped
     after the review of ed16411. The general SDLC version, DER-570,
@@ -3886,9 +3985,9 @@ credentials for Linear on each harness.
 | O17 | **Accepted in writing by the operator, 2026-10-19 (residual accepted).** Accept in writing operator item 4: anyone who can push the repo, workers included, can write a consistent forged state that, with a commit planted on project-main, chooses the proving and env commands a restored run executes; the restore checks narrow it to project-main commits and the operator's reading of the summary | Accept. Per-branch credentials are not generally available (as for the tracker); branch protection on project-main, where the host offers it, removes the planted-commit half. The alternative, a separate state remote, is O12's later item. **Scope, 2026-10-19 (review of ed91909):** this acceptance covers proving and env commands; the bundle pin, which the pinned-clone revision moved to the toolbox remote, is [O22](#questions-for-the-operator) |
 | O18 | The `env` gate: operator acceptance after the agent gate (env-verifier and env-reviewer), or the operator alone | **Accepted by the operator, 2026-10-19, as recommended.** Agent gate, then operator acceptance, as designed: the agents check evidence line by line and the security reads; the operator accepts what every later check will trust |
 | O19 | `passEnv` values reach command stages only, so a builder cannot run integration tests that need them in its own worktree | Accept: builders run unit tests and the dependencies the env started; the proving commands run the integration tests. Giving builders the values would widen what a worker's `bash` can send |
-| O20 | The genesis anchor: a restore needs the genesis state commit from the operator's own note, kept off the machine | **Accepted by the operator, 2026-10-19, as recommended.** Accept: Run prep prints it, and the first `/sdlc` prints it again with the typed toolbox remote, which the note now also holds (review of ed91909). A lost note blocks a restore; the operator then reads the genesis from an independent clone they trust, and the restore summary shows it for comparison. Without the anchor a wholly foreign state branch would pass on trust-on-first-use |
+| O20 | The genesis anchor: a restore needs the genesis state commit from the operator's own note, kept off the machine | **Accepted by the operator, 2026-10-19, as recommended.** Accept: Run prep prints it once, with the toolbox remote the operator typed there and the trunk, which the note now also holds (reviews of ed91909 and 0047da2). A lost note blocks a restore; the operator then reads the genesis from an independent clone they trust, and the restore summary shows it for comparison. Without the anchor a wholly foreign state branch would pass on trust-on-first-use |
 | O21 | **Open.** Each run has its own run root, and with it its own bare product clone (`repo.git`), worktrees, toolbox copy, compiled files, and state branch `sdlc/run/<chunk-slug>`; nothing of a run sits in the operator's checkout. Two runs share only the product remote (project-main differs per chunk; the `tickets` branch is shared), the operator's model capacity, and the operator. How many runs may be active at once? | (a) **One run per chunk slug, chunks in parallel.** A second run root for a slug whose state branch exists is refused at `state-init`. Pro: no new mechanism; the lease and the state branch already key on the slug; parallel chunks cost only disk. Con: two drivers push the shared `tickets` branch, so one can see a rejected fast-forward (never a force); two local-model workers contend. (b) **One active driver per machine**, through a lock under `$XDG_STATE_HOME/sdlc/`. Pro: matches one operator and one local model. Con: a new lock outside every run root, and an idle chunk blocks another. (c) **No rule.** Pro: nothing to build. Con: two run roots on one slug race on the state branch until the lease stops one. **Recommend (a)**: the run root already isolates everything local; the shared remote is what a solo operator already has across chunks, and O11 covers model contention in the operator's own session |
-| O22 | **Accepted in writing by the operator, 2026-10-19; branch protection is on for the toolbox `main`.** Accept in writing operator item 5: the toolbox remote is fixed by the operator's typed URL and off-machine note, but anyone who can push its trunk, workers included when the toolbox is the product repo, can put a commit on the reviewed ref; and at a restore a forged state can name another pin on that remote, which the operator must read as a diff from the genesis pin before typing its full SHA; a Run prep's first pin on trunk is taken on the summary alone | Accept, with branch protection on the toolbox trunk, which removes the planted-commit half as it does for O17 while workers' credentials cannot bypass it. The alternatives, typing the full SHA at every Run prep and repin, or a toolbox remote workers cannot push, cost a 40-hex entry per pin or a second credential for a residual the diff already shows |
+| O22 | **Accepted in writing by the operator, 2026-10-19; branch protection is on for the toolbox `main`.** Accept in writing operator item 5: the toolbox remote is fixed by the operator's typed URL and off-machine note, but anyone who can push its trunk, workers included when the toolbox is the product repo, can put a commit on the reviewed ref; and at a restore a forged state can name another pin on that remote, which the operator must read as a diff from the genesis pin before typing its full SHA; a Run prep's first pin on trunk is taken on the summary alone | Accept, with branch protection on the toolbox trunk. The reviewed ref is `refs/heads/<bundle.trunk>`, `main` unless Run prep's operator names another, which then needs the same protection; the remote's `HEAD` is never read, and every Start re-fetches that ref and re-checks the pin on it (review of 0047da2). Protection removes the planted-commit half as it does for O17 while workers' credentials cannot bypass it. The alternatives, typing the full SHA at every Run prep and repin, or a toolbox remote workers cannot push, cost a 40-hex entry per pin or a second credential for a residual the diff already shows |
 
 ### Rollout / rollback
 
