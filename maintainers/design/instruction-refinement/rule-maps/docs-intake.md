@@ -20,36 +20,38 @@ clarifications (2026-09-27): none of their subjects occur in this file.
 | --- | --- | --- | --- |
 | 1 | Title | kept verbatim | L1 |
 | 3 | Checklist applies before any third-party skill body lands | kept verbatim | L3 |
-| 4–5 | **security** owns this gate; workers (remote agents, local CLIs, mirrors) do not bypass it | kept; the list moves out of the parenthesis (standard 8); "go through it" names the allowed action (standard 7) (MQ1) | L4–5 |
-| 7–9 | First-party files written in this repo (this checklist, `security-hardening`, language guides) are not vendor intake; still no secrets or `scripts/` | kept; the parenthesis becomes "for example" (MQ2); "must not ship" → imperative "Ship them without" | L7–8 |
-| 11 | Heading "Checklist" | kept (`#checklist`) | L10 |
-| 13–16 | Step 1: clone or fetch + checkout; no marketplace install; no `npx` installer, runner, or "add this skill"; no second process pack beside this repo's ids | kept; parenthesis → colon; "Do not" → "Never", the step head "Clone" is the allowed action | L12–15 |
-| 17–20 | Step 2: never copy `scripts/`; never run upstream install, postinstall, bootstrap; executable helpers untrusted until **security** says otherwise, default drop | kept; "default is drop them … until security says otherwise" → "Drop … keep one only if **security** clears it" (allowed action beside "never") | L16–18 |
-| 21–24 | Step 3: run SkillSpector, cisco skill-scanner, and/or a verified obielin skillguard; verify the tool's GitHub org before trusting binary or action; name collisions are not a clear | kept; "and/or" → "one or more of" (MQ3); the parenthesis becomes its own sentence | L19–22 |
-| 25–27 | Step 4: pin SHA in `SOURCES.md` before the body; row names upstream, SHA, license, notes; empty SHA → no body; first-party rows use `first-party` | kept; "Empty SHA means no body" → if/then; imperative | L23–25 |
-| 28–31 | Step 5: rewrite ≤250 lines, least privilege; no verbatim vendor `SKILL.md`; compress; review skills must not write; no secrets; no extra bodies in the same PR unless **security** asked | kept; "compress" sits beside "never paste" (standard 7); "Review skills must not write" verbatim (MQ4) | L26–29 |
-| 32–33 | Step 6: pin stays until a later **security**-cleared bump; no marketplace sync, no "latest", no unattended vendor pull | kept; first sentence → imperative; second verbatim | L30–31 |
-| 35 | Heading "Workers" | kept (`#workers`; linked from `poc/rewrite/skills/sdlc-onboarding`) | L33 |
-| 37–39 | Remote-agent PRs still need a security clear; remote authoring no exemption; Build DoD: diff matches the pinned SHA, or `first-party` for first-party prose | kept; singular; the parenthesized condition becomes its own sentence (standard 8) | L35–36 |
-| 41–44 | Product-repo `.agents/tracker/SKILL.md`, each one a governing `## Tracker` names (root, or a subdirectory whose `AGENTS.md` the root `AGENTS.md` or `CLAUDE.md` names): no SOURCES row; **security** reads the change that adds or edits it | kept; the scope moves out of the parenthesis into its own sentence, words unchanged | L38–41 |
-| 44–46 | It holds no tokens, no `scripts/` files, no executable blocks except the fenced shell recipe from `adapters/local.md` | kept; numbered **security** step (standard 1) stating the outcome: the read fails if any is present | L42–44 |
-| 46–48 | **security** compares the recipe with the adapter's current text; only placeholder fills and baked-in gotchas may differ | kept verbatim, as a **security** step | L45–46 |
-| 48–49 | Any other executable content fails the read | kept; **security** step, active voice | L47 |
-| 51 | Heading "Layout-only exception" | kept (`#layout-only-exception`) | L49 |
-| 53–54 | Empty skill directories holding only `.gitkeep` (layout, no `SKILL.md`, no scripts) are OK without scan | kept; the parenthesis becomes a sentence after a colon | L51 |
-| 54–55 | Intake and scanners start when a body, script, or third-party file would land | kept; imperative "Start" | L51 |
-| — | `## Script records`: none cleared; **security** appends one line per bundle script | new; route to `docs/sdlc/bundle-spec.md#script-records` | L53–55 |
+| 4–5 | **security** owns this gate; workers (remote agents, local CLIs, mirrors) do not bypass it | kept; the list moves out of the parenthesis (standard 8); "go through it" names the allowed action (standard 7) (MQ1) | L4 |
+| 7–9 | First-party files written in this repo (this checklist, `security-hardening`, language guides) are not vendor intake; still no secrets or `scripts/` | kept; the parenthesis becomes "for example" (MQ2); "must not ship" → imperative "Ship them without" | L6–7 |
+| 11 | Heading "Checklist" | kept (`#checklist`) | L9 |
+| 13–16 | Step 1: clone or fetch + checkout; no marketplace install; no `npx` installer, runner, or "add this skill"; no second process pack beside this repo's ids | kept; parenthesis → colon; "Do not" → "Never", the step head "Clone" is the allowed action | L11–14 |
+| 17–20 | Step 2: never copy `scripts/`; never run upstream install, postinstall, bootstrap; executable helpers untrusted until **security** says otherwise, default drop | kept; "default is drop them … until security says otherwise" → "Drop … keep one only if **security** clears it" (allowed action beside "never") | L15–17 |
+| 21–24 | Step 3: run SkillSpector, cisco skill-scanner, and/or a verified obielin skillguard; verify the tool's GitHub org before trusting binary or action; name collisions are not a clear | kept; "and/or" → "one or more of" (MQ3); the parenthesis becomes its own sentence | L18–20 |
+| 25–27 | Step 4: pin SHA in `SOURCES.md` before the body; row names upstream, SHA, license, notes; empty SHA → no body; first-party rows use `first-party` | kept; "Empty SHA means no body" → if/then; imperative | L21–23 |
+| 28–31 | Step 5: rewrite ≤250 lines, least privilege; no verbatim vendor `SKILL.md`; compress; review skills must not write; no secrets; no extra bodies in the same PR unless **security** asked | kept; "compress" sits beside "never paste" (standard 7); "Review skills must not write" verbatim (MQ4) | L24–27 |
+| 32–33 | Step 6: pin stays until a later **security**-cleared bump; no marketplace sync, no "latest", no unattended vendor pull | kept; first sentence → imperative; second verbatim | L28–29 |
+| 35 | Heading "Workers" | kept (`#workers`; linked from `poc/rewrite/skills/sdlc-onboarding`) | L31 |
+| 37–39 | Remote-agent PRs still need a security clear; remote authoring no exemption; Build DoD: diff matches the pinned SHA, or `first-party` for first-party prose | kept; singular; the parenthesized condition becomes its own sentence (standard 8) | L33–34 |
+| 41–44 | Product-repo `.agents/tracker/SKILL.md`, each one a governing `## Tracker` names (root, or a subdirectory whose `AGENTS.md` the root `AGENTS.md` or `CLAUDE.md` names): no SOURCES row; **security** reads the change that adds or edits it | kept; the scope moves out of the parenthesis into its own sentence, words unchanged | L36–38 |
+| 44–46 | It holds no tokens, no `scripts/` files, no executable blocks except the fenced shell recipe from `adapters/local.md` | kept; numbered **security** step (standard 1) stating the outcome: the read fails if any is present | L39–41 |
+| 46–48 | **security** compares the recipe with the adapter's current text; only placeholder fills and baked-in gotchas may differ | kept verbatim, as a **security** step | L42 |
+| 48–49 | Any other executable content fails the read | kept; **security** step, active voice | L43 |
+| 51 | Heading "Layout-only exception" | kept (`#layout-only-exception`) | L45 |
+| 53–54 | Empty skill directories holding only `.gitkeep` (layout, no `SKILL.md`, no scripts) are OK without scan | kept; the parenthesis becomes a sentence after a colon | L47 |
+| 54–55 | Intake and scanners start when a body, script, or third-party file would land | kept; imperative "Start" | L47 |
+| — | `## Script records`: none cleared; **security** appends one line per bundle script | new; route to `docs/sdlc/bundle-spec.md#script-records` | L49–51 |
+| — | Dev dependency: exact pin, lockfile, no runtime dependency; `typescript` `5.9.3` for `packages/sdlc-driver` only | new; Ruling S8 | L53–55 |
 
 ## G2 change map (DER-421)
 
-The locations above are the current 55-line file. G2 shortened three paragraphs so `## Script records` fits the cap. No checklist step changed.
+The locations above are this 55-line file. G2 shortened three paragraphs so `## Script records` fits the cap. The driver merge joined four wrapped lines, without changing those rules, so `## Dev dependencies` fits the same cap. No checklist step changed.
 
 | Prior line (DER-336 file) | Change | Current |
 | --- | --- | --- |
-| L7–9 | First-party sentence stays an example list and still forbids secrets and `scripts/` | L7–8 |
-| L36–38 | Remote-agent clear and the pinned-SHA match stay; "Build DoD" was the occasion, not an extra condition | L35–36 |
-| L53–55 | A directory that holds only `.gitkeep` stays unscanned; intake still starts when a body, script, or third-party file would land | L51 |
-| — | New route: no script is cleared; the bullet shape is owned by bundle-spec | L53–55 |
+| L7–9 | First-party sentence stays an example list and still forbids secrets and `scripts/` | L6–7 |
+| L36–38 | Remote-agent clear and the pinned-SHA match stay; "Build DoD" was the occasion, not an extra condition | L33–34 |
+| L53–55 | A directory that holds only `.gitkeep` stays unscanned; intake still starts when a body, script, or third-party file would land | L47 |
+| — | New route: no script is cleared; the bullet shape is owned by bundle-spec | L49–51 |
+| — | `typescript` `5.9.3` is a devDependency of `packages/sdlc-driver` only, with its lockfile; no runtime dependency | L53–55 |
 
 ## Meaning questions
 

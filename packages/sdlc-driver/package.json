@@ -1,0 +1,21 @@
+{
+  "name": "sdlc-driver",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Core SDLC bundle driver: bundle check and stage-result reader. Node built-ins only.",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.18"
+  },
+  "bin": {
+    "sdlc-driver": "./src/cli.ts"
+  },
+  "scripts": {
+    "check": "tsc -p . && node --test",
+    "test": "node --test"
+  },
+  "devDependencies": {
+    "typescript": "5.9.3"
+  }
+}
