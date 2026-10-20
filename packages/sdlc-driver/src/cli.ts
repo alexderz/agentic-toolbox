@@ -78,6 +78,7 @@ function validate(args: string[]): Issue[] {
     runRoot,
     runFolder: `${relative(runRoot, folder)}/`,
     exits: node.exits,
+    ...(isManager ? { reserved: [] } : {}),
     checks: node.checks ?? [],
     driverAuthored: opts.authored === "driver",
   }, file).issues;

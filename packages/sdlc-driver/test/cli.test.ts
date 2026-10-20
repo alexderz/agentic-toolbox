@@ -131,6 +131,10 @@ test("validate: fixed manager gate escalation requires original-node context", (
   assert.equal(run(args).status, 2);
   assert.equal(run([...args, "--for-node", "ghost"]).status, 2);
   assert.deepEqual(run([...args, "--for-node", "ask"]), { status: 0, out: "", err: "" });
+  for (const stopped of ["ask", "refine"]) for (const choice of ["stop", "operator"]) {
+    writeFileSync(file, JSON.stringify({ ...result, choice }));
+    assert.match(run([...args, "--for-node", stopped]).out, /flow.choice-not-allowed/);
+  }
   writeFileSync(file, JSON.stringify({ ...result, step: "Build" }));
   assert.match(run([...args, "--for-node", "ask"]).out, /result.step/);
   writeFileSync(file, JSON.stringify({ ...result, choice: "resume", status: "pass", evidence: { kind: "model", checks: ["source: gather brief.md"] } }));
