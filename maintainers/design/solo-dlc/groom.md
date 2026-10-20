@@ -1,15 +1,13 @@
 # Groom — solo-dlc
 
-DRAFT (pre-review)
+Frozen record of the plan as reviewed at Groom on 2026-10-20. Not live: the tracker is the source of truth for tickets, blockers and state.
 
-<!-- At freeze, replace the draft marker above with this sentence and
-delete this comment: Frozen record of the plan as reviewed at Groom on
-<YYYY-MM-DD>. Not live: the tracker is the source of truth for tickets,
-blockers and state. -->
+
 
 - Chunk: `DER-421` · LLD: `maintainers/design/solo-dlc/lld.md` · Date: `2026-10-20`
-- Review: `pending`
-- Tickets: pending at freeze. `G1` is the existing `DER-529` (update it; do not file a second ticket). Every other `G` id is unassigned.
+- Review: clean Grok reviewer `agent:main:subagent:dddaaf93-f8b7-4b88-9de1-c1d072c84b60`, 2026-10-20, passed `586e4d1`. Report: `projects/solo-dlc/review-prep-groom-final4.md` (coordinator workspace).
+- Tickets: G1 = DER-529; G0 = DER-574; G2 = DER-575; G5a = DER-576; G5b = DER-577; G5c = DER-578; G5d = DER-579; G5e = DER-580; G3 = DER-581; G7 = DER-582; G6 = DER-583; G4 = DER-584; G8 = DER-585. Existing G1 / DER-529 remains Done for its original shared-contract delivery; solo-specific additions are staged and not represented as landed yet.
+- Land order: G0 → G1 supplements → G2 → G5a → G3 → G8 → G4 → G5b → G5c → G5d → G5e → G7 → G6. Each land requires its own passing review and post-land verification.
 - Out of scope for this plan: general-SDLC follow-ups `DER-565` (build-environment gate for the SDLC itself) and `DER-570` (general-SDLC toolbox-copy layout). `G9` (Linear for driven runs, security rulings S1 and S2) is not groomed; it needs its own LLD addendum and its own security gate.
 - Test environment: this chunk is a TypeScript driver, two harness packages, and docs. Tests run on Node.js `>=22.18` (`packages/sdlc-driver` `engines`), npm, and the pinned `typescript` devDependency (ruling S8), via `node:test` (`tsc -p . && node --test`) and the writing-standard K checks. No database, container, or other service. No env-prep item: this chunk does not need a build-environment gate to build or test. The product still implements env-prep for bundles that carry a `json sdlc-env` block (`G5e`, `G3`).
 
