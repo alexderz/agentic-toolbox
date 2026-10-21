@@ -7,6 +7,14 @@ Repo license is MIT ([LICENSE](LICENSE)); `skills/debug-anthropic/` and
 `skills/ui-craft/` are Apache-2.0 ([NOTICE](NOTICE)). See [docs/INTAKE.md](docs/INTAKE.md).
 **security** intake before any third-party content. No auto-update.
 
+`minecraft-builder` is not pinned here. It moved to
+[alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc)
+(`skills/minecraft-builder`). PrismarineJS/minecraft-data has no LICENSE file
+and the GitHub license field is null, so it is not cleared for this repo.
+`docs/model-research` moved to
+[alexderz/agentic-model-testing](https://github.com/alexderz/agentic-model-testing/tree/main/docs/model-research);
+this repo keeps only `docs/model-research/moved.md`.
+
 | Skill | Upstream | SHA | License | Notes |
 | --- | --- | --- | --- | --- |
 | tracker-sdlc | first-party (this repo) | first-party | MIT | Contract + 5 adapters, prose only. A repo tracker skill has no `scripts/` files and no executable blocks except the fenced shell recipe from `adapters/local.md`; **security** compares it with the adapter's current text (only placeholder fills and baked-in gotchas may differ). Every tracker read/write goes through it and the product repo's `.agents/tracker/SKILL.md`. No vendor body. No `scripts/` in this skill. |

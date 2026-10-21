@@ -1,3 +1,5 @@
+The `fmt-lint` workflow that implemented this plan was removed on 2026-10-21 (DER-590). This file is the old plan, not a live check.
+
 # CI hooks — first cut
 
 Thin plan for what to wire **first**. **No skill bodies.**

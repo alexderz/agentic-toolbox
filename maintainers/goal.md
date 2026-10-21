@@ -4,7 +4,7 @@ This is the shared skills repo other CLIs should read.
 
 ## Done means
 
-1. CI (fmt-lint) green on `main`.
+1. No required fmt/lint check. The `fmt-lint` workflow was removed on 2026-10-21.
 2. Every directory under `skills/*/SKILL.md` is listed accurately in
    `SOURCES.md` + `AGENTS.md`.
 3. No empty skill placeholders claimed as bodies; no vendor pack paste;

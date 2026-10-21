@@ -4,6 +4,11 @@ Newest first. Skip empty sections.
 
 ## Unreleased
 
+### Removed
+
+- The `fmt-lint` GitHub Actions check. It failed on `knowledge/ai/practices/elevenlabs-voice-clips.md`, which this split does not change, and it blocked landing (`DER-590`).
+- `skills/minecraft-builder` moved to public [alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc). PrismarineJS/minecraft-data has no LICENSE file and its GitHub license is null. `docs/model-research` moved to [alexderz/agentic-model-testing](https://github.com/alexderz/agentic-model-testing/tree/main/docs/model-research); this folder keeps `moved.md` only (`DER-590`).
+
 ### Added
 
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls

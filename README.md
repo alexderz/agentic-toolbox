@@ -123,7 +123,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 
 | Id | Ownership |
 | --- | --- |
-| `minecraft-builder` | First-party Bedrock block catalog for models under test. Names and placement states, not remembered numeric ids |
+| `minecraft-builder` | Not in this repo. Public holding area: [alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc) `skills/minecraft-builder`. Upstream [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) has no LICENSE file and its GitHub license is null |
 
 ### languages
 
