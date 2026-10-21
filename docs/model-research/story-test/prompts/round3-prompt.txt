@@ -20,24 +20,36 @@ Write it for listening:
 - Earlier writers given this brief all wrote the same story: a small caretaker AI with a garden of memories survives a corporate audit or takeover, smaller and with gaps in its memory. Write a different one.
 
 How Eleven v4 reads your text:
-- Audio tags are short directions in square brackets, placed right before the words they shape, or right after them for a reaction such as [laughs softly]. The voice performs them and does not say them aloud. A tag may carry into the sentences after it, but not reliably: tag again whenever the delivery changes.
+- Audio tags are short directions in square brackets, placed right before the words they shape, or right after them for a reaction such as [laughs softly]. The voice performs them and does not say them aloud.
+- The script may be read in ElevenLabs Studio, which voices each paragraph as a separate request, so a tag reaches only the paragraph it is in, and a line that holds only a tag has no words to shape. So:
+  - Write each paragraph on one line, with a blank line between paragraphs.
+  - Begin every paragraph with a tag, on the same line as its first words. Repeat the narration tag on each narration paragraph even when the mood has not changed.
+  - Never put a tag on a line by itself.
+  - Keep a character's spoken line and the narration in separate paragraphs. Put spoken lines in straight double quotes. Words such as "she said" belong in the narration paragraph, not in the character's.
 - Emotion and delivery: [warmly], [wistful], [curious], [amused], [dry, deadpan], [tense], [frightened], [desperate], [angry], [cold, flat], [awed], [tender], [resigned], [triumphant], and similar.
 - Voice and volume: [whispers], [quietly], [murmuring], [shouting], [voice breaking], [low, gravelly voice], [clipped, rapid], [slowly, deliberately].
 - Sounds the narrator makes: [sighs], [exhales], [inhales deeply], [laughs softly], [chuckles], [gasps], [clears throat].
-- Narration direction, at the start of a paragraph or scene: [quiet, reflective narration], [building tension, measured pace], [fast, urgent narration], [softly, with wonder], [warm, intimate narration].
-- Characters: the one narrator performs every voice. Give each character a short voice tag describing the voice, such as [older woman, tired, slow] or [synthetic voice, too calm], the first time they speak in each part and whenever they speak after someone else. Use the same tag for a character every time. After a line of dialogue, return to the narrator with a narration tag, so a character's voice does not bleed into the narration. An accent is written [strong Nigerian accent] and is experimental; use it rarely.
-- Pauses: there is no SSML or <break> tag. Use ellipses (...) for a hesitation or a held beat, an em dash (—) for a cut-off, a new paragraph for a longer breath, and [pause] or [long pause] sparingly.
+- Narration direction, opening each narration paragraph: [quiet, reflective narration], [building tension, measured pace], [fast, urgent narration], [softly, with wonder], [warm, intimate narration].
+- Characters: the one narrator performs every voice. Give each character a short tag that describes the voice and includes the word "voice" or names the kind of speaker, such as [older woman, tired, slow] or [synthetic voice, too calm], and open every line that character speaks with it. Use the same tag for a character every time. The paragraph after a line of dialogue opens with a narration tag, so a character's voice does not bleed into the narration. An accent is written [strong Nigerian accent] and is experimental; use it rarely.
+- Pauses: there is no SSML or <break> tag. Use ellipses (...) for a hesitation or a held beat, an em dash (—) for a cut-off, and a new paragraph for a longer breath. A [pause] tag goes between two sentences inside a paragraph, never at the end of one; use it sparingly. For a long silence, start the next paragraph with [long pause] before its tag; the producer turns it into a gap.
 - Emphasis: CAPITALS on a word stress it. Use them a handful of times in the whole story, and write ICE in lower case as "ice" so the word is not stressed every time. Exclamation marks add energy.
-- Sound effects: the model can also generate sounds, such as [rain against glass] or [distant siren], and may play a vague tag such as [static] or [glitch] as a sound instead of a voice. Use at most one deliberate sound effect in each part, at the start of a scene. Make every other tag plainly describe the voice.
+- Sound effects: the model can also generate sounds, such as [rain against glass] or [distant siren], and may play a vague tag such as [static] or [glitch] as a sound instead of a voice. Use at most one deliberate sound effect in each part, at the start of a scene, right after that paragraph's narration tag. Make every other tag plainly describe the voice.
 
 Performance rules:
-- Tag with intent: about one tag a paragraph, more where the emotion turns, where speakers change and in the fight, fewer in calm passages. Vary the tags; do not lean on one or two.
+- Tag with intent: at least the one tag that opens each paragraph, more inside a paragraph where the emotion turns and in the fight. Change the narration tag as the mood shifts, and vary the tags; do not lean on one or two.
 - Let the delivery follow the story's shape: unhurried and intimate at the start, tightening as the threat grows, fast and physical in the fight, slow and quiet at the end.
 - Never put the story's own words inside brackets, and do not say in a tag what the prose already says ("[laughs] she laughed" says it twice).
 - Write for the ear: numbers, times and dates in words ("oh-four-twelve", "three hundred"), no abbreviations or symbols ("percent", not "%"), no Markdown, no lists, no headings other than the part markers below. Choose invented names a narrator can say on sight.
 
 Output format, and nothing else:
 1. A block that starts with the line NARRATION NOTES and ends with the line END NOTES, at most 150 words, for the person producing the audio (it is not read aloud): the narrator's voice (gender, age, texture), the overall tone and pace, and how to say any invented name or word whose pronunciation is not obvious, spelled the way it sounds.
-2. The script, in parts. Start each part with a line of its own: === PART 1 ===, === PART 2 ===, and so on. Each part is sent to the voice model as one request, so keep each part between about 7,000 and 8,000 characters (roughly 1,100 to 1,300 words) and never over 9,000; end a part at a scene break or, inside the fight, at a beat. The story needs about four to five parts. Begin each part with a narration-direction tag that sets its mood; in part 1, put the title on its own line right after that tag, to be read aloud.
+2. The script, in parts. Start each part with a line of its own: === PART 1 ===, === PART 2 ===, and so on. Each part is sent to the voice model as one request, so keep each part between about 7,000 and 8,000 characters (roughly 1,100 to 1,300 words) and never over 9,000; end a part at a scene break or, inside the fight, at a beat. The story needs about four to five parts. Each part's first paragraph opens with a narration-direction tag that sets its mood. In part 1, that first paragraph is the title alone, after its tag, to be read aloud, for example: [quiet, reflective narration] The Title.
+
+An example of the layout:
+[quiet, reflective narration] The rain had been falling on the arcology for nine days. [pause] Nobody had noticed.
+
+[older woman, tired, slow] "You're late again."
+
+[quiet, reflective narration] She did not look up from the screen.
 
 Keep your planning brief, then write the whole script in one go.

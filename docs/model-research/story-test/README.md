@@ -103,21 +103,35 @@ the end, and adds four sections.
   - A different story from the one every round 2 model converged on: a caretaker AI, a garden of memories, and
     survival with gaps.
 - **How Eleven v4 reads text.** This is distilled from
-  [elevenlabs-voice-clips.md](../../../knowledge/ai/practices/elevenlabs-voice-clips.md) and ElevenLabs'
+  [elevenlabs-voice-clips.md](../../../knowledge/ai/practices/elevenlabs-voice-clips.md),
+  [elevenlabs-narration.md](../../../knowledge/ai/practices/elevenlabs-narration.md) and ElevenLabs'
   [Prompting Eleven v4](https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v4)
-  (checked 2026-10-20). It covers these tag families:
+  (checked 2026-10-20 and 2026-10-21). It sets a paragraph layout meant to work in ElevenLabs Studio, which voices each
+  paragraph as its own request, as well as in whole-part API requests:
+  - every paragraph opens with a tag on the same line as its words, and a narration paragraph repeats the narration
+    tag even when the mood hasn't changed;
+  - no tag on a line of its own, and no pause tag at the end of a paragraph;
+  - a character's line, in straight double quotes, and the narration in separate paragraphs.
+
+  It covers these tag families:
   - emotion and delivery;
   - voice and volume;
   - sounds the narrator makes;
   - narration direction;
-  - one fixed voice tag per character, repeated in each part and after another speaker, then a narration tag to
-    hand back;
-  - pauses through ellipses, dashes and paragraphs, since v4 has no SSML `<break>`;
+  - one fixed voice tag per character, describing a voice, on every line that character speaks, then a narration
+    tag to hand back;
+  - pauses through ellipses, dashes and paragraphs, since v4 has no SSML `<break>`, `[pause]` only between two
+    sentences of a paragraph, and `[long pause]` opening a paragraph for a gap;
   - rare CAPITALS, with ICE written "ice" so it isn't stressed every time;
   - at most one deliberate sound effect per part, with a warning that vague tags such as `[static]` can play as
     sounds.
 
-  It says plainly that a tag may carry into the next sentences but not reliably.
+  The first version of the brief (2026-10-20) said only that a tag may carry into the next sentences but not
+  reliably, and put each part's opening tag and the title on lines of their own. Ornith's script, the first result,
+  followed it and put 85 of its 89 tags on lines of their own. Imported into Studio on the project defaults, the
+  script was read with its tags aloud: the default model, Multilingual v2, doesn't perform tags, and Studio voices
+  each paragraph alone, so a tag on its own line is cut off from its words. The layout rules were added on
+  2026-10-21, after that run. Scripts from the first version need [studio_text.py](studio_text.py).
 - **Performance rules.**
   - About one tag per paragraph, more at turns, at speaker changes and in the fight.
   - Delivery that follows the story's shape.
@@ -128,7 +142,9 @@ the end, and adds four sections.
     names. It is not read aloud.
   - The script in `=== PART n ===` parts of about 7,000 to 8,000 characters, and never more than 9,000. Eleven v4
     takes 10,000 characters per request, so each part is one request.
-  - Each part opens with a narration-direction tag. Part 1 then reads the title aloud.
+  - Each part's first paragraph opens with a narration-direction tag. In part 1 that paragraph is the title, read
+    aloud.
+  - A three-line example of the layout.
 
 The story comes first, and its 5,000 words don't count the tags.
 
@@ -141,7 +157,7 @@ The story comes first, and its 5,000 words don't count the tags.
 - `max_tokens` is 32000, because round 2's 20,000 cut both Flash-Next stories off and the tags add text.
 - Thinking is capped at 12,432 tokens as in rounds 1 and 2: `thinking_budget_tokens` by default. For vLLM, pass
   `'{"thinking_token_budget": 12432}'`.
-- `TITAN_API` sets the endpoint; the default is Titan's llama-swap at `http://10.69.2.62:8080/v1`.
+- `TITAN_API` sets the endpoint; the default is Titan's llama-swap at `http://titan:8080/v1`.
 - It writes `request.json`, `response.json`, `script.md`, `thinking.md` and `check.json`.
 
 [narration_check.py](narration_check.py) (`python3 narration_check.py script.md [--json]`) counts what can be
@@ -149,6 +165,9 @@ counted before rendering. It doesn't grade the story.
 - **Counts:** story words without tags; tags per 100 words; distinct and most-used tags; the full tag list per part,
   to spot tags that might play as sound effects; CAPITALS emphasis.
 - **Parts:** each part's size against the 9,000 and 10,000 limits, and whether the part opens with a tag.
+- **Layout:** lines that hold only a tag, paragraphs that don't open with a tag, and paragraphs that end with a pause
+  tag.
+  `check.json` files written before 2026-10-21 don't have these checks.
 - **Format problems:**
   - the notes block, its length, and text outside the notes and parts;
   - digits, symbols, Markdown and SSML;
@@ -163,13 +182,29 @@ Judge the result by ear:
 
 ### Render it
 
-Send each part, without the notes block, as one Create speech request with `model_id` `eleven_v4`, and keep the voice,
-settings and seed the same for every part so the parts sound like one reading. Mod the First's game voice (Will,
-stock, `bIHbv24MWmeRgasZH58o`) renders at stability 0.3, similarity 0.75 and seed 7, since lower stability gives the
-tags room. Those settings were tested on 313 short clips only (all under 70 characters, emotion tags only, no sound
-effects, almost no ellipses or capitals), so how a voice holds up over a 5,000-word narration is untested. Pick a
-narrator voice that fits the notes block, and listen to part 1 before rendering the rest. Expect about 30,000 to
-40,000 characters per story, at Eleven v4's $0.08 per 1,000 characters.
+[elevenlabs-narration.md](../../../knowledge/ai/practices/elevenlabs-narration.md) covers both routes in detail.
+
+**In ElevenLabs Studio:** convert the script with [studio_text.py](studio_text.py), which drops the notes block and
+the part markers and fixes the tag layout, keeping every word except ICE, which it writes as "ice":
+
+    python3 studio_text.py script.md story.txt
+
+It prints where to add a silence on the timeline. Upload `story.txt` (don't import a repository URL), set **Project
+settings > Model** to Eleven v4, and play a few paragraphs before exporting. This route follows the Studio docs; the
+converted text has been rendered through the API, not yet in Studio.
+
+**Through the API:** [render_narration.py](render_narration.py) converts the script the same way, splits it into
+requests at the part breaks and silences, renders each with `eleven_v4`, the same voice, settings and seed, and
+`previous_request_ids`, then joins them with silence into `narration.wav`, and `narration.mp3` when `lameenc` is
+installed. `--check` transcribes each request with Speech to text and reports spoken tags and audio events. It reads
+the key from `ELEVENLABS_API_KEY`.
+
+    python3 render_narration.py script.md OUTDIR --limit 1 --check   # render and check the first request
+    python3 render_narration.py script.md OUTDIR --check             # render the rest and join them
+
+The defaults are the stock voice Brian (`nPczCjzI2devNBz1zQrb`), stability 0.35, similarity 0.75 and seed 7. Pick a
+narrator voice that fits the notes block with `--voice`. Eleven v4 bills about 0.22 credits per character, so a
+story of 25,000 characters with tags costs about 5,500 credits.
 
 ### Results
 
@@ -177,7 +212,7 @@ Each model's folder under [results/round3/](results/round3/) holds `script.md`, 
 
 | Model | Engine | Story words, tags | Parts | Time, speed | Notes |
 | --- | --- | --- | --- | --- | --- |
-| Ornith 1.5 122B-A10B (`lcpp6-ornith-122b-q4kxl`, 2026-10-20) | llama.cpp 0.7, UD-Q4_K_XL, thinking cap 12,432 | 4,129 words; 89 tags (2.2 per 100 words, 27 distinct) | 5, of 3,354 to 5,583 characters | 1,193 s at 15.5 tok/s; ended on `stop` | `narration_check.py` lists no problems. Short of 5,000 words, and every part is well under the 7,000 to 8,000 characters asked for. The title, "Running the Black", is also the first sentence. One "ICE" in capitals in dialogue, although its own notes say to read it as "ice". Not yet rendered or judged by ear. |
+| Ornith 1.5 122B-A10B (`lcpp6-ornith-122b-q4kxl`, 2026-10-20) | llama.cpp 0.7, UD-Q4_K_XL, thinking cap 12,432 | 4,129 words; 89 tags (2.2 per 100 words, 27 distinct) | 5, of 3,354 to 5,583 characters | 1,193 s at 15.5 tok/s; ended on `stop` | `narration_check.py` lists no problems. Short of 5,000 words, and every part is well under the 7,000 to 8,000 characters asked for. The title, "Running the Black", is also the first sentence. One "ICE" in capitals in dialogue, although its own notes say to read it as "ice". Written to the first version of the brief: 85 tags on lines of their own. Rendered on 2026-10-21 through the API after `studio_text.py` (Brian, seven requests, 21.8 minutes, 5,200 credits). The `--check` transcripts match the text at 98.8% to 100%, with no spoken tags or audio events. Not yet judged by ear. |
 
 ### Why the round 2 brief
 

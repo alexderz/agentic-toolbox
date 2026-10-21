@@ -9,6 +9,8 @@ and reports what can be counted before rendering:
   every part's full tag list (to spot tags that may play as sound effects);
 - part sizes against the brief's 9,000 characters and the 10,000-character Eleven v4 request limit, and whether each
   part opens with a tag;
+- the paragraph layout that ElevenLabs Studio needs: lines that hold only a tag, paragraphs that do not open with a
+  tag, and paragraphs that end with a pause tag;
 - text that would be read aloud wrongly or is out of format: digits, symbols, Markdown, SSML, empty, nested,
   unclosed or over-long brackets, text before the notes, CAPITALS emphasis count.
 It does not grade the story.
@@ -65,6 +67,20 @@ def check(text):
             problems.append(f"part {i} is {len(p)} characters (brief: at most {BRIEF_LIMIT})")
         if not TAG.match(p):
             problems.append(f"part {i} does not open with a tag")
+    lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
+    alone = [ln for ln in lines if not TAG.sub("", ln).strip()]
+    untagged = [ln for i, ln in enumerate(lines) if TAG.sub("", ln).strip() and not TAG.match(ln)
+                and not (i and lines[i - 1] in alone)]
+    trailing = [ln for ln in lines if TAG.sub("", ln).strip()
+                and re.search(r"\[(short |long )?pauses?\]\s*$", ln, re.I)]
+    r["layout"] = {"paragraphs": len(lines), "tag_only_lines": len(alone), "untagged_paragraphs": len(untagged),
+                   "paragraphs_ending_in_a_pause": len(trailing)}
+    if alone:
+        problems.append(f"{len(alone)} lines hold only a tag (Studio voices each paragraph alone and may speak them)")
+    if untagged:
+        problems.append(f"{len(untagged)} paragraphs do not open with a tag (nor follow a tag-only line; in Studio they lose the direction)")
+    if trailing:
+        problems.append(f"{len(trailing)} paragraphs end with a pause tag (nothing follows it in Studio)")
     prose = TAG.sub(" ", body)
     caps = [c for c in re.findall(r"\b[A-Z]{2,}\b", prose) if c not in ("AI", "I")]
     r["caps_emphasis"] = len(caps)

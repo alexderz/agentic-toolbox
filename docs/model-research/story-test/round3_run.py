@@ -1,11 +1,11 @@
-"""Story test round 3 (narration script for ElevenLabs Eleven v4), Alex 2026-10-20: one request with
+"""Story test round 3 (narration script for ElevenLabs Eleven v4), 2026-10-20: one request with
 prompts/round3-prompt.txt, max_tokens 32000 (round 2's 20,000 cut the longest stories off and tags add about a tenth),
 thinking capped at 12,432 as in rounds 1 and 2 (llama.cpp thinking_budget_tokens; pass '{"thinking_token_budget": 12432}'
 as EXTRA for vLLM instead). Writes request.json, response.json, script.md, thinking.md and check.json (narration_check.py).
 
   python3 round3_run.py MODEL OUTDIR [EXTRA_JSON]
 
-TITAN_API is the OpenAI-compatible base (default http://10.69.2.62:8080/v1, Titan's llama-swap). While a GPU hold
+TITAN_API is the OpenAI-compatible base (default http://titan:8080/v1, Titan's llama-swap). While a GPU hold
 blocks plain requests there, point it at a forwarder that adds the holder's key. The prompt is read from
 prompts/round3-prompt.txt beside this script, or from round3-prompt.txt in the same folder.
 """
@@ -15,7 +15,7 @@ from narration_check import check
 
 MODEL, OUT = sys.argv[1], sys.argv[2]
 EXTRA = json.loads(sys.argv[3]) if len(sys.argv) > 3 else {"thinking_budget_tokens": 12432}
-BASE = os.environ.get("TITAN_API", "http://10.69.2.62:8080/v1")
+BASE = os.environ.get("TITAN_API", "http://titan:8080/v1")
 os.makedirs(OUT, exist_ok=True)
 HERE = os.path.dirname(os.path.abspath(__file__))
 PROMPT = next(p for p in (os.path.join(HERE, "prompts", "round3-prompt.txt"), os.path.join(HERE, "round3-prompt.txt"))
