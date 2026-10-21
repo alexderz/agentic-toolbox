@@ -171,6 +171,14 @@ effects, almost no ellipses or capitals), so how a voice holds up over a 5,000-w
 narrator voice that fits the notes block, and listen to part 1 before rendering the rest. Expect about 30,000 to
 40,000 characters per story, at Eleven v4's $0.08 per 1,000 characters.
 
+### Results
+
+Each model's folder under [results/round3/](results/round3/) holds `script.md`, `thinking.md` and `check.json`.
+
+| Model | Engine | Story words, tags | Parts | Time, speed | Notes |
+| --- | --- | --- | --- | --- | --- |
+| Ornith 1.5 122B-A10B (`lcpp6-ornith-122b-q4kxl`, 2026-10-20) | llama.cpp 0.7, UD-Q4_K_XL, thinking cap 12,432 | 4,129 words; 89 tags (2.2 per 100 words, 27 distinct) | 5, of 3,354 to 5,583 characters | 1,193 s at 15.5 tok/s; ended on `stop` | `narration_check.py` lists no problems. Short of 5,000 words, and every part is well under the 7,000 to 8,000 characters asked for. The title, "Running the Black", is also the first sentence. One "ICE" in capitals in dialogue, although its own notes say to read it as "ice". Not yet rendered or judged by ear. |
+
 ### Why the round 2 brief
 
 - **The best stories came from round 2.** A cross-round read of all nine stories on 2026-10-20 (a clean Sonnet

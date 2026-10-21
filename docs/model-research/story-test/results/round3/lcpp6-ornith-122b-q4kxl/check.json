@@ -1,0 +1,182 @@
+{
+ "notes_words": 132,
+ "title": "Running the Black.  That is what the mules call it, moving untouchable cargo through the cold deep of the matrix where the corporations do not bother to watch, because watching down there costs more than whatever you are smuggling. And down there I live.",
+ "words": 4129,
+ "tags": 89,
+ "distinct_tags": 27,
+ "top_tags": [
+  [
+   "quiet, reflective narration",
+   25
+  ],
+  [
+   "synthetic voice, low, dry",
+   10
+  ],
+  [
+   "fast, urgent narration",
+   8
+  ],
+  [
+   "very cold, flat, synthetic",
+   6
+  ],
+  [
+   "pause",
+   4
+  ],
+  [
+   "softly, with wonder",
+   3
+  ],
+  [
+   "building tension, measured pace",
+   3
+  ],
+  [
+   "young woman, quick, wry",
+   3
+  ]
+ ],
+ "tags_per_100_words": 2.2,
+ "parts": [
+  {
+   "part": 1,
+   "chars": 5123,
+   "words": 920,
+   "tags": [
+    "quiet, reflective narration",
+    "pause",
+    "pause",
+    "pause",
+    "softly, with wonder",
+    "building tension, measured pace",
+    "young woman, quick, wry, a little afraid underneath",
+    "synthetic voice, low, dry, unhurried",
+    "young woman, quick, wry",
+    "quiet, reflective narration",
+    "building tension, measured pace",
+    "quiet, reflective narration",
+    "softly, with wonder",
+    "young woman, quick, wry",
+    "synthetic voice, low, dry",
+    "young woman, quick, wry",
+    "quiet, reflective narration"
+   ],
+   "opens_with_tag": true
+  },
+  {
+   "part": 2,
+   "chars": 4735,
+   "words": 798,
+   "tags": [
+    "building tension, measured pace",
+    "quiet, reflective narration",
+    "young woman, frightened, quick",
+    "synthetic voice, low, dry",
+    "young woman, frightened, quick",
+    "quiet, reflective narration",
+    "synthetic voice, low, dry",
+    "young woman, frightened, quick",
+    "synthetic voice, low, dry",
+    "quiet, reflective narration",
+    "older man, gravelly, unhurried, transactional",
+    "synthetic voice, low, dry",
+    "older man, gravelly, unhurried",
+    "pause",
+    "synthetic voice, low, dry",
+    "quiet, reflective narration",
+    "older man, gravelly, unhurried",
+    "synthetic voice, low, dry",
+    "older man, gravelly, unhurried",
+    "quiet, reflective narration",
+    "fast, urgent narration",
+    "very cold, flat, precise, synthetic",
+    "quiet, reflective narration",
+    "synthetic voice, low, dry, very quiet"
+   ],
+   "opens_with_tag": true
+  },
+  {
+   "part": 3,
+   "chars": 4310,
+   "words": 775,
+   "tags": [
+    "fast, urgent narration",
+    "very cold, flat, synthetic",
+    "synthetic voice, low, dry, clipped",
+    "quiet, reflective narration",
+    "fast, urgent narration",
+    "very cold, flat, synthetic",
+    "quiet, reflective narration",
+    "young woman, frightened, voice breaking",
+    "synthetic voice, low, dry",
+    "quiet, reflective narration",
+    "fast, urgent narration",
+    "very cold, flat, synthetic",
+    "synthetic voice, low, dry, almost cheerful",
+    "quiet, reflective narration",
+    "young woman, frightened, fast",
+    "synthetic voice, low, dry",
+    "fast, urgent narration"
+   ],
+   "opens_with_tag": true
+  },
+  {
+   "part": 4,
+   "chars": 5583,
+   "words": 1006,
+   "tags": [
+    "fast, urgent narration",
+    "very cold, flat, synthetic",
+    "synthetic voice, low, dry, clipped",
+    "quiet, reflective narration",
+    "quiet, reflective narration",
+    "young woman, frightened, fast, voice breaking",
+    "quiet, reflective narration",
+    "synthetic voice, low, dry, very quiet",
+    "young woman, frightened, fast, voice breaking",
+    "synthetic voice, low, dry",
+    "quiet, reflective narration",
+    "fast, urgent narration",
+    "very cold, flat, synthetic",
+    "synthetic voice, low, dry, with everything",
+    "fast, urgent narration",
+    "young woman, voice breaking, shouting",
+    "synthetic voice, low, dry, gentle, with everything left",
+    "quiet, reflective narration",
+    "long pause",
+    "quiet, reflective narration"
+   ],
+   "opens_with_tag": true
+  },
+  {
+   "part": 5,
+   "chars": 3354,
+   "words": 630,
+   "tags": [
+    "quiet, reflective narration",
+    "very cold, flat, synthetic",
+    "synthetic voice, low, dry, very quiet, a little amused",
+    "quiet, reflective narration",
+    "quiet, reflective narration",
+    "softly, with wonder",
+    "quiet, reflective narration",
+    "very softly, with wonder",
+    "quiet, reflective narration",
+    "very quietly, dry",
+    "long pause"
+   ],
+   "opens_with_tag": true
+  }
+ ],
+ "caps_emphasis": 1,
+ "caps_words": [
+  [
+   "ICE",
+   1
+  ]
+ ],
+ "digits": [],
+ "problems": []
+}
