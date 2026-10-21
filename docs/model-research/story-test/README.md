@@ -80,3 +80,105 @@ its skeleton and its ending; Flash-Next's pair shares a frame but differs most i
 Flash-Next needs more than 20,000 tokens for this task: it thought for about 8,500 words and wrote nearly 6,000, so
 both stories hit the limit. Qwen run 1 used its whole thinking cap and spilled the tail of its in-thought draft into
 the output; a larger cap or a guard against leaked thinking would fix that.
+
+## Round 3: a narration script for Eleven v4 (designed 2026-10-20)
+
+Round 3 asks for a story from the round 2 brief, written as a performance. It includes the audio tags, pauses and
+emphasis that ElevenLabs Eleven v4 follows, so the text can go straight to text-to-speech. The model writes the
+narration and the operator renders the audio. The round tests whether a model can direct a reading as well as write
+the story.
+
+### The brief
+
+[prompts/round3-prompt.txt](prompts/round3-prompt.txt) keeps round 2's first four paragraphs word for word: the
+setting, the AI protagonist, the shape and the pace. It moves round 2's closing "Keep your planning brief" sentence to
+the end, and adds four sections.
+
+- **Write it for listening.**
+  - At least three speaking characters who talk differently, one of them not human.
+  - About a quarter of the story in dialogue.
+  - Screens and messages spoken or described in the prose, never set out as formatted blocks.
+  - One real choice for the AI in the climax.
+  - A different story from the one every round 2 model converged on: a caretaker AI, a garden of memories, and
+    survival with gaps.
+- **How Eleven v4 reads text.** This is distilled from
+  [elevenlabs-voice-clips.md](../../../knowledge/ai/practices/elevenlabs-voice-clips.md) and ElevenLabs'
+  [Prompting Eleven v4](https://elevenlabs.io/docs/overview/capabilities/text-to-speech/best-practices#prompting-eleven-v4)
+  (checked 2026-10-20). It covers these tag families:
+  - emotion and delivery;
+  - voice and volume;
+  - sounds the narrator makes;
+  - narration direction;
+  - one fixed voice tag per character, repeated in each part and after another speaker, then a narration tag to
+    hand back;
+  - pauses through ellipses, dashes and paragraphs, since v4 has no SSML `<break>`;
+  - rare CAPITALS, with ICE written "ice" so it isn't stressed every time;
+  - at most one deliberate sound effect per part, with a warning that vague tags such as `[static]` can play as
+    sounds.
+
+  It says plainly that a tag may carry into the next sentences but not reliably.
+- **Performance rules.**
+  - About one tag per paragraph, more at turns, at speaker changes and in the fight.
+  - Delivery that follows the story's shape.
+  - No story words inside brackets.
+  - Text written for the ear: numbers in words, and no abbreviations, symbols or Markdown.
+- **Output format.**
+  - A `NARRATION NOTES` block of at most 150 words for the producer: casting, tone and pace, and how to say invented
+    names. It is not read aloud.
+  - The script in `=== PART n ===` parts of about 7,000 to 8,000 characters, and never more than 9,000. Eleven v4
+    takes 10,000 characters per request, so each part is one request.
+  - Each part opens with a narration-direction tag. Part 1 then reads the title aloud.
+
+The story comes first, and its 5,000 words don't count the tags.
+
+### Run it
+
+[round3_run.py](round3_run.py) sends one request:
+
+    python3 round3_run.py MODEL OUTDIR [EXTRA_JSON]
+
+- `max_tokens` is 32000, because round 2's 20,000 cut both Flash-Next stories off and the tags add text.
+- Thinking is capped at 12,432 tokens as in rounds 1 and 2: `thinking_budget_tokens` by default. For vLLM, pass
+  `'{"thinking_token_budget": 12432}'`.
+- `TITAN_API` sets the endpoint; the default is Titan's llama-swap at `http://10.69.2.62:8080/v1`.
+- It writes `request.json`, `response.json`, `script.md`, `thinking.md` and `check.json`.
+
+[narration_check.py](narration_check.py) (`python3 narration_check.py script.md [--json]`) counts what can be
+counted before rendering. It doesn't grade the story.
+- **Counts:** story words without tags; tags per 100 words; distinct and most-used tags; the full tag list per part,
+  to spot tags that might play as sound effects; CAPITALS emphasis.
+- **Parts:** each part's size against the 9,000 and 10,000 limits, and whether the part opens with a tag.
+- **Format problems:**
+  - the notes block, its length, and text outside the notes and parts;
+  - digits, symbols, Markdown and SSML;
+  - empty, unclosed or over-long brackets.
+- **Truncation:** the runner adds a problem when the reply didn't end on `stop`.
+
+Judge the result by ear:
+- Do the tags land?
+- Do the characters stay distinct, and does the narrator come back after them?
+- Does the pace follow the story?
+- Is any tag spoken aloud or played as a sound?
+
+### Render it
+
+Send each part, without the notes block, as one Create speech request with `model_id` `eleven_v4`, and keep the voice,
+settings and seed the same for every part so the parts sound like one reading. Mod the First's game voice (Will,
+stock, `bIHbv24MWmeRgasZH58o`) renders at stability 0.3, similarity 0.75 and seed 7, since lower stability gives the
+tags room. Those settings were tested on 313 short clips only (all under 70 characters, emotion tags only, no sound
+effects, almost no ellipses or capitals), so how a voice holds up over a 5,000-word narration is untested. Pick a
+narrator voice that fits the notes block, and listen to part 1 before rendering the rest. Expect about 30,000 to
+40,000 characters per story, at Eleven v4's $0.08 per 1,000 characters.
+
+### Why the round 2 brief
+
+- **The best stories came from round 2.** A cross-round read of all nine stories on 2026-10-20 (a clean Sonnet
+  reader) ranked the six round 2 stories above the three from round 1.
+  - The round 1 stories have no spoken dialogue: the actuary only types.
+  - The round 2 stories have about 30 to 76 lines of dialogue each, including a child, a voiced enemy and a
+    voice-copying black dog.
+  - The fixed outline made all three round 1 stories hit the same beats: the clean-ledger hum, the shark, the
+    icebreaker, the spared cowboy and the dry report.
+- **The generic brief lets the model cast its own world,** including who speaks and how. A narration test needs that.
+- **Round 2's weaknesses are addressed in the new sections.** The models converged on one story, lost round 1's
+  kill-or-spare choice, and set screens out as text blocks. The listening section targets each of these.

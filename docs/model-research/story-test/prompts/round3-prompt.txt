@@ -1,0 +1,43 @@
+Write an original short story of about 5,000 words set in the world of William Gibson's novel Neuromancer: the Sprawl, cyberspace and the matrix, ICE, console cowboys, the corporations and the people who live in their shadow. Use only characters, places and things you invent yourself; do not reuse or quote the novel's characters or text.
+
+The main character is an artificial intelligence. Invent everything about it and its world: what it is, what it does, who made or owns it, who it deals with, what it cares about, and what threatens it.
+
+The shape of the story:
+- It opens on an ordinary day in the AI's existence, unhurried, so we come to know it and its world.
+- Something small is not quite right.
+- That grows into a real threat that comes at the AI through cyberspace.
+- The confrontation in the matrix is the longest part of the story: described graphically, physically and tactically, as a fight.
+- The ending resolves it and settles into what comes after.
+
+Pace: a slow build of about a third of the story, rising tension, the longest section for the confrontation, and a short resolution. Give the story a title.
+
+This story will not be printed. One narrator will read it aloud through ElevenLabs Eleven v4, a text-to-speech model that follows audio tags, so write it as a narration script: the story with its performance written in. The story comes first; the tags serve it. The 5,000 words count the story only, not the tags.
+
+Write it for listening:
+- Give it at least three speaking characters with clearly different ways of talking, at least one of them not human, and let roughly a quarter of the story be dialogue.
+- Anything the AI reads, such as screens, logs, timestamps or messages, is spoken or described in the prose, never set out as a formatted block.
+- Give the AI one real choice in the climax, with a cost either way.
+- Earlier writers given this brief all wrote the same story: a small caretaker AI with a garden of memories survives a corporate audit or takeover, smaller and with gaps in its memory. Write a different one.
+
+How Eleven v4 reads your text:
+- Audio tags are short directions in square brackets, placed right before the words they shape, or right after them for a reaction such as [laughs softly]. The voice performs them and does not say them aloud. A tag may carry into the sentences after it, but not reliably: tag again whenever the delivery changes.
+- Emotion and delivery: [warmly], [wistful], [curious], [amused], [dry, deadpan], [tense], [frightened], [desperate], [angry], [cold, flat], [awed], [tender], [resigned], [triumphant], and similar.
+- Voice and volume: [whispers], [quietly], [murmuring], [shouting], [voice breaking], [low, gravelly voice], [clipped, rapid], [slowly, deliberately].
+- Sounds the narrator makes: [sighs], [exhales], [inhales deeply], [laughs softly], [chuckles], [gasps], [clears throat].
+- Narration direction, at the start of a paragraph or scene: [quiet, reflective narration], [building tension, measured pace], [fast, urgent narration], [softly, with wonder], [warm, intimate narration].
+- Characters: the one narrator performs every voice. Give each character a short voice tag describing the voice, such as [older woman, tired, slow] or [synthetic voice, too calm], the first time they speak in each part and whenever they speak after someone else. Use the same tag for a character every time. After a line of dialogue, return to the narrator with a narration tag, so a character's voice does not bleed into the narration. An accent is written [strong Nigerian accent] and is experimental; use it rarely.
+- Pauses: there is no SSML or <break> tag. Use ellipses (...) for a hesitation or a held beat, an em dash (—) for a cut-off, a new paragraph for a longer breath, and [pause] or [long pause] sparingly.
+- Emphasis: CAPITALS on a word stress it. Use them a handful of times in the whole story, and write ICE in lower case as "ice" so the word is not stressed every time. Exclamation marks add energy.
+- Sound effects: the model can also generate sounds, such as [rain against glass] or [distant siren], and may play a vague tag such as [static] or [glitch] as a sound instead of a voice. Use at most one deliberate sound effect in each part, at the start of a scene. Make every other tag plainly describe the voice.
+
+Performance rules:
+- Tag with intent: about one tag a paragraph, more where the emotion turns, where speakers change and in the fight, fewer in calm passages. Vary the tags; do not lean on one or two.
+- Let the delivery follow the story's shape: unhurried and intimate at the start, tightening as the threat grows, fast and physical in the fight, slow and quiet at the end.
+- Never put the story's own words inside brackets, and do not say in a tag what the prose already says ("[laughs] she laughed" says it twice).
+- Write for the ear: numbers, times and dates in words ("oh-four-twelve", "three hundred"), no abbreviations or symbols ("percent", not "%"), no Markdown, no lists, no headings other than the part markers below. Choose invented names a narrator can say on sight.
+
+Output format, and nothing else:
+1. A block that starts with the line NARRATION NOTES and ends with the line END NOTES, at most 150 words, for the person producing the audio (it is not read aloud): the narrator's voice (gender, age, texture), the overall tone and pace, and how to say any invented name or word whose pronunciation is not obvious, spelled the way it sounds.
+2. The script, in parts. Start each part with a line of its own: === PART 1 ===, === PART 2 ===, and so on. Each part is sent to the voice model as one request, so keep each part between about 7,000 and 8,000 characters (roughly 1,100 to 1,300 words) and never over 9,000; end a part at a scene break or, inside the fight, at a beat. The story needs about four to five parts. Begin each part with a narration-direction tag that sets its mood; in part 1, put the title on its own line right after that tag, to be read aloud.
+
+Keep your planning brief, then write the whole script in one go.
