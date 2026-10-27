@@ -6,6 +6,8 @@ Newest first. Skip empty sections.
 
 ### Removed
 
+- pr-lens and its catalog entries moved to [agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc/tree/main/skills/pr-lens); its CLI installs an ISC-licensed dependency (DER-590).
+
 - The `fmt-lint` GitHub Actions check. It failed on `knowledge/ai/practices/elevenlabs-voice-clips.md`, which this split does not change, and it blocked landing (`DER-590`).
 - `skills/minecraft-builder` moved to public [alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc). PrismarineJS/minecraft-data has no LICENSE file and its GitHub license is null. `docs/model-research` moved to [alexderz/agentic-model-testing](https://github.com/alexderz/agentic-model-testing/tree/main/docs/model-research); this folder keeps `moved.md` only (`DER-590`).
 
