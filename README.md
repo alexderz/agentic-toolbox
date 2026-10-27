@@ -106,11 +106,6 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | `grok-acp` | First-party. Grok Build over ACP as a builder. Prose only; the client is [packages/grok-acp](packages/grok-acp/). Operator opt-in |
 | `cursor-cloud-agents-when` | First-party. Which worker builds: Cursor Cloud Agent or the local grok CLI. Prose only. Operator opt-in |
 
-### diagrams
-
-| Id | Ownership |
-| --- | --- |
-
 ### ui
 
 | Id | Ownership |
