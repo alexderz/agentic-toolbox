@@ -1,6 +1,6 @@
 # Bundle runs
 
-Owner of every [HLD rule change](../../maintainers/design/solo-dlc/hld.md#rule-changes)
+Owner of every HLD rule change (solo-dlc design HLD, "Rule changes")
 for a driven or followed bundle run. Other SDLC files keep their rules
 off that path and carry a one-line route here. Run-root formats belong
 to [Run state](run-state.md). Exits, chunk land, re-entry, and the
@@ -19,7 +19,7 @@ filed only after that review passes.
 ## Tracker
 
 Workers write tracker state per the
-[HLD tracker table](../../maintainers/design/solo-dlc/hld.md#tracker).
+HLD tracker table (solo-dlc design HLD, "Tracker").
 Prompts carry those instructions. The driver also runs the repo tracker
 skill `read` with no model for the tracker-state check.
 

@@ -3,7 +3,7 @@
 Owner of the run-root formats that Run prep, the harness plugins, and
 workers use. Rules only; examples live in
 `maintainers/design/solo-dlc/lld.md` (Behavior 4). Procedure:
-[sdlc-kickoff](../../skills/sdlc-kickoff/SKILL.md). Files are UTF-8.
+sdlc-kickoff (the solo-dlc loader's run prep). Files are UTF-8.
 
 ## Run root
 
