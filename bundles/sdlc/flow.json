@@ -1,0 +1,806 @@
+{
+  "schemaVersion": 1,
+  "id": "sdlc",
+  "entry": "refine",
+  "itemEntry": "build",
+  "defaults": {
+    "prove": []
+  },
+  "nodes": [
+    {
+      "id": "refine",
+      "label": "Brief",
+      "step": "Brief",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "brief",
+          "to": "brief-gate",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "refiner",
+      "scope": "chunk"
+    },
+    {
+      "id": "brief-gate",
+      "label": "Brief",
+      "step": "Brief",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "confirmed",
+          "to": "comparables",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "refine",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Confirm the brief as the refiner left it, or say what to revise. Quote the refiner's proposed cuts and open points from its last `result.md`.",
+      "scope": "chunk",
+      "gate": "brief"
+    },
+    {
+      "id": "comparables",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "hld",
+          "to": "hld",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "architect",
+      "outputs": [
+        "{design}/comparables.md"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "hld",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "ux",
+          "to": "ux",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "architect",
+      "outputs": [
+        "{design}/hld.md",
+        "{design}/components.json"
+      ],
+      "checks": [
+        "test-env"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "ux",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "review",
+          "to": "ux-review",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "designer",
+      "outputs": [
+        "{design}/ux.md",
+        "{design}/user-stories.md"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "ux-review",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "ux-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "ux",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "ux-reviewer",
+      "scope": "chunk"
+    },
+    {
+      "id": "ux-gate",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "accepted",
+          "to": "plan-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "waived",
+          "to": "plan-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "ux",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Accept `{design}/ux.md` and `{design}/user-stories.md`, waive the UX review in writing, or say what to revise. Quote the UX reviewer's verdict and open findings, and each open UX question with the designer's recommendation.",
+      "scope": "chunk",
+      "gate": "ux"
+    },
+    {
+      "id": "plan-gate",
+      "label": "Plan",
+      "step": "Plan",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "trial-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "hld",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Accept `{design}/hld.md`, or say what to revise. Quote each item under its `## Open` heading with the HLD's default or recommendation, and summarize its test harness and environment section: each dependency and integration the build needs.",
+      "scope": "chunk",
+      "gate": "plan"
+    },
+    {
+      "id": "trial-gate",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "trial",
+          "to": "trial-done",
+          "extract": {
+            "from": "{design}/hld.md",
+            "heading": "Trial kickoff prompt",
+            "to": "trial-kickoff.md"
+          },
+          "say": "Trial kickoff prompt written: {{extracted}}",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "skip",
+          "to": "spec",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "ask": "Run a Trial before Spec? Quote each unconfirmed fact and the recommendation from the `## Trial question` section of `{design}/hld.md`. On yes, the driver writes the Trial kickoff prompt to a file and prints its path.",
+      "scope": "chunk",
+      "gate": "trial"
+    },
+    {
+      "id": "trial-done",
+      "label": "Trial",
+      "step": "Trial",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "done",
+          "to": "spec",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "hld",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Is the Trial done, with each verdict recorded under `{design}/poc/`? Quote each verdict and any HLD change the Trial report recommends.",
+      "scope": "chunk",
+      "gate": "trial-done"
+    },
+    {
+      "id": "spec",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "mockups",
+          "to": "mockups",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "architect",
+      "skills": [
+        "security-hardening"
+      ],
+      "outputs": [
+        "{design}/lld.md"
+      ],
+      "scope": "chunk",
+      "envSpec": true
+    },
+    {
+      "id": "mockups",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "none",
+          "to": "security",
+          "checks": [
+            "no-screen"
+          ],
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "review",
+          "to": "mockup-review",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "designer",
+      "scope": "chunk",
+      "outputDirs": [
+        "{design}/mockups/"
+      ]
+    },
+    {
+      "id": "mockup-review",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "mockup-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "mockups",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "ux-reviewer",
+      "scope": "chunk"
+    },
+    {
+      "id": "mockup-gate",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "accepted",
+          "to": "security",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "mockups",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Accept the mockups under `{design}/mockups/`, or say what to revise. Quote the UX reviewer's verdict and open findings.",
+      "scope": "chunk",
+      "gate": "mockup"
+    },
+    {
+      "id": "security",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "spec-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "spec",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "security",
+      "checks": [
+        "authz",
+        "secrets",
+        "egress",
+        "data-class",
+        "writers",
+        "env-commands"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "spec-gate",
+      "label": "Spec",
+      "step": "Spec",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "env-prep",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "spec",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Accept `{design}/lld.md`, and accept in writing each residual its trust-boundary section lists under operator must accept; or say what to revise. Quote security's findings with severities, each open operator question with the LLD's recommendation, and the build-environment block's dependencies and `passEnv` names.",
+      "scope": "chunk",
+      "gate": "spec"
+    },
+    {
+      "id": "env-prep",
+      "label": "Env",
+      "step": "Build",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "prove",
+          "statuses": [
+            "pass",
+            "fail"
+          ],
+          "to": "env-prove"
+        },
+        {
+          "name": "respec",
+          "statuses": [
+            "needs_input"
+          ],
+          "to": "respec-gate"
+        }
+      ],
+      "persona": "env-builder",
+      "scope": "chunk"
+    },
+    {
+      "id": "respec-gate",
+      "label": "Env",
+      "step": "Spec",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "spec",
+          "to": "spec",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "retry",
+          "to": "env-prep",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "The env-builder says the LLD's build environment cannot be built as written. Route back to Spec for an LLD change, or tell the env-builder how to go on. Quote its reasons from its last `result.md`.",
+      "scope": "chunk",
+      "gate": "respec"
+    },
+    {
+      "id": "env-prove",
+      "label": "Env",
+      "step": "Build",
+      "kind": "command",
+      "exits": [
+        {
+          "name": "baseline",
+          "to": "env-baseline",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "env-prep",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "scope": "chunk",
+      "commands": "env"
+    },
+    {
+      "id": "env-baseline",
+      "label": "Env",
+      "step": "Build",
+      "kind": "command",
+      "exits": [
+        {
+          "name": "green",
+          "to": "env-verify",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "known",
+          "to": "env-verify",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "scope": "chunk",
+      "commands": "env-test"
+    },
+    {
+      "id": "env-verify",
+      "label": "Env",
+      "step": "Build",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "review",
+          "to": "env-review",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "env-prep",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "env-verifier",
+      "checks": [
+        "env-proof",
+        "baseline"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "env-review",
+      "label": "Env",
+      "step": "Review",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "gate",
+          "to": "env-gate",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "env-prep",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "env-reviewer",
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary",
+        "env-harness"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "env-gate",
+      "label": "Env",
+      "step": "Build",
+      "kind": "gate",
+      "exits": [
+        {
+          "name": "accept",
+          "to": "env-land",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "revise",
+          "to": "env-prep",
+          "statuses": [
+            "fail"
+          ]
+        },
+        {
+          "name": "spec",
+          "to": "spec",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "ask": "Accept the build and test environment, send it back to the env-builder, or route back to Spec for an LLD change. Quote the env-verifier's `env-proof` and `baseline` findings, the baseline status with any pre-existing failures, and the env-reviewer's verdict.",
+      "scope": "chunk",
+      "gate": "env"
+    },
+    {
+      "id": "env-land",
+      "label": "Env",
+      "step": "Build",
+      "kind": "land",
+      "exits": [
+        {
+          "name": "done",
+          "to": "groom",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "builder": "env-prep",
+      "prove": "env-prove",
+      "verify": "env-verify",
+      "review": "env-review",
+      "scope": "chunk"
+    },
+    {
+      "id": "groom",
+      "label": "Groom",
+      "step": "Groom",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "review",
+          "to": "groom-review",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "architect",
+      "outputs": [
+        "{design}/groom.md"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "groom-review",
+      "label": "Groom",
+      "step": "Groom",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "file",
+          "to": "file-tickets",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "groom",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "groom-reviewer",
+      "scope": "chunk"
+    },
+    {
+      "id": "file-tickets",
+      "label": "Groom",
+      "step": "Groom",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "items",
+          "to": "@items",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "persona": "manager",
+      "outputs": [
+        "{design}/groom.md"
+      ],
+      "scope": "chunk"
+    },
+    {
+      "id": "build",
+      "label": "Build",
+      "step": "Build",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "prove",
+          "statuses": [
+            "pass",
+            "fail"
+          ],
+          "to": "prove"
+        }
+      ],
+      "persona": "builder",
+      "scope": "item"
+    },
+    {
+      "id": "prove",
+      "label": "Build",
+      "step": "Build",
+      "kind": "command",
+      "exits": [
+        {
+          "name": "verify",
+          "to": "verify",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "build",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "scope": "item",
+      "commands": "groom"
+    },
+    {
+      "id": "verify",
+      "label": "Verify",
+      "step": "Build",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "review",
+          "to": "review",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "build",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "verifier",
+      "checks": [
+        "dod"
+      ],
+      "scope": "item"
+    },
+    {
+      "id": "review",
+      "label": "Review",
+      "step": "Review",
+      "kind": "model",
+      "exits": [
+        {
+          "name": "land",
+          "to": "land",
+          "statuses": [
+            "pass"
+          ]
+        },
+        {
+          "name": "fix",
+          "to": "build",
+          "statuses": [
+            "fail"
+          ]
+        }
+      ],
+      "persona": "reviewer",
+      "checks": [
+        "intake",
+        "sha-pins",
+        "trust-boundary",
+        "env-harness"
+      ],
+      "scope": "item"
+    },
+    {
+      "id": "land",
+      "label": "Land",
+      "step": "Build",
+      "kind": "land",
+      "exits": [
+        {
+          "name": "done",
+          "to": "@done",
+          "statuses": [
+            "pass"
+          ]
+        }
+      ],
+      "builder": "build",
+      "prove": "prove",
+      "verify": "verify",
+      "review": "review",
+      "scope": "item"
+    }
+  ]
+}
