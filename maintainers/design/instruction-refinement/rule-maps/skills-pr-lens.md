@@ -4,7 +4,7 @@ Item: DER-330 (F, vendor-derived light pass).
 
 Old: `skills/pr-lens/SKILL.md` at project-main 120d298 (main 7a11696 plus
 the DER-298 Monthly link), lines 1–250.
-New: [`skills/pr-lens/SKILL.md`](../../../../skills/pr-lens/SKILL.md).
+New: [`skills/pr-lens/SKILL.md`](https://github.com/alexderz/agentic-toolbox-misc/blob/main/skills/pr-lens/SKILL.md).
 A light pass maps changed lines only; every other line is unchanged.
 Disposition: **kept** (same rule, new wording), **dropped** (duplicate,
 owner named).

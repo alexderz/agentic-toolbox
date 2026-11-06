@@ -43,7 +43,6 @@ There is no plugin manifest yet. Natural install groups:
 | **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp`, `cursor-cloud-agents-when` | Operator opt-in. `grok-acp` offloads a build to the local Grok CLI over ACP and needs the `grok-acp` package on `PATH`. `cursor-cloud-agents-when` chooses Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work |
-| **diagrams** | `pr-lens` | Operator opt-in. Architecture and data-flow diagrams for a PR, rendered locally and attached with `gh`. Needs Node (`npx`) and `gh` 2.99+ |
 | **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 
@@ -107,12 +106,6 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | `grok-acp` | First-party. Grok Build over ACP as a builder. Prose only; the client is [packages/grok-acp](packages/grok-acp/). Operator opt-in |
 | `cursor-cloud-agents-when` | First-party. Which worker builds: Cursor Cloud Agent or the local grok CLI. Prose only. Operator opt-in |
 
-### diagrams
-
-| Id | Ownership |
-| --- | --- |
-| `pr-lens` | Rewrite of coldteadotai/pr-lens (MIT). Local render + PR attach only; no canvas, no `analyze`. Pin in [SOURCES.md](SOURCES.md). Operator opt-in |
-
 ### ui
 
 | Id | Ownership |
@@ -123,7 +116,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 
 | Id | Ownership |
 | --- | --- |
-| `minecraft-builder` | First-party Bedrock block catalog for models under test. Names and placement states, not remembered numeric ids |
+| `minecraft-builder` | Not in this repo. Public holding area: [alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc) `skills/minecraft-builder`. Upstream [PrismarineJS/minecraft-data](https://github.com/PrismarineJS/minecraft-data) has no LICENSE file and its GitHub license is null |
 
 ### languages
 
@@ -155,6 +148,8 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 - SDLC: [docs/SDLC.md](docs/SDLC.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Intake: [docs/INTAKE.md](docs/INTAKE.md)
+- Vendor-neutral cybersecurity skill packs (survey, not vendored): [docs/security-skill-packs/README.md](docs/security-skill-packs/README.md)
+- Mechanical and electrical engineering with AI (survey, not vendored): [docs/engineering-with-ai/README.md](docs/engineering-with-ai/README.md)
 - First cherry-pick candidates: [maintainers/CHERRY-PICK-CANDIDATES.md](maintainers/CHERRY-PICK-CANDIDATES.md)
 - CI hooks (fmt/lint): [maintainers/CI-HOOKS-PLAN.md](maintainers/CI-HOOKS-PLAN.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)

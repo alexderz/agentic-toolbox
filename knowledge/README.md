@@ -54,10 +54,12 @@ Every note:
 | Note | Path |
 | --- | --- |
 | Jev (TypeSafe System One) | [`ai/models/jev.md`](ai/models/jev.md) |
+| Titan local model tiers | [`ai/practices/titan-local-model-tiers.md`](ai/practices/titan-local-model-tiers.md) |
 | Open Jev-class models (2026-09-27 snapshot; bookmark pass 2026-09-28) | [`ai/models/jev-open-2026-09-27.md`](ai/models/jev-open-2026-09-27.md) |
 | ElevenLabs voice clips with Eleven v4 (2026-10-17) | [`ai/practices/elevenlabs-voice-clips.md`](ai/practices/elevenlabs-voice-clips.md) |
 | Public red-team and blue-team agent skill packs (2026-10-18 snapshot) | [`ai/vendors/security-skill-packs-2026-10-18.md`](ai/vendors/security-skill-packs-2026-10-18.md) |
 | X chatter on red-team and blue-team agent skill packs (2026-10-18) | [`ai/vendors/x-chatter-security-skill-packs-2026-10-18.md`](ai/vendors/x-chatter-security-skill-packs-2026-10-18.md) |
+| Mechanical and electrical engineering with AI (2026-11-06 survey) | [`ai/practices/engineering-with-ai.md`](ai/practices/engineering-with-ai.md) |
 
 ## Never
 
