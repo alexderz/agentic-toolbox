@@ -149,6 +149,7 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Intake: [docs/INTAKE.md](docs/INTAKE.md)
 - Vendor-neutral cybersecurity skill packs (survey, not vendored): [docs/security-skill-packs/README.md](docs/security-skill-packs/README.md)
+- Mechanical and electrical engineering with AI (survey, not vendored): [docs/engineering-with-ai/README.md](docs/engineering-with-ai/README.md)
 - First cherry-pick candidates: [maintainers/CHERRY-PICK-CANDIDATES.md](maintainers/CHERRY-PICK-CANDIDATES.md)
 - CI hooks (fmt/lint): [maintainers/CI-HOOKS-PLAN.md](maintainers/CI-HOOKS-PLAN.md)
 - Contributing: [CONTRIBUTING.md](CONTRIBUTING.md)
