@@ -24,17 +24,27 @@ truth is private.
 
 ## Drawings and GD&T
 
-No checker with a published pass rule was opened. OmniMech describes
-annotation-grounded constraints and says current models do poorly.
-That is a paper result, not a local command. text-to-cad has an
-`engineering-drawing` skill path. Its pass rule was not read.
+`skills/engineering-drawing/SKILL.md` in `earthtojake/text-to-cad` was
+read on 2026-11-06. The pass conditions it states:
+
+| Check | What the skill text says |
+| --- | --- |
+| File | `cad run` writes one PDF. A missing renderer or a failed render leaves no new file |
+| Views | Third-angle top, front, and right from `sheet.three_views`. No sections, detail views, or auxiliary views |
+| Dimensions | Measured from model geometry unless the script overrides the value. A dimension without `tol=`, `fit=`, or `general_tolerance=` is nominal |
+| Reported faults | "measures blank paper" when dimension points miss the view. "annotation overlaps" when callouts collide. The skill says it does not check annotation against linework |
+
+Those rules are the skill's own. They were not executed. They are not
+a GD&T frame checker. OmniMech still describes annotation-grounded
+constraints as a paper task, and its data release was not confirmed.
+The FreeCAD TechDraw GD&T article body was not retrieved.
 
 ## CAM and manufacturing
 
 | Check | Source | What a later run can record |
 | --- | --- | --- |
 | DFM rule list | atopile 0.16.15 blog, for boards | Shorts, opens, body intersections, clearance, track width, and the other rule types the blog names. Mechanical DFM is a different skill path (`dfm` in text-to-cad) and was not read |
-| CAM job creation | Fusion community MCP README | Whether `cam_create_setup` and `cam_post_process` return a toolpath file. G-code correctness against a machine was not specified by that README |
+| CAM job creation | Fusion community `docs/TOOLS.md` | `cam_create_setup`, `cam_create_operation`, `cam_generate_toolpath`, and `cam_post_process` are named. Post-process requires a `.cps` path. No numeric toolpath check is stated there |
 
 ## Schematic and PCB
 
@@ -90,9 +100,13 @@ list. It is not a general SPICE pass rate.
 | Specification-to-RTL | VerilogEval revisit | Same style of pass rate on the added task split. The paper says prompt choice changes the rate |
 
 Syntax-only acceptance is a weaker check. The VerilogEval papers use
-simulation. A Yosys read or a Verilator build was not documented in
-this pass (G14). Those tools can still be used as extra checks. Their
-command lines are not copied here because the manuals were not opened.
+simulation. G14 is closed for the FPGA place-and-route commands that
+were copied from the Yosys getting-started page, the nextpnr README,
+and the OpenROAD-flow-scripts README. Those commands are in
+[FPGA, CAE, CAM, and control](fpga-cae-control.md). The Yosys page
+names `verilator --lint-only FILE.v` as a syntax check before
+`synth_ice40`. The Verilator manual was not opened, so this survey
+does not add Verilator flags beyond that command.
 
 ## Embedded and instruments
 

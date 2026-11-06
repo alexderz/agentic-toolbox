@@ -14,7 +14,7 @@ an external kernel. This survey did not load any weights.
 | URL | Paper <https://arxiv.org/html/2312.08617v4>. Code <https://github.com/hkust-zhiyao/RTL-Coder>. Weights named in the README: `ishorn5/RTLCoder-Deepseek-v1.1`, `ishorn5/RTLCoder-v1.1`, GPTQ 4-bit, and GGUF 4-bit |
 | Class | specialist, Verilog |
 | Parameters | Paper: 7B class. Bases named: Mistral-7B-v0.1 and DeepSeek-Coder-6.7B |
-| Quantization and memory | Paper: 4-bit quantization "takes only 4GB of memory" and "can work on a laptop". That 4 GB figure is the paper's claim, not a measurement from this survey. Hugging Face file listing for `ishorn5/RTLCoder-v1.1` shows two FP16 shards, 9.94 GB and 4.54 GB (14.48 GB of weight files). File size is not peak VRAM |
+| Quantization and memory | Paper: 4-bit quantization "takes only 4GB of memory" and "can work on a laptop". That 4 GB figure is the paper's claim, not a measurement from this survey. The Hugging Face file page for `ishorn5/RTLCoder-v1.1` displays two FP16 shards as 9.94 GB and 4.54 GB. Those are the page's own labels. Exact byte lengths were not re-fetched, so this survey does not convert them to GiB. 9.94 + 4.54 = 14.48 in the same displayed unit. File size is not peak VRAM |
 | Training hardware in the paper | 4 RTX 4090 GPUs, 24 GB each, DeepSpeed stage 2, context 2048. That is training, not a requirement for inference |
 | 24 GB class | The paper's 4-bit claim (4 GB) is inside a 24 GB card if the claim holds, and also inside a smaller card. The paper also trains on 24 GB cards. Inference VRAM for the FP16 shards was not measured. CPU path: README says the GGUF 4-bit file can run with `ctransformers` and `gpu_layers=0` |
 | License | No license file in the GitHub content listing (API 404 on the license endpoint) |
@@ -90,57 +90,69 @@ context length 32,768 tokens and says sequences up to 131,072 tokens
 belong on the non-GGUF weights. GGUF quant names on that README include
 `q4_K_M`, `q5_K_M`, and `q8_0`.
 
-`Qwen/Qwen2.5-Coder-7B-Instruct` reports 7,615,616,512 BF16 parameters.
-The four safetensors files sum to 15,231,271,864 bytes (14.185 GiB).
-That matches 2 bytes times the parameter count, plus a few kilobytes of
-headers. It is the weight-file size of the BF16 checkpoint.
+`Qwen/Qwen2.5-Coder-7B-Instruct` reports 7,615,616,512 BF16
+parameters. Two bytes per parameter is 15,231,233,024 bytes, which is
+15.231 GB (bytes / 10^9) and 14.185 GiB (bytes / 2^30). Hugging Face
+`usedStorage` for that repo is 15,231,271,864 bytes: the same decimal
+reading, 15.231 GB, and the same binary reading, 14.185 GiB. The
+38,840-byte gap is the safetensors headers around the parameter
+payload. 15.231 is not a GiB figure.
 
 `Qwen/Qwen2.5-VL-7B-Instruct` is `image-text-to-text`. Config:
 `model_type` `qwen2_5_vl`, `torch_dtype` `bfloat16`,
 `max_position_embeddings` 128000, 28 layers, hidden size 3584. The
-safetensors record is 8,292,166,656 parameters. The five weight files
-sum to 16,584,414,560 bytes (15.446 GiB).
+safetensors record is 8,292,166,656 parameters. Two bytes per parameter
+is 16,584,333,312 bytes (16.584 GB, 15.445 GiB). `usedStorage` is
+16,584,414,560 bytes (16.584 GB, 15.445 GiB). The 81,248-byte gap is
+headers. The exact quotient is 15.445440 GiB, which rounds to 15.445.
 
 ### Weight-file sizes
 
-HTTP `Content-Length` after redirects, official GGUF files, 2026-11-06.
-GiB is bytes divided by 1024 cubed. These are file sizes.
+Converted from the exact byte counts on 2026-11-06. GB is bytes / 10^9.
+GiB is bytes / 2^30. Three decimal places. GGUF lengths are HTTP
+`Content-Length` after redirects. BF16 and 32B AWQ lengths are Hugging
+Face `usedStorage`, which matches the safetensors shard sums for those
+three repos.
 
-| File | Bytes | GiB |
-| --- | --- | --- |
-| `qwen2.5-coder-3b-instruct-q4_k_m.gguf` | 2,104,932,800 | 1.960 |
-| `qwen2.5-coder-3b-instruct-q8_0.gguf` | 3,616,088,512 | 3.368 |
-| `qwen2.5-coder-7b-instruct-q4_k_m.gguf` | 4,683,073,536 | 4.361 |
-| `qwen2.5-coder-7b-instruct-q5_k_m.gguf` | 5,444,831,232 | 5.071 |
-| `qwen2.5-coder-7b-instruct-q8_0.gguf` | 8,098,525,184 | 7.542 |
-| `qwen2.5-coder-14b-instruct-q4_k_m.gguf` | 8,988,110,272 | 8.371 |
-| `qwen2.5-coder-14b-instruct-q5_k_m.gguf` | 10,508,873,152 | 9.787 |
-| `qwen2.5-coder-14b-instruct-q8_0.gguf` | 15,701,597,632 | 14.623 |
-| `qwen2.5-coder-32b-instruct-q4_k_m.gguf` | 19,851,335,872 | 18.488 |
-| `qwen2.5-coder-32b-instruct-q5_k_m.gguf` | 23,262,156,992 | 21.665 |
+| File or repo | Bytes | GB (10^9) | GiB (2^30) |
+| --- | --- | --- | --- |
+| `qwen2.5-coder-3b-instruct-q4_k_m.gguf` | 2,104,932,800 | 2.105 | 1.960 |
+| `qwen2.5-coder-3b-instruct-q8_0.gguf` | 3,616,088,512 | 3.616 | 3.368 |
+| `qwen2.5-coder-7b-instruct-q4_k_m.gguf` | 4,683,073,536 | 4.683 | 4.361 |
+| `qwen2.5-coder-7b-instruct-q5_k_m.gguf` | 5,444,831,232 | 5.445 | 5.071 |
+| `qwen2.5-coder-7b-instruct-q8_0.gguf` | 8,098,525,184 | 8.099 | 7.542 |
+| `qwen2.5-coder-14b-instruct-q4_k_m.gguf` | 8,988,110,272 | 8.988 | 8.371 |
+| `qwen2.5-coder-14b-instruct-q5_k_m.gguf` | 10,508,873,152 | 10.509 | 9.787 |
+| `qwen2.5-coder-14b-instruct-q8_0.gguf` | 15,701,597,632 | 15.702 | 14.623 |
+| Coder-7B-Instruct `usedStorage` (BF16) | 15,231,271,864 | 15.231 | 14.185 |
+| VL-7B-Instruct `usedStorage` (BF16) | 16,584,414,560 | 16.584 | 15.445 |
+| `qwen2.5-coder-32b-instruct-q4_k_m.gguf` | 19,851,335,872 | 19.851 | 18.488 |
+| Coder-32B-Instruct-AWQ `usedStorage` | 19,328,993,904 | 19.329 | 18.002 |
+| `qwen2.5-coder-32b-instruct-q5_k_m.gguf` | 23,262,156,992 | 23.262 | 21.665 |
 
-AWQ safetensors sums from the Hugging Face tree API the same day:
-
-| Repo | Bytes | GiB |
-| --- | --- | --- |
-| `Qwen/Qwen2.5-Coder-32B-Instruct-AWQ` | 19,328,993,904 | 18.002 |
-| `Qwen/Qwen2.5-VL-7B-Instruct-AWQ` | 6,923,972,384 | 6.448 |
+`Qwen/Qwen2.5-VL-7B-Instruct-AWQ` is the exception to the shard-sum
+match. Its two safetensors files sum to 6,923,972,384 bytes (6.924 GB,
+6.448 GiB). Repo `usedStorage` is 6,935,394,447 bytes (6.935 GB, 6.459
+GiB). The larger number includes non-weight files. The weight-file row
+used below is the shard sum.
 
 ### What a 24 GiB device can be said to hold
 
-24 GiB is 25,769,803,776 bytes. Every file in the two tables is smaller
-than that, so the weights themselves are under 24 GiB. That statement
-is about the file. It is not a measured runtime peak.
+24 GiB is 25,769,803,776 bytes (2^30 × 24). 24 GB in the decimal sense
+is 24,000,000,000 bytes. Every file in the table, and the VL AWQ shard
+sum, is smaller than both of those integers. That is a statement about
+the file. It is not a measured runtime peak.
 
-Headroom left if the file were the only occupant:
+Headroom below 24 GiB, from the exact byte count, rounded to three
+decimals:
 
-| File | File GiB | 24 minus file, GiB |
+| File | File GiB | 24 GiB minus file, GiB |
 | --- | --- | --- |
 | 7B `q4_K_M` | 4.361 | 19.639 |
-| 7B BF16 safetensors | 14.185 | 9.815 |
+| 7B BF16 `usedStorage` | 14.185 | 9.815 |
 | 14B `q8_0` | 14.623 | 9.377 |
-| VL-7B BF16 safetensors | 15.446 | 8.554 |
-| 32B AWQ safetensors | 18.002 | 5.998 |
+| VL-7B BF16 `usedStorage` | 15.445 | 8.555 |
+| 32B AWQ `usedStorage` | 18.002 | 5.998 |
 | 32B `q4_K_M` | 18.488 | 5.512 |
 | 32B `q5_K_M` | 21.665 | 2.335 |
 
@@ -160,8 +172,10 @@ RAM. No CPU-only run was done, and system-RAM peak is unknown.
 | RTLCoder paper | 4-bit model "takes only 4GB of memory". Training used four 24 GB RTX 4090 cards | Author claim for a Verilog specialist, not a measurement of Qwen2.5-Coder |
 
 Third-party VRAM calculators that estimate 18 to 19 GB for the 32B AWQ
-checkpoint were not used. The AWQ weight files sum to 18.002 GiB, which
-is the part of that estimate that this survey actually counted.
+checkpoint were not used. The AWQ `usedStorage` is 19,328,993,904 bytes,
+which is 19.329 GB and 18.002 GiB. The 18 GiB binary figure is the part
+of that range this survey actually counted. The decimal 19.329 GB is
+the same bytes, not a second measurement.
 
 ## Hosted models with no local weights on the pages read
 

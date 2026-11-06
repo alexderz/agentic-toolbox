@@ -60,3 +60,18 @@ adapter size. Copied Yosys, nextpnr, OpenROAD-flow-scripts, ngspice
 
 Did not install tools, flash a board, open an instrument, or rerun a
 benchmark.
+
+## 2026-11-06 — Cross-reference and unit correction
+
+Updated [EDA and circuits](workflows/eda-and-circuits.md),
+[evaluation](workflows/evaluation.md), [code CAD](workflows/code-cad.md),
+and [cross-domain](workflows/cross-domain.md) so they no longer say
+G14 is open or that the drawing skill and the place-and-route commands
+were unread. The Verilator manual stays unread. `verilator --lint-only`
+is recorded only because the Yosys getting-started page names it.
+
+Recomputed every Qwen byte count as decimal GB (bytes / 10^9) and
+binary GiB (bytes / 2^30). Hugging Face `usedStorage` for
+`Qwen2.5-Coder-7B-Instruct` is 15,231,271,864 bytes, which is 15.231 GB
+and 14.185 GiB. The VL-7B BF16 figure that had been rounded to 15.446
+GiB is 15.445 GiB.

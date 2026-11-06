@@ -76,8 +76,12 @@ EDA Corpus supplies prompt and script pairs under CC-BY-4.0. OpenROAD
 Agent's abstract reports 94% on its script tasks and says the model is
 open. The download URL was not opened.
 
-Place-and-route CLIs (Yosys, nextpnr, OpenROAD's own shell) were not
-copied. See open question G14.
+Yosys `v0.70`, nextpnr `0.11.1`, and the OpenROAD-flow-scripts `make`
+line are copied in [FPGA, CAE, CAM, and control](fpga-cae-control.md).
+G14 is closed. The Yosys getting-started page names
+`verilator --lint-only` as a step before synthesis. The Verilator
+manual itself was not opened, so no Verilator flag beyond that one
+command is recorded.
 
 ## Embedded
 

@@ -211,7 +211,7 @@ skills. Those three bodies were still not read.
 | License | MIT (`github-api` and README badge) |
 | Dependencies | README install uses `curl` to `https://texttocad.dev/install.sh` or a Windows script, then uv. Not run |
 | Formats | STEP, GLB, STL, 3MF, DXF, G-code, URDF, SRDF, SDF, drawings, named by skill paths and README |
-| Read/write | Writes models and checks named by skills. Skill internals unread (G1) |
+| Read/write | Writes models and the exports the `cad` skill names. `engineering-drawing` and `cad` were read. `gcode`, `dfm`, `urdf`, `srdf`, and `sdf` were not (G1, partial) |
 | Mode | Local server and local files, per README |
 | Evidence | `readme`, `git-tree`, `github-api` |
 | Class | tool-driver |
