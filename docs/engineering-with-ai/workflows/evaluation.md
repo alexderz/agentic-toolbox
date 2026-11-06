@@ -96,9 +96,11 @@ command lines are not copied here because the manuals were not opened.
 
 ## Embedded and instruments
 
-No pass rule was copied, because the PlatformIO and PyVISA READMEs were
-not opened. A later note can add the build exit code and a VISA
-identity query after those manuals are read.
+| Check | Source | Pass condition the source states |
+| --- | --- | --- |
+| Firmware build | platformio-mcp README | `pio-agent build` or `platformio-mcp build` exits successfully. `--json` is the machine-readable form. Exit-code table was not copied |
+| Flash and serial | same README | `flash` and `monitor` are separate commands. `monitor` can take `--expect`. A board is required. None was used |
+| Scope identity | pyvisa-mcp README | `open_instrument` then `learn_instrument` stores `*IDN?`. Writes stay off until the dialect is one the README allows, or `unlock_writes confirm=true` |
 
 ## What not to treat as a pass
 

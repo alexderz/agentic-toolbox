@@ -170,15 +170,36 @@ Mode for these is local process plus Onshape API credentials, inferred from the 
 | Field | Value |
 | --- | --- |
 | URL | <https://github.com/tangency-labs/solidcraft> and <https://docs.solidcraft.io/> |
-| Capabilities | README: open-source parametric 3D CAD in Rust. Sketch, constraints, feature timeline, desktop, browser, and a built-in MCP server. 17 `SKILL.md` files in the tree. Skill bodies not read |
+| Capabilities | README: open-source parametric 3D CAD in Rust. `docs/mcp.md` on the default branch, read 2026-11-06: stdio MCP. Command is `solidcraft-cli mcp`, headless or bridged to a running app on `127.0.0.1:27878` by default. Tools named there: `list_commands`, `describe_command`, `execute`, `batch`, `inspect_design`, `measure`, `body_topology`, `set_parameter`, `check_parameters`, `screenshot`, `compare_picture`, `export`, `undo`, `redo`, `pending`, `crash_reports`, `skill_reference`, `running`, `new_design`, `open`, `save`. `list_commands` is the live catalog. The doc says an unfiltered catalog is about 350 KB, so the tool list above is the MCP surface, not every modeling command. `expect` on `execute` and `batch` checks volume in mm³, body count, and bounding box after the call. Default volume tolerance is relative 0.002. Each bounding-box coordinate must lie within 0.05 mm. Bundled skill names: `solidcraft-modeling`, `solidcraft-mechanisms`, `solidcraft-editing`, `solidcraft-checking`. The doc was read from HEAD, which is at or after release `v0.30.1` |
 | Maturity | Latest release `v0.30.1`, published 2026-11-02. `pushed_at` 2026-11-06. Created 2026-10-07. 14,178 stars |
 | License | Apache-2.0 (`github-api`) |
-| Dependencies | Desktop install or the web app. MCP command line not copied from docs |
-| Formats | Unknown in this pass (G2) |
-| Read/write | README says agents model through MCP. Exact read/write split unknown |
-| Mode | Local app, plus a browser app |
-| Evidence | `readme`, `github-api`, `git-tree` |
+| Dependencies | `solidcraft-cli` from a package install. Headless screenshots use a GPU device or, with no adapter, a CPU rasterizer |
+| Formats | `export` formats named: step, 3mf, 3mf-tagged, stl, stla, obj, urdf. `open` reads `.sc`, `.solidcraft`, STEP, 3MF, and STL |
+| Read/write | Read-only tools named in the doc: `list_commands`, `describe_command`, `inspect_design`, `measure`, `body_topology`, `skill_reference`, `crash_reports`, `pending`, `running`. `new_design` replaces the design. `execute`, `batch`, `open`, `save`, `export`, and `screenshot` can write files |
+| Mode | Local stdio. Bridged mode talks to the desktop app on localhost |
+| Evidence | `readme`, `docs/mcp.md`, `github-api`, `git-tree` |
 | Class | tool-driver |
+
+### text-to-cad drawing skill
+
+Read 2026-11-06 from `skills/engineering-drawing/SKILL.md` (MIT header).
+
+The skill's output is one PDF. The interface is a Python script, not a
+CLI and not a DXF. `cad.eng_drawing` projects views from an existing
+build123d shape (`sheet.three_views` is third-angle top, front, and
+right, plus an isometric when `iso=True`). Dimensions use model
+coordinates. `view.hole` names thru, depth, counterbore, countersink,
+and thread. Tolerances are whatever the script passes as `tol=`,
+`fit=`, or `general_tolerance=`. The skill text says a dimension
+without one of those is nominal, and that those values come from the
+design requirements. It also says the sheet has no sections, detail
+views, or auxiliary views, and that it does not check annotation
+against linework. Overlapping annotation is reported when `cad run`
+executes the script. That command was not run here.
+
+The `cad` skill, same repository, states exports STEP, STL, 3MF, GLB,
+and xbf through `cad export`, and says URDF, SRDF, and SDF are other
+skills. Those three bodies were still not read.
 
 ### text-to-cad plugin
 
@@ -246,9 +267,10 @@ Mode for these is local process plus Onshape API credentials, inferred from the 
 
 CAM tool names that were actually seen:
 
-- `shinobi81/fusion360-mcp-server` README: `cam_create_setup`, `cam_create_operation`, `cam_post_process`.
+- `shinobi81/fusion360-mcp-server` `docs/TOOLS.md`, read 2026-11-06: `cam_create_setup` (milling, turning, or cutting, with stock mode and offsets), `cam_create_operation` (face, contour, adaptive, drilling, and others, with stepdown, feed, speed, and coolant), `cam_generate_toolpath`, `cam_post_process`, `cam_list_setups`, `cam_list_operations`, `cam_get_operation_info`. Post-process text: pass a full `.cps` path, because cloud-post builds do not ship local posts. The post library inside Fusion itself is a separate Autodesk help page and was not copied into a machine list.
 - `blwfish/freecad-mcp` README: CAM toolpath generation on a current FreeCAD weekly, not on 1.1.x.
 - text-to-cad skill paths: `gcode`, `dfm`, `dfam-check`, `dxf`, `sendcutsend`, `bambu-labs`. Bodies unread.
+- FreeCAD's documentation category lists a page named TechDraw Geometric dimensioning and tolerancing. The page body was not retrieved (the wiki returned an access check). No callout-verification command was copied from it.
 
 No toolpath was generated in this survey.
 
@@ -269,7 +291,10 @@ No toolpath was generated in this survey.
 
 ### Foam-Agent
 
-Paper only on this pass. See [papers](papers.md). Repository not found (G12).
+Repository <https://github.com/csml-rpi/Foam-Agent>, MIT, release
+`v2.2.0` (2026-11-01). MCP tools and OpenFOAM targets are in
+[papers](papers.md). The server was not started. A second repository,
+`apekshhaa/Foam-Agent`, has 1 star and was not read.
 
 ## Assemblies
 

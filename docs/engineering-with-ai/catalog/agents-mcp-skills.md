@@ -27,7 +27,7 @@ the tool-driver loop.
 | Pack | URL | `SKILL.md` count | License | `pushed_at` | Stars | Domain named by paths or README |
 | --- | --- | --- | --- | --- | --- | --- |
 | text-to-cad | <https://github.com/earthtojake/text-to-cad> | 12 | MIT | 2026-11-05 | 25,621 | CAD, DFM, drawings, G-code, URDF, SRDF, SDF |
-| SolidCraft | <https://github.com/tangency-labs/solidcraft> | 17 | Apache-2.0 | 2026-11-06 | 14,178 | Parametric CAD app skills. Bodies unread |
+| SolidCraft | <https://github.com/tangency-labs/solidcraft> | 17 | Apache-2.0 | 2026-11-06 | 14,178 | MCP tools and STEP/3MF/STL/OBJ/URDF exports are in `docs/mcp.md`. Bundled names: modeling, mechanisms, editing, checking |
 | JITX skills | <https://github.com/JITx-Inc/jitx-skills> | 11 | Proprietary file | 2026-11-05 | 20 | Components, circuits, layout, mechanical |
 | kicad-mcp-pro | <https://github.com/oaslananka/kicad-mcp-pro> | 39 files, 7 names under `skills/` | MIT | 2026-11-06 | 182 | Schematic, PCB, DRC, fabrication |
 | mcp-server-kicad | <https://github.com/ProductOfAmerica/mcp-server-kicad> | 6 | GPL-3.0 | 2026-11-05 | 16 | KiCad tool use. Maintenance mode in the repo description |
@@ -54,12 +54,13 @@ Detailed cards are in [mechanical](mechanical.md) and
 | Onshape | Official FeatureScript MCP | Hosted HTTP |
 | Onshape | hedless, jarvis, altendky | Local plus Onshape API. READMEs unread |
 | CAD files | earthtojake/text-to-cad | Local, build123d |
-| CAD app | SolidCraft built-in MCP | Local or browser. Schema unread |
+| CAD app | SolidCraft built-in MCP | Local. Tool names in `docs/mcp.md`. Command catalog is dynamic |
 | CAE | Cai-aa/CAE-Agent-Hub | Local solver bridges |
-| KiCad | ProductOfAmerica, oaslananka, mixelpixx, Konnect | Local |
+| KiCad | ProductOfAmerica, oaslananka, mixelpixx, Konnect | Local. Konnect repo archived. Successor is Konnect-EDA |
 | SPICE | Cognitohazard/ltspice-mcp, ghensley/circuit-sim-mcp | Local |
-| Embedded | jl-codes/platformio-mcp | README unread |
-| Instruments | abhinav937/pyvisa-mcp | README unread |
+| Embedded | jl-codes/platformio-mcp | README: build, flash, monitor. Not run |
+| Instruments | abhinav937/pyvisa-mcp | README tool table read. Writes gated |
+| CFD | csml-rpi/Foam-Agent | `foamagent-mcp`, seven tools, OpenFOAM v10 or ESI v2006 |
 
 ## Hosted agents that are not local weights
 

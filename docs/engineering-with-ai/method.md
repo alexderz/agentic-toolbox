@@ -64,6 +64,14 @@ fill a gap.
 ## Hardware
 
 Model file sizes and memory figures appear only next to the source that
-states them. A sum of weight-file sizes is a file size, not a measured
-VRAM peak. A fit on a 24 GB GPU is recorded only when a source states
-that fit. This survey does not assume a GPU is present.
+states them. Three different numbers stay in separate columns:
+
+| Kind | What it is |
+| --- | --- |
+| Weight-file size | Bytes of a GGUF or safetensors object, from an HTTP `Content-Length` or the Hugging Face tree API |
+| Parameter storage | Published parameter count times the bytes per element the checkpoint declares (`BF16` is 2) |
+| Runtime peak | Memory a process actually reached while generating tokens, including the KV cache |
+
+A file size is not a runtime peak. A fit on a 24 GB GPU is recorded
+only when a source states that fit for that checkpoint and context.
+This survey does not assume a GPU is present and did not load weights.

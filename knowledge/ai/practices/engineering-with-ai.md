@@ -22,9 +22,10 @@ in the survey is vendored or cleared for install.
 
 ## Unknown
 
-Fields the survey leaves unknown stay unknown here. In particular:
-general-model VRAM, Zoo kernel location, GD&T checker behavior, and
-any benchmark this pass did not rerun.
+Fields the survey leaves unknown stay unknown here. Weight-file sizes
+for several Qwen2.5-Coder and Qwen2.5-VL checkpoints are recorded.
+Runtime peaks for those files are not. Zoo kernel location, a GD&T
+frame checker, and any benchmark this pass did not rerun stay open.
 
 ## Do not
 

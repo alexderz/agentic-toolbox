@@ -27,6 +27,7 @@ trained to emit geometry or a circuit.
 | [Code CAD workflow](workflows/code-cad.md) | Documented code-to-solid loop |
 | [EDA workflow](workflows/eda-and-circuits.md) | Documented schematic, SPICE, and HDL loops |
 | [Cross-domain](workflows/cross-domain.md) | Electromechanical handoffs |
+| [FPGA, CAE, control](workflows/fpga-cae-control.md) | Yosys, nextpnr, ORFS, Foam-Agent, drawings, CAM, AC margins |
 
 GitHub star counts and `pushed_at` dates come from the GitHub REST API
 on 2026-11-06. `pushed_at` is the repository push timestamp, which can
@@ -44,20 +45,20 @@ or devices, and did not reproduce any benchmark score.
 | Parametric CAD | [Mechanical](catalog/mechanical.md), [code CAD](workflows/code-cad.md) | Primary pages and releases for build123d, CadQuery, OpenSCAD, FreeCAD MCP, Fusion MCP, Onshape FeatureScript MCP, SolidCraft |
 | Text and code to CAD | [Mechanical](catalog/mechanical.md), [papers](catalog/papers.md) | Zoo Agent API and Zookeeper pages, text-to-cad plugin, CADAM, Text2CAD, CAD-Recode, CADGenBench |
 | Assembly and constraints | [Mechanical](catalog/mechanical.md), [cross-domain](workflows/cross-domain.md) | Tool claims for joints, mates, URDF, SRDF, SDF. No assembly benchmark was scored here |
-| Drawings and GD&T | [Mechanical](catalog/mechanical.md), [papers](catalog/papers.md) | engineering-drawing skill name; OmniMech paper. Drawing skill body not read. No GD&T checker was run |
-| CAM and manufacturing | [Mechanical](catalog/mechanical.md) | Fusion community MCP CAM tool names; text-to-cad `gcode`, `dfm`, `dxf` skill names. Toolpath quality unknown |
-| FEA, CFD, multiphysics | [Mechanical](catalog/mechanical.md) | FreeCAD MCP FEM claim, CAE-Agent-Hub README table, Foam-Agent paper |
+| Drawings and GD&T | [Mechanical](catalog/mechanical.md), [deeper flows](workflows/fpga-cae-control.md) | Drawing skill body read: PDF, numeric `tol` and `fit`. GD&T frame checker still unread |
+| CAM and manufacturing | [Mechanical](catalog/mechanical.md) | Fusion community MCP CAM tool table read, including the `.cps` post requirement |
+| FEA, CFD, multiphysics | [Mechanical](catalog/mechanical.md), [papers](catalog/papers.md) | Foam-Agent `v2.2.0` tools and OpenFOAM v10 / ESI v2006. CAE-Agent-Hub commercial runs still unread |
 | Topology and generative design | [Papers](catalog/papers.md) | AutoSiMP and LLM-SIMP papers. Both say code follows publication or acceptance |
 | Schematic and PCB | [Electrical](catalog/electrical.md), [EDA workflow](workflows/eda-and-circuits.md) | KiCad CLI docs, three KiCad MCP repositories, atopile, tscircuit, SKiDL, JITX skills |
 | SPICE and analog | [Electrical](catalog/electrical.md), [papers](catalog/papers.md) | AnalogCoder, AnalogGenie, ltspice-mcp, circuit-sim-mcp |
-| Digital, HDL, FPGA | [Electrical](catalog/electrical.md), [papers](catalog/papers.md) | VerilogEval, RTLCoder, EDA Corpus, OpenROAD Agent abstract. Yosys and nextpnr agent skills not surveyed |
-| Power and control | [Open questions](open-questions.md) | Named inside analog and clearance checks. No dedicated control-design agent was read end to end |
-| Embedded interfacing | [Electrical](catalog/electrical.md) | platformio-mcp repository metadata. Firmware behavior not run |
-| Test and instruments | [Electrical](catalog/electrical.md) | pyvisa-mcp metadata. No instrument session was opened |
+| Digital, HDL, FPGA | [Electrical](catalog/electrical.md), [deeper flows](workflows/fpga-cae-control.md) | VerilogEval and RTLCoder, plus Yosys, nextpnr, and ORFS command lines |
+| Power and control | [Deeper flows](workflows/fpga-cae-control.md) | ngspice `.ac`, python-control `margin`, ltspice-mcp phase margin. Combined magnetics and firmware loop still open |
+| Embedded interfacing | [Electrical](catalog/electrical.md) | platformio-mcp README: build, flash, monitor, human approval |
+| Test and instruments | [Electrical](catalog/electrical.md) | pyvisa-mcp tool table and write gate. No instrument session |
 | Electromechanical | [Cross-domain](workflows/cross-domain.md) | URDF, SRDF, SDF, JITX mechanical skill, STEP and board exports |
 | Skills and packs | [Agents](catalog/agents-mcp-skills.md) | `SKILL.md` path counts from Git trees |
 | Harnesses | [Agents](catalog/agents-mcp-skills.md) | Clients named by vendor docs. No client was configured |
-| Local models | [Models](catalog/models.md) | RTLCoder and CAD-Recode sizes from paper or file listing. Other VRAM figures unknown |
+| Local models | [Models](catalog/models.md) | Qwen2.5-Coder and Qwen2.5-VL-7B weight-file sizes. Runtime peaks unknown. RTLCoder and CAD-Recode unchanged |
 
 ## Maintenance
 

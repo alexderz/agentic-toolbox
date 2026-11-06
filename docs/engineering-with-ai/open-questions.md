@@ -1,32 +1,33 @@
 # Open questions
 
-Left open on 2026-11-06. A later pass can close a row by filling the
-source column and moving the result into the matching catalog page.
+Status after the 2026-11-06 refinement. Closed rows stay here so a
+later edit can see what was answered. A closed row's evidence is in
+the linked page.
 
-| ID | Question | Why it is open |
-| --- | --- | --- |
-| G1 | What does each text-to-cad skill body require of build123d, and which checks does `engineering-drawing` actually emit? | Paths were listed from the git tree. Skill bodies were not read |
-| G2 | Does SolidCraft's MCP expose a stable tool list, and which formats does `solidcraft-cli mcp` read and write? | README and release `v0.30.1` were fetched. Tool schema was not |
-| G3 | Which Fusion license tiers enable the local MCP server? | Fusion help requires the desktop app and the preference toggle. Tier is unstated there |
-| G4 | What is the fixed tool list for Onshape FeatureScript MCP? | Official posts describe generate, run, and revise FeatureScript. A schema file was not downloaded |
-| G5 | Where does the Zoo geometry kernel execute, local or vendor cloud? | Agent API page describes a web interface. Execution location was not stated on the pages read |
-| G6 | What license covers KCL the language, the Zoo CLI, and the engine? | Not stated on the Zoo pages opened |
-| G7 | Are OmniMech's 251,000 drawings and the evaluation code public? | The paper says they will be released. A repository was not found in this pass |
-| G8 | Are STEP-LLM weights public, and what is the checkpoint size? | Paper fetched. Artifact URL not confirmed |
-| G9 | AutoSiMP and the LLM-SIMP controller both defer code. Did either repository appear after the HTML versions read here? | Papers say release is on acceptance or publication. Not rechecked beyond those HTML pages |
-| G10 | What GD&T callouts can a checker verify, as distinct from drawing text? | No GD&T verification tool was read end to end |
-| G11 | What CAM operation types and post processors do the Fusion MCP tools support? | Community README names `cam_create_setup`, `cam_create_operation`, `cam_post_process`. Post list unknown. Official Fusion MCP tool list is dynamic |
-| G12 | Foam-Agent's MCP tools: repository, license, and OpenFOAM version | Paper HTML describes an MCP design. GitHub search for `foam-agent openfoam` returned no repository |
-| G13 | CAE-Agent-Hub solvers: which commercial licenses are required at runtime, and which profiles were executed by someone other than the author? | README table lists Abaqus, Fluent, Workbench, AEDT, HyperWorks, CalculiX, Elmer, ParaView. Independent runs unknown |
-| G14 | FPGA flow agents for Yosys, nextpnr, and OpenROAD beyond the EDA Corpus and OpenROAD Agent abstract | Awesome-LLM4EDA was last pushed 2024-07-08. Individual flow repos were not opened |
-| G15 | Power electronics and control: bode, loop stability, magnetics, and firmware co-design | AnalogGenie discusses converters. atopile 0.16.15 blog lists IPC-2221 clearance by voltage. No control-design repository was opened |
-| G16 | `jl-codes/platformio-mcp` tool list and whether flash or serial is in scope | Description was empty in the API. README not opened |
-| G17 | `abhinav937/pyvisa-mcp`: which instrument classes and transports the README claims, and whether it writes instrument state | API description names discovery and control over LAN, USB, GPIB, and serial. README body not opened. 1 star |
-| G18 | KiCad MCP Pro: which of the 7 `skills/` names are the canonical set versus generated copies | Tree shows repeated copies under `.agents`, `.opencode`, Gemini, and `src/`. Behavior not compared |
-| G19 | Does ProductOfAmerica `mcp-server-kicad` still match its skill text after the README maintenance-mode notice? | Description says security and KiCad compatibility fixes only. Tool behavior not run |
-| G20 | Konnect archive state | API `archived` is true and `pushed_at` is 2026-11-02. Whether the archive blocks new use was not tested |
-| G21 | General coding models that fit a 24 GB GPU or a CPU-only machine for these workflows | No general-model card was measured here. See [models](catalog/models.md) |
-| G22 | CADGenBench leaderboard rows after 2026-11-06 | Dataset viewer rows from that day are a snapshot. The Space is the live board |
-| G23 | Independent reproduction of VerilogEval, RTLCoder, AnalogCoder, Text2CAD, and CADGenBench numbers | All figures in [papers](catalog/papers.md) are author-reported or leaderboard rows. None were rerun |
-| G24 | `gitcad` and NativeCAD claims | gitcad has 2 stars. NativeCAD was a vendor page. Neither was built |
-| G25 | Amagine3D and Multi-Agent CAD: what kernel and which benchmark | API metadata only. READMEs not opened |
+| ID | Status | Question | Where it stands |
+| --- | --- | --- | --- |
+| G1 | partial | text-to-cad drawing and CAD skills | `engineering-drawing` and the `cad` skill were read. PDF, third-angle views, `tol` and `fit`, STEP/STL/3MF/GLB/xbf exports. `gcode`, `dfm`, `urdf`, `srdf`, and `sdf` bodies were not |
+| G2 | closed | SolidCraft MCP tools and formats | `docs/mcp.md`: tool names, STEP/3MF/STL/OBJ/URDF, read versus write. Live command catalog is `list_commands`, about 350 KB, and was not dumped |
+| G8 | closed | STEP-LLM code and weights | <https://github.com/JasonShiii/STEP-LLM> exists, MIT, 35 stars. Released artifacts are LoRA adapters. Qwen adapter file is 119,801,528 bytes. Full merged weights were not in the repo. Runtime memory unknown |
+| G11 | closed | Fusion community CAM tools | `docs/TOOLS.md` lists setup, operation, toolpath, and post. Post needs a `.cps` path. Official Fusion MCP tool list is still dynamic |
+| G12 | closed | Foam-Agent repository | <https://github.com/csml-rpi/Foam-Agent>, MIT, `v2.2.0`, OpenFOAM v10 and ESI v2006, seven MCP tools. Two author-reported success rates, not rerun |
+| G14 | closed | FPGA and OpenROAD CLIs | Yosys 0.70, nextpnr 0.11.1, ORFS `make` line. No agent skill for those CLIs was opened |
+| G16 | closed | platformio-mcp | README documents build, flash, monitor, and the `agent_*` tools. Approval stays with a person. Not run |
+| G17 | closed | pyvisa-mcp | Tool table read. Known-scope dialects may be written. Others need `unlock_writes`. No instrument was opened |
+| G18 | closed | KiCad MCP Pro skill copies | Seven workflow names are five identical blobs each. Four other skill names exist once |
+| G19 | closed | mcp-server-kicad maintenance | README: maintenance mode as of October 2026, KiCad 9 or 10, and a recommendation to use `kicad-cli`. The skill file still forbids `kicad-cli`. The 18-edit comparison is the author's, on an unpublished board |
+| G20 | closed | Konnect archive | README says the repo is read-only and points at `Orchis-ai-LLC/Konnect-EDA`, described there as commercial and closed source, free during beta. Archived tree stays AGPL-3.0 per that README |
+| G21 | closed | 24 GB coding and VL checkpoints | Official Qwen file sizes are in [models](catalog/models.md). Every listed file is under 24 GiB. Runtime peaks were not measured, so a fit is not claimed |
+| G10 | partial | GD&T verification | Drawing skill records numeric `tol` and `fit` only. FreeCAD TechDraw GD&T page title is listed. Page body was not retrieved. No symbol checker was found |
+| G15 | partial | Power and control | ngspice `.ac`, python-control `margin`, ltspice-mcp phase margin, and atopile clearance are documented separately. Magnetics plus compensator plus firmware was not found as one artifact |
+| G3 | open | Fusion license tier for the local MCP | Help page still does not name a tier |
+| G4 | open | Onshape FeatureScript MCP tool schema | Official posts still do not publish a fixed tool list |
+| G5 | open | Where the Zoo kernel runs | Unstated on the pages read |
+| G6 | open | KCL and Zoo engine license | Unstated on the pages read |
+| G7 | open | OmniMech public release | Paper still says it will be released. No repository confirmed |
+| G9 | open | AutoSiMP and LLM-SIMP code | Papers still defer the code. No repository was found on this pass |
+| G13 | open | CAE-Agent-Hub commercial solver licenses and independent runs | README table unchanged. No third-party run log was opened |
+| G22 | open | CADGenBench rows after 2026-11-06 | Snapshot stands. Board is live |
+| G23 | open | Independent reproduction of published scores | Still not run, on purpose |
+| G24 | open | gitcad and NativeCAD | Not built |
+| G25 | open | Amagine3D and Multi-Agent CAD kernels | READMEs still not opened |

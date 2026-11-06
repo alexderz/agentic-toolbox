@@ -40,3 +40,23 @@ exports) without composing an untested pipeline.
 Left GD&T semantics, CAM toolpath quality, power-electronics control
 design, FPGA place-and-route agents, and instrument sessions as open
 questions.
+
+## 2026-11-06 — Refinement
+
+Read skill and MCP documents that the first pass had only counted:
+text-to-cad `engineering-drawing` and `cad`, SolidCraft `docs/mcp.md`,
+Fusion community `docs/TOOLS.md`, Foam-Agent README, platformio-mcp
+README, pyvisa-mcp README, mcp-server-kicad maintenance section,
+Konnect archive notice, and KiCad MCP Pro blob SHAs.
+
+Recorded official Qwen2.5-Coder GGUF and AWQ file sizes and the
+Qwen2.5-VL-7B BF16 file size. Separated those byte counts from runtime
+peaks. Did not load a model.
+
+Verified <https://github.com/JasonShiii/STEP-LLM> and the Qwen LoRA
+adapter size. Copied Yosys, nextpnr, OpenROAD-flow-scripts, ngspice
+`.ac`, and python-control `margin` from their manuals into
+[fpga-cae-control](workflows/fpga-cae-control.md).
+
+Did not install tools, flash a board, open an instrument, or rerun a
+benchmark.

@@ -49,6 +49,8 @@ Author-reported results are in [papers](papers.md). Not rerun.
 
 ## Tool-driver models
 
+A tool-driver for these workflows is a general coding model, or a
+vision-language model when the input is a drawing or a render.
 CADGenBench's reference baseline writes build123d or CadQuery with an
 external LLM, then exports STEP. The benchmark README does not require
 a CAD-specialist checkpoint. Leaderboard rows fetched from the
@@ -74,20 +76,92 @@ PlatformIO: the model that writes the code can be any coding model the
 harness runs. Correctness is the external tool's ERC, DRC, build, or
 simulation, documented in [evaluation](../workflows/evaluation.md).
 
-## 24 GB-class options with a source
+## Local coding and vision tool-drivers
 
-Only these statements are sourced. No GPU is assumed to be present.
+Checked 2026-11-06 against official Qwen repositories. Apache-2.0 on
+the Hugging Face model records below. No checkpoint was loaded. No
+token rate was measured.
 
-| Option | Source | What it supports | What it does not say |
-| --- | --- | --- | --- |
-| RTLCoder 4-bit | Paper | 4 GB memory claim, and a GGUF path with `gpu_layers=0` in the README | Measured tokens per second, context beyond the README sample, or a named 24 GB card for inference |
-| RTLCoder training | Paper | Fits training on 24 GB RTX 4090 cards with the paper's batch settings | That a reader must own that GPU |
-| CAD-Recode v1.5 | Model card | About 1.5B to 2B parameters | VRAM, quantization, and CPU-only status |
-| FP16 RTLCoder-v1.1 shards | Hugging Face file listing | 14.48 GB of weight files | Peak VRAM. A fit in 24 GB would be an estimate and is not stated |
+The Qwen2.5-Coder family README lists instruct sizes 0.5B, 1.5B, 3B,
+7B, 14B, and 32B, each with AWQ, GGUF, and GPTQ-Int4 / GPTQ-Int8
+uploads. The 32B AWQ card states 32.5B parameters, AWQ 4-bit, and a
+context length of 131,072 tokens. The official 32B GGUF README states
+context length 32,768 tokens and says sequences up to 131,072 tokens
+belong on the non-GGUF weights. GGUF quant names on that README include
+`q4_K_M`, `q5_K_M`, and `q8_0`.
 
-General coding models in the 7B to 32B range are the usual tool-drivers
-for build123d and KiCad. Their file sizes and quantizations were not
-looked up in this pass, so none is listed as 24 GB-capable here (G21).
+`Qwen/Qwen2.5-Coder-7B-Instruct` reports 7,615,616,512 BF16 parameters.
+The four safetensors files sum to 15,231,271,864 bytes (14.185 GiB).
+That matches 2 bytes times the parameter count, plus a few kilobytes of
+headers. It is the weight-file size of the BF16 checkpoint.
+
+`Qwen/Qwen2.5-VL-7B-Instruct` is `image-text-to-text`. Config:
+`model_type` `qwen2_5_vl`, `torch_dtype` `bfloat16`,
+`max_position_embeddings` 128000, 28 layers, hidden size 3584. The
+safetensors record is 8,292,166,656 parameters. The five weight files
+sum to 16,584,414,560 bytes (15.446 GiB).
+
+### Weight-file sizes
+
+HTTP `Content-Length` after redirects, official GGUF files, 2026-11-06.
+GiB is bytes divided by 1024 cubed. These are file sizes.
+
+| File | Bytes | GiB |
+| --- | --- | --- |
+| `qwen2.5-coder-3b-instruct-q4_k_m.gguf` | 2,104,932,800 | 1.960 |
+| `qwen2.5-coder-3b-instruct-q8_0.gguf` | 3,616,088,512 | 3.368 |
+| `qwen2.5-coder-7b-instruct-q4_k_m.gguf` | 4,683,073,536 | 4.361 |
+| `qwen2.5-coder-7b-instruct-q5_k_m.gguf` | 5,444,831,232 | 5.071 |
+| `qwen2.5-coder-7b-instruct-q8_0.gguf` | 8,098,525,184 | 7.542 |
+| `qwen2.5-coder-14b-instruct-q4_k_m.gguf` | 8,988,110,272 | 8.371 |
+| `qwen2.5-coder-14b-instruct-q5_k_m.gguf` | 10,508,873,152 | 9.787 |
+| `qwen2.5-coder-14b-instruct-q8_0.gguf` | 15,701,597,632 | 14.623 |
+| `qwen2.5-coder-32b-instruct-q4_k_m.gguf` | 19,851,335,872 | 18.488 |
+| `qwen2.5-coder-32b-instruct-q5_k_m.gguf` | 23,262,156,992 | 21.665 |
+
+AWQ safetensors sums from the Hugging Face tree API the same day:
+
+| Repo | Bytes | GiB |
+| --- | --- | --- |
+| `Qwen/Qwen2.5-Coder-32B-Instruct-AWQ` | 19,328,993,904 | 18.002 |
+| `Qwen/Qwen2.5-VL-7B-Instruct-AWQ` | 6,923,972,384 | 6.448 |
+
+### What a 24 GiB device can be said to hold
+
+24 GiB is 25,769,803,776 bytes. Every file in the two tables is smaller
+than that, so the weights themselves are under 24 GiB. That statement
+is about the file. It is not a measured runtime peak.
+
+Headroom left if the file were the only occupant:
+
+| File | File GiB | 24 minus file, GiB |
+| --- | --- | --- |
+| 7B `q4_K_M` | 4.361 | 19.639 |
+| 7B BF16 safetensors | 14.185 | 9.815 |
+| 14B `q8_0` | 14.623 | 9.377 |
+| VL-7B BF16 safetensors | 15.446 | 8.554 |
+| 32B AWQ safetensors | 18.002 | 5.998 |
+| 32B `q4_K_M` | 18.488 | 5.512 |
+| 32B `q5_K_M` | 21.665 | 2.335 |
+
+KV cache, activations, and a vision tower's runtime buffers sit in the
+remainder. Their size was not measured. A 32B `q5_K_M` file leaves
+2.335 GiB before any cache, which is a small remainder, not evidence
+that generation succeeds. CPU-only execution is possible in the sense
+that the GGUF files exist and llama.cpp can place layers in system
+RAM. No CPU-only run was done, and system-RAM peak is unknown.
+
+### Other published memory figures, different models
+
+| Source | What it measures | What it is not |
+| --- | --- | --- |
+| Qwen vLLM recipe, original Qwen | Table of GPU memory on a Tesla V100 32 GB in eager mode. Qwen-7B is 17.94 GB at sequence 2048 and 20.96 GB at 8192. Qwen-7B-Int4 is 9.10 GB and 12.26 GB. The same page lists 24 GB cards (RTX 4090, 3090, A5000) as supporting Qwen-7B, Qwen-7B-Int4, and Qwen-14B-Int4 at the default sequence length | Not Qwen2.5-Coder and not Qwen2.5-VL. The page is an older generation |
+| OpenLLM Qwen2.5 deployment page | A "required GPU RAM" column: `qwen2.5:7b` 24G, `qwen2.5:32b` 80G, `qwen2.5:14b` 80G | A packager's requirement label for generic `qwen2.5` tags. Not a peak measured here, and not labeled as the Coder or VL checkpoints |
+| RTLCoder paper | 4-bit model "takes only 4GB of memory". Training used four 24 GB RTX 4090 cards | Author claim for a Verilog specialist, not a measurement of Qwen2.5-Coder |
+
+Third-party VRAM calculators that estimate 18 to 19 GB for the 32B AWQ
+checkpoint were not used. The AWQ weight files sum to 18.002 GiB, which
+is the part of that estimate that this survey actually counted.
 
 ## Hosted models with no local weights on the pages read
 

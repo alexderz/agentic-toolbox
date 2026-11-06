@@ -24,7 +24,7 @@ Snapshot 2026-11-06. Class labels match [method](../method.md).
 | Field | Value |
 | --- | --- |
 | URL | <https://github.com/ProductOfAmerica/mcp-server-kicad> |
-| Capabilities | Description: maintenance mode, security and KiCad compatibility fixes only. Skill text fetched for `skills/using-kicad/SKILL.md` says 109 tools and forbids direct edits of `.kicad_sch`, `.kicad_pcb`, and related files. Tree has 6 `SKILL.md` files. Catalog names in that skill: `circuit-design`, `schematic-plan`, `schematic-design`, `pcb-layout`, `verification` |
+| Capabilities | README, read 2026-11-06: maintenance mode as of October 2026. Security fixes and KiCad compatibility fixes only. No new tools planned. Badge text says KiCad 9 or 10. The README's own comparison, on one unpublished board, says plain Claude Code got 18 of 18 single edits right and the plugin got 3 of 18, and that a 20-edit session was right for both with the plugin using about 1.8 times the context. That test material is not published. The README now says to check work with `kicad-cli`. `skills/using-kicad/SKILL.md` still says not to edit KiCad files as text and not to run `kicad-cli`. Those two instructions disagree. Tree has 6 `SKILL.md` files. Catalog names in that skill: `circuit-design`, `schematic-plan`, `schematic-design`, `pcb-layout`, `verification` |
 | Maturity | `pushed_at` 2026-11-05. Created 2026-03-09. 16 stars. PyPI project linked: `mcp-server-kicad` |
 | License | GPL-3.0 |
 | Dependencies | KiCad, from the skill text. Version floor unknown |
@@ -39,7 +39,7 @@ Snapshot 2026-11-06. Class labels match [method](../method.md).
 | Field | Value |
 | --- | --- |
 | URL | <https://github.com/oaslananka/kicad-mcp-pro> |
-| Capabilities | Description: schematic and PCB workflows, ERC/DRC, DFM, BOM, manufacturing preparation. Canonical names under `skills/`: `drc-check`, `fabrication-output`, `kicad-design-review`, `pcb-design`, `schematic-review`, `visual-excellence`, `wired-subcircuit-design`. Git tree contains 39 `SKILL.md` paths because those names are copied for Claude, OpenCode, Gemini, Cursor, and package data |
+| Capabilities | Description: schematic and PCB workflows, ERC/DRC, DFM, BOM, manufacturing preparation. Git tree on 2026-11-06: seven names (`drc-check`, `fabrication-output`, `kicad-design-review`, `pcb-design`, `schematic-review`, `visual-excellence`, `wired-subcircuit-design`) each occur as five paths and each of those five paths shares one blob SHA. They are copies, not five different texts. Other `SKILL.md` names in the tree, one blob each: `cloud-project-review`, `code-review`, `kicad-pcb-review`, `kicad-pcb-review-skill`. Bodies of those extras were not compared |
 | Maturity | Latest release tag `kicad-mcp-gui-v4.7.0`, published 2026-11-04. `pushed_at` 2026-11-06. 182 stars. Created 2026-05-31 |
 | License | MIT |
 | Dependencies | KiCad. Version not taken from the README |
@@ -54,7 +54,7 @@ Snapshot 2026-11-06. Class labels match [method](../method.md).
 | Repo | API | License | What was read |
 | --- | --- | --- | --- |
 | <https://github.com/mixelpixx/KiCAD-MCP-Server> | 3,174 stars, `pushed_at` 2026-11-04, created 2025-04-26 | MIT | Page excerpt: MCP server for schematic and PCB actions, symbols, footprints, routing, checks, production files. Tool inventory not counted |
-| <https://github.com/mixelpixx/Konnect> | 1,453 stars, `pushed_at` 2026-11-02, created 2026-07-05, `archived` true | AGPL-3.0 | Description: KiCad 10 plugin, one Rust binary, 217 tools. 6 `SKILL.md` files. Archive flag and later push are both API fields (G20). Skill excerpt says KiCad files are not to be edited as text |
+| <https://github.com/mixelpixx/Konnect> | 1,453 stars, `pushed_at` 2026-11-02, created 2026-07-05, `archived` true | AGPL-3.0 | README: the repository is being archived and is read-only. Development continues at <https://github.com/Orchis-ai-LLC/Konnect-EDA>. That repository's API description says commercial and closed source, free during the beta. `pushed_at` 2026-10-25, 122 stars, not archived, SPDX `NOASSERTION`. The archived README says the code in `mixelpixx/Konnect` stays AGPL-3.0 and that `mixelpixx/KiCAD-MCP-Server` stays MIT. 6 `SKILL.md` files. A push was not attempted |
 
 ## Code-defined electronics
 
@@ -211,7 +211,7 @@ Specialist and benchmark entries are in [papers](papers.md) and [models](models.
 
 `Thinklab-SJTU/Awesome-LLM4EDA` has 300 stars, no license file detected, `pushed_at` 2024-07-08. It is an index, last updated well before this survey. Entries after that date are not in that list.
 
-Yosys, nextpnr, Amaranth, and cocotb agent skills were not opened (G14). Their use as checkers is still valid as ordinary tools. This pass did not document their CLIs.
+Yosys 0.70, nextpnr 0.11.1, and the OpenROAD-flow-scripts `make` line are in [FPGA, CAE, CAM, and control](../workflows/fpga-cae-control.md). Amaranth and cocotb agent skills were not opened.
 
 ## Embedded and instruments
 
@@ -220,31 +220,27 @@ Yosys, nextpnr, Amaranth, and cocotb agent skills were not opened (G14). Their u
 | Field | Value |
 | --- | --- |
 | URL | <https://github.com/jl-codes/platformio-mcp> |
-| Capabilities | unknown. API description is empty. Several alias repositories point at this one and were not opened |
-| Maturity | `pushed_at` 2026-10-13. Created 2026-01-10. 54 stars |
+| Capabilities | README, read 2026-11-06: product name PIO Agent, runtime name PlatformIO MCP. CLI `pio-agent` and `platformio-mcp`. Commands shown: `devices`, `boards`, `init`, `build`, `flash`, `monitor`, `agent-validate`, `agent-build-diagnose`, `agent-safe-pin-audit`, `agent-flash-monitor-verify`, `agent-last-report`, `policy-status`. README also names MCP tools `agent_validate_project`, `agent_build_diagnose`, `agent_safe_pin_audit`, `agent_flash_monitor_verify`, `agent_generate_board_report`, `get_policy_status`, `agent_resolve_target`, `agent_monitor_health`, `cancel_task`, `list_task_history`. Flash and serial monitor are in the documented command list. The README says risky operations honor policy and that approval stays human-controlled. Canonical runtime version named in the README: 3.1.0, with a 3.2.0 candidate described as not the only published line |
+| Maturity | `pushed_at` 2026-10-13. Created 2026-01-10. 54 stars. npm package name in the README: `platformio-mcp` |
 | License | MIT |
-| Dependencies | PlatformIO, presumed from the name. Not confirmed in a README |
-| Formats | unknown |
-| Read/write | unknown (G16) |
-| Mode | unknown |
-| Evidence | `github-api` only |
-| Class | tool-driver if the README matches the name |
-
-A second repository, `powerdragonfire/platformio.mcp`, has the description "build, flash, serial monitor, tests, crash decoding, size reports" and 6 stars, updated 2026-11-04. README not opened.
+| Dependencies | Node and PlatformIO, from the command examples. A board is required for `flash` and `monitor`. None was attached |
+| Formats | A PlatformIO project directory. `--json` is documented for machine-readable CLI output |
+| Read/write | Build reads the project and writes a firmware artifact. `flash` writes to a connected board. `monitor` reads serial. Approval status is described as read-only for the agent |
+| Mode | Local CLI or local stdio MCP |
+| Evidence | `readme`, `github-api`. Commands not run |
+| Class | tool-driver |
 
 ### pyvisa-mcp
 
 | Field | Value |
 | --- | --- |
 | URL | <https://github.com/abhinav937/pyvisa-mcp> |
-| Capabilities | API description: discover and control oscilloscopes and other VISA instruments over LAN, USB, GPIB, and serial. README body not opened |
+| Capabilities | README tool table: `list_instruments`, `discover_network_instruments`, `open_instrument`, `learn_instrument`, `fetch_manual`, `search_scope_knowledge`, `list_learned_instruments`, `forget_instrument`, `query`, `write`, `query_binary`, `read_errors`, `scope_capture_waveform`, `export_waveform`, `scope_measure`, `scope_configure`, `scope_acquire`, `scope_screenshot`, `instrument_capabilities`, `unlock_writes`, `suggest_scpi`. LAN open becomes `TCPIP0::ADDRESS::inst0::INSTR`. Raw socket ports named: 5025 and 5555 |
 | Maturity | `pushed_at` 2026-09-13. Created 2026-09-12. 1 star |
 | License | MIT |
-| Dependencies | PyVISA and a VISA backend, not confirmed |
-| Formats | unknown |
-| Read/write | Description says control, which includes writes to instruments. Scope unknown (G17) |
-| Mode | Local MCP, instruments on the host's buses |
-| Evidence | `github-api` |
+| Dependencies | PyVISA. README: `pyvisa-py` is enough for LAN and socket. USB-TMC extra needs libusb. NI-VISA is not required for LAN |
+| Formats | SCPI text. Waveform export CSV, NPY, or BIN. Screenshot PNG, BMP, or JPEG when the instrument returns an image |
+| Read/write | After identify, writes are allowed for dialects the README names as Rigol, Keysight, Tektronix, Siglent, and LeCroy. Other identities are query and learn only until `unlock_writes` with `confirm=true`. `scope_configure` and `scope_acquire` change instrument state. `scope_acquire` autoset also requires `confirm=true` |
+| Mode | Local stdio MCP. State file under `~/.local/share/pyvisa-mcp/` unless `PYVISA_MCP_MEMORY` is set |
+| Evidence | `readme`, `github-api`. No instrument was opened |
 | Class | tool-driver |
-
-No instrument session was opened. No SCPI script was written.
