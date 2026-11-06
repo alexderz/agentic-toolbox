@@ -21,6 +21,8 @@ trained to emit geometry or a circuit.
 | [Mechanical catalog](catalog/mechanical.md) | CAD, CAM, FEA, CFD, topology |
 | [Electrical catalog](catalog/electrical.md) | Schematic, PCB, SPICE, HDL, embedded, instruments |
 | [Agents, MCP, skills](catalog/agents-mcp-skills.md) | Skills, MCP servers, hosted agents |
+| [Skill packs](catalog/skill-packs.md) | Side-by-side skill packs and what each one checks |
+| [Harnesses](harnesses.md) | Creator posts and the harness files that were opened |
 | [Models](catalog/models.md) | Specialist weights and local-size evidence |
 | [Papers](catalog/papers.md) | Papers, datasets, benchmarks |
 | [Evaluation](workflows/evaluation.md) | Checks a later run can execute |
