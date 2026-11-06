@@ -68,11 +68,11 @@ after the 2026-11-06 pass.
 | Q2 | Which MCP servers drive a live CAD session, and which need a GUI? | Answered for the FreeCAD, Fusion, Onshape, and OpenSCAD servers that were opened. Install not tested |
 | Q3 | Is there a public mechanical benchmark with a validity gate? | CADGenBench README: STEP validity gate, then shape, interface, and topology. Scores not recomputed |
 | Q4 | Which electrical checks are non-interactive? | KiCad 9 and 10 CLI docs: `sch erc` and `pcb drc` with exit code 0 or 5. Not run |
-| Q5 | Which open weights are specialist CAD or HDL models with a stated size? | RTLCoder and CAD-Recode have sourced sizes. Other local VRAM figures are unknown |
+| Q5 | Which open weights are specialist CAD or HDL models with a stated size? | RTLCoder and CAD-Recode have sourced sizes. Qwen2.5-Coder and Qwen2.5-VL-7B weight-file bytes are in [models](catalog/models.md). Runtime peaks remain unknown |
 | Q6 | Where do mechanical and electrical models meet? | URDF, SRDF, SDF, and JITX mechanical skill names; STEP export; KiCad 3D export named in MCP tool lists. No joint project was built |
 | Q7 | Which papers release code, and which defer it? | See the artifacts column in [papers](catalog/papers.md). Several 2026 simulation papers say release is later |
 | Q8 | What can a 24 GB-class machine run, without assuming a GPU is attached? | Only figures a paper or file listing states. See [models](catalog/models.md) |
-| Q9 | Which GD&T, CAM, power-electronics, and instrument agents are real? | Named. Bodies and results mostly unread. See [open questions](open-questions.md) |
+| Q9 | Which GD&T, CAM, power-electronics, and instrument agents are real? | CAM tool names, the drawing skill, ngspice `.ac`, and the pyvisa-mcp tool table were read. A GD&T frame checker and a combined power-and-firmware loop remain open |
 | Q10 | Do commercial MCP servers list a fixed tool schema? | Fusion help says tools are dynamic. Onshape FeatureScript MCP tools were not enumerated from a schema file |
 
 ## Market split observed in sources

@@ -67,4 +67,4 @@ taken from a simulation.
 - Whether `export_3d` writes STEP, WRL, or both.
 - A public electromechanical benchmark with both DRC and interference
   scores. None was opened.
-- Control firmware in the loop. PlatformIO MCP behavior is unread.
+- Control firmware in the loop. platformio-mcp's README documents `build`, `flash`, and `monitor`, with approval left to a person. No board was used, and no combined electrical and mechanical run was done.

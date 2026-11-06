@@ -96,6 +96,33 @@ atopile `v0.12.5`, kicad-mcp-pro `kicad-mcp-gui-v4.7.0`, SolidCraft
 - <https://tscircuit.com/>
 - <https://devbisme.github.io/skidl/pages/third-party-tools.html>
 
+## Refinement, same day
+
+- Qwen2.5-Coder GGUF and AWQ files and the Qwen2.5-VL-7B-Instruct
+  config and safetensors listing on Hugging Face. Byte sizes are HTTP
+  `Content-Length` or the tree API `size` field.
+- Qwen2.5-Coder README:
+  <https://github.com/QwenLM/Qwen2.5-Coder>
+- Qwen vLLM memory table (original Qwen, not 2.5):
+  <https://github.com/QwenLM/Qwen/blob/main/recipes/inference/vllm/README.md>
+- OpenLLM Qwen2.5 requirement column:
+  <https://qwen.readthedocs.io/zh-cn/latest/deployment/openllm.html>
+- <https://github.com/JasonShiii/STEP-LLM> and
+  `JasonShiii/step-llm-qwen3b` `adapter_model.safetensors`
+- <https://github.com/csml-rpi/Foam-Agent> README and release `v2.2.0`
+- <https://github.com/tangency-labs/solidcraft/blob/main/docs/mcp.md>
+- <https://github.com/earthtojake/text-to-cad/blob/main/skills/engineering-drawing/SKILL.md>
+- <https://github.com/shinobi81/fusion360-mcp-server/blob/main/docs/TOOLS.md>
+- <https://github.com/jl-codes/platformio-mcp> README
+- <https://github.com/abhinav937/pyvisa-mcp> README
+- <https://github.com/YosysHQ/yosys> v0.70 and the synth example
+- <https://github.com/YosysHQ/nextpnr> README, tag `nextpnr-0.11.1`
+- <https://github.com/The-OpenROAD-Project/OpenROAD-flow-scripts> README
+- ngspice manual:
+  <https://ngspice.sourceforge.io/docs/ngspice-html-manual/manual.xhtml>
+  section 11.3.1
+- python-control 0.10.2 `control.margin`
+
 ## Papers and datasets
 
 Identifiers and URLs are in [papers](catalog/papers.md). Hugging Face

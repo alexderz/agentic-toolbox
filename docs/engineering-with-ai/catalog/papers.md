@@ -110,12 +110,12 @@ ones the source itself states, plus gaps this pass did not close.
 
 | Field | Value |
 | --- | --- |
-| URL | <https://arxiv.org/html/2601.12641> |
-| Date | arXiv 2601.12641 |
-| Task | Fine-tune an LLM to emit STEP text. About 40,000 STEP-caption pairs. DFS reserialization, retrieval, then a Chamfer-distance reward |
-| Reported | Paper: higher geometric fidelity than a Text2CAD baseline. Tables not copied |
-| Artifacts | A public checkpoint URL was not confirmed (G8) |
-| Limits | STEP is cross-referenced text. The paper's own motivation is that autoregressive models struggle with that structure |
+| URL | Paper <https://arxiv.org/abs/2601.12641>. Proceedings PDF linked from the README: <https://past.date-conference.com/proceedings-archive/2026/DATA/1319.pdf>. Code <https://github.com/JasonShiii/STEP-LLM> |
+| Date | README badge: DATE 2026. Repository created 2025-12-15. `pushed_at` 2026-08-21. 35 stars. MIT for the code |
+| Task | Fine-tune Llama-3.2-3B-Instruct or Qwen2.5-3B to emit ISO 10303-21 STEP. Model card: about 20,000 STEP files with 0 to 500 entities. README: captions from GPT-4o on ABC, DFS reorder, optional RAG |
+| Reported | Paper HTML, earlier pass: higher geometric fidelity than a Text2CAD baseline. Tables not copied and not rerun |
+| Artifacts | Three LoRA adapters, not full models. Hugging Face: `JasonShiii/step-llm-llama3b`, `step-llm-llama3b-no_rag`, `step-llm-qwen3b`. `adapter_model.safetensors` on the Qwen repo is 119,801,528 bytes. README and model card say about 150 MB each. RAG and no-RAG adapters use different prompts and are not interchangeable. A no-RAG Qwen adapter is not released. Qwen2.5-3B's Hugging Face card license is `qwen-research`, which the model card contrasts with Apache-2.0 on other Qwen2.5 sizes. Llama adapters point at a gated base |
+| Limits | Model card: context cap 16,384 tokens, numeric error from tokenization, dimensions may miss the prompt, not for unvalidated production use. Runtime memory of a loaded adapter plus base was not measured |
 
 ### OmniMech
 
@@ -139,12 +139,12 @@ stars, MIT, `pushed_at` 2026-11-04. Paper, if any, was not opened.
 
 | Field | Value |
 | --- | --- |
-| URL | <https://arxiv.org/html/2509.18178v2> |
-| Date | arXiv 2509.18178 version 2 |
-| Task | Multi-agent OpenFOAM CFD. The HTML describes an MCP split into meshing, solving, and post-processing, with `case_id` and `job_id` |
-| Reported | Not extracted |
-| Artifacts | No repository returned by the GitHub search used in this pass (G12) |
-| Limits | OpenFOAM case correctness was not checked |
+| URL | Paper <https://arxiv.org/abs/2509.18178>. Code <https://github.com/csml-rpi/Foam-Agent> |
+| Date | arXiv v1 2025-09-17, v2 2025-09-30. Repository MIT, copyright 2025 Ling Yue. Latest release `v2.2.0` published 2026-11-01. API on 2026-11-06: 363 stars, `updatedAt` 2026-11-05 |
+| Task | Natural language or an existing case to an OpenFOAM run. MCP tools in the README: `plan`, `input_writer`, `run`, `review`, `apply_fixes`, `run_case`, `visualization`. Default target Foundation OpenFOAM v10. `FOAMAGENT_OPENFOAM_TARGET=esi-v2006` selects ESI/OpenCFD v2006. `FOAMAGENT_OPENFOAM_FORK=esi` is a separate legacy translation and does not select v2006 |
+| Reported | Paper abstract: 88.2% on 110 tasks with Claude 3.5 Sonnet, against 55.5% for MetaOpenFOAM. README on the fetched page: FoamBench 110 tasks, 100% with Claude Opus 4.6. Both figures are author-reported, on different models, and were not rerun. They are not one result |
+| Artifacts | Docker images named `leoyue123/foamagent` and `leoyue123/foamagent:v2.0.0`. Claude skill path `.claude/skills/foam.md`. Command `foamagent-mcp` |
+| Limits | README: shared code between the two OpenFOAM targets is not a guarantee that every solver succeeds. Gmsh and HPC routing are described as CLI-graph paths, while `run` is local-only |
 
 ### AutoSiMP
 

@@ -76,20 +76,23 @@ EDA Corpus supplies prompt and script pairs under CC-BY-4.0. OpenROAD
 Agent's abstract reports 94% on its script tasks and says the model is
 open. The download URL was not opened.
 
-Place-and-route CLIs (Yosys, nextpnr, OpenROAD's own shell) were not
-copied. See open question G14.
+Yosys `v0.70`, nextpnr `0.11.1`, and the OpenROAD-flow-scripts `make`
+line are copied in [FPGA, CAE, CAM, and control](fpga-cae-control.md).
+G14 is closed. The Yosys getting-started page names
+`verilator --lint-only` as a step before synthesis. The Verilator
+manual itself was not opened, so no Verilator flag beyond that one
+command is recorded.
 
 ## Embedded
 
-`jl-codes/platformio-mcp` is MIT, 54 stars, and the API description is
-empty. Do not infer build, flash, or serial behavior from the name.
-`powerdragonfire/platformio.mcp` describes those actions and was not
-read. No board was flashed.
+`jl-codes/platformio-mcp` documents `build`, `flash`, and `monitor`,
+plus the `agent_*` tools listed in [electrical](../catalog/electrical.md).
+The README says approval of risky operations stays with a person. No
+board was flashed. `powerdragonfire/platformio.mcp` was not read.
 
 ## Instruments
 
-`abhinav937/pyvisa-mcp` describes VISA discovery and control. The README
-was not opened. This survey did not send SCPI, did not change a
-instrument configuration, and does not list a safe command set.
-A later pass can document read-only identification queries from the
-README after it is read.
+`abhinav937/pyvisa-mcp` lists the tools in the electrical catalog.
+Writes are allowed for the dialects the README names, and blocked for
+other identities until `unlock_writes` with `confirm=true`. This survey
+did not send SCPI and did not open an instrument.

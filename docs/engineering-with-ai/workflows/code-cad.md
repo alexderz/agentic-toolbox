@@ -50,18 +50,21 @@ None of these was wired together in this survey.
 
 ## Drawings
 
-text-to-cad lists `skills/engineering-drawing/SKILL.md`. The body was
-not read, so this page does not state which views or GD&T symbols it
-emits. OmniMech is a paper benchmark for dimensioned drawings, and its
-data was not public on the HTML that was read.
+`skills/engineering-drawing/SKILL.md` was read. It writes one PDF from
+a build123d shape: third-angle top, front, and right, plus an isometric
+when requested, with hole callouts and numeric `tol=` or `fit=`. It
+states that sections, detail views, and auxiliary views are absent, and
+that a dimension without a tolerance argument is nominal. It does not
+describe a GD&T feature-control frame. OmniMech remains a paper
+benchmark whose data release was not confirmed.
 
 ## CAM
 
-A STEP file is the input to CAM, not a toolpath. The Fusion community
-MCP README names setup, operation, and post tools. text-to-cad lists a
-`gcode` skill. Neither path was read far enough to state a post
-processor or a stock setup. Record those as unknown until the tool
-schema is opened.
+A STEP file is the input to CAM, not a toolpath. Fusion community
+`docs/TOOLS.md` names `cam_create_setup`, `cam_create_operation`,
+`cam_generate_toolpath`, and `cam_post_process`. Post-process requires
+a full `.cps` path. The text-to-cad `gcode` skill body is still unread,
+so this page does not state a post processor from that skill.
 
 ## Specialist models on the same artifact
 
@@ -70,7 +73,7 @@ schema is opened.
 | Text2CAD | CAD command sequence | Rebuild the sequence in a kernel that understands that sequence. The paper uses the DeepCAD representation |
 | CAD-Recode | CadQuery Python | Execute it. The license on the weights is CC BY-NC 4.0 |
 | BrepGen | B-rep sample | Load the sample. License file forbids commercial use |
-| STEP-LLM | STEP text | Parse as STEP. Public weights were not confirmed |
+| STEP-LLM | STEP text from a LoRA adapter on Llama-3.2-3B-Instruct or Qwen2.5-3B | Parse as STEP. Full merged weights are not in the release. The Qwen adapter file is 119,801,528 bytes |
 
 A tool-driver that writes build123d and a specialist that emits a
 sequence can be compared only after both produce a solid the same
