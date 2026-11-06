@@ -31,3 +31,11 @@ the linked page.
 | G23 | open | Independent reproduction of published scores | Still not run, on purpose |
 | G24 | open | gitcad and NativeCAD | Not built |
 | G25 | open | Amagine3D and Multi-Agent CAD kernels | READMEs still not opened |
+| H1 | open | Are `u/Ambitious_Split_6670` and GitHub `earthtojake` the same person? | The indexed Reddit post links the repository. No profile page was fetched |
+| H2 | open | Reddit author of the claude-cad post | The index did not print a username, and the JSON URL returned 403 |
+| H3 | open | Backplane maintainer names | README says electrical engineers and does not name a person in the section read |
+| H4 | open | VibeCAD 0.10.1 versus the GitHub push of 2026-08-21 | PyPI describes 0.10.1. The default-branch skill already says 39 tools. Tag versus package was not diffed |
+| H5 | open | ProtoForge ERC and DRC logs | The skill names the commands. No log file was in the paths opened |
+| H6 | open | Remaining MetaForge and Backplane skill bodies | 2 of 263 MetaForge skills and 2 Backplane skills were opened |
+| H7 | open | Public X posts about these harnesses | One `search_posts_all` call returned `client-forbidden` / `user-not-enrolled`. It was not retried |
+| H8 | open | 3DCodeVerse skill behavior | Twenty paths are listed. Bodies were not opened |

@@ -123,6 +123,23 @@ atopile `v0.12.5`, kicad-mcp-pro `kicad-mcp-gui-v4.7.0`, SolidCraft
   section 11.3.1
 - python-control 0.10.2 `control.margin`
 
+## Harness pass, same day
+
+GitHub contents and trees: `0oKevino0/claude-cad`,
+`jmwright/cadquery-llm-skill`, `ashishmgupta1005-blip/ProtoForge`,
+`nickkraakman/skidl-skills`, `wangtao9090/VibeCAD`,
+`BackplaneWorks/Backplane`, `FidelOdok/MetaForge`,
+`rawwerks/VibeCAD`, `10-X-eng/vibecad`, `gaoypeng/3dcodeverse`,
+`colaco1123/K-AI`, `circuit-synth/circuit-synth`,
+`circuit-synth/kicad-sch-api`.
+
+Hacker News items via Algolia: 49327458, 49062621, 49573391.
+
+PyPI: <https://pypi.org/project/vibecad/>.
+
+X `search_posts_all` returned `client-forbidden`. No post from that
+call is used.
+
 ## Papers and datasets
 
 Identifiers and URLs are in [papers](catalog/papers.md). Hugging Face

@@ -75,3 +75,16 @@ binary GiB (bytes / 2^30). Hugging Face `usedStorage` for
 `Qwen2.5-Coder-7B-Instruct` is 15,231,271,864 bytes, which is 15.231 GB
 and 14.185 GiB. The VL-7B BF16 figure that had been rounded to 15.446
 GiB is 15.445 GiB.
+
+## 2026-11-06 — Skill packs and creator harnesses
+
+Searched GitHub trees, Hacker News items, and indexed Reddit posts for
+people describing a CAD or circuit agent loop. Opened `SKILL.md` files
+for claude-cad, VibeCAD's agent skill, Backplane's schematic skill,
+two MetaForge skills, ProtoForge, SKiDL `new-circuit`, and the CadQuery
+LLM skill. Wrote [harnesses](harnesses.md) and
+[skill packs](catalog/skill-packs.md).
+
+Did not install any skill or server. Public X search returned
+`client-forbidden` and was not retried. Reddit JSON returned 403, so
+those dates and handles stay labeled as search-index text.

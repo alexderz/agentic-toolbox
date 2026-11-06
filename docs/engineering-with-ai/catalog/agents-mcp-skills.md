@@ -19,8 +19,11 @@ These clients appear in official setup pages. None was configured here.
 | Gemini CLI | kicad-mcp-pro tree under `integrations/gemini-cli/` | Copied skills |
 | LM Studio | blwfish FreeCAD MCP README | Author smoke test of MCP with named local models |
 
-A harness in this table does not contain a geometry kernel. It hosts
-the tool-driver loop.
+A client in this table does not contain a geometry kernel. It hosts
+the tool-driver loop. Published CAD and circuit loops, and the posts
+by the people who described building them, are in
+[harnesses](../harnesses.md). A comparison of the skill packs is in
+[skill packs](skill-packs.md).
 
 ## Skill packs with a tree count
 
