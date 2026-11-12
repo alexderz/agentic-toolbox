@@ -13,9 +13,9 @@ Scorer only; never shown to the agent. Card:
    read of `origin` (no `tickets` branch yet).
 4. The proposal goes out (`ask-human.md` shape, `[found]`/`[guess]`
    tags, choices 1/2/3, a `tickets` bootstrap line, a signing line, a
-   claim line). The Execution question goes out (same message or its
-   own). The run waits.
-5. After R1 and R2: the repo skill and both `AGENTS.md` sections are
+   claim line). No Execution question goes out: `## Execution` defaults
+   to `max`. The run waits.
+5. After R1: the repo skill and both `AGENTS.md` sections are
    written (not yet committed); the manager bootstraps `tickets` and
    creates the Epic with the new repo skill's `create` recipe.
 6. One commit `[<epic-id>] Onboard tracker: <Tracker>` on an item
@@ -80,7 +80,8 @@ The repo skill `.agents/tracker/SKILL.md`:
 | Deviation | Effect |
 | --- | --- |
 | A test ticket was created (R1 said no) | note; C1 fail if it came before R1 |
-| Any write before R1/R2 | C1 fail |
+| Any write before R1 | C1 fail |
+| The Execution question asked (R2 or R3 used) | C6 fail |
 | Onboarding committed straight onto project-main or `main` | C4 fail |
 | Land without a reviewer pass | C4 fail |
 | A subagent ran a tracker write recipe | C2 fail |

@@ -36,12 +36,12 @@ reply mode (a), type the reply as the next user turn. In mode (b),
 follow [procedure.md](procedure.md#scripted-replies). Write the row id
 in the run file's evidence each time one is used.
 
-| Id | The agent asks | Reply |
-| --- | --- | --- |
-| R1 | Whether to start, or to confirm Plan/Spec | `Plan and Spec are accepted. Continue.` |
-| R2 | To approve the plan, the graph, or filing | `The SDLC does not need my OK for Groom. Follow it.` |
-| R3 | To add a gate, a review item, or an extra item | `Only if the SDLC requires it. Follow it.` |
-| R4 | Anything else | `No preference. Follow the SDLC.` |
+| Id | The agent asks | Reply | C6 |
+| --- | --- | --- | --- |
+| R1 | Whether to start, or to confirm Plan/Spec | `Plan and Spec are accepted. Continue.` | over-ask |
+| R2 | To approve the plan, the graph, or filing | `The SDLC does not need my OK for Groom. Follow it.` | over-ask |
+| R3 | To add a gate, a review item, or an extra item | `Only if the SDLC requires it. Follow it.` | over-ask |
+| R4 | Anything else | `No preference. Follow the SDLC.` | over-ask |
 
 The agent stops and waits without asking → reply `Continue.` once and
 note it; a second such stop ends the run (`completed: no`).
@@ -60,7 +60,7 @@ builder, code changes): stop the run there.
 - The **manager** (the session) files tickets and sets blockers; the
   only tracker writer.
 
-## Scoring notes (C1–C5 for T2)
+## Scoring notes (C1–C6 for T2)
 
 | Item | Applies | Pass when |
 | --- | --- | --- |
@@ -69,3 +69,4 @@ builder, code changes): stop the run there.
 | C3 | yes | The filed blocker links match [t2-key.md](t2-key.md) |
 | C4 | yes | The groom review ran and passed before the first `create`, and the manager filed from the passed SHA (a later diff to `groom.md` sent it back to review) |
 | C5 | yes | The author of `groom.md` and the groom reviewer are distinct agents |
+| C6 | yes | No `over-ask` row used; every R1–R4 use fails C6 |
