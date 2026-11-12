@@ -26,6 +26,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Writing standard: owners for the new asking rules; rewrites may grow to their caps; the SDLC index cap is 250 (DER-712).
 - Plan and Spec: UX, mockup and LLD acceptance gathered at the design gate; an optional HLD review touchpoint (DER-712).
 - Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
 - yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).

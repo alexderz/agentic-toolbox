@@ -21,8 +21,7 @@ Parallelism: max
 
 ## Evals
 
-Agent text: `AGENTS.md`, `skills/sdlc/SKILL.md`, `skills/sdlc/references/`, `skills/sdlc/references/intake.md`,
-`skills/`.
+Agent text: `AGENTS.md`, `skills/` (the SDLC is `skills/sdlc/`).
 
 1. A PR into `main` that changes agent text gets an eval run before it
    merges: T1–T3 on the PR's head, three repeats per task, on each model
