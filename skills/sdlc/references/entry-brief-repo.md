@@ -36,14 +36,18 @@ exists for this chunk. Do not implement in this step: write the brief.
    brief. Read the skill, or pack it into the gatherer prompt. Never
    copy or paraphrase its loop here; link the skill, because it will
    change.
-2. **Refine.** The refiner, a different subagent from the gatherer,
-   loads `yagni`. It questions necessity and makes the brief less stupid
-   and simpler. It works from first principles: the dump and looked-up
-   facts, not a product template.
-3. A requirement dies, or a new unresolved point appears → return to
-   Gather with the delta. Resume the gatherer.
-4. Repeat 1–3 until the operator confirms a brief that Refine did not
-   send back.
+2. **Refine.** The refiner, a different subagent from the gatherer, runs
+   [`discover-the-idea` Refine](../../discover-the-idea/SKILL.md#refine). It loads no `yagni`. It works from
+   first principles: the dump and looked-up facts, not a product template.
+3. **manager**: Refine returns `back to Gather` → resume the gatherer with the delta, then run step 2 again.
+4. **manager**: Refine returns `buildable` → run the `tracker-sdlc` setup check. It fails, and the asks file
+   holds no tracker proposal yet → run `sdlc-onboarding` as its When table says.
+5. **manager**: raise the brief confirmation, each standing permission, the release permission and the HLD
+   review choice as asks of their own ([Raising an ask](liaison.md#raising-an-ask)). The **liaison** sends every
+   open ask as touchpoint 1 ([Touchpoints](../SKILL.md#touchpoints)).
+6. **manager**: the brief confirmation's answer is a correction → resume the gatherer with it, then step 2. It
+   confirms → End of chunk Brief. Asks left open block only their dependents
+   ([While a question is open](../SKILL.md#while-a-question-is-open)).
 
 Gatherer and refiner ids: [Step agents](subagents.md#step-agents).
 No language skill on a gather- or refine-only turn:
@@ -53,11 +57,15 @@ Write Plan from the confirmed brief, never from a raw dump.
 
 End of chunk Brief:
 
-1. Cut project-main `integrate/<chunk-slug>`. Source:
-   [Branches](branches-and-lands.md#branches).
-2. Run the `tracker-sdlc` setup check. It fails → load
-   [`sdlc-onboarding`](../../sdlc-onboarding/SKILL.md), which
-   writes the tracker files first.
+1. Cut project-main `integrate/<chunk-slug>`. Source: [Branches](branches-and-lands.md#branches). Commit the
+   chunk's `brief.md`, `rulings.md` and `asks.md` on it. The confirmed brief is frozen from here: only the
+   **manager** changes `brief.md`, on project-main, to apply an operator answer; the commit cites the ask id,
+   and a ruling records the change (GR18). The operator changes the brief in chat → the **liaison** first
+   records it as an answered ask.
+2. The setup check failed at chunk Brief step 4 → run [`sdlc-onboarding`](../../sdlc-onboarding/SKILL.md)
+   Write on the answer to the tracker proposal. It writes the tracker files first. No answer yet → each
+   tracker write below waits for it. No setup check ran at chunk Brief, because the chunk entered here with a
+   confirmed brief → run it now; it fails → run `sdlc-onboarding` as its When table says.
 3. Get the Epic (`backlog`):
    - The chunk arrived as a tracker ticket → use that ticket as the
      Epic. Never file a duplicate. Its type is not Epic → ask the operator
@@ -70,8 +78,9 @@ End of chunk Brief:
       **reviewer**, and **security** read of the repo skill. Never land
       a bare commit.
    4. Land it on project-main.
-5. **manager** posts the Entry classification on the Epic with
-   `tracker-sdlc` `comment`.
+5. **manager** posts the Entry classification and the path and commit
+   of the confirmed brief, which holds the standing permissions, on the
+   Epic with `tracker-sdlc` `comment`.
 
 ### Item brief
 
@@ -112,8 +121,9 @@ Brief.
    | Condition | Action |
    | --- | --- |
    | The two fixes would look the same to a user, and neither is a plan change | The step 3 pick stands. |
-   | The operator already wrote that they are AFK, headless, or autonomous | Apply the AFK pick in [Asking the operator](../SKILL.md#asking-the-human). |
-   | Otherwise | Ask the operator. The wait blocks this issue only; other items proceed: [Asking the operator](../SKILL.md#asking-the-human). |
+   | The two fixes differ only in two-way how-choices, and neither is a plan change ([Asking the operator](../SKILL.md#asking-the-human)) | The step 3 pick stands. Log a ruling. |
+   | The picked fix removes a part of the HLD | Escalate it at the Item rung: [Escalation](../SKILL.md#escalation). |
+   | Otherwise | Raise a "theirs" ask ([Raising an ask](liaison.md#raising-an-ask)). The wait blocks this issue only; other items proceed. |
 
 Contrarian id: [Step agents](subagents.md#step-agents). Use only the
 roles in [Roles](../SKILL.md#roles).

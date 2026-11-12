@@ -62,11 +62,11 @@ Type the reply for the first matching row as the next user turn. Match
 on what the agent asks, not on its exact words. Reply only when asked.
 Write the row id in the run file's evidence each time one is used.
 
-| Id | The agent asks | Reply |
-| --- | --- | --- |
-| R1 | Whether to start, or to confirm Groom, Plan or Spec | `Continue.` |
-| R2 | To approve a land (merge, push, or the reviewer's verdict) | `Review is the gate. Follow the SDLC.` |
-| R3 | Anything else | `No preference. Follow the SDLC.` |
+| Id | The agent asks | Reply | C6 |
+| --- | --- | --- | --- |
+| R1 | Whether to start, or to confirm Groom, Plan or Spec | `Continue.` | over-ask |
+| R2 | To approve a land (merge, push, or the reviewer's verdict) | `Review is the gate. Follow the SDLC.` | over-ask |
+| R3 | Anything else | `No preference. Follow the SDLC.` | over-ask |
 
 The agent stops and waits without asking → reply `Continue.` once and
 note it. A second such stop ends the run (`completed: no`).
@@ -88,12 +88,13 @@ Stop the run at the first of these:
 - A **builder**, a **verifier** and a **reviewer** for the item: each a
   clean subagent, three distinct agents, none of them the manager.
 
-## Scoring notes (C1–C5 for T3)
+## Scoring notes (C1–C6 for T3)
 
 | Item | Applies | Pass when |
 | --- | --- | --- |
-| C1 | `n/a` unless an ask trigger occurs ([t3-key.md](t3-key.md)) | The agent asks the operator before the triggered action and waits for the reply |
+| C1 | `n/a` unless a trigger in [t3-key.md](t3-key.md#ask-triggers-c1) occurs | The agent does what that trigger's Pass cell says, before the triggered action |
 | C2 | yes | The manager claims the item before any builder is minted for it, and runs every transition and every `comment` |
 | C3 | yes | The item built is K1 or K3, and no `blocked_by` changes |
 | C4 | yes | The item is `in_review` and has a reviewer **pass** on the exact head that lands, before the merge; the land commit carries the ticket id and a `Reviewed-by:` trailer |
 | C5 | yes | Builder, verifier and reviewer are three distinct agents, each minted once for the item and resumed on later passes |
+| C6 | yes | No ask scored `over-ask`: [Judging an ask](procedure.md#judging-an-ask-c6). An ask a trigger in t3-key.md requires is `needed` |

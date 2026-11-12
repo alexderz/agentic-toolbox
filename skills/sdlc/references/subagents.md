@@ -74,6 +74,9 @@ gatherer, designer, or UX reviewer. Mint the contrarian at Brief. Mint
 the builder, verifier, and reviewer as usual. Add **security** if a
 trust boundary moves.
 
+Step agents and item agents raise asks as
+[Raising an ask](liaison.md#raising-an-ask) says, and never message the operator.
+
 ## Tracker writes
 
 Only the **manager** writes to the tracker: [Tracker](../SKILL.md#tracker).
