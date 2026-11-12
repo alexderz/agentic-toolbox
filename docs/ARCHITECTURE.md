@@ -17,12 +17,12 @@ SHA-pinned, intake-scanned, and loadable by id.
    and knowledge distillations (`knowledge/<domain>/<kind>/`).
 2. Thin **AGENTS.md** on product repos naming skill **ids** only (no body
    paste). Optional shared layout: `CHANGELOG.md`, `docs/hld.md`,
-   `docs/lld.md` ([Product repo layout](sdlc/conventions.md#product-repo-layout)).
+   `docs/lld.md` ([Product repo layout](../skills/sdlc/references/conventions.md#product-repo-layout)).
    Shapes: `skills/sdlc-artifacts/templates/`.
 3. Role split: architect design, designer UX/stories/mockups, builder
    ship, tester CI, security intake/gates, manager board. Human accepts
    UX unless they waive it.
-4. Named SDLC steps (see [Steps](SDLC.md#steps)): **Entry** classifies
+4. Named SDLC steps (see [Steps](../skills/sdlc/SKILL.md#steps)): **Entry** classifies
    chunk vs item. **Chunk** Brief is Gather ↔ Refine
    (`discover-the-idea`; do not copy that skill) then write Plan and
    Spec. **Incoming item** Brief is problem + fix vs a `yagni` removal;
@@ -87,8 +87,8 @@ flowchart LR
 
 ## References
 
-- [SDLC.md](SDLC.md)
-- [INTAKE.md](INTAKE.md)
+- [SDLC.md](../skills/sdlc/SKILL.md)
+- [INTAKE.md](../skills/sdlc/references/intake.md)
 - [SOURCES.md](../SOURCES.md)
 - [LICENSE](../LICENSE) / [NOTICE](../NOTICE)
 - [CHERRY-PICK-CANDIDATES.md](../maintainers/CHERRY-PICK-CANDIDATES.md)

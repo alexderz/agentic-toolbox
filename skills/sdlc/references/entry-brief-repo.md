@@ -14,7 +14,7 @@ The classification line goes on the ticket at Brief.
 1. You cannot tell which row fits → take a short look: can you
    reproduce it? Does the fix need a design choice? Then classify again.
 2. Still unclear → ask the operator, as
-   [Asking the operator](../SDLC.md#asking-the-human) says.
+   [Asking the operator](../SKILL.md#asking-the-human) says.
 
 Do not implement at Entry: classify, or ask. Never use the item path to
 avoid talking to the operator, or someone the operator names in
@@ -31,7 +31,7 @@ Gather ↔ Refine. Skip this loop only when a confirmed brief already
 exists for this chunk. Do not implement in this step: write the brief.
 
 1. **Gather.** Load
-   [`discover-the-idea`](../../skills/discover-the-idea/SKILL.md). That
+   [`discover-the-idea`](../../discover-the-idea/SKILL.md). That
    skill owns the interview, environment facts, options map, and the
    brief. Read the skill, or pack it into the gatherer prompt. Never
    copy or paraphrase its loop here; link the skill, because it will
@@ -47,7 +47,7 @@ exists for this chunk. Do not implement in this step: write the brief.
 
 Gatherer and refiner ids: [Step agents](subagents.md#step-agents).
 No language skill on a gather- or refine-only turn:
-[`language-router` Never](../../skills/language-router/SKILL.md#never).
+[`language-router` Never](../../language-router/SKILL.md#never).
 
 Write Plan from the confirmed brief, never from a raw dump.
 
@@ -56,7 +56,7 @@ End of chunk Brief:
 1. Cut project-main `integrate/<chunk-slug>`. Source:
    [Branches](branches-and-lands.md#branches).
 2. Run the `tracker-sdlc` setup check. It fails → load
-   [`sdlc-onboarding`](../../skills/sdlc-onboarding/SKILL.md), which
+   [`sdlc-onboarding`](../../sdlc-onboarding/SKILL.md), which
    writes the tracker files first.
 3. Get the Epic (`backlog`):
    - The chunk arrived as a tracker ticket → use that ticket as the
@@ -112,11 +112,11 @@ Brief.
    | Condition | Action |
    | --- | --- |
    | The two fixes would look the same to a user, and neither is a plan change | The step 3 pick stands. |
-   | The operator already wrote that they are AFK, headless, or autonomous | Apply the AFK pick in [Asking the operator](../SDLC.md#asking-the-human). |
-   | Otherwise | Ask the operator. The wait blocks this issue only; other items proceed: [Asking the operator](../SDLC.md#asking-the-human). |
+   | The operator already wrote that they are AFK, headless, or autonomous | Apply the AFK pick in [Asking the operator](../SKILL.md#asking-the-human). |
+   | Otherwise | Ask the operator. The wait blocks this issue only; other items proceed: [Asking the operator](../SKILL.md#asking-the-human). |
 
 Contrarian id: [Step agents](subagents.md#step-agents). Use only the
-roles in [Roles](../SDLC.md#roles).
+roles in [Roles](../SKILL.md#roles).
 
 ## Repo
 
@@ -126,7 +126,7 @@ Before Plan, make sure each exists; set up what is missing:
    says so.
 2. A README or AGENTS stub, so agents who need access are aware. Layout:
    [Product repo layout](conventions.md#product-repo-layout). Stub
-   template: [`agents-stub.md`](../../skills/sdlc-artifacts/templates/agents-stub.md).
+   template: [`agents-stub.md`](../../sdlc-artifacts/templates/agents-stub.md).
 3. The repo has CI or hooks → a **tester** watch on it.
 4. Designs live in git from onset:
    [Designs in git](conventions.md#designs-in-git).

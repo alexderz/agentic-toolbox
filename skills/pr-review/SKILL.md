@@ -13,10 +13,10 @@ Aligns with SDLC **Review**: review **before the item lands on
 project-main** (or trunk if there is no project-main). Review is an
 explicit gate: internal lands are local merges with no PR, and that
 does not skip it; PRs are only for outside or remote workers. See
-[Review](../../docs/sdlc/build-review.md#review) and
-[Project-main](../../docs/sdlc/branches-and-lands.md#project-main).
+[Review](../sdlc/references/build-review.md#review) and
+[Project-main](../sdlc/references/branches-and-lands.md#project-main).
 Builder, verifier and reviewer are distinct; mint, then resume:
-[Item agents](../../docs/sdlc/subagents.md#item-agents).
+[Item agents](../sdlc/references/subagents.md#item-agents).
 
 ## Iron law
 
@@ -32,7 +32,7 @@ Builder, verifier and reviewer are distinct; mint, then resume:
    link, base/head SHAs, standards sources (`AGENTS.md`,
    `CODING_STANDARDS.md`, CONTRIBUTING). Not the builder transcript.
    **Later rounds:** resume the same reviewer and send the new range; see
-   [Item agents](../../docs/sdlc/subagents.md#item-agents).
+   [Item agents](../sdlc/references/subagents.md#item-agents).
 3. **Two axes, separate:**
    - **Standards** — repo conventions + judgement smells (see baseline). Documented repo rules override smells.
    - **Spec** — ticket/LLD/acceptance: missing, wrong, or scope creep. Quote the requirement.

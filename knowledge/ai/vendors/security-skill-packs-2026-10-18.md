@@ -22,7 +22,7 @@ are first-party and are not part of this catalog.
 ## When to read
 
 Read this before you look for a third-party security skill, before
-you propose one for [intake](../../../docs/INTAKE.md), or when an
+you propose one for [intake](../../../skills/sdlc/references/intake.md), or when an
 operator asks what public red-team or blue-team packs exist. Open the
 live repository before you rely on any number here.
 
@@ -108,7 +108,7 @@ server, an Action, or a scanner rather than `SKILL.md` content.
 | PentestGPT | <https://github.com/GreyDGL/PentestGPT> | GreyDGL (user) | Penetration-testing agent framework | 16.0k stars; last push 2026-07-14 |
 | hexstrike-ai | <https://github.com/0x4m4/hexstrike-ai> | 0x4m4 (user) | MCP server that drives security tools | 12.9k stars; last push 2026-08-03 |
 | claude-code-security-review | <https://github.com/anthropics/claude-code-security-review> | Anthropic (org) | GitHub Action for security review of pull requests | 6.4k stars; last push 2026-02-11 |
-| skill-scanner | <https://github.com/cisco-ai-defense/skill-scanner> | Cisco AI Defense (org) | Scanner for agent skills; already named in [intake](../../../docs/INTAKE.md) | 2.6k stars; last push 2026-10-15 |
+| skill-scanner | <https://github.com/cisco-ai-defense/skill-scanner> | Cisco AI Defense (org) | Scanner for agent skills; already named in [intake](../../../skills/sdlc/references/intake.md) | 2.6k stars; last push 2026-10-15 |
 | pentest-ai | <https://github.com/0xSteph/pentest-ai> | 0xSteph (user) | Penetration-testing framework with agents and an MCP server; no `SKILL.md` | 1.7k stars; last commit 2026-10-07 |
 | claude-skills-security-guide | <https://github.com/RationalEyes/claude-skills-security-guide> | RationalEyes (user) | Threat taxonomy for skills as a supply chain | 13 stars; last push 2026-03-30 |
 
@@ -168,7 +168,7 @@ whole list, not its security entries.
 
 - Install a pack from this list with a marketplace command, `npx`, or
   a plugin add. Intake is clone, scan, pin, and rewrite:
-  [docs/INTAKE.md](../../../docs/INTAKE.md).
+  [skills/sdlc/references/intake.md](../../../skills/sdlc/references/intake.md).
 - Copy a `SKILL.md` body, payload list, or script from these packs
   into this repo.
 - Remint a pack as a skill id here, or read a star count as a

@@ -21,7 +21,7 @@ vendor intake. Ship them without secrets and without `scripts/`.
    skill-scanner, a **verified** obielin skillguard. **Verify the GitHub
    org** of the tool before you trust its binary or action. A matching
    name is not a clear.
-4. **Pin SHA in [SOURCES.md](../SOURCES.md) before the body.** Write the
+4. **Pin SHA in [SOURCES.md](../../../SOURCES.md) before the body.** Write the
    row first: upstream, SHA, license, notes. If the SHA cell is empty,
    land no body. For a first-party row, write `first-party` as the SHA.
 5. **Rewrite ≤250 lines + least privilege.** Compress the vendor

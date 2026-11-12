@@ -8,10 +8,10 @@ description: use this when about to claim work is complete, fixed, or passing â€
 Rewrite of obra/superpowers `verification-before-completion` @ `b36e0829`. Compress, not a paste. Id: `verify-before-done`.
 
 Notify only when the work is **landed+verified**: see SDLC
-[Definition of done](../../docs/sdlc/build-review.md#definition-of-done).
+[Definition of done](../sdlc/references/build-review.md#definition-of-done).
 
 The **proving command** is always re-run. Verifier mint, resume, and
-never the builder: see SDLC [Item agents](../../docs/sdlc/subagents.md#item-agents).
+never the builder: see SDLC [Item agents](../sdlc/references/subagents.md#item-agents).
 
 ## Iron law
 

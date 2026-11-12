@@ -5,9 +5,9 @@ Write, rewrite and review agent text to these rules. Source: DER-288
 
 ## Names
 
-- **Agent text** (`$AT`) — `AGENTS.md`, `docs/SDLC.md`, `docs/sdlc/`,
-  `docs/INTAKE.md`, `skills/`, `maintainers/AGENTS.md`, `maintainers/evals/`.
-- **Old** — `main` at 7a11696; **Old L**, a line in it. **SDLC index** — `docs/SDLC.md`.
+- **Agent text** (`$AT`) — `AGENTS.md`, `skills/sdlc/SKILL.md`, `skills/sdlc/references/`,
+  `skills/sdlc/references/intake.md`, `skills/`, `maintainers/AGENTS.md`, `maintainers/evals/`.
+- **Old** — `main` at 7a11696; **Old L**, a line in it. **SDLC index** — `skills/sdlc/SKILL.md`.
 - **Owner** — the one file that holds a rule. **Route** — one line
   elsewhere that names the rule and links the owner by path and anchor.
 - **Rule map** — per edited agent file: each old rule, its disposition,
@@ -44,9 +44,9 @@ roles and step names. Write the Use name, never the banned one:
    "never" names the allowed action beside it.
 8. Write imperative sentences, one instruction each. Hide no condition
    in a parenthesis. No metaphor. No self-deleting or dated conditions.
-9. Caps in lines: `SKILL.md` ≤250; SDLC index ≤200; `docs/sdlc/` files ≤150, except
+9. Caps in lines: `SKILL.md` ≤250; SDLC index ≤200; `skills/sdlc/references/` files ≤150, except
    `trunk-changelog-monthly.md` ≤80, `branches-and-lands.md` ≤120, `conventions.md`
-   ≤100; root `AGENTS.md` ≤100; `docs/INTAKE.md` ≤55; this file ≤150. `tracker-sdlc`
+   ≤100; root `AGENTS.md` ≤100; `skills/sdlc/references/intake.md` ≤55; this file ≤150. `tracker-sdlc`
    has a 150-line target: a goal, not a blocker; only its `SKILL.md` cap blocks
    (Q10). Caps and K1 apply to rewrites, not to the C1 move. Rewrites never grow,
    except `language-router`, `maintainers/AGENTS.md` and new files. If a cap needs a
@@ -58,27 +58,27 @@ roles and step names. Write the Use name, never the banned one:
 
 | Rule | Owner | Others route |
 | --- | --- | --- |
-| Roles; names `manager`, `trunk`, `project-main` | `docs/SDLC.md#roles`, `#names` | all |
-| Only the manager writes the tracker | `docs/SDLC.md#tracker` | `tracker-sdlc`, `sdlc-artifacts`, `AGENTS.md`, subagents |
-| Workers do not bypass security | `docs/SDLC.md#roles` | Build, subagents |
-| When to ask the operator; AFK pick between two item fixes | `docs/SDLC.md#asking-the-human` | skills; item Brief |
+| Roles; names `manager`, `trunk`, `project-main` | `skills/sdlc/SKILL.md#roles`, `#names` | all |
+| Only the manager writes the tracker | `skills/sdlc/SKILL.md#tracker` | `tracker-sdlc`, `sdlc-artifacts`, `AGENTS.md`, subagents |
+| Workers do not bypass security | `skills/sdlc/SKILL.md#roles` | Build, subagents |
+| When to ask the operator; AFK pick between two item fixes | `skills/sdlc/SKILL.md#asking-the-human` | skills; item Brief |
 | Ask message shape | `skills/sdlc-artifacts/templates/ask-human.md` | SDLC, no inline copy |
-| Branch source; incoming-item branch; project-main | `docs/sdlc/branches-and-lands.md#branches`, `#project-main` | `AGENTS.md`, Build, item Brief, Groom |
-| Serialized lands; land order; `done` after land and verify | `docs/sdlc/branches-and-lands.md#land-path` | `AGENTS.md`, Build, Groom, conventions |
-| Gatherer, refiner, designer, contrarian: ids, mint, resume | `docs/sdlc/subagents.md#step-agents` | Brief |
-| Builder, verifier, reviewer distinct; mint, resume | `docs/sdlc/subagents.md#item-agents` | Build, Review, `pr-review`, `verify-before-done` |
-| Pack vs point; workers | `docs/sdlc/subagents.md#spawn-prompts`, `#workers` | `AGENTS.md` |
-| Groom reviewer id | `docs/sdlc/groom-step.md#names` | copy dropped |
-| Notify only when landed and verified | `docs/sdlc/build-review.md#definition-of-done` | none; the old L1088 copy moves into the owner |
-| Designs in git from onset | `docs/sdlc/conventions.md#designs-in-git` | SDLC index, Repo |
-| UX review loop; operator acceptance | `docs/sdlc/plan-trial-spec.md#ux` | Plan, Spec |
-| Monthly is not the security gate | `docs/sdlc/trunk-changelog-monthly.md#monthly` | Spec, Review |
+| Branch source; incoming-item branch; project-main | `skills/sdlc/references/branches-and-lands.md#branches`, `#project-main` | `AGENTS.md`, Build, item Brief, Groom |
+| Serialized lands; land order; `done` after land and verify | `skills/sdlc/references/branches-and-lands.md#land-path` | `AGENTS.md`, Build, Groom, conventions |
+| Gatherer, refiner, designer, contrarian: ids, mint, resume | `skills/sdlc/references/subagents.md#step-agents` | Brief |
+| Builder, verifier, reviewer distinct; mint, resume | `skills/sdlc/references/subagents.md#item-agents` | Build, Review, `pr-review`, `verify-before-done` |
+| Pack vs point; workers | `skills/sdlc/references/subagents.md#spawn-prompts`, `#workers` | `AGENTS.md` |
+| Groom reviewer id | `skills/sdlc/references/groom-step.md#names` | copy dropped |
+| Notify only when landed and verified | `skills/sdlc/references/build-review.md#definition-of-done` | none; the old L1088 copy moves into the owner |
+| Designs in git from onset | `skills/sdlc/references/conventions.md#designs-in-git` | SDLC index, Repo |
+| UX review loop; operator acceptance | `skills/sdlc/references/plan-trial-spec.md#ux` | Plan, Spec |
+| Monthly is not the security gate | `skills/sdlc/references/trunk-changelog-monthly.md#monthly` | Spec, Review |
 | Which skill loads when | root `AGENTS.md` load table | SDLC skill table dropped |
 | Language map, load-with list, no-language turns | `skills/language-router/SKILL.md` | `AGENTS.md`, one row |
 | Skill inventory | `SOURCES.md` | `AGENTS.md`; SDLC skill table dropped |
-| Third-party intake | `docs/INTAKE.md` | `AGENTS.md`, `SOURCES.md` |
+| Third-party intake | `skills/sdlc/references/intake.md` | `AGENTS.md`, `SOURCES.md` |
 | Public-repo voice | root `AGENTS.md#public-repo` | `maintainers/AGENTS.md` |
-| `researcher` is not an SDLC role; "no ninth role" → "use only the roles in the table" | `docs/SDLC.md#roles` | root `AGENTS.md` Research row |
+| `researcher` is not an SDLC role; "no ninth role" → "use only the roles in the table" | `skills/sdlc/SKILL.md#roles` | root `AGENTS.md` Research row |
 
 ## Protected rules
 
@@ -88,7 +88,7 @@ any other change is an MQ. The item names its rows; **security** reads it at Rev
 | Rule | LLD item | Mechanical check, old vs new |
 | --- | --- | --- |
 | `security-hardening` Never, Ask first | E5 | `sed -n '/^## Never/,/^## [^N]/p' f \| grep -c '^\| '` equal; same for `## Ask first` |
-| `docs/INTAKE.md` checklist | H | six numbered steps under `## Checklist` |
+| `skills/sdlc/references/intake.md` checklist | H | six numbered steps under `## Checklist` |
 | `tracker-sdlc` claim protocol, Never, Ask first; adapters | D1 | Claim steps 1–5 kept; Never and Ask-first bullet counts equal |
 | `skills/tracker-sdlc/adapters/local.md` recipe | D1 | K5 |
 | `grok-acp` permission posture, labels, own-item limits | E4 | every map row `kept` |
@@ -138,9 +138,9 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
   `grep -c '^Contract version: 2$' skills/tracker-sdlc/SKILL.md` = 1.
 - **K7 links**: every relative link in changed files resolves; every
   `#anchor` matches a heading slug or `<a id>`; the anchors of the LLD
-  [file map](design/instruction-refinement/lld.md#paths--modules-file-and-anchor-map) exist.
+  [file map](design/ask-less/lld.md#a0-file-map) exist.
 - **K8 people doc**: `diff <(git show 7a11696:docs/SDLC.md | sed -n '119,383p' | sed -E 's/^#(#+ )/\1/') <(git show 88455d8:docs/how-software-gets-built.md)` → empty (DER-288 items, through project-main 88455d8);
-  each later commit in `git log 88455d8.. -- docs/how-software-gets-built.md` has a change map naming its `docs-google-style` read at Review (operator, 2026-09-27). **K9**: `grep -c 'id="asking-the-human"' docs/SDLC.md` = 1.
+  each later commit in `git log 88455d8.. -- docs/how-software-gets-built.md` has a change map naming its `docs-google-style` read at Review (operator, 2026-09-27). **K9**: `grep -c 'id="asking-the-human"' skills/sdlc/SKILL.md` = 1.
 - **K10 public text**, before each push and the PR: `git diff main...
   | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|\bsk-[A-Za-z0-9_-]{20,}|\.(lan|local|internal|ts\.net)\b|https?://)'`
   → each hit is an allowed reference (upstream or comparables URL) or is

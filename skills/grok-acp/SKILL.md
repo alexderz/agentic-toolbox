@@ -86,7 +86,7 @@ directory and the run directories it creates are `0700`.
 | --- | --- | --- |
 | 0 | `end_turn` | Verify |
 | 2 | Usage: `bad_cwd`, `empty_prompt`, `unreadable_file`, `bad_args`, `label_exists`, `unknown_label`, `cwd_mismatch`, `busy`, `bad_out` | Fix the call. `unknown_label` is a typo, not a reason to `--replace` |
-| 3 | Resume failed | Mint `--replace` with a short handoff, per SDLC [Fallback](../../docs/sdlc/subagents.md#fallback) |
+| 3 | Resume failed | Mint `--replace` with a short handoff, per SDLC [Fallback](../sdlc/references/subagents.md#fallback) |
 | 4 | Agent or protocol error | Read `grok.stderr`. Auth: operator runs `grok login` |
 | 5 | Timeout, signal, or cancelled | Resume with what is left, or raise `--timeout`. If `sessionId` is `null`, it stopped before a session existed: mint again |
 | 6 | Stopped for another reason (`max_tokens`, `refusal`, …) | Read `stopReason`; usually overflow → `--replace` |
@@ -107,16 +107,16 @@ directory and the run directories it creates are `0700`.
 - **Resume = delta.** What changed, what failed, what to do next. Do not
   re-send the spec.
 - **Branching is yours.** Create the item branch and worktree yourself from
-  the source [Branches](../../docs/sdlc/branches-and-lands.md#branches) names;
+  the source [Branches](../sdlc/references/branches-and-lands.md#branches) names;
   pass it as `--cwd`. Tell Grok to commit on that branch, **never** to push,
   and never to merge the item branch into anything. De-conflicting is still
   the builder's job: when project-main moves, resume the label with a delta
   that tells it to merge or rebase project-main **into** the item branch.
-  Lands stay serialized and stay with the manager ([Land path](../../docs/sdlc/branches-and-lands.md#land-path)).
+  Lands stay serialized and stay with the manager ([Land path](../sdlc/references/branches-and-lands.md#land-path)).
 - **Blockers and gates.** Check the item's blockers before minting.
   Offloading the build skips no gate: Review and security still run.
 - **Fallback and overflow.** Exit 3, or a session too long to be useful:
-  `--replace` with a short handoff, per SDLC [Fallback](../../docs/sdlc/subagents.md#fallback).
+  `--replace` with a short handoff, per SDLC [Fallback](../sdlc/references/subagents.md#fallback).
 
 ### Handoff shape
 

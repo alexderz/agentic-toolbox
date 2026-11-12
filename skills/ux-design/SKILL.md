@@ -61,11 +61,11 @@ rest from the live path.
 6. Explain choices as task fit, not “I like it.”
 
 Designer and UX reviewer ids, and resume across rounds:
-[Step agents](../../docs/sdlc/subagents.md#step-agents).
+[Step agents](../sdlc/references/subagents.md#step-agents).
 
 ## Review loop (agents, then operator)
 
-Loop and operator acceptance: [UX](../../docs/sdlc/plan-trial-spec.md#ux).
+Loop and operator acceptance: [UX](../sdlc/references/plan-trial-spec.md#ux).
 
 1. **UX reviewer** reads the brief, the stories, and written taste/shape
    **if those are requirements**. Checks:
@@ -77,7 +77,7 @@ Loop and operator acceptance: [UX](../../docs/sdlc/plan-trial-spec.md#ux).
    asked for that shape.
 2. Designer fixes; the UX reviewer re-checks until those agents agree.
    If they disagree on the requirements, ask the operator ([Asking the
-   operator](../../docs/SDLC.md#asking-the-human)).
+   operator](../sdlc/SKILL.md#asking-the-human)).
 3. When the agents agree, ask the operator the same way: show the
    variants and say which the agents recommend and why (requirements,
    not taste).

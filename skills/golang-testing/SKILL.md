@@ -166,7 +166,7 @@ go test -bench=. -benchmem ./...
 | **security** | Intake; CLEAR conditions (SKILL only) | Day-to-day testify coaching |
 | **manager** | After-act landed+verified | Blessing a suite that skipped `tdd` / verify |
 
-Workers do not bypass **security**: [Roles](../../docs/SDLC.md#roles). A green `go test` is not a **security** clear of this skill home.
+Workers do not bypass **security**: [Roles](../sdlc/SKILL.md#roles). A green `go test` is not a **security** clear of this skill home.
 
 ## Red flags
 
