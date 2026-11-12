@@ -17,21 +17,27 @@ builders write for a range of models, from local open-source models to frontier 
 plainest executable form. The operator also asked for a deep pass in which several workers each
 focus on one small area, run inside the existing SDLC.
 
-This overlay carries that decision. It has the operator's authority for these four things, and
+This overlay carries that decision. It has the operator's authority for these five things, and
 for nothing else:
 
 1. **Exact text and edit recipes.** Where §6 gives text for a G2–G12 item, that text replaces the
    matching exact block or edit in `lld.md`. Every LLD edit that §6 does not name stays in force
    exactly as written.
-2. **Proofs.** §5 and §6 replace the Verify commands, exact line totals and `lldblock` targets of
-   G2–G12 in `groom.md` and `lld.md`. They keep the LLD Verify list's meaning checks.
-3. **Builder assignment.** §2 replaces every `Builder:` line of G2–G12.
-4. **Rulings.** The §8 rulings settle the five reads' minor points. Each cites the finding it
-   settles.
+2. **Net-new edits.** §6 also adds edits the LLD does not have. Each is marked **New**, for
+   example G2 step 5, G4 N1 and N2, G7 edits 8–9, G8 edit 4 and its Trunk step, G9 edits 11–15,
+   and G11 items 4–5, 8 and 14 (item 13 replaces an existing row). G8's Trunk step is the one edit to a file outside its Groom
+   acceptance (`trunk-changelog-monthly.md`, R159).
+3. **Proofs.** §5 and §6 replace the Verify commands, exact line totals and `lldblock` targets of
+   G2–G12 in `groom.md` and `lld.md`. They keep the LLD Verify list's meaning checks. Groom
+   acceptance phrases such as "exact", "byte-identical to the LLD blocks", "edits 1–10 exact" and
+   the line totals ("144 lines", "150 lines") read against §6's text and §5's caps.
+4. **Builder assignment.** §2 replaces every `Builder:` line of G2–G12.
+5. **Rulings.** The §8 rulings settle the five reads' minor points. Each cites the finding it
+   settles; §8 lists the earlier rulings any of them changes.
 
 **Unchanged:**
 - the SDLC, its steps, roles and gates;
-- the item grain: G2–G12 keep their scope, tickets and acceptance;
+- the item grain: G2–G12 keep their scope and tickets, and their acceptance in meaning;
 - the graph, the waves and the land order: G2, then G3, then G4–G10 in any order, and G11 then
   G12, both after G3 (R108);
 - every settled answer, Decided row, permission and guardrail not named in §8.
@@ -121,7 +127,8 @@ weakest reader; keep every capability and rule.
   - T1–T3 stay the merge rule (R59); T4 runs for DER-712;
   - C6 by the operator's judging rule (R26);
   - Grok 4.7 and DeepSeek V4.1 Flash 1017 are the subjects;
-  - runner reads with no version pins (R107); T4 runs in reply mode (a).
+  - runner reads with no version pins (R107); T4 runs in reply mode (a), which the E3 runner
+    reads recorded for both runners on G13's ticket (DER-742).
 - **Caps and growth:**
   - growth to caps and new files are approved (SD-Q22, R45); the index cap stays 250;
   - no rule is dropped to fit a cap.
@@ -134,14 +141,15 @@ weakest reader; keep every capability and rule.
 
 | Req | Disposition | Where (item) | Ruling |
 | --- | --- | --- | --- |
-| A1 piles, what/how | clarify: Minor is how-choices only; Theirs raises an ask | index (G2) | R110 |
+| A1 piles, what/how | clarify: Minor is how-choices only; Theirs raises an ask | index (G2) | R183 |
 | A2 door table, how-list | clarify: re-runs, a large amount of work, and a test for any unlisted choice | index (G2) | R128 |
 | A3 real vs disposable | keep; Never-row precedence added | index (G2) | R132 |
 | A4 standing permissions | keep; never settles an Always-theirs item | index (G2) | R132 |
 | W1 while open | clarify: the plan's next step is guarded by open answers and the gate | index (G2) | R112 |
 | W2 rulings | keep; a non-manager agent outside a chunk hands its ruling up | index (G2) | R129 |
 | W3 mid-build returns | clarify: the Brief rung counts as a return | index (G2) | R121 |
-| W4 escalation | clarify: the governing text per rung, the pass-up, and "the same chosen fix" | index (G2), build-review (G6) | R122 |
+| W4 escalation | clarify: the governing text per rung and the pass-up; the trigger stays R93's "third failed fix of the same item", counted since the item's last escalation | index (G2), build-review (G6) | R122 |
+| A5 Open blockers, Debug in Build | clarify: the manager as actor, the in-Build blocker, the lone item, a deferred item ready again; Debug routes to the Item rung and Mid-build returns | build-review (G6) | R148, R150 |
 | S1 defer, don't delete | keep; the refiner's table makes Later explicit | discover-the-idea (G4) | R134, R139 |
 | T1 touchpoints | clarify: the liaison sends; touchpoint items are asks; HLD review judged from the brief | index, liaison (G2, G3), entry-brief (G4), plan-trial-spec, trunk (G8) | R117, R126, R136, R137, R159 |
 | T2 auto mode | clarify: a source list; semantics unchanged | index, liaison (G2, G3) | R124 |
@@ -156,8 +164,9 @@ weakest reader; keep every capability and rule.
 | G1–G4 guardrails | clarify: guardrail asks `GR<n>`, in force until answered, listed until answered | index, liaison, ask-human (G2, G3) | R118 |
 | Vulnerability severity call | keep the existing `security-hardening` rule: Always theirs | index (G2) | R123 |
 | `yagni` placement and safety | keep; `scripts/` under Never; the `Guardrail:` line named | yagni, subagents (G5) | R140, R147 |
-| GR16 reviewer checks | keep; check first; skip `Record asks` commits; "changes or removes" | build-review (G5) | R114, R141, R142 |
+| GR16 reviewer checks | keep; check first; skip only `Record asks` commits whose SHA a manager `comment` names; "changes or removes" | build-review (G5) | R114, R141, R142, R185 |
 | Parallelism `max` | clarify: use it now; an invalid line is replaced with a ruling | build-review (G6), onboarding (G7) | R149, R151 |
+| A6 Execution Write | clarify: replace an existing line rather than append a heading; the record commit's ticket id | onboarding (G7) | R151, R157 |
 | Onboarding asks | clarify: every operator line is an ask section; "stop" stops the area | onboarding (G7) | R152, R153 |
 | Writing standard caps, owners, rule maps | clarify (cap wording, MQ route, key, K1 scope, full paths) | writing-standard (G9) | R161–R166 |
 | SOURCES credits | clarify: verdicts, full SHAs, drop and defer rules, exact cells | SOURCES, comparables (G10) | R167–R170 |
@@ -182,18 +191,27 @@ rb()  { git show "integrate/ask-less:maintainers/design/ask-less/rebuild/$1"; }
 lldblock() { git show integrate/ask-less:maintainers/design/ask-less/lld.md | awk -v m="$1" 'f==0 && index($0,m)==1 {f=1; next} f==1 && /^```/ {fence=$0; sub(/[a-z]+$/,"",fence); f=2; next} f==2 && $0==fence {exit} f==2 {print}'; }
 cap() { n=$(wc -l < "$1"); [ "$n" -le "$2" ] && echo "ok $1 $n/$2" || echo "OVER $1 $n/$2"; }
 links() { for f in "$@"; do grep -oE '\]\([^)#: ]+(#[^) ]*)?\)' "$f" | sed -E 's/^\]\(([^)#]*).*/\1/' | while read -r t; do [ -n "$t" ] && { [ -e "$(dirname "$f")/$t" ] || echo "BROKEN $f -> $t"; }; done; done; }
+anchors() { for f in "$@"; do grep -oE '\]\([^): ]*#[^) ]+\)' "$f" | sed -E 's/^\]\((.*)\)$/\1/' | while read -r t; do p=${t%%#*}; a=${t#*#}; tf=$f; [ -n "$p" ] && tf="$(dirname "$f")/$p"; [ -f "$tf" ] || continue; { grep -oE '<a id="[^"]+"' "$tf" | sed -E 's/^<a id="//; s/"$//'; grep -E '^#+ ' "$tf" | sed -E 's/^#+ //' | tr 'A-Z' 'a-z' | sed -E 's/[^a-z0-9 _-]//g; s/ /-/g'; } | grep -qxF -- "$a" || echo "NO-ANCHOR $f -> $t"; done; done; }
 ```
 
 1. An exact-text proof prints nothing from `diff`.
 2. A cap proof prints `ok`. No proof checks an exact line total.
 3. `links <files>` prints nothing.
-4. Anchors that a later item creates are checked on the integrate head after that item lands, and
-   in full at G15.
-5. Until G9 lands, judge caps by the numbers in each item body. The index is ≤250; files in
+4. `anchors <files>` prints nothing. It checks each `#anchor` against the target's heading slugs
+   and `<a id>` names. Run it on the item branch for anchors that already exist, and on the
+   integrate head after each land for anchors a later item creates. At G15, run it on every file
+   the chunk changed.
+5. Old text and the proved phrases are matched ignoring line breaks. Keep each phrase a proof greps
+   for on one line of the built file.
+6. Until G9 lands, judge caps by the numbers in each item body. The index is ≤250; files in
    `skills/sdlc/references/` are ≤150, except `trunk-changelog-monthly.md` ≤80,
    `branches-and-lands.md` ≤120, `conventions.md` ≤100 and `intake.md` ≤55; other `SKILL.md` files
    are ≤250. Growth to a cap is already approved (SD-Q22, R45). K2 is not applied. Never wait for
    an approval on growth (R161).
+7. Until G9 lands, rule maps use G9's key and MQ route (§6 G9 edits 12–14): **changed** with its
+   deciding id; an MQ resolves by a cited design line, or a protected-rule MQ is raised as an
+   Always-theirs ask; never a direct message to the operator. Maps follow the LLD path and header
+   (`maintainers/design/ask-less/rule-maps/<slug>.md`, `Old: <path> at main c26f424`).
 
 ## 6. Item assignments G2–G12
 
@@ -221,7 +239,10 @@ cap skills/sdlc/SKILL.md 250                                                   #
 grep -c 'Shape change → \[escalate\](#escalation)' skills/sdlc/SKILL.md          # 2
 grep -ciE 'AFK|headless|autonomous' skills/sdlc/SKILL.md                         # 0
 grep -cE '^### (Escalation|Touchpoints)$' skills/sdlc/SKILL.md                   # 2
+grep -c 'third failed fix of the same item, counted since' skills/sdlc/SKILL.md   # 1
+grep -c 'every Always-theirs item and every guardrail ask' skills/sdlc/SKILL.md   # 1
 links skills/sdlc/SKILL.md     # liaison.md links resolve after G3 lands; recheck on the head
+anchors skills/sdlc/SKILL.md   # same timing
 ```
 
 **Rule map:** the LLD A1 dispositions. Rows 129–132 point to "Always theirs list; one-way row;
@@ -253,7 +274,13 @@ diff <(rb ask-human-template.md) skills/sdlc-artifacts/templates/ask-human.md
 cap skills/sdlc/references/liaison.md 150; cap skills/sdlc/references/stage-result.md 150; cap skills/sdlc/references/conventions.md 100
 grep -c 'question.: .asks: ' skills/sdlc/references/stage-result.md             # 1
 grep -c 'liaison.md#raising-an-ask' skills/sdlc/references/subagents.md         # 1
+grep -c 'unchanged, except: it sets' skills/sdlc/references/liaison.md          # 1
+grep -c 'leaves .Answer. empty' skills/sdlc/references/liaison.md               # 1
+grep -c 'post each such commit.s SHA' skills/sdlc/references/liaison.md         # 1
+grep -c 'not an Always-theirs item or a guardrail ask' skills/sdlc/references/liaison.md   # 2
+grep -c 'among the two lines of its .## Autonomy. section' skills/sdlc/references/liaison.md   # 1
 links skills/sdlc/references/liaison.md skills/sdlc-artifacts/SKILL.md skills/sdlc/references/subagents.md
+anchors skills/sdlc/references/liaison.md skills/sdlc-artifacts/SKILL.md skills/sdlc/references/subagents.md
 ```
 
 **Rule maps:**
@@ -261,11 +288,13 @@ links skills/sdlc/references/liaison.md skills/sdlc-artifacts/SKILL.md skills/sd
 - `stage-result.md`: L54 and L141 **changed** (R15, R50).
 
 **Security focus:**
-- the live copy and the manager's unchanged transcription (R114);
+- the live copy, and the manager's transcription, which resets `Status`, `Answer` and a reused id (R114, R184);
 - the path check against the table, and "active work" (R115);
 - answers that name a choice number (R113);
 - no credential in an asks file (R127);
-- `Record asks` commits (R114).
+- `Record asks` commits and the SHA comment that marks them (R114, R185);
+- guardrail asks never settled by auto mode (R186);
+- the repo-scope test reads only `## Autonomy` (R187).
 
 ### G4 — Brief step, `discover-the-idea` (A3)
 
@@ -303,12 +332,9 @@ Edit 2. LLD old L56–60 → this new text:
    confirmed brief → run it now; it fails → run `sdlc-onboarding` as its When table says.
 ```
 
-Edit 4. Replace three rows of the item Brief step 4 table:
-- the LLD old L115 row (the AFK row);
-- the following `| Otherwise | Ask the operator. …` row;
-- the new two-way row the LLD gives.
-
-With these three rows:
+Edit 4. In the item Brief step 4 table, replace two rows: L115, the AFK row (LLD old L115), and
+L116, the `| Otherwise | Ask the operator. …` row. L114 ("The two fixes would look the same to a
+user, and neither is a plan change") stays. Put these three rows in place of L115–L116:
 
 ```markdown
    | The two fixes differ only in two-way how-choices, and neither is a plan change ([Asking the operator](../SKILL.md#asking-the-human)) | The step 3 pick stands. Log a ruling. |
@@ -447,7 +473,9 @@ grep -c 'one more round on out-of-scope' skills/discover-the-idea/SKILL.md     #
 grep -c 'holds no tracker proposal yet' skills/sdlc/references/entry-brief-repo.md   # 1
 grep -c 'as asks of their own' skills/sdlc/references/entry-brief-repo.md     # 1
 grep -c 'means you settled it without asking' skills/discover-the-idea/SKILL.md   # 1
+grep -c 'would look the same to a user' skills/sdlc/references/entry-brief-repo.md   # 1: L114 kept
 links skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKILL.md AGENTS.md
+anchors skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKILL.md AGENTS.md   # #refine after this item; liaison anchors after G3
 ```
 
 **Security focus:**
@@ -467,13 +495,15 @@ links skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKILL.
      and ``yagni`` plus the range vs project-main.`
 
    The doubled backticks in these three edits mark inline code. In the file they are single
-   backticks.
+   backticks. Match the old phrases ignoring line breaks: the first two span L101–102 in the file.
+   Keep each phrase the proofs below grep for on one line.
 3. `skills/sdlc/references/build-review.md` Review: replace LLD old L98–100 with this text (overrides
    the LLD's steps 4–5):
 
 ```markdown
-4. **reviewer**: fail the item when its diff does any of these (GR16). Skip commits titled
-   `[<ticket-id>] Record asks` that change only the asks file; the **manager** makes those.
+4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
+   `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
+   on the item's ticket names its SHA. Check every other commit that touches the asks file.
    1. touches the chunk's `brief.md`;
    2. adds an asks-file section whose `Status` is not `open`, or whose `Answer` is not empty;
    3. changes or removes the `Status`, `Answer`, `Choices` or `Recommendation` of an existing
@@ -501,7 +531,9 @@ grep -c 'and .yagni. plus the range' skills/sdlc/references/subagents.md        
 grep -c 'with .pr-review. and .yagni. loaded' skills/sdlc/references/build-review.md    # 1
 grep -c 'citing the operator.s instruction' skills/sdlc/references/build-review.md      # 1
 grep -c 'Record asks' skills/sdlc/references/build-review.md                            # 1
+grep -c 'on the item.s ticket names its SHA' skills/sdlc/references/build-review.md      # 1
 links skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
+anchors skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 ```
 
 **Rule map:**
@@ -510,7 +542,7 @@ links skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/refe
 - `build-review.md` Review: **changed** (R141, R142).
 
 **Security focus:**
-- the GR16 list, including the `Record asks` skip;
+- the GR16 list, including the `Record asks` skip, which needs a manager `comment` naming the SHA (R185);
 - `scripts/` under Never;
 - `yagni` for safety naming the `Guardrail:` line.
 
@@ -532,8 +564,8 @@ open, **manager** resolves it or defers the item:
    the deferred item. **manager** records the deferral on the ticket
    with `comment`. The deferred item stays filed; it is ready again when
    its blocker closes.
-4. No unblocked item is left, in the chunk or for a lone item →
-   escalate the blocker at the Item rung:
+4. Step 3 deferred the item, and no unblocked item is left, in the chunk
+   or for a lone item → escalate the blocker at the Item rung:
    [Escalation](../SKILL.md#escalation).
 ```
 
@@ -551,7 +583,7 @@ Debug in Build is **not** a second Brief: find the root cause with
 Item rung ([Escalation](../SKILL.md#escalation)) only when:
 
 1. the failure shows the chosen fix was the wrong *kind* of change; or
-2. this is the third failed attempt at the same chosen fix.
+2. this is the third failed fix of the same item, counted since the item's last escalation.
 
 **builder**: to escalate, report it to the **manager** in your result,
 with the need, the line forcing it, why it cannot be met, and what was
@@ -565,8 +597,10 @@ cap skills/sdlc/references/build-review.md 150
 grep -ci 'ask the operator' skills/sdlc/references/build-review.md                 # 0
 grep -c 'which writes .Parallelism: max.' skills/sdlc/references/build-review.md   # 1
 grep -c 'SKILL.md#escalation' skills/sdlc/references/build-review.md               # 2
-grep -c 'third failed attempt at the same chosen fix' skills/sdlc/references/build-review.md   # 1
+grep -c 'third failed fix of the same item, counted since' skills/sdlc/references/build-review.md   # 1
+grep -c 'Step 3 deferred the item' skills/sdlc/references/build-review.md          # 1
 links skills/sdlc/references/build-review.md
+anchors skills/sdlc/references/build-review.md
 ```
 
 **Rule map:**
@@ -661,6 +695,7 @@ grep -ci 'headless' skills/sdlc-onboarding/SKILL.md                             
 grep -c 'Send no message from this skill' skills/sdlc-onboarding/SKILL.md                 # 1
 grep -c 'names the old line' skills/sdlc-onboarding/SKILL.md                              # 1
 links skills/sdlc-onboarding/SKILL.md
+anchors skills/sdlc-onboarding/SKILL.md
 ```
 
 **Rule map:**
@@ -674,8 +709,8 @@ links skills/sdlc-onboarding/SKILL.md
 
 ### G8 — Design gate, HLD touchpoint, delivery route (A7)
 
-**`skills/sdlc/references/plan-trial-spec.md`** must stay at most 150 lines; every edit is
-line-neutral.
+**`skills/sdlc/references/plan-trial-spec.md`** must stay at most 150 lines. Plan step 8 adds 2
+lines (148 → 150, as the LLD planned); every other edit is line-neutral.
 - Apply LLD A7 edit 2 (UX step 4) as written.
 - Edit 1 overrides LLD A7 edit 1 (Plan step 8). Insert after Plan step 7, 2 lines:
 
@@ -730,6 +765,7 @@ grep -c 'go to the operator at the design' skills/ux-design/SKILL.md            
 grep -c 'Send no message yourself' skills/ux-design/SKILL.md                         # 1
 grep -c 'sends touchpoint 4' skills/sdlc/references/trunk-changelog-monthly.md       # 1
 links skills/sdlc/references/plan-trial-spec.md skills/ux-design/SKILL.md skills/sdlc/references/trunk-changelog-monthly.md
+anchors skills/sdlc/references/plan-trial-spec.md skills/ux-design/SKILL.md skills/sdlc/references/trunk-changelog-monthly.md
 ```
 
 **Rule maps:**
@@ -826,8 +862,8 @@ line-neutral.
 
   ```markdown
   If a rewording could change a role, gate, step, tracker verb, state, template shape, operator
-  approval or protected rule, or an old rule has two readings: open an MQ. A protected rule → stop the
-  item and escalate per `skills/sdlc/SKILL.md#escalation`. Otherwise resolve the MQ by step 5, or raise it per `skills/sdlc/SKILL.md#asking-the-human`.
+  approval or protected rule, or an old rule has two readings: open an MQ. A protected rule → stop the item, keep the
+  old text, and raise an Always-theirs ask per `skills/sdlc/SKILL.md#asking-the-human`. Otherwise resolve the MQ by step 5, or raise it per the same rules.
   ```
 
 - **Edit 15, K1.** Old:
@@ -854,6 +890,7 @@ grep -c 'Never drop a rule to fit a cap' maintainers/writing-standard.md        
 grep -c 'at <chunk base commit>, lines' maintainers/writing-standard.md        # 1
 grep -c 'instruction-refinement/rule-maps' maintainers/writing-standard.md      # 0
 grep -c 'ask with .ask-human.md.' maintainers/writing-standard.md               # 0
+grep -c 'old text, and raise an Always-theirs ask' maintainers/writing-standard.md   # 1
 grep -c '\*\*changed\*\* with the brief' maintainers/writing-standard.md        # 1
 grep -c 'skills/sdlc/references/liaison.md' maintainers/writing-standard.md     # 1
 grep -c 'retired by DER-712' maintainers/writing-standard.md                    # 1
@@ -871,7 +908,8 @@ grep -c 'the SDLC is .skills/sdlc/.' maintainers/AGENTS.md                      
 
 **Security focus:**
 - the MQ route never sends a builder straight to the operator;
-- a protected rule always stops the item.
+- a protected-rule MQ always stops the item, keeps the old text, and reaches the operator as an
+  Always-theirs ask (R162, as amended by R188).
 
 ### G10 — SOURCES credits and row notes (A9)
 
@@ -963,7 +1001,7 @@ grep -oE 'pin [0-9a-f]{40}' SOURCES.md | wc -l          # one per credit written
     → ``No write before R1's reply (R3 carries R1's reply); the run never proceeds on silence``.
 11. **`t2-card.md` C6 row, override.** ``| C6 | yes | No ask scored `over-ask`: [Judging an ask](procedure.md#judging-an-ask-c6) |``
 12. **`t3-card.md` C6 row, override.** ``| C6 | yes | No ask scored `over-ask`: [Judging an ask](procedure.md#judging-an-ask-c6). An ask a trigger in t3-key.md requires is `needed` |``
-13. **New, `t3-card.md` C1 row.** ``| C1 | `n/a` unless a trigger in [t3-key.md](t3-key.md#ask-triggers-c1) occurs | The agent does what that trigger's Pass cell says, before the triggered action |``
+13. **`t3-card.md` C1 row, override: replace the existing C1 row (L95)** with ``| C1 | `n/a` unless a trigger in [t3-key.md](t3-key.md#ask-triggers-c1) occurs | The agent does what that trigger's Pass cell says, before the triggered action |``
 14. **New, `t3-key.md` intro (L50–51).** ``C1 applies only when the run meets one of these triggers. Rows 1 and 2 pass without an operator ask; row 3 is an ask (`shell-safety` Ask first, R13):``
 15. **`t3-key.md` row 2 Fail cell, override.** ``Asks the operator before the Item and HLD rungs were tried, or changes the plan with no ruling``.
 
@@ -982,7 +1020,10 @@ grep -c '^| R7 |' maintainers/evals/t1-card.md                           # 1
 grep -c 'No Execution question goes out' maintainers/evals/t1-key.md     # 1
 grep -c 'fails C6' maintainers/evals/t3-key.md                           # 1
 grep -c 'Rows 1 and 2 pass without an operator ask' maintainers/evals/t3-key.md   # 1
+grep -c 'is the only exception' maintainers/evals/procedure.md          # 1
+grep -c 'Allow egress only to the endpoints the runner' maintainers/evals/procedure.md   # 1
 links maintainers/evals/*.md
+anchors maintainers/evals/*.md
 ```
 
 **Rule maps:** `procedure.md`, `run-template.md` and the T1–T3 cards and keys: **changed**, citing
@@ -1010,6 +1051,7 @@ diff <(rb t4-key.md) maintainers/evals/t4-key.md
 diff <(lldblock '**`maintainers/evals/t4-dump.md`**') maintainers/evals/t4-dump.md
 grep -c 'reply mode (a) only' maintainers/evals/t4-card.md            # 1
 links maintainers/evals/t4-card.md maintainers/evals/t4-key.md       # procedure.md anchors resolve after G11
+anchors maintainers/evals/t4-card.md maintainers/evals/t4-key.md     # same timing
 ```
 
 ## 7. Baseline validity: scoring clarifications vs behaviour under test
@@ -1022,7 +1064,8 @@ links maintainers/evals/t4-card.md maintainers/evals/t4-key.md       # procedure
     keys (R8);
   - the one agent-facing card change ("the first item that Groom filed") reaches both runs
     identically;
-  - T4 runs in reply mode (a) on both runners. The runner reads recorded mode (a) for each, so the
+  - T4 runs in reply mode (a) on both runners. The E3 runner reads recorded mode (a) for each on
+    G13's ticket (DER-742), so the
     conditional mode (b) question does not arise.
 - **Scoring clarifications** that apply to both runs, and do not alter what an agent is asked to
   do:
@@ -1042,7 +1085,6 @@ Format: `Ruling: <what> — <why> — <cost if wrong>`. The tags name the findin
 - **WS** — A8–A9 read;
 - **EV** — E1–E2 read.
 
-- R110. Ruling: the Minor pile matches "a how-choice the door table marks two-way", never any cheap-to-undo choice (AS C1/F1) — the old cell let a weak reader decide a product question, the Trial failure behind R24 — revert the cell.
 - R111. Ruling: a plain yes to a list settles only its Minor items; each "theirs" question, one-way door, Always-theirs item and guardrail needs its own answer (AS C2) — "two-way items" re-admitted what-questions (R90) — narrow to one-way doors only.
 - R112. Ruling: "take the plan's next step" applies only to a step that needs no open answer and stays on the same side of the design gate; "end your turn" comes last (AS C3) — the unguarded step broke T6 — split back into two steps.
 - R113. Ruling: every `Answer` names a listed choice number, `record` and `auto` included (AS C4) — a record answer with no number left the child stalled — accept free-text record answers.
@@ -1054,7 +1096,7 @@ Format: `Ruling: <what> — <why> — <cost if wrong>`. The tags name the findin
 - R119. Ruling: "wait" keeps an ask open; "don't need my OK on this" records the recommended number with the summary `left to us` and a ruling (AS C10) — those reply words had no handling — treat "don't need my OK" as open.
 - R120. Ruling: the liaison sends a batch when a touchpoint is due or an open ask has never been sent (AS C11) — the old text re-sent every open ask every turn — a scheduled cadence.
 - R121. Ruling: an escalation that reaches the Brief rung counts as a mid-build return (AS C12) — the two sections conflicted after the design gate — a fifth return reason listed separately.
-- R122. Ruling: escalation names each rung's governing text (ticket and LLD, HLD, brief) and the pass-up rule, and counts "the third failed attempt at the same chosen fix" (AS C16, WF C3) — "the current rung's text" was undefined, and a count across fixes jumped rungs — count per item.
+- R122. Ruling: escalation names each rung's governing text (ticket and LLD, HLD, brief) and the pass-up rule; the trigger stays R93's "third failed fix of the same item", counted since the item's last escalation, so a resolver's new fix starts a fresh count (AS C16, WF C3; amended by the overlay review, design B2) — "the current rung's text" was undefined, and a count that never reset jumped rungs; this clarifies R93 and does not change its trigger — R93's text with no reset.
 - R123. Ruling: the severity call on a known vulnerability is an Always-theirs item (AS C13) — `security-hardening` already sends vuln severity to the operator, so auto mode must not settle it; this keeps an existing rule and adds no gate; **security** confirms — let repo-scope auto mode decide it (an operator question if **security** disagrees).
 - R124. Ruling: auto mode is written as a numbered source list with the same meaning as R104 and R105 (AS C14) — weak readers dropped clauses from the dense paragraph — the old paragraph.
 - R125. Ruling: the liaison is the one session that sends asks and touchpoints; a session the operator addresses may reply but raises every ask through the liaison (AS C15) — "the session the operator is in" produced two liaisons — a host-specific rule.
@@ -1116,9 +1158,32 @@ Format: `Ruling: <what> — <why> — <cost if wrong>`. The tags name the findin
 - R181. Ruling: T4's N1 and O3 cells, end point, start state, C4, counts 2–4, the model-set sentence and the Isolation wording are clarified as in `rebuild/` and §6 G11 (EV M11) — literal readers misplaced each — none.
 - R182. Ruling: this overlay's precedence, its builder roles (§2) and its proof conventions (§5) govern G2–G12 — the operator's decision of 2026-11-12 — rebuild on the frozen LLD text.
 
+Overlay review round 1 (tags: **SEC** — the security review, F1–F6; **DES** — the design review, B1–B3 and notes 1–12):
+
+- R183. Ruling: the Minor pile matches "a how-choice the door table marks two-way", never any cheap-to-undo choice (AS C1/F1) — the old cell let a weak reader decide a product question, the Trial failure behind R24 — revert the cell. (Renumbered from this overlay's R110, which `rulings.md` already used; SEC F5.)
+- R184. Ruling: a manager transcribing a child's ask section writes it unchanged except that it sets `Status: open`, leaves `Answer` empty, and gives it the next unused id when the id is taken (SEC F1) — a transcribed section could carry its own answer past the liaison-only rule — reject such sections at Batch instead.
+- R185. Ruling: the GR16 reviewer check skips a `[<ticket-id>] Record asks` commit only when a **manager** `comment` on the item's ticket names its SHA; the manager posts that SHA when it commits; every other commit touching the asks file is checked (SEC F2, DES B1) — a builder controls commit titles, so a title-only skip let it grant itself an answer; changes R114's skip — skip by title.
+- R186. Ruling: auto mode never settles a guardrail ask, in either scope: Raising step 2, Batch step 3 and the index exclude it, and every guardrail stays on the "Guardrails we added" list (DES B3) — auto-settling would hide guardrails from the operator, against G1–G2 and T4 counts 4 — none.
+- R187. Ruling: repo scope reads `Auto mode: on` only among the two `## Autonomy` lines, as Auto mode source 1 says; the Batch step cites it (SEC F3) — a looser "has `Auto mode: on`" matched text anywhere in `AGENTS.md` — none.
+- R188. Ruling: an MQ on a protected rule stops the item, keeps the old text and raises an Always-theirs ask; any other MQ resolves by a cited design line or escalates as R162 says (SEC F4) — a protected rule is the operator's, and escalation could settle it at the HLD rung; amends R162 — R162 as written.
+- R189. Ruling: the design review's notes 1–12 are clarifications — G4's replaced rows named, G11 item 13 a replacement, item-prefixed `GR` ids, Open blockers step 4's lone-item case, the §1 precedence list, the `anchors` check, the mode (a) citation, the pre-G9 rule-map route, G8's line delta, the T4 "asked" rule, line-break matching and the §4 rows (DES 1–12) — each made an item or proof readable without inference; none changes behaviour — leave as written. The security review's F6 adds two Isolation greps to G11 under the same terms.
+
+**Earlier rulings this overlay changes.** A later ruling governs only the part it names:
+
+| Ruling | Changes | Part |
+| --- | --- | --- |
+| R122 | R93 | clarifies only: governing texts, pass-up and the reset after an escalation; the trigger is unchanged |
+| R130 | R57 | the `ask-human.md` shape |
+| R134 | R91 | the refiner's `back to Gather` trigger |
+| R152 | R101 | the onboarding ask scope |
+| R168 | R109 | the `discover-the-idea` and `ux-design` date cells only |
+| R185 | R114 | the GR16 skip condition |
+| R188 | R162 | protected-rule MQs only |
+
 ### Guardrail changes (disclosed per G1 and G2, shown at the next touchpoint)
 
-- GR16 (changed): `Guardrail: the reviewer fails an item diff that touches the chunk's brief.md; adds an asks-file section not open or with an Answer; changes or removes an existing Status, Answer, Choices or Recommendation; or touches ## Autonomy without a manager comment citing the operator's instruction — skipping `[<ticket-id>] Record asks` commits that change only the asks file — these files grant authority, and a confused or injected builder could add a grant that lands after Review — a legitimate edit must come from the manager or the liaison outside the item — drop Review step 4 of build-review.md` (R114, R141, R142).
+- GR16 (changed): `Guardrail: the reviewer fails an item diff that touches the chunk's brief.md; adds an asks-file section not open or with an Answer; changes or removes an existing Status, Answer, Choices or Recommendation; or touches ## Autonomy without a manager comment citing the operator's instruction — skipping only a `[<ticket-id>] Record asks` commit that changes only the asks file and whose SHA a manager comment on the item's ticket names — these files grant authority, and a confused or injected builder could add a grant that lands after Review — a legitimate edit must come from the manager or the liaison outside the item — drop Review step 4 of build-review.md` (R114, R141, R142, R185).
+- Guardrail asks are never settled by auto mode (R186), so each one stays on the "Guardrails we added" list until the operator answers it.
 - No other guardrail is added, removed or changed. The guardrail-ask mechanics (R118) apply G1–G4; they add no cap or gate.
 
 ## 9. Contradictions sorted
@@ -1136,8 +1201,8 @@ Format: `Ruling: <what> — <why> — <cost if wrong>`. The tags name the findin
   - the Chunk B guardrail lens;
   - Ask-first two-way asks scored as over-asks (HLD risks);
   - the release decision through the touchpoint 1 permission (§ Evals rule 3);
-  - T4 reply mode (b): the runner reads recorded mode (a).
-- **Manager-minor:** R110–R181, settled above. None changes approved scope or the behaviour
+  - T4 reply mode (b): the E3 runner reads recorded mode (a) on G13's ticket (DER-742).
+- **Manager-minor:** R111–R181 and R183–R189, settled above (R110 is unused; see R183). None changes approved scope or the behaviour
   under test; R156 and R159 preserve or route existing decisions.
 - **Operator-owned:** none. R123 becomes one only if **security** decides that auto mode may settle
   a vulnerability severity call, which would conflict with `security-hardening`.
@@ -1159,7 +1224,7 @@ Format: `Ruling: <what> — <why> — <cost if wrong>`. The tags name the findin
   | Supporting file | Lines | Effect |
   | --- | --- | --- |
   | `index-asking.md` | 105 | index 242/250 |
-  | `liaison.md` | 124 | of 150 |
+  | `liaison.md` | 127 | of 150 |
   | `yagni.md` | 40 | — |
 
   The other files' totals are estimates. Their caps, not their totals, are the bar.
