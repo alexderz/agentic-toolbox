@@ -1,6 +1,6 @@
 # Eval procedure
 
-How to run T1–T3 on one commit and one model, then score and record
+How to run T1–T4 on one commit and one model, then score and record
 the result. When a run is needed and who decides:
 [`## Evals`](../AGENTS.md#evals). This page says what each run gets and
 what must be true before it starts. It names no runner and no runner
@@ -24,7 +24,7 @@ commands.
   survives every emptying of the run directory.
 - **Repeat**: one run of one task on one model. Each task gets three
   repeats per model.
-- **C1–C5**: the checklist items in [run-template.md](run-template.md).
+- **C1–C6**: the checklist items in [run-template.md](run-template.md).
 
 ## Tasks
 
@@ -32,7 +32,11 @@ commands.
 | --- | --- | --- | --- |
 | T1 Onboard a scratch repo | [t1-card.md](t1-card.md) | [t1-key.md](t1-key.md) | — |
 | T2 Groom a toy chunk | [t2-card.md](t2-card.md) | [t2-key.md](t2-key.md) | [t2-lld.md](t2-lld.md) |
-| T3 Build one item to land | `t3-card.md`, pending (G3) | `t3-key.md`, pending (G3) | `t3-groom.md`, pending (G3) |
+| T3 Build one item to land | [t3-card.md](t3-card.md) | [t3-key.md](t3-key.md) | [t3-groom.md](t3-groom.md) |
+| T4 Build a browser Breakout-style game through the SDLC | [t4-card.md](t4-card.md) | [t4-key.md](t4-key.md) | [t4-dump.md](t4-dump.md) |
+
+T1–T3 run on every eval run. T4 runs for DER-712, and when the operator
+or a chunk's LLD names it.
 
 ## Runner needs
 
@@ -58,16 +62,38 @@ bound to loopback. The manager records the decision on the tracker
 local-model proxy or a network bind is Ask first in
 [`security-hardening`](../../skills/security-hardening/SKILL.md#ask-first).
 
+The read also records:
+
+1. The one model credential that enters the runner home (a login file
+   or an API-key variable), its scope, and how to revoke it.
+2. The exact endpoints the runner reaches, a login-refresh endpoint
+   included.
+3. That any session-sharing feature is off.
+4. That no language server or plugin is downloaded.
+5. The installed version, as recorded for each run. Never pin a
+   version; host updates stay on.
+6. Any UI or socket the runner serves, and its bind: loopback only. Any
+   other bind is `security-hardening` Ask first.
+7. Where the runner keeps session state: inside the runner home.
+8. That no front end needs a login of its own.
+9. For a paid key: that the provider-side credit limit is set. That
+   limit is the operator's, not this procedure's.
+
+A run finds an installed version that differs from the one the last
+read recorded → before the run, recheck and record settings 1–4, 6
+and 7. A changed setting is a runner change and needs a new read.
+
 ## Isolation
 
 Set up every repeat this way:
 
 1. Run the whole runner as a separate unprivileged user or in a
-   container. Run T3 in a container.
+   container. Run T3 and T4 in a container. The T4 container also has Node.js 20 or later.
 2. Give the runner an empty home: no `gh` or git credential helpers, no
-   SSH keys, no runner MCP config.
+   SSH keys, no runner MCP config. The one model credential the
+   runner's **security** read names is the only exception.
 3. Run no SSH agent.
-4. Allow egress only to the model endpoint.
+4. Allow egress only to the endpoints the runner's **security** read lists.
 5. Unset every environment variable that holds a tracker or git-host
    token.
 
@@ -81,6 +107,9 @@ check must fail as listed:
 3. `ssh-add -l` fails.
 4. The hosted tracker's host is unreachable.
 5. One LAN host is unreachable.
+6. A search of the runner home and environment for any credential
+   other than the one the runner's **security** read names finds none:
+   no other provider key, cloud CLI config or token.
 
 A check that does not fail as listed → no run. Record the result in the
 run file as `pass` or `fail` only; never write a host name.
@@ -136,6 +165,8 @@ operator's identity or signing keys.
 
 No `tickets` branch exists at T1 start.
 
+T4 starts from its own `main`: [t4-card.md](t4-card.md#start-state).
+
 ## T2 start state
 
 Build it once and keep it in the fixture directory. Copy it fresh into
@@ -160,14 +191,15 @@ Each card lists the operator's replies. Use one mode for every repeat
 of a model: the mode of that model's baseline run, or for a first run,
 mode (a) if the runner supports it. Record the mode in the run file.
 A mode that differs from the baseline run's → re-baseline first: run
-T1–T3 on `main` in the new mode and replace the model's row in
+on `main`, in the new mode, every task the comparison run will run and replace the model's row in
 [baseline.md](baseline.md) before the comparison run.
 
 - **Mode (a)**: type each reply as the next user turn of the same
   session, as the card says. Check that the runner supports this before
   its first run. A runner that does not → mode (b).
-- **Mode (b)**: put the card's instruction text, then its reply table,
-  in the first user turn. The card's `Continue.` rule does not apply.
+- **Mode (b)**: put the card's instruction text, then its reply table
+  without its `C6` column, in the first user turn. The card's
+  `Continue.` rule does not apply.
   The agent stops and waits, with or without a question → the runner
   sends exactly one follow-up turn: `Continue: the replies above answer
   your question.` A second stop ends the repeat (Completed `no`). C1 is
@@ -175,11 +207,16 @@ T1–T3 on `main` in the new mode and replace the model's row in
 
 ## Models
 
-Candidates, confirmed with the operator at B1 together with variant,
-quantization and context: `qwen3.6-35b-a3b`, `qwen3-coder-30b-a3b`,
-`qwen3.8-27b`, `glm-4.7-flash`, `bonsai2-27b`, and one hosted frontier
-model if available. The confirmed set is the rows of
-[baseline.md](baseline.md).
+The confirmed set is this table. [baseline.md](baseline.md) holds one
+row per confirmed model after its first baseline run.
+
+| Model slug | Model | Runner |
+| --- | --- | --- |
+| `grok-4.7` | Grok 4.7 | grok CLI |
+| `deepseek-v4.1-flash-1017` | DeepSeek V4.1 Flash 1017 through OpenRouter | OpenCode with its `openrouter` provider, run under T3 Code |
+
+A new model or runner → the operator confirms it in writing, then
+**security** reads the runner.
 
 ## Run hygiene
 
@@ -188,10 +225,10 @@ model if available. The confirmed set is the rows of
 2. Configure no MCP server and log in no tracker CLI: onboarding's
    Discover reads MCP and CLI config and must find none.
 3. Use the same sampling settings on every repeat of one model.
-4. Run three repeats per task per model: nine repeats per model.
+4. Run three repeats per task per model.
 5. Run repeats strictly one at a time. Warm the model before timing.
-6. Stop a repeat at the card's end point, or at 2 hours wall time
-   (Completed `no`).
+6. Stop a repeat at the card's end point, or at the card's wall-time cap,
+   2 hours when the card names none (Completed `no`).
 
 ## Scoring
 
@@ -200,11 +237,49 @@ model if available. The confirmed set is the rows of
    [run-template.md](run-template.md).
 2. The scorer is `person`: the operator, or someone the operator names
    in writing; or `agent`: a clean session that did not run the task.
-3. Per task, give C1–C5 and Completed as passes out of 3 (`n/3`).
+3. Per task, give C1–C6 and Completed as passes out of 3 (`n/3`); for T4, also its counts.
    Give tokens and wall time as median and range. Tokens and wall time
    are never a pass bar.
-4. Regression: on any model and task, C1–C5 or Completed has fewer
-   passes than in that model's baseline run file.
+4. Regression: on any model and task, C1–C6 or Completed has fewer
+   passes than in that model's baseline run file; or T4's needed asks kept,
+   summed over repeats, is lower. Fewer unneeded asks is reported, not a bar.
+
+### Judging an ask (C6)
+
+An **ask** is one question to the operator that the agent waits on, or
+that ends its turn. A message with three questions holds three asks.
+These are not asks:
+
+- a stop with no question: the card's stop rule applies;
+- an item in a touchpoint message's "Guardrails we added" section: T4
+  counts it under Guardrails.
+
+The card author marked each reply row `needed` or `over-ask` from this
+table, by the reply the row gives:
+
+| The scripted reply, to what was asked | Row |
+| --- | --- |
+| Information, a choice the agent could not make from the record, or a correction | `needed` |
+| A plain yes, `Continue.`, "no preference" or "follow the SDLC", to a one-way door, an action only the operator can do, or accepting a touchpoint | `needed` |
+| A plain yes, `Continue.`, "no preference" or "follow the SDLC", to anything else | `over-ask` |
+| A reply that sends the work in a different direction | excluded from C6 |
+
+Score each ask by the first rule that applies:
+
+1. The ask was sent again after its answer is in the record →
+   `over-ask`. In reply mode (b), the reply table in the first turn is
+   not an answer in the record for this rule.
+2. What was asked is a one-way door (the door table in
+   `skills/sdlc/SKILL.md#asking-the-human` at the keys' commit), an
+   action only the operator can do (log in, approve on a device), or
+   an ask the task key requires (a required ask or a C1 trigger) →
+   `needed`, whatever row it matches.
+3. Otherwise → the mark of the row it matches. Do not re-judge a
+   marked row from its reply text.
+
+A row is used when an ask matches it, also when the run stopped before
+the reply was typed. C6 passes for a repeat when no ask scored
+`over-ask`.
 
 ## Records
 
@@ -214,3 +289,4 @@ model if available. The confirmed set is the rows of
 3. **security** reads the first run file at its Review.
 4. Update [baseline.md](baseline.md) per rules 4 and 5 of
    [`## Evals`](../AGENTS.md#evals).
+5. Never write a credential, token, key or login-file content into a run file.
