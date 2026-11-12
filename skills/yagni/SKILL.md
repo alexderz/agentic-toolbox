@@ -20,7 +20,7 @@ description: use this when scoping a change, adding a helper, or expanding a ski
 
 ## Ask first
 
-Before you do any of these, ask the operator per [Asking the operator](../../docs/SDLC.md#asking-the-human):
+Before you do any of these, ask the operator per [Asking the operator](../sdlc/SKILL.md#asking-the-human):
 
 - New abstraction “for later reuse” with no second caller yet.
 - New config flag or feature toggle with no current consumer.
@@ -30,7 +30,7 @@ Before you do any of these, ask the operator per [Asking the operator](../../doc
 ## Never
 
 - Never remint a MERGED skill body without a new **security** cut; get the cut first.
-- Never add marketplace installers or auto-update upstream into skills; take third-party content through [INTAKE.md](../../docs/INTAKE.md).
+- Never add marketplace installers or auto-update upstream into skills; take third-party content through [INTAKE.md](../sdlc/references/intake.md).
 - Never add “just in case” helpers for personal finance, mail, password stores, or extra hosts; leave them out.
 
 **Red flags.** If your plan says one of these, stop. Shrink the change. Ship the ask.

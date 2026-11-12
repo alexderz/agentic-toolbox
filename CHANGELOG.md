@@ -21,6 +21,10 @@ Newest first. Skip empty sections.
   conditional prose reading, and migration of in-flight sessions
   (`DER-529`; land `9bb4d96`).
 
+### Changed
+
+- The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing

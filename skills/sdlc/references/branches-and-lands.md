@@ -66,4 +66,4 @@ without a PR. PRs remain only for outside or remote workers.
 | Force-push project-main to win a race. Project-main is a shared branch; force-push is **shell-safety** Ask first. | De-conflict against the current project-main tip ([Project-main](#project-main)). |
 | Treat a green item branch as landed+verified. | Treat an item as landed+verified only when it is on its land target ([Branches](#branches)) and verified. |
 | Start or land an item that still has an **open** blocker without an operator call. | Follow [Open blockers](build-review.md#open-blockers). |
-| Use the item path to avoid talking to the operator, or someone the operator names in writing, about a product change. | Ask them ([Asking the operator](../SDLC.md#asking-the-human)). |
+| Use the item path to avoid talking to the operator, or someone the operator names in writing, about a product change. | Ask them ([Asking the operator](../SKILL.md#asking-the-human)). |

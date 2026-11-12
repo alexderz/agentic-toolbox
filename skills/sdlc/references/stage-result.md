@@ -3,7 +3,7 @@
 Tickets: item `DER-529`, chunk `DER-421`.
 
 A **stage** is one run of one SDLC step. Use the step names in
-[Names](../SDLC.md#names). A **stage result** is the file `result.json`
+[Names](../SKILL.md#names). A **stage result** is the file `result.json`
 in an absolute output directory supplied by the **stage harness**, the
 program that runs a stage and persists its output. Each invocation has
 a unique directory outside the checkout; the harness retains its path.
@@ -27,8 +27,8 @@ other status is a failure.
 | `blocked` | The stage stopped on an open blocker. |
 | `needs_input` | The stage stopped for a decision from the operator, or someone the operator names in writing. |
 
-For tracker states, see [Tracker](../SDLC.md#tracker). For decisions,
-see [Asking the operator](../SDLC.md#asking-the-human).
+For tracker states, see [Tracker](../SKILL.md#tracker). For decisions,
+see [Asking the operator](../SKILL.md#asking-the-human).
 
 ## Schema
 
@@ -39,7 +39,7 @@ is a failure. An empty string or array does not meet a non-empty rule.
 
 | Field | Type | Rule |
 | --- | --- | --- |
-| `step` | string | A step name in [Names](../SDLC.md#names). |
+| `step` | string | A step name in [Names](../SKILL.md#names). |
 | `status` | string | One of the four statuses. |
 | `evidence` | object | Stage evidence. |
 | `findings` | string | The prose. It may be empty, except when `status` is `fail` or `blocked`: then it must be non-empty. |

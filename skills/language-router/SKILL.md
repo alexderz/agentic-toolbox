@@ -33,7 +33,7 @@ A turn in this table loads no language skill.
 | --- | --- |
 | Onboarding turn (`sdlc-onboarding`) | none |
 | Gather-only or refine-only turn (`discover-the-idea`) | none |
-| Incoming-item Brief: problem, then fix vs removal ([Item brief](../../docs/sdlc/entry-brief-repo.md#item-brief)) | none |
+| Incoming-item Brief: problem, then fix vs removal ([Item brief](../sdlc/references/entry-brief-repo.md#item-brief)) | none |
 | UX-only turn (`ux-design`) | none |
 | Research-only turn (`buying-researcher`) | none |
 | README-only, docs-only, git-only, planning-only or templates-only turn | none |

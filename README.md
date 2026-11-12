@@ -60,7 +60,7 @@ Placeholders remain for empty ids. Bodies land via **security** intake
 and a compress, not a vendor paste.
 
 - Do not install a second process pack beside this repo’s ids. See
-  [docs/INTAKE.md](docs/INTAKE.md).
+  [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md).
 - Pin every third-party cherry-pick **SHA** in [SOURCES.md](SOURCES.md).
   Empty SHA cells mean the body is not here yet.
 - **security** intake before any third-party content lands in this repo.
@@ -145,9 +145,9 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 
 ## Related
 
-- SDLC: [docs/SDLC.md](docs/SDLC.md)
+- SDLC: [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Intake: [docs/INTAKE.md](docs/INTAKE.md)
+- Intake: [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md)
 - Vendor-neutral cybersecurity skill packs (survey, not vendored): [docs/security-skill-packs/README.md](docs/security-skill-packs/README.md)
 - Mechanical and electrical engineering with AI (survey, not vendored): [docs/engineering-with-ai/README.md](docs/engineering-with-ai/README.md)
 - First cherry-pick candidates: [maintainers/CHERRY-PICK-CANDIDATES.md](maintainers/CHERRY-PICK-CANDIDATES.md)

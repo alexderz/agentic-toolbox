@@ -75,12 +75,12 @@ brief**, the record in the form
 
 ## Ask first
 
-Ask per [Asking the operator](../../docs/SDLC.md#asking-the-human) before:
+Ask per [Asking the operator](../sdlc/SKILL.md#asking-the-human) before:
 
 - Writing a file.
 - Expanding "what should I buy" into "rebuild the product."
 - Ticketed tracking on the board. If used, the **manager** after-acts
-  the board: [Tracker](../../docs/SDLC.md#tracker).
+  the board: [Tracker](../sdlc/SKILL.md#tracker).
 
 ## Never
 
@@ -96,4 +96,4 @@ Ask per [Asking the operator](../../docs/SDLC.md#asking-the-human) before:
 - Never moralize about brands. Grade each candidate against the
   purchase brief.
 - Never name pantheon personas. Call agents by their
-  [SDLC role](../../docs/SDLC.md#roles), or **researcher**.
+  [SDLC role](../sdlc/SKILL.md#roles), or **researcher**.
