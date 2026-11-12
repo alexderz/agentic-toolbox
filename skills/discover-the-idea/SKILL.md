@@ -1,6 +1,6 @@
 ---
 name: discover-the-idea
-description: use this when the user wants to think through a fuzzy idea, gather requirements, pressure-test a plan before building, or says "discover the idea", "grill me", or "interview me". architect gatherer. do not use to implement, scaffold, or critique a finished design.
+description: use this when the user wants to think through a fuzzy idea, gather requirements, pressure-test a plan before building, or says "discover the idea", "grill me", or "interview me"; also as the SDLC refiner, which runs its Refine section. architect gatherer and refiner. do not use to implement, scaffold, or critique a finished design.
 ---
 
 # Discover the idea
@@ -17,8 +17,10 @@ language skill on a gather-only turn:
 
 ## Iron law
 
-**Do not write the thing. Do not decide the thing. Surface the thing.**
-The user owns decisions. You own facts. The session ends in a brief.
+**Do not write the thing. Surface the thing.** The user owns every
+"theirs" question ([Asking the operator](../sdlc/SKILL.md#asking-the-human)).
+Settle a minor point yourself and mark it `your call` in the brief.
+You own facts. The session ends in a brief.
 
 ## Loop
 
@@ -39,8 +41,10 @@ The user owns decisions. You own facts. The session ends in a brief.
 
 1. Restate the dump in one short paragraph, in the user's words,
    tightened, and name what is still vague.
-2. Ask the user to confirm or correct it. Send no question list until
-   they do.
+2. In an SDLC chunk, put the restatement in the brief; the operator
+   corrects it at touchpoint 1. Outside the SDLC, put it at the top of
+   the first question round, or in the brief when no question is
+   left. Never send it alone.
 
 ### 2. Environment (only if it exists)
 
@@ -67,8 +71,17 @@ The environment may not be a code repo. Run this step after the dump.
 The idea is a **design tree**: each decision raises more decisions. The
 **frontier** is every question whose prerequisites are already settled.
 
-1. Ask the whole frontier in one round. Number the questions and give a
-   recommended answer on each, in this format:
+1. Sort each frontier question into the three piles of
+   [Asking the operator](../sdlc/SKILL.md#asking-the-human). Write the
+   answered ones into the brief. Settle the minor ones and mark them
+   `your call`. Keep only "theirs".
+2. In an SDLC chunk, you are not the liaison: write each remaining
+   question as an ask section
+   ([Raising an ask](../sdlc/references/liaison.md#raising-an-ask)) and
+   send no message. Then write the brief, with those questions under
+   Open; do not wait and run no further round. Outside the SDLC, ask
+   the remaining frontier in one round. Number the questions and give
+   a recommended answer on each, in this format:
 
    ```
    ❓ **Q1** — **<title>**: <body, choices if any>
@@ -80,17 +93,17 @@ The idea is a **design tree**: each decision raises more decisions. The
    ➡️ …
    ```
 
-2. Wait for the answers.
-3. Recompute the frontier. A question that depends on another question
+3. Outside the SDLC: while you wait, do the research and look-ups
+   every answer needs. None left → end the turn.
+4. Recompute the frontier. A question that depends on another question
    still open this round goes in the next round.
 
 Push back on vague words ("probably", "later", "something like").
 Propose a strawman they can reject.
 
 Cap the session at four rounds. If round 4 still widens scope, split
-the idea and gather one slice. When the frontier is empty, ask one more
-round on out-of-scope and failure modes; that round counts toward the
-four. Then stop. Also stop when the next question cannot be answered by
+the idea and gather one slice. When the frontier holds no "theirs"
+question, stop. Also stop when the next question cannot be answered by
 talking, for example because it needs a prototype, a screenshot, or a
 live system. Mark those questions open; never invent an answer.
 
@@ -100,24 +113,62 @@ live system. Mark those questions open; never invent an answer.
 
    ```
    Intent
-   Out of scope
+   Decided              — chose A over B because …; minor calls marked `your call`
+   Not yet specified    — in scope, still open; Spec or a Trial settles it
+   Out of scope         — rejected, with a lasting reason
+   Later                — wanted, deferred to a named later phase
    Constraints
-   Decisions          — chose A over B because …
-   Assumptions        — now explicit
-   Options map        — only if step 3 ran
-   Open               — ungrillable or deferred
-   Verify later       — how we would know a later build matched this
+   Assumptions          — now explicit
+   Riskiest assumptions — most uncertain first; the top ones are the Trial slice
+   Standing permissions — budget, disposable environments, may create, may delete
+   Release permission   — its own item; recommend: ship without asking
+   HLD review           — yes or no, with the recommendation
+   Guardrails we added  — `Guardrail:` lines, or none
+   Options map          — only if step 3 ran
+   Open                 — "theirs" questions still unanswered
+   Verify later         — how we would know a later build matched this
    ```
 
-2. Keep the brief in chat. Write a file only when the user asks.
-3. Ask the user to confirm the brief.
-4. Stop. Hand the brief to the refiner only when the user says so.
+2. In an SDLC chunk, write the brief to `brief.md` in the chunk's
+   design folder ([layout](../sdlc/references/conventions.md#product-repo-layout))
+   and hand it to the refiner. Otherwise keep the brief in chat; write
+   a file only when the user asks.
+3. Outside the SDLC, ask the user to confirm the brief. In the SDLC,
+   the manager sends it at touchpoint 1 after Refine:
+   [Chunk brief](../sdlc/references/entry-brief-repo.md#chunk-brief).
+4. Stop.
+
+## Refine
+
+The **refiner** runs this section on a brief it did not gather. It
+makes the brief buildable. It loads no `yagni` and no language skill.
+It gets no say on settled answers or on SDLC shape.
+
+1. Sort every requirement into Decided, Not yet specified or Out of
+   scope. A requirement the operator asked for that cannot be built now
+   → Later; never delete it. Dropping one the operator asked for → a
+   "theirs" question.
+2. Name each contradiction: the two lines and why both cannot hold. A
+   wording satisfies both → propose it. None does → a "theirs" question.
+3. Name the riskiest assumptions, most uncertain first. The top ones are
+   the Trial slice.
+4. Flag each invented requirement: a line no dump sentence, operator
+   answer or looked-up fact supports. Propose removing it.
+5. Run the three-pile sort of
+   [Asking the operator](../sdlc/SKILL.md#asking-the-human) on every open
+   question. Write in the answered ones; settle the minor ones as
+   `your call`.
+6. Return `back to Gather`, with those items as the delta, only when a
+   contradiction has no wording that meets both sides, or a drop of a
+   requirement the operator asked for has no answer yet. Otherwise
+   return `buildable`: Later stays in the brief, and each other
+   "theirs" question goes in the touchpoint 1 batch (R91).
 
 ## Ask first
 
-- Writing `CONTEXT.md`, an ADR, a ticket, or any file.
+- Writing `CONTEXT.md`, an ADR, a ticket, or any file other than the brief, `rulings.md` and `asks.md`.
 - Expanding "this idea" into "rebuild the product."
-- Calling the refiner or a builder before the user confirms the brief.
+- Calling a builder before the operator confirms the brief.
 
 ## Never
 

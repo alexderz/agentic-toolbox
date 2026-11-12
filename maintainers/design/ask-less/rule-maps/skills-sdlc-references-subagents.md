@@ -1,39 +1,62 @@
 # Rule map — `skills/sdlc/references/subagents.md`
 
-Item: DER-736 (A4 of DER-712).
+Item: DER-734 (A2 of DER-712).
 
 Old: `docs/sdlc/subagents.md` at main c26f424, lines 1–136.
 New: [`skills/sdlc/references/subagents.md`](../../../../skills/sdlc/references/subagents.md).
-Disposition: **kept** (same rule, new wording or place), **route** (the
-rule lives in its owner; this file links it), **dropped** (duplicate,
-owner named), **DER-265**, **DER-271**. "Old L" = line at c26f424.
 
-A0 rewrote links only (already on this branch). This item edits two
-phrases in the pack list (old L101–108). No other rule changes.
+Disposition key: **kept**, **route**, **dropped** (owner named), **DER-265**,
+**DER-271**. "Old L" is a line at c26f424. A0 moved the file and rewrote
+links. This map records A2. The insert is a blank line plus two lines after
+old L75, so later lines move down by three. 136 lines become 139 (cap 150).
 
-Protected rule touched: `#tracker-writes` (old L77–81). The row is
-**kept**. **security** reads protected rows at Review.
-
-Operator clarifications (2026-09-27): none of their subjects occur in
-the edited phrases.
+Protected row: `#tracker-writes` (old L77–81). Every row **kept**. The
+insert is under `## Step agents`, not in that section (R85). Operator
+clarifications (2026-09-27): none of their subjects occur in this edit.
 
 | Old L | Rule | Disposition | New location |
 | --- | --- | --- | --- |
 | 1 | Title | kept | L1 |
-| 3–42 | Item agents: work item, mint, contrarian, clean, resume; the two ids; the role table; one pair per item; the five Never bullets | kept | L3–42 |
-| 44–52 | Fallback: resume failure and a transcript that will not load; never pass the other role's transcript; never rotate roles | kept | L44–52 |
-| 54–75 | Step agents: chunk brief, plan–spec, groom, incoming item brief, item grain | kept | L54–75 |
-| 77–81 | Tracker writes (P): only the **manager** writes; builder, verifier, and reviewer prompts carry no tracker-writing instructions | kept; A0 link `../SDLC.md#tracker` → `../SKILL.md#tracker` | L77–81 `#tracker-writes` |
-| 83–88 | Writable worktree: one writable item worktree, or scratch, or one item after another | kept | L83–88 |
-| 90–99 | Spawn prompts: pack when the child needs the bodies, else point; the mode table | kept; A0 link on the Point row | L90–99 |
-| 101 | First gatherer packs `discover-the-idea` | kept | L101 |
-| 102 | First refiner packs `yagni` | pack id `yagni` → `discover-the-idea` (A4). The contrarian on this line still packs `yagni` (kept) | L102 |
-| 103–106 | Designer, UX reviewer, architect, and first builder packs. The builder still packs `yagni` with the language skill, `tdd`, and `debug` | kept | L103–106 |
-| 107–108 | Verifier packs `verify-before-done` plus the proving commands. Reviewer packs `pr-review` plus the range vs project-main | verifier kept. Reviewer also packs `yagni` (A4): `pr-review` and `yagni` plus the range | L107–108 |
-| 110–122 | Resume is delta-only. Four Never bullets on what a pack includes | kept | L110–122 |
-| 124–136 | Workers table; architect reviews tools when the work needs it; workers do not bypass **security** | kept; A0 links | L124–136 |
+| 3 | Item agents heading | kept | L3 |
+| 5–16 | Work item, mint, contrarian, clean, resume | kept | L5–16 |
+| 18–20 | The manager keeps `builder_id` and `verifier_id`. Review adds `reviewer_id`. The three are different agents | kept | L18–20 |
+| 22–26 | First pass and later pass for builder, verifier, and reviewer | kept | L22–26 |
+| 28–29 | One pair per item, including when a manager spawns in parallel | kept | L28–29 |
+| 31–42 | Never: self-gate, shared transcript, reuse across items, remint while resumable, manager as contrarian, builder, or verifier | kept | L31–42 |
+| 44–49 | Fallback: resume failure, or a transcript the harness cannot load, mints a clean agent of the same role with a short handoff | kept | L44–49 |
+| 51–52 | Never pass the other role's transcript. Never rotate roles to save context | kept | L51–52 |
+| 54–70 | Step agents: gatherer and refiner, designer and UX reviewer, groom reviewer, contrarian and troubleshooter | kept | L54–70 |
+| 72–75 | Item grain: fewer agents for a no-screen incoming item. Add security when a trust boundary moves | kept | L72–75 |
+| — | Step agents and item agents raise asks as `liaison.md#raising-an-ask` says, and never message the operator | route (owner `skills/sdlc/references/liaison.md#raising-an-ask`, L1). Adds no condition. Inserted after old L75 (R85) | after the item-grain paragraph |
+| 77–81 | Only the manager writes the tracker. Builder, verifier, and reviewer prompts carry no tracker-writing instructions | kept (protected `#tracker-writes`). A0 rewrote the Tracker link on old L79. This item does not change the section | `#tracker-writes` |
+| 83–88 | On a host that pins one writable worktree, other items write to scratch or run one after another | kept | same section |
+| 90–94 | Pack when the manager holds the bodies and the child needs them. Otherwise point | kept | `#spawn-prompts` |
+| 96–99 | Pack and Point prompt table | kept. A0 rewrote the language-router link on old L99 | same table |
+| 101–108 | Typical pack mints | kept | same paragraph |
+| 110–112 | Resume is delta-only. Pack a new slice, not the whole set | kept | same paragraph |
+| 114–122 | Never: load a catalog to pack it, pack unused skills, pack and also tell the child to read it, or point with no ids | kept | same list |
+| 124–130 | Workers table | kept | `#workers` |
+| 132–133 | The architect adversarial-reviews tools when the work needs it. Other role jobs route to the index | kept. A0 rewrote the Roles link on old L133 | same paragraph |
+| 135–136 | Workers do not bypass security. Worker PR intake routes to intake | kept. A0 rewrote both links | same lines |
 
 ## Meaning questions
+
+None open. The new line is a route. The protected section is unchanged
+by this item. No open MQ.
+
+## A4 (DER-736)
+
+A2's map above is unchanged. A4 edits two phrases in the pack list
+(old L101–108). A2 inserted three lines after old L75, so those phrases
+sit three lines lower than on the A4-only branch. The ask route after
+the item-grain paragraph is A2's.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 102 | First refiner packs `yagni` | Packed id `yagni` → `discover-the-idea` (A4). The contrarian on this line still packs `yagni` (kept) | L105 |
+| 107–108 | Verifier packs `verify-before-done` plus the proving commands. Reviewer packs `pr-review` plus the range vs project-main | Verifier kept. Reviewer also packs `yagni` (A4): `pr-review` and `yagni` plus the range | L110–111 |
+
+## Meaning questions (A4)
 
 None. The two pack-list phrases are the accepted A4 edits. The refiner
 no longer packs `yagni`. The reviewer packs `pr-review` and `yagni`.
