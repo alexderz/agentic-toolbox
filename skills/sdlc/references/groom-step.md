@@ -7,7 +7,7 @@ acyclic. Parallelism in Build comes from those links.
 ## Names
 
 - **`groom.md`**: the plan, from template
-  [`groom.md`](../../skills/sdlc-artifacts/templates/groom.md), at
+  [`groom.md`](../../sdlc-artifacts/templates/groom.md), at
   `.agents/design/<chunk-slug>/groom.md` on project-main; in this skills
   home, `maintainers/design/<chunk-slug>/groom.md`.
 - **`G<n>`**: a work item's id inside `groom.md`, before it has a
@@ -118,7 +118,7 @@ highest wave among its blockers.
 4. A new link would close a cycle → do not write it. Fix the direction
    or drop the link.
 5. A new link would block an item already `in_progress` or `in_review`
-   → [ask the operator](../SDLC.md#asking-the-human) first.
+   → [ask the operator](../SKILL.md#asking-the-human) first.
 6. A separate **architect** agent exists → it reviews the reshape with
    the [Review](#2-review) checks.
 7. **manager** runs `create`, set-blocker, and `ready`.

@@ -68,7 +68,7 @@ Host and personal-account locks are **Never**, not Ask first. There is no “sup
 
 | Role | Owns | Does not own |
 | --- | --- | --- |
-| **security** | The gate; skill intake per [`docs/INTAKE.md`](../../docs/INTAKE.md) | Monthly vuln cadence; [Monthly is not this gate](../../docs/sdlc/trunk-changelog-monthly.md#monthly) |
+| **security** | The gate; skill intake per [`skills/sdlc/references/intake.md`](../sdlc/references/intake.md) | Monthly vuln cadence; [Monthly is not this gate](../sdlc/references/trunk-changelog-monthly.md#monthly) |
 | **operator** | Vuln severity calls, extra hosts, personal-account exceptions | Day-to-day intake scans |
 | **tester** | CI secret-scan and dependency-audit **hooks** | Rewriting this skill or skipping **security** because CI is green |
 | **builder** | Building behind the gate | Self-review as the **security** PR gate |
@@ -76,7 +76,7 @@ Host and personal-account locks are **Never**, not Ask first. There is no “sup
 
 Leave the CI secret-scan and dependency-audit hooks to **tester**; do not remint those jobs in this skill. A green CI hook is not a **security** clear. Escalate vulns to the operator. Never leave one in a “follow-up” with no ticket ID; name the ticket ID.
 
-Workers (remote agents, local CLIs, mirrors) do not bypass **security**; the rule is in [`docs/SDLC.md` Roles](../../docs/SDLC.md#roles).
+Workers (remote agents, local CLIs, mirrors) do not bypass **security**; the rule is in [`skills/sdlc/SKILL.md` Roles](../sdlc/SKILL.md#roles).
 
 ## Review-skill discipline
 

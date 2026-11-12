@@ -249,7 +249,7 @@ without skill names use the README's capability summary.
 - **Last activity:** 2026-09-13 · 3,402 stars
 - **Notes:** Ships a tool installer (`scripts/install_ctf_tools.sh`).
   The README's install path is `npx skills add`; this repository's
-  [intake rules](../INTAKE.md) say to clone instead.
+  [intake rules](../../skills/sdlc/references/intake.md) say to clone instead.
 
 **Catalog.** One top-level folder per skill: `ctf-web`, `ctf-pwn`,
 `ctf-crypto`, `ctf-reverse`, `ctf-forensics`, `ctf-malware`, `ctf-osint`,
@@ -593,7 +593,7 @@ which found prompt injection in 36% of the skills it tested
 
 **Vet any community pack before an agent or bot loads it.** In this
 repository, third-party skill content goes through
-[security intake](../INTAKE.md): clone instead of marketplace-installing,
+[security intake](../../skills/sdlc/references/intake.md): clone instead of marketplace-installing,
 quarantine scripts, scan, pin a commit SHA, and rewrite. Registries such
 as skills.sh rank by installs, not by review.
 
@@ -611,5 +611,5 @@ or action; a matching name is not proof.
 
 ## Related
 
-- [Third-party skill intake](../INTAKE.md)
+- [Third-party skill intake](../../skills/sdlc/references/intake.md)
 - [Security hardening skill](../../skills/security-hardening/SKILL.md)

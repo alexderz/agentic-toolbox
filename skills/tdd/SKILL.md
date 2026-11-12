@@ -15,7 +15,7 @@ Wrote code first? Delete it. Restart from a failing test. Do not keep it as refe
 
 ## Ask first
 
-Stop and ask the operator, or someone the operator names in writing, before skipping the cycle for a topic below. Ask per [Asking the operator](../../docs/SDLC.md#asking-the-human).
+Stop and ask the operator, or someone the operator names in writing, before skipping the cycle for a topic below. Ask per [Asking the operator](../sdlc/SKILL.md#asking-the-human).
 
 | Topic | Why it is a stop |
 | --- | --- |

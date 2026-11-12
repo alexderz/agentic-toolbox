@@ -46,7 +46,7 @@ Keep pip / Poetry / mypy / black only when the operator says so.
 
 | Never | Instead | Why |
 | --- | --- | --- |
-| Marketplace `npx skills add` / plugin install | Follow [INTAKE.md](../../docs/INTAKE.md) | Intake owns third-party skills |
+| Marketplace `npx skills add` / plugin install | Follow [INTAKE.md](../sdlc/references/intake.md) | Intake owns third-party skills |
 | `scripts/` in this skill dir | Keep this skill `SKILL.md` only | Intake quarantine |
 | Hand-edit `pyproject.toml` to add/remove deps | `uv add` / `uv remove` | `uv.lock` is the install truth |
 | Secrets in `pyproject.toml`, scripts, or lockfiles | Leave them out; see [`security-hardening`](../security-hardening/SKILL.md#never) | History is forever |

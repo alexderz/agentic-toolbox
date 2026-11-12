@@ -20,10 +20,10 @@ posts one verdict on the ticket with `tracker-sdlc` `comment`:
 | Honors the existing HLD | `honors` |
 | Needs a small clarification, made in place | `clarification` |
 | Changes shape: for example new parts, a new trust boundary, a new screen, several tickets | `escalate` to a chunk. Never edit the HLD quietly for a shape change. |
-| Has no HLD to align to | Ask the operator ([Asking the operator](../SDLC.md#asking-the-human)): stub or promote. |
+| Has no HLD to align to | Ask the operator ([Asking the operator](../SKILL.md#asking-the-human)): stub or promote. |
 
 In this skills home, when the change is the process itself, `docs/ARCHITECTURE.md`
-and the SDLC ([`docs/SDLC.md`](../SDLC.md) and its step files) count as the plan.
+and the SDLC ([`skills/sdlc/SKILL.md`](../SKILL.md) and its step files) count as the plan.
 
 ### Comparables
 
@@ -37,7 +37,7 @@ If there are screens, **designer** looks too.
 4. If the confirmed brief has an options map, reuse it. Still write this page.
 5. Cite only the real examples. Never invent an "industry standard".
 
-Skip this page only if the operator waives look-around in writing ([Asking the operator](../SDLC.md#asking-the-human)).
+Skip this page only if the operator waives look-around in writing ([Asking the operator](../SKILL.md#asking-the-human)).
 
 **Never**
 
@@ -119,7 +119,7 @@ No screen: write `n/a` and why. Do not invent pictures.
    trust boundaries: authn/z, secrets, egress, data class, who may write what.
 2. **architect** accepts the LLD, and **security** accepts it on trust
    boundaries.
-3. **operator** accepts the LLD after them ([Asking the operator](../SDLC.md#asking-the-human)).
+3. **operator** accepts the LLD after them ([Asking the operator](../SKILL.md#asking-the-human)).
 4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:
@@ -145,4 +145,4 @@ surfaces in the same land as the change. The Build
 current with the item.
 
 Skills, templates, and other technical docs use engineering words. Do not reuse
-the layperson analogies outside [How software gets built](../how-software-gets-built.md).
+the layperson analogies outside [How software gets built](../../../docs/how-software-gets-built.md).

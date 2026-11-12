@@ -20,9 +20,9 @@ implement with a bot token; hand the build to one of those workers.**
 3. **verifier** checks the final result.
 
 How remote agents and local CLIs fit the process:
-[Workers](../../docs/sdlc/subagents.md#workers). A worker's pull request
+[Workers](../sdlc/references/subagents.md#workers). A worker's pull request
 into this repo still goes through intake:
-[Workers](../../docs/INTAKE.md#workers).
+[Workers](../sdlc/references/intake.md#workers).
 
 ## Default split
 
@@ -89,6 +89,6 @@ degrade falls back to the grok CLI.
 
 ## Roles
 
-Role names and jobs: [Roles](../../docs/SDLC.md#roles). Tracker writes:
-[Tracker](../../docs/SDLC.md#tracker). Host lock:
+Role names and jobs: [Roles](../sdlc/SKILL.md#roles). Tracker writes:
+[Tracker](../sdlc/SKILL.md#tracker). Host lock:
 [Never](../security-hardening/SKILL.md#never).

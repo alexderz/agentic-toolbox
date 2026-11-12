@@ -5,7 +5,7 @@ description: use this at the first tracker touch of a chunk (end of Brief) or an
 
 # SDLC onboarding
 
-Sets up a product repo for the [SDLC](../../docs/SDLC.md). No `scripts/`.
+Sets up a product repo for the [SDLC](../sdlc/SKILL.md). No `scripts/`.
 
 ## Iron law
 
@@ -21,7 +21,7 @@ Sets up a product repo for the [SDLC](../../docs/SDLC.md). No `scripts/`.
 - **Onboarding commit**: the one commit that holds the files the areas'
   Write parts create at a first tracker touch.
 - Roles and branch names (operator, manager, trunk, project-main): as
-  the [SDLC](../../docs/SDLC.md#names) defines them.
+  the [SDLC](../sdlc/SKILL.md#names) defines them.
 - **Governing `AGENTS.md`**: the one [`tracker-sdlc`
   Map](../tracker-sdlc/SKILL.md#map) step 1 selects. **Repo skill**:
   `.agents/tracker/SKILL.md` in that file's directory.
@@ -105,7 +105,7 @@ upgrade diff, not a full onboarding; anything else → fail.
 
 1. Send one message from template
    [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md)
-   ([Asking the operator](../../docs/SDLC.md#asking-the-human)).
+   ([Asking the operator](../sdlc/SKILL.md#asking-the-human)).
 2. Tag each line `[found]` (read live) or `[guess]` (your pick).
 3. Name each gap with its fallback, for example: no native blockers →
    `Blocked-by:` line + `blocked` label. Do not patch the tracker.
@@ -144,11 +144,11 @@ Only after the operator confirms:
 3. Get the ticket id for the commit:
    - item: the item's ticket id;
    - chunk: the Epic id, got as end of chunk Brief says ([Chunk
-     brief](../../docs/sdlc/entry-brief-repo.md#chunk-brief)).
+     brief](../sdlc/references/entry-brief-repo.md#chunk-brief)).
 4. Commit both files as one commit on the [Branch](#branch) step 2 branch:
    `[<ticket-id>] Onboard tracker: <Tracker>`.
 5. **security** reads that change as
-   [INTAKE Workers](../../docs/INTAKE.md#workers) says for a repo skill.
+   [INTAKE Workers](../sdlc/references/intake.md#workers) says for a repo skill.
 6. Choice 3 only: the **manager** creates one ticket titled
    `tracker-sdlc test — delete me`, reads it back, transitions it to
    `canceled`, and reports its id.
@@ -170,7 +170,7 @@ valid → Propose.
 ### Propose
 
 1. Send one `ask-human.md` message
-   ([Asking the operator](../../docs/SDLC.md#asking-the-human)): how
+   ([Asking the operator](../sdlc/SKILL.md#asking-the-human)): how
    many work items may be in Build at once? **1** `max`: as many as
    filed ready tickets and worktrees allow · **2** `serial`: one at a
    time · **3** `at most <N>`, `N` a positive integer.
@@ -197,4 +197,4 @@ worktree limit. It never skips, reorders, or relaxes a gate, Review,
   Env var names and host names are allowed.
 - Install an MCP server, CLI, or skill from a marketplace or with
   `npx`. Missing tool → tell the operator what is missing.
-- Add a vendor skill. That is [INTAKE](../../docs/INTAKE.md).
+- Add a vendor skill. That is [INTAKE](../sdlc/references/intake.md).

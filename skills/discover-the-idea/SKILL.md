@@ -11,7 +11,7 @@ not have to be code. The skill has no `scripts/`.
 
 Role: **architect**. In the SDLC Brief step this agent is the
 **gatherer**; gatherer and refiner ids, mint and resume:
-[Step agents](../../docs/sdlc/subagents.md#step-agents). Load no
+[Step agents](../sdlc/references/subagents.md#step-agents). Load no
 language skill on a gather-only turn:
 [No-language turns](../language-router/SKILL.md#no-language-turns).
 
@@ -124,7 +124,7 @@ live system. Mark those questions open; never invent an answer.
 - Never implement, scaffold, or "just sketch the API"; emit the brief.
 - Never critique the brief in the same turn; the refiner does that.
 - Never recommend a tool you have not looked at this session; look first.
-- Never name pantheon personas; use only [Roles](../../docs/SDLC.md#roles).
+- Never name pantheon personas; use only [Roles](../sdlc/SKILL.md#roles).
 
 ## Red flags
 
