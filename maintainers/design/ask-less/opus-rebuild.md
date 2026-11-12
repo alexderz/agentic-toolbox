@@ -278,7 +278,6 @@ grep -c 'liaison.md#raising-an-ask' skills/sdlc/references/subagents.md         
 grep -c 'unchanged, except: it sets' skills/sdlc/references/liaison.md          # 1
 grep -c 'leaves .Answer. empty' skills/sdlc/references/liaison.md               # 1
 grep -c 'post each such commit.s SHA' skills/sdlc/references/liaison.md         # 1
-grep -c 'squash of the item branch, post the new SHAs' skills/sdlc/references/liaison.md   # 1
 grep -c 'not an Always-theirs item or a guardrail ask' skills/sdlc/references/liaison.md   # 2
 grep -c 'among the two lines of its .## Autonomy. section' skills/sdlc/references/liaison.md   # 1
 links skills/sdlc/references/liaison.md skills/sdlc-artifacts/SKILL.md skills/sdlc/references/subagents.md
@@ -505,9 +504,7 @@ anchors skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKIL
 ```markdown
 4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
    `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
-   on the item's ticket names its SHA. Check every other commit that touches the asks file.
-   After a rebase or squash of the item branch, the **manager** posts the new SHAs.
-   1. touches the chunk's `brief.md`;
+   on the item's ticket names its SHA. Check every other commit that touches the asks file.   1. touches the chunk's `brief.md`;
    2. adds an asks-file section whose `Status` is not `open`, or whose `Answer` is not empty;
    3. changes or removes the `Status`, `Answer`, `Choices` or `Recommendation` of an existing
       asks-file section;
@@ -535,7 +532,6 @@ grep -c 'with .pr-review. and .yagni. loaded' skills/sdlc/references/build-revie
 grep -c 'citing the operator.s instruction' skills/sdlc/references/build-review.md      # 1
 grep -c 'Record asks' skills/sdlc/references/build-review.md                            # 1
 grep -c 'on the item.s ticket names its SHA' skills/sdlc/references/build-review.md      # 1
-grep -c 'the \*\*manager\*\* posts the new SHAs' skills/sdlc/references/build-review.md   # 1
 links skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 anchors skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 ```
@@ -1230,7 +1226,7 @@ Overlay review round 1 (tags: **SEC** — the security review, F1–F6; **DES** 
   | Supporting file | Lines | Effect |
   | --- | --- | --- |
   | `index-asking.md` | 105 | index 242/250 |
-  | `liaison.md` | 128 | of 150 |
+  | `liaison.md` | 127 | of 150 |
   | `yagni.md` | 40 | — |
 
   The other files' totals are estimates. Their caps, not their totals, are the bar.
