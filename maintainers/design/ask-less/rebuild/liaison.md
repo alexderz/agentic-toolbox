@@ -64,8 +64,8 @@ question, or a new guardrail ([Asking the operator](../SKILL.md#asking-the-human
    | A session that is not the liaison, and the host can message the liaison's session | Send it one notice: `asks: <path> <ids>`, nothing else. The notice fails → send nothing more; the pull finds the ask |
    | A session that cannot message the liaison | Nothing more now; the pull finds the ask |
 
-   A manager that is not the liaison and reads `asks: <path> <ids>` in a child's result → send the liaison that notice, with
-   the new id of any ask it renumbered at step 3.
+   A manager that is not the liaison and reads `asks: <path> <ids>` in a child's result → send the liaison
+   `asks: <path> <ids>`, with the new id in place of the old one for any ask it renumbered at step 3.
 5. Keep working: [While a question is open](../SKILL.md#while-a-question-is-open).
 6. No such work is left → end your turn. You are not the liaison → end the stage with `status` `needs_input` and `question`
    `asks: <path> <ids>` ([Schema](stage-result.md#schema)).
@@ -103,8 +103,9 @@ the path and pull. A child is done when its stage result is persisted ([stage-re
    `Answer: auto — <recommended number>` and `Status: answered`, log the auto decision as its own ruling, and list it at the
    next touchpoint. Do not send it. Its source is in auto mode when the product's `AGENTS.md` on trunk has `Auto mode: on`
    among the two lines of its `## Autonomy` section ([Asking the operator](../SKILL.md#asking-the-human), Auto mode source 1)
-   (repo scope), or when the ask is your own and the operator put you in agent scope. An ask is your own only when you wrote
-   its section yourself; never decide it from `From`. Never extend your scope, or a child's, to an ask from another source.
+   (repo scope), or when the ask is your own and the operator put you in agent scope. An ask is your own only when you raised
+   it yourself. A section you wrote into the live copy for a child at [Raising an ask](#raising-an-ask) step 3 is the
+   child's. Never decide it from `From`. Never extend your scope, or a child's, to an ask from another source.
 4. A touchpoint is due → each item it asks for is an ask section before it is sent. Raise any that is missing
    ([Raising an ask](#raising-an-ask), steps 3–4). The touchpoint's message is the batch.
 5. Send a batch when a touchpoint is due, or when an open ask has not yet been in a message to the operator. Otherwise send

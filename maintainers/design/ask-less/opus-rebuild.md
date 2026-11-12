@@ -284,7 +284,9 @@ grep -c 'post each such commit.s SHA' skills/sdlc/references/liaison.md         
 grep -c 'not an Always-theirs item or a guardrail ask' skills/sdlc/references/liaison.md   # 2
 grep -c 'among the two lines of its .## Autonomy. section' skills/sdlc/references/liaison.md   # 1
 grep -c 'use the new id in your .asks:. pointer and at step 7' skills/sdlc/references/liaison.md   # 1
-grep -c 'never decide it from .From.' skills/sdlc/references/liaison.md                  # 1
+grep -c 'Never decide it from .From.' skills/sdlc/references/liaison.md                  # 1
+grep -c 'for a child at' skills/sdlc/references/liaison.md                               # 1
+grep -c 'with the new id in place of the old one' skills/sdlc/references/liaison.md      # 1
 grep -c 'Auto mode source 2' skills/sdlc/references/liaison.md                           # 1
 grep -c 'keep is \*\*1\*\*' skills/sdlc/references/liaison.md                             # 1
 grep -c '\*\*1\*\* keep' skills/sdlc-artifacts/templates/ask-human.md                     # 2
@@ -1185,7 +1187,7 @@ Overlay review round 1 (tags: **SEC** — the security review, F1–F6; **DES** 
 Item checks after G2 landed (tags: **G3S** — the G3 security read, B1 and N1–N3; **G11V** — the G11 verify, B1 and N1):
 
 - R190. Ruling: a manager that renumbers a transcribed ask tells the raiser the new id when it resumes it, and relays the new id to the liaison; the raiser uses it in its `asks:` pointer and at step 7 (G3S B1) — R184's re-id left the raiser reading another ask's `Answer` by its old id — none; it completes R184.
-- R191. Ruling: an ask is the liaison's own only when it wrote the section itself, never by `From`; Raising step 2 links the auto-mode sources; a guardrail reply maps keep, change, remove to **1**, **2**, **3** in the template and the Answers forms (G3S N1–N3) — clarity for small readers; no control changes — leave as written.
+- R191. Ruling: an ask is the liaison's own only when it raised it itself; a section it transcribed for a child is the child's; never decide it by `From` (amended by the overlay security re-check S6-1); Raising step 2 links the auto-mode sources; a guardrail reply maps keep, change, remove to **1**, **2**, **3** in the template and the Answers forms (G3S N1–N3) — clarity for small readers; no control changes — leave as written.
 - R192. Ruling: §5 rule 3 defers `links` targets a later item creates, as rule 4 does for anchors, and G11's proof says which targets (G11V B1) — G11's exact LLD text links to G12's files, so its Verify could never pass on the item branch — none.
 - R193. Ruling: G11 item 14 names the `t3-key.md` trigger-row move that makes its intro true (G11V N1) — the builder had to improvise it; no cell changes — none.
 
@@ -1248,7 +1250,7 @@ Item checks after G2 landed (tags: **G3S** — the G3 security read, B1 and N1�
   | Supporting file | Lines | Effect |
   | --- | --- | --- |
   | `index-asking.md` | 105 | index 242/250 |
-  | `liaison.md` | 131 | of 150 |
+  | `liaison.md` | 132 | of 150 |
   | `yagni.md` | 40 | — |
 
   The other files' totals are estimates. Their caps, not their totals, are the bar.
