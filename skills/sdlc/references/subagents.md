@@ -102,13 +102,13 @@ manager holds the bodies and the child needs them → **Pack**; else →
 | **Point** | High-level task + which skill ids / MCP servers to load (or the host default: "read the matching `SKILL.md`"). | Load those itself. Still [**at most one** language-family skill](../../language-router/SKILL.md#iron-law). |
 
 Typical pack mints: first gatherer with `discover-the-idea`; first
-refiner with `yagni`; contrarian with `yagni`; designer with
+refiner with `discover-the-idea`; contrarian with `yagni`; designer with
 `ux-design` + `sdlc-artifacts`; UX reviewer, review loop only, with
 `ux-design`; architect Plan/Spec with `sdlc-artifacts`; first builder
 with one language skill + `tdd` / `yagni` / `debug` /
 `docs-google-style`, no `tracker-sdlc`, no tracker writes; verifier
 with `verify-before-done` plus the proving commands; reviewer with
-`pr-review` plus the range vs project-main.
+`pr-review` and `yagni` plus the range vs project-main.
 
 **Resume** is always delta-only. Do not re-pack skills or MCP guides
 already in that child's transcript. A new skill or tool is required on

@@ -43,3 +43,20 @@ clarifications (2026-09-27): none of their subjects occur in this edit.
 
 None open. The new line is a route. The protected section is unchanged
 by this item. No open MQ.
+
+## A4 (DER-736)
+
+A2's map above is unchanged. A4 edits two phrases in the pack list
+(old L101–108). A2 inserted three lines after old L75, so those phrases
+sit three lines lower than on the A4-only branch. The ask route after
+the item-grain paragraph is A2's.
+
+| Old L | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 102 | First refiner packs `yagni` | Packed id `yagni` → `discover-the-idea` (A4). The contrarian on this line still packs `yagni` (kept) | L105 |
+| 107–108 | Verifier packs `verify-before-done` plus the proving commands. Reviewer packs `pr-review` plus the range vs project-main | Verifier kept. Reviewer also packs `yagni` (A4): `pr-review` and `yagni` plus the range | L110–111 |
+
+## Meaning questions (A4)
+
+None. The two pack-list phrases are the accepted A4 edits. The refiner
+no longer packs `yagni`. The reviewer packs `pr-review` and `yagni`.

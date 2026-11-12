@@ -26,6 +26,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).
 - Evals: C6 "no unneeded ask" on every task; the T1 key drops the Execution ask; T3 triggers follow the escalation ladder (DER-712).
 - Asking the operator: the three-pile sort, what vs how, cost to undo, real vs disposable, standing permissions, rulings, guardrails, auto mode, the escalation ladder and four touchpoints (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
