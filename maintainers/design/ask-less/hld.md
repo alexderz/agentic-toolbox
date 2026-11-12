@@ -475,9 +475,9 @@ keys (R8).
 | E4 | Baseline on `main`: T1–T4, both models, 3 repeats; `baseline.md` rows; DER-296 linked as related (R106) | E1, E2, E3 |
 | E5 | PR-head run and report, regressions first; release guard | E4, A0–A9 |
 
-Land order after A0: A1, A2, then A3–A9 in any order. A1 and A2 are a
-land order, not blockers: the LLD's anchor map lets each item link
-ahead.
+Land order after A0: A1, A2, then A3–A9 in any order, and E1 then E2,
+both after A2 (R108). These are land order, not blockers: the LLD's
+anchor map lets each item link ahead.
 
 ### Alternatives rejected
 
@@ -528,8 +528,9 @@ list after Spec round 2.
   provider and one model credential inside the isolated runner. The
   procedure's security read, isolation and pre-run probe apply to each;
   the read records the credential, its scope and how to revoke it, the
-  exact endpoints, and each runner's sharing, update, plugin and bind
-  settings (R83).
+  exact endpoints, each runner's sharing, plugin and bind settings,
+  and its installed version per run, never pinned, with host updates
+  left on (R83, R107).
 - **Agent authority**: agents now decide two-way doors and wipe
   disposable resources without asking. The boundary is real vs
   disposable, judged from the stated evidence; disposable excludes

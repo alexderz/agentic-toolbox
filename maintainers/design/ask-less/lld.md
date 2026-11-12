@@ -169,13 +169,13 @@ for f in knowledge/ai/vendors/*.md; do same "$f" "$f" "$kn"; done
 for f in maintainers/AGENTS.md maintainers/CHERRY-PICK-CANDIDATES.md maintainers/CI-HOOKS-PLAN.md maintainers/goal.md; do same "$f" "$f" "$mnt"; done
 diff <(git show "$base:maintainers/writing-standard.md" | sed -E "142!{$mnt}") maintainers/writing-standard.md | grep -c '^[<>]'   # prints: 2 (L141 only)
 git diff "$base" -- CHANGELOG.md | grep -c '^+[^+]'   # prints: 1
-git diff --quiet "$base" -- docs/engineering-with-ai/log.md maintainers/design maintainers/evals
+git diff --quiet "$base" -- docs/engineering-with-ai/log.md maintainers/evals
 # 3. no old path left outside the exempt files
 grep -rnE 'docs/(SDLC\.md|sdlc/|INTAKE\.md)' --include='*.md' . \
   | grep -vE '^\./(CHANGELOG\.md|docs/engineering-with-ai/log\.md|maintainers/design/|docs/SDLC\.md:)' \
   | grep -v '^\./maintainers/writing-standard\.md:142:'
 # 4. every relative link in a changed file resolves (K7, files part)
-for f in $(git diff --name-only "$base" -- '*.md'); do [ -f "$f" ] || continue
+for f in $(git diff --name-only "$base" -- '*.md' ':!maintainers/design'); do [ -f "$f" ] || continue
   grep -oE '\]\([^)#: ]+(#[^) ]*)?\)' "$f" | sed -E 's/^\]\(([^)#]*).*/\1/' | while read -r t; do
     [ -n "$t" ] && { [ -e "$(dirname "$f")/$t" ] || echo "$f -> $t"; }; done; done
 # 5. counts
@@ -195,6 +195,12 @@ git diff --quiet "$base" -- skills/tracker-sdlc/adapters/local.md || echo "K5 lo
 Part 1 proves the move changed no wording: the only difference between
 each old file and its new copy is what the path rules produce. Part 6
 runs the protected-row checks directly, as the writing standard asks.
+Parts 2 and 4 leave out `maintainers/design/`: its records predate A0,
+quote links relative to target files, and gain A0's path map (R108).
+K7's anchor check for anchors that later items create (`liaison.md`'s
+anchors, `#refine`, `#escalation`, `#touchpoints`,
+`#while-a-question-is-open`) runs on the integrate head at E5, once the
+files exist.
 
 **Protected rows** (writing standard, Protected rules): A0 changes only
 paths in them; each maps `kept`.
@@ -1211,7 +1217,8 @@ ruling. Then append these to the Notes cells:
 | `sdlc-artifacts` | ` Template asks.md and the batch shape of ask-human.md (DER-712).` |
 | `ux-design` | ` Wording edit DER-712 (design gate route), pins unchanged; security-cleared YYYY-MM-DD.` |
 
-`YYYY-MM-DD` is the date of that item's **security** read.
+`YYYY-MM-DD` is the date of A9's own **security** read of these sources;
+it waits on no other item's read (R109).
 
 #### E1 — Eval text
 
@@ -1236,9 +1243,10 @@ ruling. Then append these to the Notes cells:
    The read also records: which one model credential enters the runner
    home (a login file or an API-key variable), its scope, and how to
    revoke it; the exact endpoints the runner reaches, a login-refresh
-   endpoint included; that any session-sharing feature is off, auto-update
-   is off, no language server or plugin is downloaded, and the version is
-   pinned; any UI or socket the runner serves, its bind (loopback only;
+   endpoint included; that any session-sharing feature is off and no
+   language server or plugin is downloaded; the installed version, as
+   recorded for each run (no package pin, and host updates stay on);
+   any UI or socket the runner serves, its bind (loopback only;
    any other bind is `security-hardening` Ask first), and where it keeps
    session state (inside the runner home); that no front end needs a
    login of its own; and, for a paid key, that the provider-side credit
@@ -1609,7 +1617,7 @@ For each runner in the procedure's Models table, in order:
    | Runner | Recorded |
    | --- | --- |
    | grok CLI, Grok 4.7 | The operator's existing subscription login is the one credential: which file holds it in the runner home, its scope, how to revoke it if needed. No dedicated login is made and none is revoked after E5. The model and login-refresh endpoints |
-   | OpenCode with `openrouter`, under T3 Code | The OpenRouter key is the one credential, as an environment variable; its scope and how to revoke it; the provider-side credit limit, confirmed as the operator's own. OpenCode: session sharing off, auto-update off, no language-server or plugin download, version pinned. T3 Code: its bind (loopback only), its session-state location (inside the runner home), and that it needs no login of its own. The OpenRouter endpoints |
+   | OpenCode with `openrouter`, under T3 Code | The OpenRouter key is the one credential, as an environment variable; its scope and how to revoke it; the provider-side credit limit, confirmed as the operator's own. OpenCode: session sharing off, no language-server or plugin download, the installed version recorded in each run file (no pin; host updates stay on; R107). T3 Code: its bind (loopback only), its session-state location (inside the runner home), and that it needs no login of its own. The OpenRouter endpoints |
 
    The read also states: a hit on the login file's contents in a
    transcript or scratch repo → revoke it (R102).
@@ -1659,7 +1667,7 @@ For each runner in the procedure's Models table, in order:
 | Protected Ask-first rows | Always theirs; only the operator's own answer settles them; auto mode, under either scope, still sends them; on an LLD, **security** may decide the `security-hardening` rows (R13, R75, R76) | index `#asking-the-human` |
 | Agents acting on disposable resources | Only what the chunk created, minus credentials and anything published, sent outside or shared on a remote other than its own branches; one-way doors on real resources still need an ask or a standing permission; deleting or disabling a check is waiving a check | index `#asking-the-human` |
 | Security controls in products | A control that `security-hardening`, the LLD's trust boundaries or a **security** finding requires is a rule, not a guardrail; `yagni` never removes it | index Guardrails; `yagni` Always |
-| Eval runners holding a model login or key | One model credential in the empty runner home, recorded by the security read with its scope and revocation; egress only to the endpoints the read lists; the probe finds no other credential; never written to a run file; sharing, auto-update and plugin download off, version pinned; any bind loopback only; transcripts and session state stay on the runner | `procedure.md` Runner needs, Isolation, Pre-run probe, Records; E3 |
+| Eval runners holding a model login or key | One model credential in the empty runner home, recorded by the security read with its scope and revocation; egress only to the endpoints the read lists; the probe finds no other credential; never written to a run file; sharing and plugin download off; installed version recorded per run, never pinned (R107); any bind loopback only; transcripts and session state stay on the runner | `procedure.md` Runner needs, Isolation, Pre-run probe, Records; E3 |
 | Public design text in this skills home | `rulings.md` and `asks.md` here are public: K10 before each push; no names, hosts or private paths; answers in own words | root `AGENTS.md` Public repo; writing standard K10 |
 
 No authn/z, secret store or tracker contract changes. `stage-result.md`
@@ -1701,7 +1709,8 @@ Run on the integrate head after each land, and in full before E5:
 ### Land
 
 - Project-main: `integrate/ask-less`; items land in the order A0, A1,
-  A2, then A3–A9 and E1–E2 in any order; E3–E5 after them.
+  A2, then A3–A9 in any order, and E1 then E2, both after A2; E3–E5
+  after them. This is land order only, not a blocker.
 - Each item's commits cite its ticket id; the Trunk merge cites DER-712.
 - One PR into `main` for the chunk, after E5.
 
