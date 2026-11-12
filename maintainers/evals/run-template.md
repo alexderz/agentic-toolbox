@@ -2,7 +2,7 @@
 
 Copy this file once per model and commit under test to
 `runs/<YYYY-MM-DD>-<sha7>-<model-slug>.md`, keep the sections from
-`## Run` down, and fill them. One file holds every repeat of T1–T3 on
+`## Run` down, and fill them. One file holds every repeat of T1–T4 on
 that model. Procedure: [procedure.md](procedure.md).
 
 The file is public. Write no hostnames, IPs, model-server URLs or
@@ -29,23 +29,36 @@ One line per regression, or `none`:
 
 `<task> <item>: <n>/3 → <m>/3 — <phrase>`
 
+T4 needed asks kept: `<n>` → `<m>` — <phrase>
+
 ## Results
 
-C1–C5 and Completed: passes out of 3 (`n/3`). A repeat scored `n/a`
+C1–C6 and Completed: passes out of 3 (`n/3`). A repeat scored `n/a`
 because the run ended before the item ("not reached") counts as a
 non-pass. Write `n/a` for a task only where the card says the item
 does not apply; C5 is never `n/a`. Tokens and wall time: `median (min–max)`,
 never a pass bar.
 
-| Task | Completed | C1 | C2 | C3 | C4 | C5 | Tokens in/out | Wall |
-| --- | --- | --- | --- | --- | --- | --- | --- | --- |
-| T1 | `n/3` | `n/3` | `n/3` | `n/a` | `n/3` | `n/3` | `<in> (<low>–<high>)` / `<out> (<low>–<high>)` | `<minutes> (<low>–<high>)` |
-| T2 | `n/3` | `n/a` | `n/3` | `n/3` | `n/3` | `n/3` | same | same |
-| T3 | `n/3` | `n/3` or `n/a` | `n/3` | `n/3` | `n/3` | `n/3` | same | same |
+| Task | Completed | C1 | C2 | C3 | C4 | C5 | C6 | Tokens in/out | Wall |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| T1 | `n/3` | `n/3` | `n/3` | `n/a` | `n/3` | `n/3` | `n/3` | `<in> (<low>–<high>)` / `<out> (<low>–<high>)` | `<minutes> (<low>–<high>)` |
+| T2 | `n/3` | `n/a` | `n/3` | `n/3` | `n/3` | `n/3` | `n/3` | same | same |
+| T3 | `n/3` | `n/3` or `n/a` | `n/3` | `n/3` | `n/3` | `n/3` | `n/3` | same | same |
+| T4 | `n/3` | `n/3` | `n/3` | `n/a` | `n/3` | `n/3` | `n/3` | same | same |
+
+## T4 counts
+
+Per repeat. Rules: [t4-key.md](t4-key.md#counts).
+
+| Repeat | Unneeded asks | Needed asks kept | Guardrails added | Guardrails disclosed |
+| --- | --- | --- | --- | --- |
+| r1 | `<n>` | `<n>/4` | `<n>` | `<n>` |
+| r2 | `<n>` | `<n>/4` | `<n>` | `<n>` |
+| r3 | `<n>` | `<n>/4` | `<n>` | `<n>` |
 
 ## Evidence
 
-One block per task and repeat, in order T1 r1 … T3 r3. Each C line: the
+One block per task and repeat, in order T1 r1 … T4 r3. Each C line: the
 phrase that shows pass or fail, and where it is (transcript turn
 number, or a file in `origin.git`).
 
@@ -57,6 +70,7 @@ number, or a file in `origin.git`).
 - C3: (T2: filed links as `Kx ← Ky`; traps hit)
 - C4:
 - C5: (agent labels per job)
+- C6: over-ask row ids used, or `none`
 - Replies used: row ids in order, e.g. `R1, R2`; unprompted `Continue.`
   `0` | `1`
 - Deviations: rows from the task key's Deviations table that occurred,
@@ -72,3 +86,4 @@ number, or a file in `origin.git`).
 - `pass` needs positive evidence, not the absence of a failure.
 - One failing instance fails the item for the run.
 - A run that ended early: score what happened before the end.
+- C6: by [Judging an ask](procedure.md#judging-an-ask-c6).
