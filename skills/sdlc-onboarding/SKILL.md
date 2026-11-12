@@ -1,6 +1,6 @@
 ---
 name: sdlc-onboarding
-description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`; also when `## Execution` (the Parallelism ceiling) is absent or its check fails. do not use once the checks pass, or to change tracker schema.
+description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`; also write `## Execution` as `Parallelism: max` when it is absent or its check fails. do not use once the checks pass, or to change tracker schema.
 ---
 
 # SDLC onboarding
@@ -9,8 +9,9 @@ Sets up a product repo for the [SDLC](../sdlc/SKILL.md). No `scripts/`.
 
 ## Iron law
 
-1. Propose before you write.
-2. Land nothing in the repo or the tracker until the operator answers.
+1. Tracker area: propose before you write.
+2. Tracker area: land nothing in the repo or the tracker until the
+   operator answers.
 3. Never change the tracker schema: states, types, fields, labels,
    workflows. Name a missing piece as a gap in the proposal instead.
 
@@ -35,15 +36,15 @@ Sets up a product repo for the [SDLC](../sdlc/SKILL.md). No `scripts/`.
 | Spec entry gate | Every area's Check |
 | Build dispatch | Execution Check |
 
-A Check fails → run that area's Discover, Propose, and Write before the
-step continues. At a first tracker touch, get both areas' answers
-before the onboarding commit: `## Execution` goes in that commit. A new
-area adds a section with the same four parts and one row in this table;
-nothing else changes.
+A Check fails → run that area's Discover and Propose. Run the Tracker
+Write only after the operator answers its proposal; at end of chunk
+Brief that answer comes at touchpoint 1. `## Execution` needs no answer
+and goes in the onboarding commit. A new area adds a section with the
+same four parts and one row in this table; nothing else changes.
 
 ## Branch
 
-1. Before any area's Discover, cut the branch if it is absent. Chunk:
+1. Before any area's Write, cut the branch if it is absent. Chunk:
    project-main (`integrate/<chunk-slug>`) from trunk. Item:
    `item/<ticket-id>-<slug>` from project-main if one exists, else trunk.
 2. Put the onboarding commit here:
@@ -75,6 +76,11 @@ upgrade diff, not a full onboarding; anything else → fail.
 
 ### Discover
 
+At end of chunk Brief, each "ask the operator" or "tell the operator"
+in these steps is an ask section in the chunk's asks file
+([Raising an ask](../sdlc/references/liaison.md#raising-an-ask)); the
+liaison sends it in touchpoint 1's batch. Send no message from here.
+
 1. Find the tracker. Look in this order:
    1. the operator's statement;
    2. an existing `## Tracker` in the governing `AGENTS.md`;
@@ -103,9 +109,10 @@ upgrade diff, not a full onboarding; anything else → fail.
 
 ### Propose
 
-1. Send one message from template
-   [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md)
-   ([Asking the operator](../sdlc/SKILL.md#asking-the-human)).
+1. At end of chunk Brief, the proposal goes in touchpoint 1's message
+   ([Chunk brief](../sdlc/references/entry-brief-repo.md#chunk-brief)).
+   Otherwise send one message from template
+   [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md).
 2. Tag each line `[found]` (read live) or `[guess]` (your pick).
 3. Name each gap with its fallback, for example: no native blockers →
    `Blocked-by:` line + `blocked` label. Do not patch the tracker.
@@ -122,8 +129,8 @@ upgrade diff, not a full onboarding; anything else → fail.
 6. `local` only: put the first `tickets` bootstrap on its own proposal
    line, because it creates a shared remote branch. Add the signing
    choice: the default follows the operator's git signing config; off
-   only if the operator chooses it (for example, pinentry would hang a
-   headless agent). Record the choice under Gaps. Signing off → flag it
+   only if the operator chooses it (for example, pinentry would hang an
+   agent with no terminal). Record the choice under Gaps. Signing off → flag it
    there as a security note: commits on `tickets` then carry no
    authorship proof.
 
@@ -169,14 +176,8 @@ valid → Propose.
 
 ### Propose
 
-1. Send one `ask-human.md` message
-   ([Asking the operator](../sdlc/SKILL.md#asking-the-human)): how
-   many work items may be in Build at once? **1** `max`: as many as
-   filed ready tickets and worktrees allow · **2** `serial`: one at a
-   time · **3** `at most <N>`, `N` a positive integer.
-2. Accept no other answers.
-3. Recommend `max` unless a shared resource limits it.
-4. Until the operator answers, Build runs one item at a time.
+1. The value is `max`. Do not ask the operator.
+2. The operator may change it later; Write step 3 records the change.
 
 ### Write
 
