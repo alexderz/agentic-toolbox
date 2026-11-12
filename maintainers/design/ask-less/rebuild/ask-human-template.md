@@ -13,7 +13,7 @@
 
 **Guardrails we added**
 
-Each needs its own answer: keep, change, or remove. Listed until answered.
+Each needs its own answer: **1** keep · **2** change · **3** remove. Listed until answered.
 
 - **<GR id>** `Guardrail: <what> — <why> — <what it costs> — <how to remove it>`
 - or `none`
@@ -29,4 +29,4 @@ Each needs its own answer: keep, change, or remove. Listed until answered.
 
 **What to reply**
 
-Per ask id: **1**, **2** or **3**, "wait", or "don't need my OK on this". Per guardrail id: keep, change, or remove.
+Per ask id: **1**, **2** or **3**, "wait", or "don't need my OK on this". Per guardrail id: **1** keep, **2** change or **3** remove.
