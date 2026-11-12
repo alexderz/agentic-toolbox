@@ -23,6 +23,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- SOURCES.md: intent credits for the upstream asking ideas (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
 
 ## instruction-refinement — 2026-10-04
