@@ -23,6 +23,8 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
+
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
 
 ## instruction-refinement — 2026-10-04

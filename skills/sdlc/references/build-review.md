@@ -13,16 +13,15 @@ Branch source for each item: see [Branches](branches-and-lands.md#branches).
 ### Open blockers
 
 Do not land past an open blocker to "make progress". If any blocker is
-open, resolve it, ask, or defer the item:
+open, resolve it or defer the item:
 
-1. If the blocker is an item in this chunk, **resolve** it first: work
+1. The blocker is an item in this chunk → **resolve** it first: work
    that item, honoring *its* blockers, then return.
-2. Otherwise, ask the operator ([Asking the operator](../SKILL.md#asking-the-human))
-   whether to wait, drop the wait, or go ahead anyway. **manager**
-   records the call on the ticket with `comment`.
-3. If the operator is not available and the blocker cannot be resolved
-   here, **defer** the item. Pick an unblocked item. Do not start the
-   deferred item.
+2. Otherwise → **defer** the item. Pick an unblocked item. Do not start
+   the deferred item. **manager** records the deferral on the ticket
+   with `comment`.
+3. No unblocked item is left in the chunk → escalate the blocker:
+   [Escalation](../SKILL.md#escalation).
 
 ### Dispatch
 
@@ -35,7 +34,7 @@ the product repo's `## Execution`:
 | `max` | None |
 | `serial` | One item in Build at a time |
 | `at most <N>`, where N is a positive integer | N items in Build at a time |
-| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which asks the operator. Run one item at a time until the operator answers. |
+| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which writes `Parallelism: max`. Then use the `max` row. |
 
 The ceiling never orders work; blockers do. The harness may run fewer
 items: see [Writable worktree](subagents.md#writable-worktree).
@@ -75,7 +74,8 @@ On an unexpected failure:
 
 Debug in Build is **not** a second Brief: find the root cause with
 `debug` on the chosen fix. Do not re-open item Brief unless the failure
-shows the chosen fix was the wrong *kind* of change; then escalate.
+shows the chosen fix was the wrong *kind* of change; then escalate one
+rung: [Escalation](../SKILL.md#escalation).
 
 ### Skills-home DoD
 
