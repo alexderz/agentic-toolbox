@@ -263,11 +263,11 @@ shows it at the next touchpoint) → **brief** (the operator; the only
 rung that interrupts). Grain's "Build finds a shape change" bullet is
 deleted. Chunk B adds the component rungs.
 
-Budget (corrected at Spec, R56, R96): the index is 174 lines today.
-The asking section with escalation and touchpoints is 109 lines;
+Budget (corrected at Spec, R56, R96, R99): the index is 174 lines
+today. The asking section with escalation and touchpoints is 110 lines;
 frontmatter 4; How to read stays 3 lines; one Steps row; Grain −2;
 `liaison` is defined in the asking section, not in Names. Exact total
-246 of 250.
+247 of 250.
 
 ### Liaison (`references/liaison.md`)
 
@@ -491,7 +491,7 @@ ahead.
 - **T4 is long and noisy.** Many steps, three repeats, scripted replies
   matched by meaning. Marked reply rows and the judging table keep the
   scorer's calls checkable.
-- **Index near its cap.** Exactly 246 of 250 after A1 (Spec round 2 count). Any
+- **Index near its cap.** Exactly 247 of 250 after A1 (Spec round 3 count). Any
   later addition to the index needs a line removed or moved first.
 - **Other skills' Ask-first lists** still send some two-way doors to
   the operator (R13, R46). T4 may count those as unneeded asks; that
