@@ -23,6 +23,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Asking the operator: the three-pile sort, what vs how, cost to undo, real vs disposable, standing permissions, rulings, guardrails, auto mode, the escalation ladder and four touchpoints (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
 
 ## instruction-refinement — 2026-10-04
