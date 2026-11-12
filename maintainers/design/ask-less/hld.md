@@ -118,7 +118,7 @@ section, anchor kept.
 | W1 no idle while no-regrets work remains, same side of the design gate | Index `#asking` (While a question is open) | `liaison.md` (child waiting, L5) |
 | W2 `Ruling:` line; where the log lives | Line: index `#asking`. Path: `conventions.md` product layout line (R5, R38) | `liaison.md` |
 | W3 narrow mid-build return | Index `#asking` (Mid-build returns) | `build-review.md` Debug in Build |
-| W4 escalation ladder, generic: item → HLD → brief | Index `#grain` (replaces the "Build finds a shape change" bullet) | Plan and Spec "Shape change → escalate" step-table cells; `build-review.md` Open blockers and Debug in Build; T3 key |
+| W4 escalation ladder, generic: item → HLD → brief | Index `#escalation`, inside `#asking` (R53; replaces the Grain "Build finds a shape change" bullet) | Plan and Spec "Shape change → escalate" step-table cells; `build-review.md` Open blockers and Debug in Build; T3 key |
 | S1 defer, don't delete; three buckets | `discover-the-idea` `## Refine` | `entry-brief-repo.md` Refine step |
 | T1 four touchpoints; no other returns besides W3 | Index `#touchpoints`, new, inside `#asking` | `entry-brief-repo.md` end of chunk Brief; `plan-trial-spec.md` Plan, design gate; `trunk-changelog-monthly.md` Trunk |
 | T2 auto mode; `## Autonomy` | Index `#asking` (Auto mode) | `liaison.md` (L4 auto answers) |
@@ -237,18 +237,21 @@ asking text the Trial tested (draft v3; R24). Content, in order:
     Each touchpoint message also lists the rulings since the last one
     and its "Guardrails we added" section (G2).
 
-Grain gets W4: an escalation carries the need, the line that forces
-it, why it cannot be met, and what was tried. Rungs, lowest owning
-level first, one at a time: **item** (the manager picks another fix
-inside the HLD and logs a ruling) → **HLD** (the architect changes the
-HLD so it still meets the brief, logs a ruling, shows it at the next
-touchpoint) → **brief** (the operator; the only rung that interrupts).
-Chunk B adds the component rungs.
+W4 is an `### Escalation` subsection inside `#asking`, before
+`#touchpoints` (corrected at Spec, R53: in Grain it would be a forward
+reference to rulings and the liaison): an escalation carries the need,
+the line that forces it, why it cannot be met, and what was tried.
+Rungs, lowest owning level first, one at a time: **item** (the manager
+picks another fix inside the HLD and logs a ruling) → **HLD** (the
+architect changes the HLD so it still meets the brief, logs a ruling,
+shows it at the next touchpoint) → **brief** (the operator; the only
+rung that interrupts). Grain's "Build finds a shape change" bullet is
+deleted. Chunk B adds the component rungs.
 
-Budget: the index is 174 lines today. Asking section ≤85 lines with
-touchpoints; Grain +6; frontmatter 4; one Steps row for the liaison.
-Estimate 237 of 250. Over → Spec moves the door table's examples, not
-a rule, out of the index (R48).
+Budget (corrected at Spec, R56): the index is 174 lines today. The
+asking section with escalation and touchpoints is 109 lines;
+frontmatter 4; Names +2; How to read +1; one Steps row; Grain −2.
+Exact total 249 of 250.
 
 ### Liaison (`references/liaison.md`)
 
@@ -392,9 +395,11 @@ keys (R8).
   `rulings.md`; `asks.md` once this chunk keeps its own asks here;
   Spec's `lld.md`; rule maps under `rule-maps/`, R44), the rewritten
   agent text, `maintainers/evals/` (cards, keys, run files,
-  `baseline.md`). Product repos: `.agents/design/<chunk-slug>/rulings.md`
-  and `asks.md` beside `groom.md` (R38); an item outside a chunk logs
-  its rulings in a ticket `comment` by the manager. Tracker: DER-712
+  `baseline.md`). Product repos: `.agents/design/<chunk-slug>/brief.md`,
+  `rulings.md` and `asks.md` beside `groom.md` (R38, R54; the brief file
+  added at Spec so R19's pointer has a path); an item outside a chunk
+  logs its rulings in a ticket `comment` by the manager and keeps its
+  asks in `.agents/design/<ticket-id>-<slug>/asks.md` (R55). Tracker: DER-712
   and its items; DER-294, DER-295, DER-296. Transcripts: on the
   runners only.
 - **Worker rules** — SDLC as today, under the chunk's own rules
@@ -420,7 +425,7 @@ keys (R8).
 | Id | Item | Blocked by |
 | --- | --- | --- |
 | A0 | Move the SDLC to `skills/sdlc/`, move-only: paths, links, pointer page, `sdlc` frontmatter and `SOURCES.md` row, caps and owner tables, `AGENTS.md` paths, § Evals paths, K9 | — |
-| A1 | Index `#asking` rewrite and `#touchpoints`; W4 in Grain; AFK paragraph out; How to read names `liaison.md` | A0 |
+| A1 | Index `#asking` rewrite with `#escalation` and `#touchpoints`; Grain bullet out; AFK paragraph out; How to read names `liaison.md` | A0 |
 | A2 | Liaison: `references/liaison.md`; template `asks.md`; `ask-human.md` reshaped; `stage-result.md` `needs_input` pointer and example; `conventions.md` layout line; `subagents.md` asks route | A0 |
 | A3 | Brief step: `entry-brief-repo.md` Refine, end of chunk Brief (permissions in the brief, Entry comment pointer, tracker ask in the batch), item Brief step 4; `discover-the-idea` (`## Refine`, outline, three piles, one confirmation per loop, files allowed, wait per W1); `AGENTS.md` Refine row | A0 |
 | A4 | `yagni`: off the refiner, on the reviewer (`subagents.md` pack list, `build-review.md#review`); Ask first → log a ruling; G3 bullet; ≤40 lines | A0 |
@@ -464,8 +469,8 @@ ahead.
 - **T4 is long and noisy.** Many steps, three repeats, scripted replies
   matched by meaning. Marked reply rows and the judging table keep the
   scorer's calls checkable.
-- **Index over budget.** Estimate 237 of 250; the fallback moves
-  examples, not rules.
+- **Index at its cap.** Exactly 249 of 250 after A1 (Spec count). Any
+  later addition to the index needs a line removed or moved first.
 - **Other skills' Ask-first lists** still send some two-way doors to
   the operator (R13, R46). T4 may count those as unneeded asks; that
   is signal for the later audit.
