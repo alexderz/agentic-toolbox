@@ -22,8 +22,8 @@ credits land and corrects this page if a description is wrong.
 ### obra/superpowers: `subagent-driven-development`, `executing-plans`
 
 - **Who / what** — [obra/superpowers](https://github.com/obra/superpowers),
-  skills `subagent-driven-development` and `executing-plans`. Not
-  re-read this session.
+  skills `subagent-driven-development` and `executing-plans`.
+  Re-read by **security** at the pin on 2026-11-12 (A9): holds.
 - **What they did** — The brief credits them with "rulings, not
   stalls": while executing a plan, the agent settles a point itself,
   records the call, and keeps going, and it stops only at a short fixed
@@ -38,7 +38,7 @@ credits land and corrects this page if a description is wrong.
 ### obra/superpowers: `brainstorming`
 
 - **Who / what** — [obra/superpowers](https://github.com/obra/superpowers),
-  skill `brainstorming`. Not re-read this session.
+  skill `brainstorming`. Re-read by **security** at the pin on 2026-11-12 (A9): holds.
 - **What they did** — The brief credits it with a builder check that
   sorts open points into three piles before asking.
 - **Steal** — A1's three piles (already answered, minor, theirs), run
@@ -51,8 +51,8 @@ credits land and corrects this page if a description is wrong.
 ### mattpocock/skills: `grilling`, `wayfinder`, `triage`
 
 - **Who / what** — [mattpocock/skills](https://github.com/mattpocock/skills),
-  skills `grilling`, `wayfinder` and `triage`. Not re-read this
-  session.
+  skills `grilling`, `wayfinder` and `triage`.
+  Re-read by **security** at the pin on 2026-11-12 (A9): holds.
 - **What they did** — `grilling`: an interview method that drives a
   fuzzy idea to decisions; `discover-the-idea` already credits "public
   grilling method" in `SOURCES.md`. `triage`: the brief credits its
@@ -71,7 +71,8 @@ credits land and corrects this page if a description is wrong.
 ### addyosmani/agent-skills: `constraint-driven-development`
 
 - **Who / what** — [addyosmani/agent-skills](https://github.com/addyosmani/agent-skills),
-  skill `constraint-driven-development`. Not re-read this session.
+  skill `constraint-driven-development`.
+  Re-read by **security** at the pin on 2026-11-12 (A9): holds.
 - **What they did** — Named by the brief as an intent credit. The brief
   does not record which part it uses. The same author's Always / Ask
   first / Never boundary pattern already shapes `security-hardening`
