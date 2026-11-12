@@ -43,7 +43,7 @@ path, or **pack** its text into a subagent prompt per
 | **Roles** | You need a role's name or job | **Read [Roles](skills/sdlc/SKILL.md#roles).** |
 | **Message the operator** | Any message to the operator: an ask (gate, waiver, blocker, or unclear choice), a status, or a report | **Read [Asking the operator](skills/sdlc/SKILL.md#asking-the-human)** and follow it. |
 | **Requirements** | Chunk Brief, Gather: a fuzzy idea or an interview | **Read `skills/discover-the-idea/SKILL.md`.** |
-| **Refine** | Chunk Brief, Refine: refining a brief, as the refiner agent | **Read `skills/yagni/SKILL.md`.** |
+| **Refine** | Chunk Brief, Refine: refining a brief, as the refiner agent | **Read [`discover-the-idea` Refine](skills/discover-the-idea/SKILL.md#refine).** Do not load `yagni`. |
 | **Incoming item** | Bug report, red build, unit failure, mechanical ticket | **Read [Entry](skills/sdlc/references/entry-brief-repo.md#entry), then [Item brief](skills/sdlc/references/entry-brief-repo.md#item-brief).** Do not load `discover-the-idea`. |
 | **Research** | Purchase, product shortlist, or market research | **researcher** persona: **read `skills/buying-researcher/SKILL.md`**. Not an SDLC role or step: [Roles](skills/sdlc/SKILL.md#roles). |
 | **UX** | User stories, high-level UX, or screen mockups | **designer:** **read `skills/ux-design/SKILL.md`**. |
