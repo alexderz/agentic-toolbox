@@ -77,9 +77,9 @@ never a list of stops. Still send every Always-theirs item and every guardrail a
 
 ### Escalation
 
-Escalate on the third failed fix of the same item, counted since the item's last escalation, on an out-of-chunk blocker that leaves no unblocked item, or on a shape change the text you work from does
-not allow: the ticket and LLD for a builder, the HLD at the Item rung, the brief at the HLD rung. Carry the need, the line forcing it, why it cannot be met, and what
-was tried. Start at the lowest rung. A resolver that cannot resolve it passes it, with those four facts, to the next rung. Siblings keep moving.
+Escalate on any one of three triggers: (1) the third failed fix of the same item, counted since the item's last escalation; (2) an out-of-chunk blocker that leaves no
+unblocked item; (3) a shape change the text you work from does not allow (the ticket and LLD for a builder, the HLD at the Item rung, the brief at the HLD rung).
+Carry the need, the line forcing it, why it cannot be met, and what was tried. Start at the lowest rung. A resolver that cannot resolve it passes it, with those four facts, to the next rung. Siblings keep moving.
 
 | Rung | Resolver | Action |
 | --- | --- | --- |

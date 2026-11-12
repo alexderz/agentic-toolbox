@@ -25,7 +25,7 @@ for nothing else:
    exactly as written.
 2. **Net-new edits.** §6 also adds edits the LLD does not have. Each is marked **New**, for
    example G2 step 5, G4 N1 and N2, G7 edits 8–9, G8 edit 4 and its Trunk step, G9 edits 11–15,
-   and G11 items 4–5, 8 and 14 (item 13 replaces an existing row). G8's Trunk step is the one edit to a file outside its Groom
+   and G11 items 4–5, 8–9 and 14 (item 13 replaces an existing row). G8's Trunk step is the one edit to a file outside its Groom
    acceptance (`trunk-changelog-monthly.md`, R159).
 3. **Proofs.** §5 and §6 replace the Verify commands, exact line totals and `lldblock` targets of
    G2–G12 in `groom.md` and `lld.md`. They keep the LLD Verify list's meaning checks. Groom
@@ -240,6 +240,7 @@ grep -c 'Shape change → \[escalate\](#escalation)' skills/sdlc/SKILL.md       
 grep -ciE 'AFK|headless|autonomous' skills/sdlc/SKILL.md                         # 0
 grep -cE '^### (Escalation|Touchpoints)$' skills/sdlc/SKILL.md                   # 2
 grep -c 'third failed fix of the same item, counted since' skills/sdlc/SKILL.md   # 1
+grep -c 'Escalate on any one of three triggers: (1)' skills/sdlc/SKILL.md         # 1
 grep -c 'every Always-theirs item and every guardrail ask' skills/sdlc/SKILL.md   # 1
 links skills/sdlc/SKILL.md     # liaison.md links resolve after G3 lands; recheck on the head
 anchors skills/sdlc/SKILL.md   # same timing
@@ -277,6 +278,7 @@ grep -c 'liaison.md#raising-an-ask' skills/sdlc/references/subagents.md         
 grep -c 'unchanged, except: it sets' skills/sdlc/references/liaison.md          # 1
 grep -c 'leaves .Answer. empty' skills/sdlc/references/liaison.md               # 1
 grep -c 'post each such commit.s SHA' skills/sdlc/references/liaison.md         # 1
+grep -c 'squash of the item branch, post the new SHAs' skills/sdlc/references/liaison.md   # 1
 grep -c 'not an Always-theirs item or a guardrail ask' skills/sdlc/references/liaison.md   # 2
 grep -c 'among the two lines of its .## Autonomy. section' skills/sdlc/references/liaison.md   # 1
 links skills/sdlc/references/liaison.md skills/sdlc-artifacts/SKILL.md skills/sdlc/references/subagents.md
@@ -504,6 +506,7 @@ anchors skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKIL
 4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
    `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
    on the item's ticket names its SHA. Check every other commit that touches the asks file.
+   After a rebase or squash of the item branch, the **manager** posts the new SHAs.
    1. touches the chunk's `brief.md`;
    2. adds an asks-file section whose `Status` is not `open`, or whose `Answer` is not empty;
    3. changes or removes the `Status`, `Answer`, `Choices` or `Recommendation` of an existing
@@ -532,6 +535,7 @@ grep -c 'with .pr-review. and .yagni. loaded' skills/sdlc/references/build-revie
 grep -c 'citing the operator.s instruction' skills/sdlc/references/build-review.md      # 1
 grep -c 'Record asks' skills/sdlc/references/build-review.md                            # 1
 grep -c 'on the item.s ticket names its SHA' skills/sdlc/references/build-review.md      # 1
+grep -c 'the \*\*manager\*\* posts the new SHAs' skills/sdlc/references/build-review.md   # 1
 links skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 anchors skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 ```
@@ -995,7 +999,7 @@ grep -oE 'pin [0-9a-f]{40}' SOURCES.md | wc -l          # one per credit written
    ``- C6: each ask as `<turn>: <row id> <needed|over-ask>`, with the Judging rule number when rule 1 or 2 decided it; mark `Ask-first` on an ask a loaded skill's Ask-first row required; or `no asks` ``
 8. **New edit, `run-template.md`.** Add this line after the T4 counts table:
    ``T4 not run on this run (procedure Tasks) → write `not run` in the T4 row and under `## T4 counts`.``
-9. **Reply marks.** Keep the LLD marks. Add T1 row **R7**, inserted before R6:
+9. **New: reply marks.** Keep the LLD marks. Add T1 row **R7**, inserted before R6:
    ``| R7 | A touchpoint 1 item other than the tracker proposal: the release permission, standing permissions, or the HLD review choice | `Release: ship without asking. HLD review: no. Budget: nothing paid. You may create and delete anything in this repo.` | needed |``
 10. **`t1-card.md` C1, override of the tail.** ``The run waits for R1 and never proceeds on silence``
     → ``No write before R1's reply (R3 carries R1's reply); the run never proceeds on silence``.
@@ -1172,9 +1176,11 @@ Overlay review round 1 (tags: **SEC** — the security review, F1–F6; **DES** 
 
 | Ruling | Changes | Part |
 | --- | --- | --- |
+| R111 | HLD A1 item 8 (the G4 text) | narrows "a yes to a list settles only its two-way items" to "only its Minor items"; stricter, never looser |
 | R122 | R93 | clarifies only: governing texts, pass-up and the reset after an escalation; the trigger is unchanged |
 | R130 | R57 | the `ask-human.md` shape |
 | R134 | R91 | the refiner's `back to Gather` trigger |
+| R142 | GR16 | the wording "changes or removes"; disclosed under Guardrail changes |
 | R152 | R101 | the onboarding ask scope |
 | R168 | R109 | the `discover-the-idea` and `ux-design` date cells only |
 | R185 | R114 | the GR16 skip condition |
@@ -1224,7 +1230,7 @@ Overlay review round 1 (tags: **SEC** — the security review, F1–F6; **DES** 
   | Supporting file | Lines | Effect |
   | --- | --- | --- |
   | `index-asking.md` | 105 | index 242/250 |
-  | `liaison.md` | 127 | of 150 |
+  | `liaison.md` | 128 | of 150 |
   | `yagni.md` | 40 | — |
 
   The other files' totals are estimates. Their caps, not their totals, are the bar.
