@@ -105,8 +105,22 @@ it. Review the item before it lands on project-main or trunk.
    [Item agents](subagents.md#item-agents).
 3. Take the diff range versus project-main, or versus trunk if there is
    no project-main.
-4. **reviewer**: approve only if the item meets the ticket and the LLD
-   **and** passes the **security** gate: intake, SHA pins, and
-   trust-boundary deltas.
+4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
+   `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
+   on the item's ticket names its SHA. Check every other commit that touches the asks file.
+   1. touches the chunk's `brief.md`;
+   2. adds an asks-file section whose `Status` is not `open`, or whose `Answer` is not empty;
+   3. changes or removes the `Status`, `Answer`, `Choices` or `Recommendation` of an existing
+      asks-file section;
+   4. touches `## Autonomy` in an `AGENTS.md`, and the item's ticket has no **manager** `comment`
+      citing the operator's instruction for that change. That comment names the ask id and its
+      answer, or the date, in the manager's words.
+
+   A needed `brief.md` or answer change → the **manager** or the **liaison** makes it on
+   project-main, outside the item.
+5. **reviewer**, with `pr-review` and `yagni` loaded: approve only if step 4 failed nothing, the
+   item meets the ticket and the LLD, it ships no speculative generality (the `yagni` Iron law and
+   Decide and log), **and** it passes the **security** gate: intake, SHA pins, and trust-boundary
+   deltas.
 
 Monthly is not the security gate: see [Monthly](trunk-changelog-monthly.md#monthly).
