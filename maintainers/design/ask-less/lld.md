@@ -442,9 +442,10 @@ and pull. A child is done when its stage result is persisted
 2. The brief, the design, the repo, the tracker, the chunk's
    `rulings.md` or the operator's earlier words answer it → write
    `Answer: record — <where>` and `Status: answered`. Do not send it.
-   Skip this step for an Always-theirs item or a one-way door:
-   [Asking the operator](../SKILL.md#asking-the-human) says what
-   settles those.
+   Skip this step for an Always-theirs item
+   ([Asking the operator](../SKILL.md#asking-the-human)). For a one-way
+   door, only a standing permission settles it here: write
+   `Answer: record — standing permission <where>`; `rulings.md` never does.
 3. The product's `AGENTS.md` on trunk has `Auto mode: on`, and the ask
    is not an Always-theirs item → write
    `Answer: auto — <recommended number>` and `Status: answered`. Do not
@@ -476,9 +477,9 @@ Any agent with a question: role agents, step agents, managers.
 1. Answer it from the record: the brief, the design, the repo, the
    tracker, the chunk's `rulings.md`, the operator's earlier words.
    Answered → apply it, log a ruling, stop. Skip this step for an
-   Always-theirs item or a one-way door:
-   [Asking the operator](../SKILL.md#asking-the-human) says what
-   settles those.
+   Always-theirs item ([Asking the operator](../SKILL.md#asking-the-human)).
+   For a one-way door, only a standing permission settles it: apply it,
+   log a ruling that names the permission, stop; `rulings.md` never does.
 2. Write its section into the asks file.
 3. You are the liaison → it goes in your next [Batch](#batch-liaison).
 4. You are a subagent → name `asks: <path> <ids>` in your result to your
