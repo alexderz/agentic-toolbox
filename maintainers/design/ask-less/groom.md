@@ -29,8 +29,8 @@ this function. Define it in the shell first, from the repo root. It
 prints the first column-0 fenced block after the line that starts with
 the marker, without its fences, from the reviewed LLD on the
 `integrate/ask-less` branch, read with `git show`, never from the item
-worktree's copy. No commit hash is pinned. Item branches never edit the
-accepted design files under `maintainers/design/ask-less/`.
+worktree's copy. No commit hash is pinned. Item branches never edit
+`hld.md` or `lld.md` under `maintainers/design/ask-less/`.
 
 ```bash
 lldblock() { git show integrate/ask-less:maintainers/design/ask-less/lld.md | awk -v m="$1" 'f==0 && index($0,m)==1 {f=1; next} f==1 && /^```/ {fence=$0; sub(/[a-z]+$/,"",fence); f=2; next} f==2 && $0==fence {exit} f==2 {print}'; }
