@@ -30,6 +30,8 @@ Newest first. Skip empty sections.
 - Asking the operator: the three-pile sort, what vs how, cost to undo, real vs disposable, standing permissions, rulings, guardrails, auto mode, the escalation ladder and four touchpoints (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
 
+- Brief: the refiner runs discover-the-idea Refine, not yagni; one confirmation per Gather and Refine loop at touchpoint 1 (DER-712).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing
