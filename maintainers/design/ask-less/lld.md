@@ -169,7 +169,7 @@ for f in knowledge/ai/vendors/*.md; do same "$f" "$f" "$kn"; done
 for f in maintainers/AGENTS.md maintainers/CHERRY-PICK-CANDIDATES.md maintainers/CI-HOOKS-PLAN.md maintainers/goal.md; do same "$f" "$f" "$mnt"; done
 diff <(git show "$base:maintainers/writing-standard.md" | sed -E "142!{$mnt}") maintainers/writing-standard.md | grep -c '^[<>]'   # prints: 2 (L141 only)
 git diff "$base" -- CHANGELOG.md | grep -c '^+[^+]'   # prints: 1
-git diff --quiet "$base" -- docs/engineering-with-ai/log.md maintainers/evals
+git diff --quiet "$base" -- docs/engineering-with-ai/log.md maintainers/evals maintainers/design ':!maintainers/design/ask-less'
 # 3. no old path left outside the exempt files
 grep -rnE 'docs/(SDLC\.md|sdlc/|INTAKE\.md)' --include='*.md' . \
   | grep -vE '^\./(CHANGELOG\.md|docs/engineering-with-ai/log\.md|maintainers/design/|docs/SDLC\.md:)' \
@@ -195,8 +195,10 @@ git diff --quiet "$base" -- skills/tracker-sdlc/adapters/local.md || echo "K5 lo
 Part 1 proves the move changed no wording: the only difference between
 each old file and its new copy is what the path rules produce. Part 6
 runs the protected-row checks directly, as the writing standard asks.
-Parts 2 and 4 leave out `maintainers/design/`: its records predate A0,
-quote links relative to target files, and gain A0's path map (R108).
+Part 2 still checks that older design records are unchanged and leaves
+out only `maintainers/design/ask-less/`, which gains A0's path map.
+Part 4 leaves out all of `maintainers/design/`: its records quote links
+relative to the target files (R108).
 K7's anchor check for anchors that later items create (`liaison.md`'s
 anchors, `#refine`, `#escalation`, `#touchpoints`,
 `#while-a-question-is-open`) runs on the integrate head at E5, once the
@@ -1251,6 +1253,12 @@ it waits on no other item's read (R109).
    session state (inside the runner home); that no front end needs a
    login of its own; and, for a paid key, that the provider-side credit
    limit is set, which is the operator's limit, not this procedure's.
+   A run finds an installed version that differs from the one the last
+   read recorded → recheck the read's settings above (session sharing,
+   plugin and language-server download, bind, session-state location,
+   the one credential, the endpoints) and record them before the run. A
+   changed setting is a runner change and needs a new read. Never pin a
+   version; host updates stay on.
    ```
 
 5. Isolation step 1, old ``1. Run the whole runner as a separate unprivileged user or in a`` / ``   container. Run T3 in a container.``
@@ -1650,12 +1658,15 @@ For each runner in the procedure's Models table, in order:
 
 1. Export the integrate head after A0–A9 and E1–E4 land.
 2. Run the same set as E4; write one run file per model.
-3. The PR description lists regressions first, then the T4 counts,
-   baseline → head, per model.
-4. Release guard (GR6): any regression per procedure Scoring 4 → no
-   merge; the liaison reports to the operator. None → merge on the
-   auto-ship permission. After the merge, the head's run files become
-   the `baseline.md` rows (§ Evals rule 4).
+3. The PR description lists regressions first, with any runner-version
+   difference between the baseline and head run files beside them, then
+   the T4 counts, baseline → head, per model.
+4. Release guard (GR6): record the measured head's sha and the release
+   verdict on E5's ticket. Any regression per procedure Scoring 4 → the
+   verdict is no merge, and the liaison reports to the operator. None →
+   the verdict is merge, on the auto-ship permission; the **manager**
+   performs the merge at the Trunk step. After that merge, the head's
+   run files become the `baseline.md` rows (§ Evals rule 4).
 
 ### Trust boundaries
 
@@ -1667,7 +1678,7 @@ For each runner in the procedure's Models table, in order:
 | Protected Ask-first rows | Always theirs; only the operator's own answer settles them; auto mode, under either scope, still sends them; on an LLD, **security** may decide the `security-hardening` rows (R13, R75, R76) | index `#asking-the-human` |
 | Agents acting on disposable resources | Only what the chunk created, minus credentials and anything published, sent outside or shared on a remote other than its own branches; one-way doors on real resources still need an ask or a standing permission; deleting or disabling a check is waiving a check | index `#asking-the-human` |
 | Security controls in products | A control that `security-hardening`, the LLD's trust boundaries or a **security** finding requires is a rule, not a guardrail; `yagni` never removes it | index Guardrails; `yagni` Always |
-| Eval runners holding a model login or key | One model credential in the empty runner home, recorded by the security read with its scope and revocation; egress only to the endpoints the read lists; the probe finds no other credential; never written to a run file; sharing and plugin download off; installed version recorded per run, never pinned (R107); any bind loopback only; transcripts and session state stay on the runner | `procedure.md` Runner needs, Isolation, Pre-run probe, Records; E3 |
+| Eval runners holding a model login or key | One model credential in the empty runner home, recorded by the security read with its scope and revocation; egress only to the endpoints the read lists; the probe finds no other credential; never written to a run file; sharing and plugin download off; installed version recorded per run, never pinned; a changed version rechecks the read's settings, and a changed setting needs a new read (R107); any bind loopback only; transcripts and session state stay on the runner | `procedure.md` Runner needs, Isolation, Pre-run probe, Records; E3 |
 | Public design text in this skills home | `rulings.md` and `asks.md` here are public: K10 before each push; no names, hosts or private paths; answers in own words | root `AGENTS.md` Public repo; writing standard K10 |
 
 No authn/z, secret store or tracker contract changes. `stage-result.md`
