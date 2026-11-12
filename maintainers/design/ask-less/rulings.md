@@ -140,6 +140,10 @@ refiner's minor points; R34 onward are the architect's calls at Plan.
 - R109. Ruling: every `YYYY-MM-DD` that A9 writes in `SOURCES.md` is the date of A9's own security read of the sources; A9 waits on no other item's read — the old wording ("that item's security read") read as A3's or A7's read and implied a hidden prerequisite — none.
 - R83 note: amended by R107 (no version pin; host updates stay on).
 
+### Build (manager dispositions)
+
+- R110. Ruling: A0's changelog count matches added bullet entries (`^+- `), not every added nonblank line — the accepted A0 changelog belongs under `### Changed`, which the baseline lacks, so its required new heading made the old check count two instead of one — cost if wrong: restore one grep pattern; the one-entry requirement and exact changelog text are unchanged. The independent G1 verifier and reviewer also review this proof-command correction. This is not a new operator gate or scope change.
+
 ## Guardrails (G1)
 
 Only guardrails this chunk added without being asked. Ones a toolbox

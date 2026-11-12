@@ -168,7 +168,7 @@ same docs/security-skill-packs/README.md docs/security-skill-packs/README.md "$s
 for f in knowledge/ai/vendors/*.md; do same "$f" "$f" "$kn"; done
 for f in maintainers/AGENTS.md maintainers/CHERRY-PICK-CANDIDATES.md maintainers/CI-HOOKS-PLAN.md maintainers/goal.md; do same "$f" "$f" "$mnt"; done
 diff <(git show "$base:maintainers/writing-standard.md" | sed -E "142!{$mnt}") maintainers/writing-standard.md | grep -c '^[<>]'   # prints: 2 (L141 only)
-git diff "$base" -- CHANGELOG.md | grep -c '^+[^+]'   # prints: 1
+git diff "$base" -- CHANGELOG.md | grep -c '^+- '   # prints: 1 entry; a new section heading is not an entry
 git diff --quiet "$base" -- docs/engineering-with-ai/log.md maintainers/evals maintainers/design ':!maintainers/design/ask-less'
 # 3. no old path left outside the exempt files
 grep -rnE 'docs/(SDLC\.md|sdlc/|INTAKE\.md)' --include='*.md' . \
