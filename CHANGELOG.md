@@ -20,6 +20,7 @@ Newest first. Skip empty sections.
 - Specify the typed SDLC stage result, validation, evidence ownership,
   conditional prose reading, and migration of in-flight sessions
   (`DER-529`; land `9bb4d96`).
+- Eval task T4: build a browser brick-breaker game through the SDLC (DER-712).
 
 ### Changed
 
