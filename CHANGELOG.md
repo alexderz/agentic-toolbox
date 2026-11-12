@@ -21,6 +21,10 @@ Newest first. Skip empty sections.
   conditional prose reading, and migration of in-flight sessions
   (`DER-529`; land `9bb4d96`).
 
+### Changed
+
+- Evals: C6 "no unneeded ask" on every task; the T1 key drops the Execution ask; T3 triggers follow the escalation ladder (DER-712).
+
 ## instruction-refinement — 2026-10-04
 
 Epic `DER-288`: every agent instruction rewritten to one writing
