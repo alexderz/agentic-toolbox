@@ -504,7 +504,8 @@ anchors skills/sdlc/references/entry-brief-repo.md skills/discover-the-idea/SKIL
 ```markdown
 4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
    `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
-   on the item's ticket names its SHA. Check every other commit that touches the asks file.   1. touches the chunk's `brief.md`;
+   on the item's ticket names its SHA. Check every other commit that touches the asks file.
+   1. touches the chunk's `brief.md`;
    2. adds an asks-file section whose `Status` is not `open`, or whose `Answer` is not empty;
    3. changes or removes the `Status`, `Answer`, `Choices` or `Recommendation` of an existing
       asks-file section;
@@ -532,6 +533,7 @@ grep -c 'with .pr-review. and .yagni. loaded' skills/sdlc/references/build-revie
 grep -c 'citing the operator.s instruction' skills/sdlc/references/build-review.md      # 1
 grep -c 'Record asks' skills/sdlc/references/build-review.md                            # 1
 grep -c 'on the item.s ticket names its SHA' skills/sdlc/references/build-review.md      # 1
+grep -c "^ *1\. touches the chunk's \`brief.md\`" skills/sdlc/references/build-review.md  # 1
 links skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 anchors skills/yagni/SKILL.md skills/sdlc/references/subagents.md skills/sdlc/references/build-review.md
 ```
