@@ -11,9 +11,9 @@ The new text is `rebuild/ask-human-template.md`, which replaces the LLD A2 block
 | 6–7 | Why it matters: what happens if we wait, guess, or pick each way | kept | `- Why it matters:` |
 | 9–12 | Choices numbered 1, 2, 3 | kept (R57, as changed at Spec round 2, D11) | `- Choices:` |
 | 14–15 | Recommend one choice, with reasons; say so if none is clearly better | kept | `- I recommend` |
-| 17–18 | Reply with 1, 2 or 3, "wait", or "don't need my OK on this" | kept per ask id; guardrails gain keep, change, or remove (R57) | `**What to reply**` |
+| 17–18 | Reply with 1, 2 or 3, "wait", or "don't need my OK on this" | kept per ask id; guardrails gain **1** keep, **2** change or **3** remove (R57, R191) | `**What to reply**` |
 | 19 | The agent stops this part until the operator answers | changed (L5, W1): work that does not depend on the questions continues | Opening line |
-| — | (new) `none` under Questions; guardrails listed `GR<n>` until answered; rulings since the last touchpoint; a "For this message" part | changed (R57, R118, R130) | `**Guardrails we added**`, `**Rulings since the last touchpoint**`, `**For this message**` |
+| — | (new) `none` under Questions; guardrails listed `GR<n>` until answered; rulings since the last touchpoint; a "For this message" part | changed (R57, R118, R130, R191) | `**Guardrails we added**`, `**Rulings since the last touchpoint**`, `**For this message**` |
 
 ## Meaning questions
 
