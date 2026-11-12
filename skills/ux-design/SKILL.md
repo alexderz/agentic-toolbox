@@ -78,9 +78,9 @@ Loop and operator acceptance: [UX](../sdlc/references/plan-trial-spec.md#ux).
 2. Designer fixes; the UX reviewer re-checks until those agents agree.
    If they disagree on the requirements, ask the operator ([Asking the
    operator](../sdlc/SKILL.md#asking-the-human)).
-3. When the agents agree, ask the operator the same way: show the
-   variants and say which the agents recommend and why (requirements,
-   not taste).
+3. When the agents agree, the variants go to the operator at the design
+   gate, with the agents' pick and why (requirements, not taste):
+   [UX](../sdlc/references/plan-trial-spec.md#ux).
 
 ## Always
 

@@ -11,6 +11,8 @@
 5. **architect** commits.
 6. **architect** pushes project-main.
 7. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
+8. HLD review chosen at touchpoint 1 → **manager** sends touchpoint 2
+   ([Touchpoints](../SKILL.md#touchpoints)). Spec waits for the answer.
 
 **Item:** do not write a new HLD. Read the existing one. **manager**
 posts one verdict on the ticket with `tracker-sdlc` `comment`:
@@ -58,8 +60,8 @@ If there is a screen, mockups are part of Spec.
    not a requirement.
 3. **designer** fixes the findings. Repeat steps 2–3 until the designer
    and the reviewing agent agree the work meets the requirements.
-4. **operator** accepts the work, or writes `UX verification not
-   required`. For mockups, this happens before Groom.
+4. **operator** accepts the work at the design gate, or writes
+   `UX verification not required` ([Touchpoints](../SKILL.md#touchpoints)).
 
 **Never**
 
@@ -119,7 +121,7 @@ No screen: write `n/a` and why. Do not invent pictures.
    trust boundaries: authn/z, secrets, egress, data class, who may write what.
 2. **architect** accepts the LLD, and **security** accepts it on trust
    boundaries.
-3. **operator** accepts the LLD after them ([Asking the operator](../SKILL.md#asking-the-human)).
+3. **operator** accepts the LLD, UX and mockups at the design gate ([Touchpoints](../SKILL.md#touchpoints)).
 4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:
