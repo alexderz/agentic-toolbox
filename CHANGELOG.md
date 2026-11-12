@@ -26,6 +26,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Plan and Spec: UX, mockup and LLD acceptance gathered at the design gate; an optional HLD review touchpoint (DER-712).
 - Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
 - yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).
 - Evals: C6 "no unneeded ask" on every task; the T1 key drops the Execution ask; T3 triggers follow the escalation ladder (DER-712).
