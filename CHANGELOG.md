@@ -23,6 +23,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Writing standard: owners for the new asking rules; rewrites may grow to their caps; the SDLC index cap is 250 (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
 
 ## instruction-refinement — 2026-10-04
