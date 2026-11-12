@@ -37,13 +37,18 @@ exists for this chunk. Do not implement in this step: write the brief.
    copy or paraphrase its loop here; link the skill, because it will
    change.
 2. **Refine.** The refiner, a different subagent from the gatherer,
-   loads `yagni`. It questions necessity and makes the brief less stupid
-   and simpler. It works from first principles: the dump and looked-up
-   facts, not a product template.
-3. A requirement dies, or a new unresolved point appears → return to
-   Gather with the delta. Resume the gatherer.
-4. Repeat 1–3 until the operator confirms a brief that Refine did not
-   send back.
+   runs [`discover-the-idea` Refine](../../discover-the-idea/SKILL.md#refine).
+   It loads no `yagni`. It works from first principles: the dump and
+   looked-up facts, not a product template.
+3. Refine returns `back to Gather` → return to Gather with its delta.
+   Resume the gatherer.
+4. Refine returns `buildable` → run the `tracker-sdlc` setup check. It
+   fails → run `sdlc-onboarding` Tracker Check, Discover and Propose.
+5. **manager** sends touchpoint 1 ([Touchpoints](../SKILL.md#touchpoints)):
+   the brief, its standing permissions, the release permission as its
+   own item, the HLD review choice and any onboarding proposal.
+6. The operator corrects the brief → step 1 with the correction. The
+   operator confirms → End of chunk Brief.
 
 Gatherer and refiner ids: [Step agents](subagents.md#step-agents).
 No language skill on a gather- or refine-only turn:
@@ -54,10 +59,14 @@ Write Plan from the confirmed brief, never from a raw dump.
 End of chunk Brief:
 
 1. Cut project-main `integrate/<chunk-slug>`. Source:
-   [Branches](branches-and-lands.md#branches).
-2. Run the `tracker-sdlc` setup check. It fails → load
-   [`sdlc-onboarding`](../../sdlc-onboarding/SKILL.md), which
-   writes the tracker files first.
+   [Branches](branches-and-lands.md#branches). Commit the chunk's
+   `brief.md`, `rulings.md` and `asks.md` on it. The confirmed brief
+   is frozen from here: only the **manager** changes `brief.md`, on
+   project-main, to apply an operator answer; the commit cites the ask
+   id, and a ruling records the change (GR18).
+2. The setup check failed at chunk Brief step 4 → run
+   [`sdlc-onboarding`](../../sdlc-onboarding/SKILL.md) Write on the
+   operator's touchpoint 1 answer. It writes the tracker files first.
 3. Get the Epic (`backlog`):
    - The chunk arrived as a tracker ticket → use that ticket as the
      Epic. Never file a duplicate. Its type is not Epic → ask the operator
@@ -70,8 +79,9 @@ End of chunk Brief:
       **reviewer**, and **security** read of the repo skill. Never land
       a bare commit.
    4. Land it on project-main.
-5. **manager** posts the Entry classification on the Epic with
-   `tracker-sdlc` `comment`.
+5. **manager** posts the Entry classification and the path and commit
+   of the confirmed brief, which holds the standing permissions, on the
+   Epic with `tracker-sdlc` `comment`.
 
 ### Item brief
 
@@ -112,7 +122,7 @@ Brief.
    | Condition | Action |
    | --- | --- |
    | The two fixes would look the same to a user, and neither is a plan change | The step 3 pick stands. |
-   | The operator already wrote that they are AFK, headless, or autonomous | Apply the AFK pick in [Asking the operator](../SKILL.md#asking-the-human). |
+   | The two fixes differ only in two-way choices ([Asking the operator](../SKILL.md#asking-the-human)) | The step 3 pick stands. Log a ruling. |
    | Otherwise | Ask the operator. The wait blocks this issue only; other items proceed: [Asking the operator](../SKILL.md#asking-the-human). |
 
 Contrarian id: [Step agents](subagents.md#step-agents). Use only the
