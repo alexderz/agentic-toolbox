@@ -11,6 +11,8 @@
 5. **architect** commits.
 6. **architect** pushes project-main.
 7. **manager** posts the HLD path on the Epic with `tracker-sdlc` `comment`.
+8. The confirmed brief's `HLD review` line says yes → the **liaison** sends touchpoint 2 ([Touchpoints](../SKILL.md#touchpoints)).
+   Start Spec only after the operator accepts the HLD. The operator asks for changes → **architect** revises the HLD; repeat this step.
 
 **Item:** do not write a new HLD. Read the existing one. **manager**
 posts one verdict on the ticket with `tracker-sdlc` `comment`:
@@ -58,8 +60,8 @@ If there is a screen, mockups are part of Spec.
    not a requirement.
 3. **designer** fixes the findings. Repeat steps 2–3 until the designer
    and the reviewing agent agree the work meets the requirements.
-4. **operator** accepts the work, or writes `UX verification not
-   required`. For mockups, this happens before Groom.
+4. **operator** accepts the work at the design gate, or writes
+   `UX verification not required` ([Touchpoints](../SKILL.md#touchpoints)).
 
 **Never**
 
@@ -97,10 +99,10 @@ Entry gate: run the offline `tracker-sdlc` setup check. If it fails, run
 2. **architect** commits the LLD to git.
 3. **manager** posts the LLD path on the Epic with `tracker-sdlc` `comment`.
 
-**Item:** align to the existing LLD the same way as in [Plan](#plan).
-Make a clarification in place. Escalate a shape change. **security**
-still reads the trust-boundary note. If the item does not touch a
-boundary, the note is `n/a` and why.
+**Item:** align to the existing LLD the same way as in [Plan](#plan). Make a clarification in place; the **liaison**
+sends its acceptance as an ask in the next batch, and Build waits for that answer. An unchanged LLD needs no ask.
+Escalate a shape change: [Escalation](../SKILL.md#escalation). **security** still reads the trust-boundary note.
+If the item does not touch a boundary, the note is `n/a` and why.
 
 ### Mockups
 
@@ -119,7 +121,7 @@ No screen: write `n/a` and why. Do not invent pictures.
    trust boundaries: authn/z, secrets, egress, data class, who may write what.
 2. **architect** accepts the LLD, and **security** accepts it on trust
    boundaries.
-3. **operator** accepts the LLD after them ([Asking the operator](../SKILL.md#asking-the-human)).
+3. **operator** accepts the LLD, and the UX and mockups when there are any, at the design gate ([Touchpoints](../SKILL.md#touchpoints)).
 4. Start Groom or Build only after step 3.
 
 This review is a gate at Spec. Monthly is not the security gate:

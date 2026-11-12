@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 - yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).
 - Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
 - sdlc-onboarding: Parallelism defaults to max with no question; the tracker proposal joins touchpoint 1 (DER-712).
+- Plan and Spec: UX, mockup and LLD acceptance gathered at the design gate; an optional HLD review touchpoint (DER-712).
 
 ## instruction-refinement — 2026-10-04
 
