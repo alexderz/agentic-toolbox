@@ -13,16 +13,19 @@ Branch source for each item: see [Branches](branches-and-lands.md#branches).
 ### Open blockers
 
 Do not land past an open blocker to "make progress". If any blocker is
-open, resolve it, ask, or defer the item:
+open, **manager** resolves it or defers the item:
 
-1. If the blocker is an item in this chunk, **resolve** it first: work
-   that item, honoring *its* blockers, then return.
-2. Otherwise, ask the operator ([Asking the operator](../SKILL.md#asking-the-human))
-   whether to wait, drop the wait, or go ahead anyway. **manager**
-   records the call on the ticket with `comment`.
-3. If the operator is not available and the blocker cannot be resolved
-   here, **defer** the item. Pick an unblocked item. Do not start the
-   deferred item.
+1. The blocker is an item in this chunk, not yet in Build → **resolve**
+   it first: work that item, honoring *its* blockers, then return.
+2. The blocker is an item in this chunk already in Build → leave it to
+   its builder. This item waits. Pick an unblocked item.
+3. Otherwise → **defer** the item. Pick an unblocked item. Do not start
+   the deferred item. **manager** records the deferral on the ticket
+   with `comment`. The deferred item stays filed; it is ready again when
+   its blocker closes.
+4. Step 3 deferred the item, and no unblocked item is left, in the chunk
+   or for a lone item → escalate the blocker at the Item rung:
+   [Escalation](../SKILL.md#escalation).
 
 ### Dispatch
 
@@ -35,7 +38,7 @@ the product repo's `## Execution`:
 | `max` | None |
 | `serial` | One item in Build at a time |
 | `at most <N>`, where N is a positive integer | N items in Build at a time |
-| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which asks the operator. Run one item at a time until the operator answers. |
+| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which writes `Parallelism: max`. Use the `max` row now; do not wait for that commit to land. |
 
 The ceiling never orders work; blockers do. The harness may run fewer
 items: see [Writable worktree](subagents.md#writable-worktree).
@@ -74,8 +77,15 @@ On an unexpected failure:
 3. Load `verify-before-done` to prove the fix.
 
 Debug in Build is **not** a second Brief: find the root cause with
-`debug` on the chosen fix. Do not re-open item Brief unless the failure
-shows the chosen fix was the wrong *kind* of change; then escalate.
+`debug` on the chosen fix. Do not re-open item Brief. Escalate at the
+Item rung ([Escalation](../SKILL.md#escalation)) only when:
+
+1. the failure shows the chosen fix was the wrong *kind* of change; or
+2. this is the third failed fix of the same item, counted since the item's last escalation.
+
+**builder**: to escalate, report it to the **manager** in your result,
+with the need, the line forcing it, why it cannot be met, and what was
+tried. Any other failure: [Mid-build returns](../SKILL.md#asking-the-human).
 
 ### Skills-home DoD
 
