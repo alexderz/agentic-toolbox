@@ -51,7 +51,7 @@ is a failure. An empty string or array does not meet a non-empty rule.
 | `exit_code` | integer | `kind` is `command`. Not a string, and not a fraction. |
 | `checks` | non-empty array of non-empty strings with no newline | `kind` is `model` and `status` is `pass`. Each entry names one check. |
 | `blocker` | non-empty string | `status` is `blocked`. The blocker ticket id. |
-| `question` | non-empty string | `status` is `needs_input`. The asks it waits on, written `asks: <path> <ids>`. |
+| `question` | non-empty string | `status` is `needs_input`. The decision the stage waits on. |
 
 Omit an evidence field when its required condition does not hold.
 The reader rejects a present-but-not-required field as a failure.
@@ -138,7 +138,7 @@ separately for diagnosis. Missing files remain reader failures.
 {"step": "Brief", "status": "needs_input",
   "evidence": {
     "kind": "model",
-    "question": "asks: .agents/design/payments-retry/asks.md Q3 Q4"
+    "question": "Stop the retry after 3 attempts, or after 30 seconds?"
   },
   "findings": ""
 }

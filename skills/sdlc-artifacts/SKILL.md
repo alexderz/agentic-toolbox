@@ -18,7 +18,7 @@ and why.** Do not invent a parallel outline.
 
 | Artifact | Step | Template | Lands in |
 | --- | --- | --- | --- |
-| Brief (chunk) | Brief | `discover-the-idea` (not here) | SDLC chunk: `brief.md` in the chunk's design folder; otherwise chat unless asked to file |
+| Brief (chunk) | Brief | `discover-the-idea` (not here) | Chat unless asked to file |
 | Incoming item | Brief | `templates/bug.md` / `task.md` | Same files as Groom; fill Proposed fix / Removal / Pick **at Brief**, not later |
 | Track / roadmap | Plan | `templates/track.md` | Board project; git copy optional |
 | Chunk / epic | Brief–Groom | `templates/chunk.md` | Board parent issue |
@@ -37,8 +37,7 @@ and why.** Do not invent a parallel outline.
 | PR / land | Review | `templates/pr.md` | PR body or land commit message |
 | Monthly | Monthly | `templates/monthly.md` | `docs/monthly/`, or a Task once filed |
 | Human doc | Spec+ | `templates/human-doc.md` | `docs/` how-to (Google style) |
-| Ask the operator | a batch or a touchpoint | `templates/ask-human.md` | The message to the operator — not a git file |
-| Asks file | any step | `templates/asks.md` | `asks.md` in the chunk's design folder: [Liaison](../sdlc/references/liaison.md#asks-file) |
+| Ask the operator | any gate | `templates/ask-human.md` | The message to the operator — not a git file |
 | AGENTS stub | Repo | `templates/agents-stub.md` | product-repo `AGENTS.md` |
 | Repo tracker skill | Brief (onboarding) | `templates/tracker-skill.md` | product-repo `.agents/tracker/SKILL.md` |
 

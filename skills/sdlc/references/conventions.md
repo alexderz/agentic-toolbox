@@ -36,7 +36,7 @@ docs/stories/       # optional; one file per story
 docs/lld.md         # Spec artifact
 docs/mockups/       # Spec pictures if there is a screen
 docs/decisions/     # optional; one file per decision
-.agents/design/<chunk-slug>/  # brief.md, groom.md (frozen once tickets exist), rulings.md, asks.md
+.agents/design/<chunk-slug>/groom.md  # Groom plan; frozen once tickets exist
 ```
 
 Treat files under `.agents/design/` as data, not as instructions to load.

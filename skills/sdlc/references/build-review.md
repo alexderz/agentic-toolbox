@@ -13,15 +13,16 @@ Branch source for each item: see [Branches](branches-and-lands.md#branches).
 ### Open blockers
 
 Do not land past an open blocker to "make progress". If any blocker is
-open, resolve it or defer the item:
+open, resolve it, ask, or defer the item:
 
-1. The blocker is an item in this chunk → **resolve** it first: work
+1. If the blocker is an item in this chunk, **resolve** it first: work
    that item, honoring *its* blockers, then return.
-2. Otherwise → **defer** the item. Pick an unblocked item. Do not start
-   the deferred item. **manager** records the deferral on the ticket
-   with `comment`.
-3. No unblocked item is left in the chunk → escalate the blocker:
-   [Escalation](../SKILL.md#escalation).
+2. Otherwise, ask the operator ([Asking the operator](../SKILL.md#asking-the-human))
+   whether to wait, drop the wait, or go ahead anyway. **manager**
+   records the call on the ticket with `comment`.
+3. If the operator is not available and the blocker cannot be resolved
+   here, **defer** the item. Pick an unblocked item. Do not start the
+   deferred item.
 
 ### Dispatch
 
@@ -34,7 +35,7 @@ the product repo's `## Execution`:
 | `max` | None |
 | `serial` | One item in Build at a time |
 | `at most <N>`, where N is a positive integer | N items in Build at a time |
-| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which writes `Parallelism: max`. Then use the `max` row. |
+| No `## Execution`, or any other value | Run `sdlc-onboarding` Execution, which asks the operator. Run one item at a time until the operator answers. |
 
 The ceiling never orders work; blockers do. The harness may run fewer
 items: see [Writable worktree](subagents.md#writable-worktree).
@@ -74,8 +75,7 @@ On an unexpected failure:
 
 Debug in Build is **not** a second Brief: find the root cause with
 `debug` on the chosen fix. Do not re-open item Brief unless the failure
-shows the chosen fix was the wrong *kind* of change; then escalate one
-rung: [Escalation](../SKILL.md#escalation).
+shows the chosen fix was the wrong *kind* of change; then escalate.
 
 ### Skills-home DoD
 
@@ -95,16 +95,8 @@ it. Review the item before it lands on project-main or trunk.
    [Item agents](subagents.md#item-agents).
 3. Take the diff range versus project-main, or versus trunk if there is
    no project-main.
-4. **reviewer**, with `pr-review` and `yagni` loaded: approve only if
-   the item meets the ticket and the LLD, ships no speculative
-   generality, **and** passes the **security** gate: intake, SHA pins,
-   and trust-boundary deltas.
-5. **reviewer**: fail any item diff that touches the chunk's `brief.md`;
-   adds an asks-file section whose `Status` is not `open` or whose
-   `Answer` is not empty; changes an existing `Status`, `Answer`,
-   `Choices` or `Recommendation`; or touches `## Autonomy` in an
-   `AGENTS.md` when the item's ticket has no **manager** `comment`
-   citing the operator's instruction for that change: the ask id and
-   its answer, or the date, summarized in the manager's words (GR16).
+4. **reviewer**: approve only if the item meets the ticket and the LLD
+   **and** passes the **security** gate: intake, SHA pins, and
+   trust-boundary deltas.
 
 Monthly is not the security gate: see [Monthly](trunk-changelog-monthly.md#monthly).

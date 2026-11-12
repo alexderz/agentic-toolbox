@@ -5,7 +5,8 @@ Write, rewrite and review agent text to these rules. Source: DER-288
 
 ## Names
 
-- **Agent text** (`$AT`) — `AGENTS.md`, `skills/` (the SDLC is `skills/sdlc/`), `maintainers/AGENTS.md`, `maintainers/evals/`.
+- **Agent text** (`$AT`) — `AGENTS.md`, `skills/sdlc/SKILL.md`, `skills/sdlc/references/`,
+  `skills/sdlc/references/intake.md`, `skills/`, `maintainers/AGENTS.md`, `maintainers/evals/`.
 - **Old** — `main` at 7a11696; **Old L**, a line in it. **SDLC index** — `skills/sdlc/SKILL.md`.
 - **Owner** — the one file that holds a rule. **Route** — one line
   elsewhere that names the rule and links the owner by path and anchor.
@@ -43,13 +44,13 @@ roles and step names. Write the Use name, never the banned one:
    "never" names the allowed action beside it.
 8. Write imperative sentences, one instruction each. Hide no condition
    in a parenthesis. No metaphor. No self-deleting or dated conditions.
-9. Caps in lines: `SKILL.md` ≤250, the SDLC index included; files in
-   `skills/sdlc/references/` ≤150, except `trunk-changelog-monthly.md` ≤80,
-   `branches-and-lands.md` ≤120, `conventions.md` ≤100, `intake.md` ≤55; root
-   `AGENTS.md` ≤100; this file ≤150. `tracker-sdlc` has a 150-line target: a goal,
-   not a blocker; only its `SKILL.md` cap blocks (Q10). Caps and K1 apply to
-   rewrites, not to a move. A rewrite may grow to its cap. A cap that needs a new
-   file → add the file, log a ruling. Dropping an operator-asked rule → ask them.
+9. Caps in lines: `SKILL.md` ≤250; SDLC index ≤200; `skills/sdlc/references/` files ≤150, except
+   `trunk-changelog-monthly.md` ≤80, `branches-and-lands.md` ≤120, `conventions.md`
+   ≤100; root `AGENTS.md` ≤100; `skills/sdlc/references/intake.md` ≤55; this file ≤150. `tracker-sdlc`
+   has a 150-line target: a goal, not a blocker; only its `SKILL.md` cap blocks
+   (Q10). Caps and K1 apply to rewrites, not to the C1 move. Rewrites never grow,
+   except `language-router`, `maintainers/AGENTS.md` and new files. If a cap needs a
+   dropped rule or a new file, ask the operator.
 10. Each item carries a rule map for every agent file it edits. The
     reviewer checks the map, not only the prose.
 
@@ -60,10 +61,8 @@ roles and step names. Write the Use name, never the banned one:
 | Roles; names `manager`, `trunk`, `project-main` | `skills/sdlc/SKILL.md#roles`, `#names` | all |
 | Only the manager writes the tracker | `skills/sdlc/SKILL.md#tracker` | `tracker-sdlc`, `sdlc-artifacts`, `AGENTS.md`, subagents |
 | Workers do not bypass security | `skills/sdlc/SKILL.md#roles` | Build, subagents |
-| When to ask the operator; rulings; guardrails; auto mode; escalation; touchpoints | `skills/sdlc/SKILL.md#asking-the-human`, `#escalation`, `#touchpoints` | skills; Brief; Plan; Spec; Build |
-| Ask, batch and touchpoint message shape | `skills/sdlc-artifacts/templates/ask-human.md` | SDLC, no inline copy |
-| Liaison; asks file; `needs_input` pointer | `skills/sdlc/references/liaison.md`; shape `templates/asks.md`; pointer `references/stage-result.md#schema` | SDLC index, subagents |
-| Refiner job; three buckets; defer, don't delete | `skills/discover-the-idea/SKILL.md#refine` | `AGENTS.md`, Brief |
+| When to ask the operator; AFK pick between two item fixes | `skills/sdlc/SKILL.md#asking-the-human` | skills; item Brief |
+| Ask message shape | `skills/sdlc-artifacts/templates/ask-human.md` | SDLC, no inline copy |
 | Branch source; incoming-item branch; project-main | `skills/sdlc/references/branches-and-lands.md#branches`, `#project-main` | `AGENTS.md`, Build, item Brief, Groom |
 | Serialized lands; land order; `done` after land and verify | `skills/sdlc/references/branches-and-lands.md#land-path` | `AGENTS.md`, Build, Groom, conventions |
 | Gatherer, refiner, designer, contrarian: ids, mint, resume | `skills/sdlc/references/subagents.md#step-agents` | Brief |
@@ -101,9 +100,9 @@ any other change is an MQ. The item names its rows; **security** reads it at Rev
 ## Rule maps
 
 1. Write one rule map per edited agent file at
-   `maintainers/design/<chunk-slug>/rule-maps/<slug>.md`. The
+   `maintainers/design/instruction-refinement/rule-maps/<slug>.md`. The
    slug is the path lowercased, `/SKILL.md` and `.md` dropped, `/` → `-`.
-2. Header: `Old: <path> at <chunk base commit>, lines a–b. New: <path>.`
+2. Header: `Old: <path> at main 7a11696, lines a–b. New: <path>.`
 3. Key: **kept**, **route**, **dropped** with the owner named, **DER-265**, **DER-271**.
 4. Table `Old L | Rule | Disposition | New location`, in old-line order;
    ranges cover every non-blank old line.
@@ -126,7 +125,8 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
 ## Checks
 
 - **K1 caps** (`wc -l`): the caps in standard 9 block; the target there does not.
-- **K2**: retired by DER-712; a rewrite may grow to its standard 9 cap (K1).
+- **K2 never grow**: each edited file ≤ `git show 7a11696:<f> | wc -l`;
+  exempt `language-router`, `maintainers/AGENTS.md`, new files.
 - **K3 names**: `grep -rniE 'orchestrator|official copy|improvise|parent (agent|session)|parent-pick|the \*{0,2}parent\*{0,2} (may|picks|is)' $AT`
   → empty, except the `tracker-sdlc` comment shape `(per orchestrator …)`,
   which is contract text (Q9); other `-w parent` hits: tracker fields, Go tests.
@@ -134,7 +134,7 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
 - **K5 recipe**: `awk '/^```sh$/{f=1} f{print} f&&/^```$/{f=0}'` on
   `adapters/local.md`, old (`git show 7a11696:…`) vs new → no diff.
 - **K6 shapes**: `git diff --quiet 7a11696 -- skills/sdlc-artifacts/templates/tracker-skill.md`;
-  per template `grep -oE '^#+ .*|^- \*\*[^*]+\*\*'` unchanged, except `ask-human.md` and `asks.md` (DER-712);
+  per template `grep -oE '^#+ .*|^- \*\*[^*]+\*\*'` unchanged;
   `grep -c '^Contract version: 2$' skills/tracker-sdlc/SKILL.md` = 1.
 - **K7 links**: every relative link in changed files resolves; every
   `#anchor` matches a heading slug or `<a id>`; the anchors of the LLD
@@ -142,7 +142,7 @@ files it; the "Improvise" and "a person" replacements in Names; frontmatter
 - **K8 people doc**: `diff <(git show 7a11696:docs/SDLC.md | sed -n '119,383p' | sed -E 's/^#(#+ )/\1/') <(git show 88455d8:docs/how-software-gets-built.md)` → empty (DER-288 items, through project-main 88455d8);
   each later commit in `git log 88455d8.. -- docs/how-software-gets-built.md` has a change map naming its `docs-google-style` read at Review (operator, 2026-09-27). **K9**: `grep -c 'id="asking-the-human"' skills/sdlc/SKILL.md` = 1.
 - **K10 public text**, before each push and the PR: `git diff main...
-  | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|\bsk-[A-Za-z0-9_-]{20,}|\bxai-[A-Za-z0-9_-]{20,}|\.(lan|local|internal|ts\.net)\b|https?://)'`
+  | grep -nE '^\+.*(([0-9]{1,3}\.){3}[0-9]{1,3}|/home/|:[0-9]{4,5}\b|\bsk-[A-Za-z0-9_-]{20,}|\.(lan|local|internal|ts\.net)\b|https?://)'`
   → each hit is an allowed reference (upstream or comparables URL) or is
   removed; same check on PR and tracker text before posting.
 
