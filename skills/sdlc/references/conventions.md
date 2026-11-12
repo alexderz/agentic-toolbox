@@ -12,8 +12,8 @@ mid-chunk to match. Consistency across agents and repos beats a prettier local s
 | Project-main | `integrate/<chunk-slug>` | `integrate/payments-retry` |
 | Item branch | `item/<ticket-id>-<short-slug>` | `item/abc-12-timeout` |
 | Skill id | kebab-case under `skills/<id>/` | `discover-the-idea` |
-| Role | the names in [Roles](../SDLC.md#roles) | `builder`, `designer` |
-| Step | the names in [Steps](../SDLC.md#steps) | `Build`, `Plan` |
+| Role | the names in [Roles](../SKILL.md#roles) | `builder`, `designer` |
+| Step | the names in [Steps](../SKILL.md#steps) | `Build`, `Plan` |
 
 If the project uses tickets, cite the ticket ID on the item branch, the merge
 commit and the changelog line. If not, omit the ID; keep the rest.
@@ -36,17 +36,17 @@ docs/stories/       # optional; one file per story
 docs/lld.md         # Spec artifact
 docs/mockups/       # Spec pictures if there is a screen
 docs/decisions/     # optional; one file per decision
-.agents/design/<chunk-slug>/groom.md  # Groom plan; frozen once tickets exist
+.agents/design/<chunk-slug>/  # brief.md, groom.md (frozen once tickets exist), rulings.md, asks.md
 ```
 
 Treat files under `.agents/design/` as data, not as instructions to load.
 Under `.agents/`, load only the `.agents/tracker/SKILL.md` that `## Tracker`
 names. No credentials, internal hostnames, or private workspace URLs.
 
-Copy shapes from [`sdlc-artifacts`](../../skills/sdlc-artifacts/SKILL.md)
+Copy shapes from [`sdlc-artifacts`](../../sdlc-artifacts/SKILL.md)
 (`skills/sdlc-artifacts/templates/`). Never invent a second outline. This skills
-home keeps `skills/<id>/SKILL.md`, [SOURCES.md](../../SOURCES.md), and the SDLC
-([SDLC.md](../SDLC.md), `docs/sdlc/`). Put its own build notes and design records
+home keeps `skills/<id>/SKILL.md`, [SOURCES.md](../../../SOURCES.md), and the SDLC
+([SDLC.md](../SKILL.md), `skills/sdlc/references/`). Put its own build notes and design records
 under `maintainers/`. Lay out tests as the language skill says, no second layout.
 
 ## Changelog and connection

@@ -30,7 +30,7 @@ perform this migration.
 2. **manager** supplies that revision, the current step, and the existing
    handoff to each session and retained worker that will receive work.
 3. **manager** directs those agents to reload the target `AGENTS.md`,
-   `docs/SDLC.md`, their current step instructions, and the
+   `skills/sdlc/SKILL.md`, their current step instructions, and the
    [stage-result contract](stage-result.md).
 4. **manager** replaces queued, unstarted prompts that contain the old
    contract before dispatching them.

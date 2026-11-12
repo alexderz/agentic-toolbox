@@ -74,7 +74,7 @@ Host and personal-account locks are **Never**, not Ask first.
 | **builder** | Classifying commands before they run | Self-excepting “just this once” |
 | **manager** | After-act | Blessing a ship that skipped the gate |
 
-Workers do not bypass **security** ([SDLC roles](../../docs/SDLC.md#roles)). A green ShellCheck is not a **security** clear.
+Workers do not bypass **security** ([SDLC roles](../sdlc/SKILL.md#roles)). A green ShellCheck is not a **security** clear.
 
 ## Red flags
 

@@ -3,7 +3,7 @@
 Tickets: item `DER-529`, chunk `DER-421`.
 
 A **stage** is one run of one SDLC step. Use the step names in
-[Names](../SDLC.md#names). A **stage result** is the file `result.json`
+[Names](../SKILL.md#names). A **stage result** is the file `result.json`
 in an absolute output directory supplied by the **stage harness**, the
 program that runs a stage and persists its output. Each invocation has
 a unique directory outside the checkout; the harness retains its path.
@@ -27,8 +27,8 @@ other status is a failure.
 | `blocked` | The stage stopped on an open blocker. |
 | `needs_input` | The stage stopped for a decision from the operator, or someone the operator names in writing. |
 
-For tracker states, see [Tracker](../SDLC.md#tracker). For decisions,
-see [Asking the operator](../SDLC.md#asking-the-human).
+For tracker states, see [Tracker](../SKILL.md#tracker). For decisions,
+see [Asking the operator](../SKILL.md#asking-the-human).
 
 ## Schema
 
@@ -39,7 +39,7 @@ is a failure. An empty string or array does not meet a non-empty rule.
 
 | Field | Type | Rule |
 | --- | --- | --- |
-| `step` | string | A step name in [Names](../SDLC.md#names). |
+| `step` | string | A step name in [Names](../SKILL.md#names). |
 | `status` | string | One of the four statuses. |
 | `evidence` | object | Stage evidence. |
 | `findings` | string | The prose. It may be empty, except when `status` is `fail` or `blocked`: then it must be non-empty. |
@@ -51,7 +51,7 @@ is a failure. An empty string or array does not meet a non-empty rule.
 | `exit_code` | integer | `kind` is `command`. Not a string, and not a fraction. |
 | `checks` | non-empty array of non-empty strings with no newline | `kind` is `model` and `status` is `pass`. Each entry names one check. |
 | `blocker` | non-empty string | `status` is `blocked`. The blocker ticket id. |
-| `question` | non-empty string | `status` is `needs_input`. The decision the stage waits on. |
+| `question` | non-empty string | `status` is `needs_input`. The asks it waits on, written `asks: <path> <ids>`. |
 
 Omit an evidence field when its required condition does not hold.
 The reader rejects a present-but-not-required field as a failure.
@@ -138,7 +138,7 @@ separately for diagnosis. Missing files remain reader failures.
 {"step": "Brief", "status": "needs_input",
   "evidence": {
     "kind": "model",
-    "question": "Stop the retry after 3 attempts, or after 30 seconds?"
+    "question": "asks: .agents/design/payments-retry/asks.md Q3 Q4"
   },
   "findings": ""
 }

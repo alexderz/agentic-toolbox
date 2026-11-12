@@ -38,7 +38,7 @@ applicable). No secret scan in this first cut — park for later
 
 ## Non-goals (this cut)
 
-- SkillSpector in CI — intake stays [INTAKE.md](../docs/INTAKE.md) /
+- SkillSpector in CI — intake stays [INTAKE.md](../skills/sdlc/references/intake.md) /
   **security**, before a body lands
 - Full test suites
 - Vendor skill SHA verification in CI — stays **security** +

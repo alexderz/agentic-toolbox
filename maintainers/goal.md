@@ -26,7 +26,7 @@ This is the shared skills repo other CLIs should read.
   work unless a bug is proven.
 
 ### C — Docs accuracy
-- Keep `docs/ARCHITECTURE.md` and `docs/SDLC.md` factual if you touch
+- Keep `docs/ARCHITECTURE.md` and `skills/sdlc/SKILL.md` factual if you touch
   related skills; no process churn for its own sake.
 
 ## Explicit non-goals

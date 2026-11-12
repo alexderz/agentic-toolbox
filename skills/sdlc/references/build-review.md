@@ -2,7 +2,7 @@
 
 ## Build
 
-Open blocker: defined in [Tracker](../SDLC.md#tracker).
+Open blocker: defined in [Tracker](../SKILL.md#tracker).
 
 **manager**: before minting or resuming a **builder** on an item, claim
 the item with the `tracker-sdlc` claim verb, under the builder's agent
@@ -17,7 +17,7 @@ open, resolve it, ask, or defer the item:
 
 1. If the blocker is an item in this chunk, **resolve** it first: work
    that item, honoring *its* blockers, then return.
-2. Otherwise, ask the operator ([Asking the operator](../SDLC.md#asking-the-human))
+2. Otherwise, ask the operator ([Asking the operator](../SKILL.md#asking-the-human))
    whether to wait, drop the wait, or go ahead anyway. **manager**
    records the call on the ticket with `comment`.
 3. If the operator is not available and the blocker cannot be resolved
@@ -80,9 +80,9 @@ shows the chosen fix was the wrong *kind* of change; then escalate.
 ### Skills-home DoD
 
 In this repo, any skill-body diff must match the pinned SHA in
-[SOURCES.md](../../SOURCES.md) for that id. If that SHA is empty, no
-body may land. Worker PR intake: [Workers](../INTAKE.md#workers).
-Workers do not bypass **security**: see [Roles](../SDLC.md#roles).
+[SOURCES.md](../../../SOURCES.md) for that id. If that SHA is empty, no
+body may land. Worker PR intake: [Workers](intake.md#workers).
+Workers do not bypass **security**: see [Roles](../SKILL.md#roles).
 
 ## Review
 

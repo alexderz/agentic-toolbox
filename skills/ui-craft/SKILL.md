@@ -44,7 +44,7 @@ The operator picks one answer per product repo; the UI craft note records it:
 1. If the product repo has a UI craft note, follow the note. Do not ask
    again unless the operator reopens the choice in writing.
 2. If it has no UI craft note, put the ask in your handoff; keep building
-   with option 1. The ask follows [Asking the operator](../../docs/SDLC.md#asking-the-human)
+   with option 1. The ask follows [Asking the operator](../sdlc/SKILL.md#asking-the-human)
    and the `ask-human.md` shape: one choice per option in the list above,
    and a recommendation of option 1.
 3. Only after the operator answers does the **manager** write the UI craft
@@ -228,7 +228,7 @@ This pass is the builder's visual self-check. Done evidence is
 - **Excluded: the shipped subagents and the binary's directives.** They lift
   the harness's gates on subagents and autonomy.
 - **Excluded: the `ios` and `android` references.** They are MIT, from another project.
-- This rewrite and the pin are compared with upstream at [Monthly](../../docs/sdlc/trunk-changelog-monthly.md#monthly)
+- This rewrite and the pin are compared with upstream at [Monthly](../sdlc/references/trunk-changelog-monthly.md#monthly)
   review. A new pin needs a new **security** read.
 
 ## Ask first

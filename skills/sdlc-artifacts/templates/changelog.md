@@ -1,7 +1,7 @@
 # Changelog
 
 Newest first. Skip empty sections. Board, git, and this file must agree
-(see `<skills-home>/docs/sdlc/conventions.md#changelog-and-connection`).
+(see `<skills-home>/skills/sdlc/references/conventions.md#changelog-and-connection`).
 
 ## Unreleased
 

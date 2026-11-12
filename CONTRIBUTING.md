@@ -8,8 +8,8 @@ only maintainer. Internal work lands by local merge, not by pull request.
 1. Open an **issue** first if the change is more than a typo (new skill
    id, process change, or third-party intake).
 2. Fork. Branch off `main`.
-3. Follow [docs/SDLC.md](docs/SDLC.md) for anything larger than a typo.
-   Skill bodies: [docs/INTAKE.md](docs/INTAKE.md) and
+3. Follow [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md) for anything larger than a typo.
+   Skill bodies: [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md) and
    [SOURCES.md](SOURCES.md). No marketplace install, no `scripts/` in
    skill dirs, no secrets.
 4. Open a pull request against `main`. Keep the diff one idea.
