@@ -34,6 +34,7 @@ Newest first. Skip empty sections.
 - Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
 - sdlc-onboarding: Parallelism defaults to max with no question; the tracker proposal joins touchpoint 1 (DER-712).
 - Plan and Spec: UX, mockup and LLD acceptance gathered at the design gate; an optional HLD review touchpoint (DER-712).
+- SOURCES.md: intent credits for the upstream asking ideas (DER-712).
 
 ## instruction-refinement — 2026-10-04
 
