@@ -13,6 +13,7 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- The liaison procedure (skills/sdlc/references/liaison.md), the asks-file template asks.md, and the batch and touchpoint shape of ask-human.md (DER-712).
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
 - Knowledge note `knowledge/ai/vendors/security-skill-packs-2026-10-18.md`: a pointer catalog of public red-team and blue-team agent skill packs with maintainer, side, verified GitHub signals, and a maintenance guess; no skill bodies vendored (`DER-557`)
 - Knowledge note `knowledge/ai/vendors/x-chatter-security-skill-packs-2026-10-18.md`: X-signal ranking of public red-team and blue-team agent skill packs (Both/Red/Blue), with per-pack distinct-post counts, top-post links, and star/license figures as posted on X; companion to the GitHub-verified catalog; no skill bodies vendored
