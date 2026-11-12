@@ -29,6 +29,7 @@ Newest first. Skip empty sections.
 - Asking the operator: the three-pile sort, what vs how, cost to undo, real vs disposable, standing permissions, rulings, guardrails, auto mode, the escalation ladder and four touchpoints (DER-712).
 - Evals: C6 "no unneeded ask" on every task; the T1 key drops the Execution ask; T3 triggers follow the escalation ladder (DER-712).
 - Brief: the refiner runs discover-the-idea Refine, not yagni; one confirmation per Gather and Refine loop at touchpoint 1 (DER-712).
+- yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).
 
 ## instruction-refinement — 2026-10-04
 
