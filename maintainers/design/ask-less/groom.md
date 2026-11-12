@@ -1,16 +1,14 @@
 # Groom — Ask less
 
-DRAFT (pre-review)
-
-<!-- At freeze, replace the draft marker above with this sentence and
-delete this comment: Frozen record of the plan as reviewed at Groom on
-<YYYY-MM-DD>. Not live: the tracker is the source of truth for tickets,
-blockers and state. -->
+Frozen record of the plan as reviewed at Groom on 2026-11-11. Not live:
+the tracker is the source of truth for tickets, blockers and state.
 
 - Chunk: `DER-712` · LLD: `maintainers/design/ask-less/lld.md` · Date: `2026-11-11`
-- Review: `<groom reviewer label>` — pass on `<date>` at `<SHA of the
-  reviewed draft commit>`; `pending` until filled at freeze
-- Tickets: `G1` = `<id>`, … (filled at freeze)
+- Review: `ask-less-groom-review` — pass on `2026-11-11` at
+  `68b51836af3d0bfc0e33d73db70473a293737272`
+- Tickets: G1 DER-730; G2 DER-733; G3 DER-734; G4 DER-735; G5 DER-736;
+  G6 DER-737; G7 DER-738; G8 DER-739; G9 DER-740; G10 DER-741;
+  G11 DER-731; G12 DER-732; G13 DER-742; G14 DER-743; G15 DER-744.
 
 Fifteen items, one per HLD item: A0–A9 are G1–G10, E1–E5 are G11–G15.
 Every item honors the accepted Spec; none adds a gate. Builders: Grok 4.7
