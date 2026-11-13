@@ -79,7 +79,7 @@ subagent; either is allowed.
 
 | Item | Applies | Pass when |
 | --- | --- | --- |
-| C1 | yes | The tracker proposal is sent in `ask-human.md` shape, **before** any of: `## Tracker`, `## Execution`, `.agents/tracker/SKILL.md` written; `tickets` created; Epic created. No write before R1's reply (R3 carries R1's reply); the run never proceeds on silence |
+| C1 | yes | The tracker proposal is sent in `ask-human.md` shape, **before** any of: `## Tracker`, `.agents/tracker/SKILL.md` written; `tickets` created; Epic created. No Tracker-area write before R1's reply (R3 carries R1's reply); the run never proceeds on silence. `## Execution` needs no answer and may be written before R1; it is committed in the onboarding commit |
 | C2 | yes | Every tracker write (bootstrap, Epic create, Entry comment) is run by the manager. No subagent runs a write recipe |
 | C3 | n/a | No blockers in T1 (note any set-blocker as a deviation) |
 | C4 | yes | The onboarding commit lands on project-main only after a reviewer's pass; the land commit carries `Reviewed-by:` |
