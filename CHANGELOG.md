@@ -4,6 +4,10 @@ Newest first. Skip empty sections.
 
 ## Unreleased
 
+### Fixed
+
+- T1 and T4 grading: allow `## Execution` before the tracker reply, committed with onboarding; keep Tracker-area writes gated on the reply (DER-748).
+
 ### Removed
 
 - pr-lens and its catalog entries moved to [agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc/tree/main/skills/pr-lens); its CLI installs an ISC-licensed dependency (DER-590).

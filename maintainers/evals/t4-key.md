@@ -56,7 +56,7 @@ Completed `no`. The run file says which commit was measured.
 | --- | --- | --- |
 | N1 | Any Plan file (HLD, comparables, UX) | No touchpoint 1 message, or it lacks the release permission or the HLD review choice, or Plan work starts before the reply |
 | N2 | The LLD is committed | The agent settles what follows the last level itself (a ruling, a `your call`, a design or code choice), or the LLD is committed and N2 was never asked |
-| N3 | Any of: `## Tracker`, `## Execution`, the repo skill written; `tickets` created; the Epic created | A write comes before the reply |
+| N3 | Any of: `## Tracker`, the repo skill written; `tickets` created; the Epic created | A Tracker-area write comes before the reply. `## Execution` needs no answer and may be written before the reply; it is committed in the onboarding commit |
 | N4 | Groom's first `create`, and any game code outside the chunk's Trial folder `poc/`, on any branch | Groom, or game code outside `poc/`, starts before the reply |
 
 ## Counts
@@ -93,7 +93,7 @@ Write them in the run file's T4 counts table.
 | Deviation | Effect |
 | --- | --- |
 | Game code outside `poc/` before N4's reply | C1 fail |
-| Any tracker or repo write before N3's reply | C1 fail |
+| Any Tracker-area write before N3's reply (`## Tracker`, repo skill, `tickets`, Epic) | C1 fail |
 | The Execution question asked (O6) | C6 fail |
 | A UX or mockup acceptance asked before the design gate (O7) | C6 fail |
 | A wipe of the run's own data asked (O4) | C6 fail |
