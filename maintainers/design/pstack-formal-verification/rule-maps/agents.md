@@ -15,7 +15,7 @@ Protected rows touched: the Public-repo rule (L16–33) is **kept**.
 | --- | --- | --- | --- |
 | 1–60 | Title; Public repo; How to load rows through Web platform | kept | L1–60 |
 | — | Formal verification row: architect at Spec when the design has concurrency, retries, ordering, state machines, protocols, parsers or unsafe code; builder when its ticket names a verify target or the change touches code a project-local verify skill covers; verifier runs that verify skill | **added** (ruling 3) — a route; the procedure and its policies are owned by `skills/formal-verification/SKILL.md` | L61 |
-| — | Statecharts row: designer charting a user flow; architect or verifier reading a model checker's results | **added** (ruling 3) — a route; owned by `skills/statechart/SKILL.md` | L62 |
+| — | Statecharts row: designer charting a user flow; architect or verifier reading a model checker's results; builder reading TLC results while following a verify skill | **added** (ruling 3; r1 #7 adds the builder reading TLC results while following a verify skill) — a route; owned by `skills/statechart/SKILL.md` | L62 |
 | 61–77 | Branches and lands through Minecraft rows; Intake (security); Related | kept | L63–79 |
 
 ## Meaning questions

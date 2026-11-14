@@ -7,7 +7,7 @@ light-pass change map per `maintainers/writing-standard.md` Rule maps step 6. Th
 Old: upstream `pstack/skills/create-formal-verification-skill/SKILL.md` (C, 43 lines) and
 `pstack/skills/maintain-formal-verification-skill/SKILL.md` (M, 58 lines) at
 3dbd22ff12742fb28c9700b9760baa29ed41dc13. New:
-[`skills/formal-verification/SKILL.md`](../../../../skills/formal-verification/SKILL.md) (250 lines).
+[`skills/formal-verification/SKILL.md`](../../../../skills/formal-verification/SKILL.md) (249 lines).
 
 Key: **kept** (same behavior, new words), **adapted** (changed by a manager ruling, named),
 **dropped** (reason), **added** (source).
@@ -18,7 +18,8 @@ Key: **kept** (same behavior, new words), **adapted** (changed by a manager ruli
 | C9 | Test vs verification; reader-cold verify skill; trust without the language | kept | intro; Write the verify skill lead |
 | — | Attribution line | added (ruling 5) | L8 |
 | — | Names: property, verification, check, verify target, verify skill, coverage record, sync commit, broken variant | added (writing standard 3) | Names |
-| — | Actors: architect at Spec, builder, verifier | added (ruling 3); the architect records target, property and tool in the LLD or ticket | Actors |
+| — | Actors: architect at Spec, builder, verifier | added (ruling 3); the architect picks target, property and tool and writes them into the LLD or ticket, described by output, not by later section names (r1 #2) | Actors |
+| — | Create's "Use" line: one condition per actor (architect at Spec on the design traits; builder when the ticket names a verify target); outside an SDLC item, one agent does all of Create | changed (r1 #1, manager disposition) | Create lead |
 | C13 | Answer from the code; ask only what you cannot observe; start at a named area | adapted: ask per Asking the operator (ruling 4) | Toolbox policies 1; Choose the target 1 |
 | C15 | Promise where a break harms users and tests rarely reach; strongest, not easiest | kept, as numbered steps; "find the implicit state machines" list added from the post (ruling 1) | Choose the target 2–5 |
 | C19 | Tool choice: TLA+ default for order; code verifier per input; generated-input tests when none; proof when no bound; prefer installable; say why | kept, as a first-match table | Choose the tool |

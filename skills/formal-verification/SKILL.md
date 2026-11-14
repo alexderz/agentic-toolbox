@@ -26,9 +26,8 @@ back in line after the code changed. Each opens with when to use it.
 
 ## Actors
 
-- **architect**, at Spec: does Create's Choose the target and Choose the
-  tool, and writes the verify target, the property and the tool into the
-  LLD or the ticket.
+- **architect**, at Spec: picks the verify target, the property and the
+  tool, and writes them into the LLD or the ticket.
 - **builder**: does the rest of Create when its ticket names a verify
   target; follows the product repo's verify skill when the change touches
   its verify target; does Maintain when that verify skill is out of step.
@@ -80,9 +79,9 @@ Every check you create or update meets all seven:
 
 ## Create
 
-Use Create when the ticket names a verify target, or when the design or
-change has concurrency, retries, ordering, state machines, protocols,
-parsers or unsafe code and no verify skill covers that code.
+Use Create: the architect at Spec when the design has concurrency, retries,
+ordering, state machines, protocols, parsers or unsafe code; the builder when
+the ticket names a verify target. Outside an SDLC item, one agent does all of Create.
 
 ### Choose the target
 

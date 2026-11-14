@@ -31,6 +31,7 @@ model-checked" in its title and in the handoff.
 ## Actors
 
 - **architect** or **verifier**: charts a TLA+ model and reads TLC's results.
+- **builder**: reads TLC results while following a verify skill.
 - **designer**: charts a user flow from approved stories.
 
 ## Toolbox policies
@@ -45,13 +46,14 @@ model-checked" in its title and in the handoff.
 4. The upstream pstack `statechart` command is an operator opt-in, used
    only when the operator says so in writing, at the operator's own risk.
    It is TypeScript at [cursor/plugins `pstack` at `3dbd22f`](https://github.com/cursor/plugins/tree/3dbd22ff12742fb28c9700b9760baa29ed41dc13/pstack).
-   Its first run installs TLC and Java through `mise` and needs the
+   It needs `mise` and a TypeScript runtime already installed; its first
+   run installs Java and TLC into the user's mise store and needs the
    network. This toolbox does not vendor it, run it or give an install
    command for it. Without that opt-in, follow this file.
 
 ## Chart a checked model
 
-The **architect** or **verifier** uses this section.
+The **architect**, **verifier** or **builder** uses this section.
 
 ### Write the spec
 
@@ -67,18 +69,19 @@ The **architect** or **verifier** uses this section.
 
 ### Run TLC
 
-1. Run TLC once on the unmodified config, single-worker, with its
-   `-dump dot` option set to label actions (`-dump dot,actionlabels <file>`).
+1. Run TLC once on the unmodified config with `-workers 1 -dump dot,actionlabels <file>`.
    Keep the output as `tlc.out`.
 2. If TLC reports a broken invariant, a broken `PROPERTY` or a deadlock,
    save its trace as that rule's bug path, in `tlc-<rule>.out`. TLC
    stops at the first break; for an invariant or a deadlock its trace is
    the shortest path to it.
-3. Remove that rule from a copy of the config; for a deadlock, set
-   `CHECK_DEADLOCK FALSE`. Run TLC again on the copy.
+3. Remove that rule from the working copy of the config, keeping earlier
+   removals; for a deadlock, set `CHECK_DEADLOCK FALSE`. Rerun TLC on the
+   working copy with the same flags.
 4. Repeat steps 2 and 3 until no rule breaks.
-5. Keep the `.dot` graph and the distinct state count from the last run:
-   it explored the whole state space, past every broken rule.
+5. Keep the `.dot` graph and the distinct state count from the last run.
+   If the last run finished with no error, it explored every reachable
+   state inside any `CONSTRAINT`; otherwise apply step 6.
 6. If a run stops on an error or does not finish, list each rule it did
    not check under "Rules not checked". Do not mark those rules. A rule
    not checked can hold or break.
@@ -115,25 +118,28 @@ Read these limits before you trust a result:
 
 ### Draw the chart
 
-1. If TLC counted more than 500 states, draw only the bug paths; if no
-   rule broke, draw no chart, report the state count, and say that a
-   smaller model is needed to see the graph. Otherwise draw every chart
-   state reachable from a start state, and every arrow.
+1. If the distinct state count kept in Run TLC step 5 is above 500, draw
+   only the bug paths; if no rule broke, draw no chart, report the state
+   count, and say that a smaller model is needed to see the graph.
+   Otherwise draw every chart state reachable from a start state, and
+   every arrow.
 2. Count the arrows. Above about 20, coarsen first: merge values that
    behave alike under one label, and drop detail the reader can skip,
    such as a pending call whose answer changes nothing.
 3. While coarsening, keep every state of every bug path and every mark.
-   Never merge two states that break different rules. A merge that turns
-   `breaks` into `mayBreak` hides where a rule breaks; undo it.
+   Never merge two states that break different rules; keep them as
+   separate chart states. A merge that turns `breaks` into `mayBreak`
+   hides where a rule breaks; undo it.
 4. If it is still too busy, hide steps the reader can skip, such as a
    reset available everywhere or an arrow that duplicates others. Hide
    every step behind an arrow, or none. Every chart state must stay
    reachable from a start state. A chart state that can move in the model
    keeps at least one outgoing arrow.
-5. Evaluate each broken rule on the variable values in the graph's state
-   labels. Mark each chart state: `breaks` if every model state behind it
-   breaks a rule, `mayBreak` if only some do. The graph explored past each
-   broken rule, so states after a bug appear too.
+5. Mark broken invariants by their values in the graph's state labels:
+   `breaks` if every model state behind a chart state breaks one, `mayBreak`
+   if only some do. Mark a deadlock on each graph state with no outgoing
+   edge. A broken `PROPERTY` gets its bug path only, no mark. The graph
+   explored past each broken rule, so states after a bug appear too.
 6. Add the class lines and a Legend. One Legend state per mark names the
    rules it marks; if two rules break in one state, name both:
 
