@@ -4,7 +4,7 @@ Entry point for sessions that work on this repository itself: skills,
 docs, packages, or process. Agents that only use the toolbox stop at the
 root [AGENTS.md](../AGENTS.md) and do not load this file.
 
-Read the root [AGENTS.md](../AGENTS.md) and [docs/SDLC.md](../docs/SDLC.md)
+Read the root [AGENTS.md](../AGENTS.md) and [skills/sdlc/SKILL.md](../skills/sdlc/SKILL.md)
 first. This file adds only what is specific to building this repository.
 Write agent text to the [writing standard](writing-standard.md#standard).
 
@@ -21,8 +21,7 @@ Parallelism: max
 
 ## Evals
 
-Agent text: `AGENTS.md`, `docs/SDLC.md`, `docs/sdlc/`, `docs/INTAKE.md`,
-`skills/`.
+Agent text: `AGENTS.md`, `skills/` (the SDLC is `skills/sdlc/`).
 
 1. A PR into `main` that changes agent text gets an eval run before it
    merges: T1–T3 on the PR's head, three repeats per task, on each model

@@ -102,7 +102,7 @@ Blue-team adjacent mentions: **splunk-mcp-guard** (defensive proxy over Splunk M
 
 ## Do not
 
-- Install a pack named here with a marketplace command, `npx`, or a plugin add. Intake is clone, scan, pin, rewrite: [docs/INTAKE.md](../../../docs/INTAKE.md).
+- Install a pack named here with a marketplace command, `npx`, or a plugin add. Intake is clone, scan, pin, rewrite: [skills/sdlc/references/intake.md](../../../skills/sdlc/references/intake.md).
 - Copy a `SKILL.md` body, payload list, or script from these packs into this repo.
 - Remint a pack as a skill id here, or read an X like count as a GitHub star count.
 - Store tokens or credentials used to query these sources.

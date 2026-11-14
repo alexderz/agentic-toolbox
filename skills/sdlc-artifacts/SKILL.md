@@ -6,7 +6,7 @@ description: use this when writing or updating an HLD, LLD, ticket, epic, groom 
 # SDLC artifacts
 
 Fill-in shapes for artifacts the SDLC already requires. Process lives in
-[docs/SDLC.md](../../docs/SDLC.md). **Copy a template; do not paste the
+[skills/sdlc/SKILL.md](../sdlc/SKILL.md). **Copy a template; do not paste the
 SDLC into the artifact.** No `scripts/`.
 
 ## Iron law
@@ -18,7 +18,7 @@ and why.** Do not invent a parallel outline.
 
 | Artifact | Step | Template | Lands in |
 | --- | --- | --- | --- |
-| Brief (chunk) | Brief | `discover-the-idea` (not here) | Chat unless asked to file |
+| Brief (chunk) | Brief | `discover-the-idea` (not here) | SDLC chunk: `brief.md` in the chunk's design folder; otherwise chat unless asked to file |
 | Incoming item | Brief | `templates/bug.md` / `task.md` | Same files as Groom; fill Proposed fix / Removal / Pick **at Brief**, not later |
 | Track / roadmap | Plan | `templates/track.md` | Board project; git copy optional |
 | Chunk / epic | Brief–Groom | `templates/chunk.md` | Board parent issue |
@@ -27,7 +27,7 @@ and why.** Do not invent a parallel outline.
 | Comparables | Plan | `templates/comparables.md` | `docs/comparables.md` or `docs/<slug>/comparables.md` |
 | UX / journeys | Plan | `templates/ux.md` | `docs/ux.md` or `docs/<slug>/ux.md` |
 | User story | Plan | `templates/user-story.md` | `docs/stories/` or the board |
-| PoC | Trial | `templates/poc.md` | `poc/poc.md` beside the chunk's design records: [Trial](../../docs/sdlc/plan-trial-spec.md#trial) |
+| PoC | Trial | `templates/poc.md` | `poc/poc.md` beside the chunk's design records: [Trial](../sdlc/references/plan-trial-spec.md#trial) |
 | LLD | Spec | `templates/lld.md` | `docs/lld.md` or `docs/<slug>/lld.md` |
 | Mockups | Spec | `templates/mockup.md` | `docs/mockups/` (or `n/a`) |
 | Decision | any | `templates/decision.md` | `docs/decisions/<slug>.md` |
@@ -37,7 +37,8 @@ and why.** Do not invent a parallel outline.
 | PR / land | Review | `templates/pr.md` | PR body or land commit message |
 | Monthly | Monthly | `templates/monthly.md` | `docs/monthly/`, or a Task once filed |
 | Human doc | Spec+ | `templates/human-doc.md` | `docs/` how-to (Google style) |
-| Ask the operator | any gate | `templates/ask-human.md` | The message to the operator — not a git file |
+| Ask the operator | a batch or a touchpoint | `templates/ask-human.md` | The message to the operator — not a git file |
+| Asks file | any step | `templates/asks.md` | `asks.md` in the chunk's design folder: [Liaison](../sdlc/references/liaison.md#asks-file) |
 | AGENTS stub | Repo | `templates/agents-stub.md` | product-repo `AGENTS.md` |
 | Repo tracker skill | Brief (onboarding) | `templates/tracker-skill.md` | product-repo `.agents/tracker/SKILL.md` |
 
@@ -46,7 +47,7 @@ and why.** Do not invent a parallel outline.
 - Copy the file. Delete unused *optional* sections. Keep required ones.
 - Link the layer above and below (track → chunk → item; HLD → LLD →
   ticket). A changelog line cites the ticket ID and the land SHA.
-- Tracker: only the manager writes it: [Tracker](../../docs/SDLC.md#tracker).
+- Tracker: only the manager writes it: [Tracker](../sdlc/SKILL.md#tracker).
   The manager files a ticket body with `tracker-sdlc` `create`, posts later
   fields or a design's git path with `comment` (no edit verb), and sets
   blockers with set-blocker, not only as text.

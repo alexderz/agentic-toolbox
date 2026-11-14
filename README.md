@@ -10,7 +10,8 @@ Git is the source of truth. A local or vendor mirror may follow. Do not
 treat a mirror as an independent write path for skill bodies.
 
 **License:** MIT ([LICENSE](LICENSE)). `skills/debug-anthropic/` and
-`skills/ui-craft/` are Apache-2.0 ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
+`skills/ui-craft/` are Apache-2.0. `skills/modern-web-guidance/` is mixed:
+Apache-2.0 entry and index, CC-BY-4.0 guides ([NOTICE](NOTICE)). Pins: [SOURCES.md](SOURCES.md).
 
 How the work gets done, in plain language (including a calculator
 walkthrough):
@@ -44,6 +45,7 @@ There is no plugin manifest yet. Natural install groups:
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp`, `cursor-cloud-agents-when` | Operator opt-in. `grok-acp` offloads a build to the local Grok CLI over ACP and needs the `grok-acp` package on `PATH`. `cursor-cloud-agents-when` chooses Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work |
 | **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
+| **web** | `modern-web-guidance` | Builder reference for browser UI code: HTML, CSS and client-side JS/TS. Loads beside the one language skill and `ui-craft`; not a language skill. Text only: a local index and 209 guides, read only as the task needs |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 
 `lang-go`, `lang-python`, and `lang-shell` are **pointers**. They do not
@@ -60,7 +62,7 @@ Placeholders remain for empty ids. Bodies land via **security** intake
 and a compress, not a vendor paste.
 
 - Do not install a second process pack beside this repo’s ids. See
-  [docs/INTAKE.md](docs/INTAKE.md).
+  [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md).
 - Pin every third-party cherry-pick **SHA** in [SOURCES.md](SOURCES.md).
   Empty SHA cells mean the body is not here yet.
 - **security** intake before any third-party content lands in this repo.
@@ -112,6 +114,12 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | --- | --- |
 | `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
 
+### web
+
+| Id | Ownership |
+| --- | --- |
+| `modern-web-guidance` | Rewritten entry and index (Apache-2.0) over the guides of GoogleChrome/modern-web-guidance (CC-BY-4.0, modified only to turn `npx` retrieve references into local links). No CLI, scripts, hooks, telemetry or network. Pin in [SOURCES.md](SOURCES.md) |
+
 ### minecraft
 
 | Id | Ownership |
@@ -145,9 +153,9 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 
 ## Related
 
-- SDLC: [docs/SDLC.md](docs/SDLC.md)
+- SDLC: [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
-- Intake: [docs/INTAKE.md](docs/INTAKE.md)
+- Intake: [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md)
 - Vendor-neutral cybersecurity skill packs (survey, not vendored): [docs/security-skill-packs/README.md](docs/security-skill-packs/README.md)
 - Mechanical and electrical engineering with AI (survey, not vendored): [docs/engineering-with-ai/README.md](docs/engineering-with-ai/README.md)
 - First cherry-pick candidates: [maintainers/CHERRY-PICK-CANDIDATES.md](maintainers/CHERRY-PICK-CANDIDATES.md)

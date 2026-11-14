@@ -1,16 +1,17 @@
 ---
 name: sdlc-onboarding
-description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`; also when `## Execution` (the Parallelism ceiling) is absent or its check fails. do not use once the checks pass, or to change tracker schema.
+description: use this at the first tracker touch of a chunk (end of Brief) or an item (start of item Brief), or when the tracker-sdlc setup check fails — discover the repo's tracker, propose a mapping to the operator, then write AGENTS.md `## Tracker` and `.agents/tracker/SKILL.md`; also write `## Execution` as `Parallelism: max` when it is absent or its check fails. do not use once the checks pass, or to change tracker schema.
 ---
 
 # SDLC onboarding
 
-Sets up a product repo for the [SDLC](../../docs/SDLC.md). No `scripts/`.
+Sets up a product repo for the [SDLC](../sdlc/SKILL.md). No `scripts/`.
 
 ## Iron law
 
-1. Propose before you write.
-2. Land nothing in the repo or the tracker until the operator answers.
+1. Tracker area: propose before you write.
+2. Tracker area: land nothing in the repo or the tracker until the
+   operator answers.
 3. Never change the tracker schema: states, types, fields, labels,
    workflows. Name a missing piece as a gap in the proposal instead.
 
@@ -21,7 +22,7 @@ Sets up a product repo for the [SDLC](../../docs/SDLC.md). No `scripts/`.
 - **Onboarding commit**: the one commit that holds the files the areas'
   Write parts create at a first tracker touch.
 - Roles and branch names (operator, manager, trunk, project-main): as
-  the [SDLC](../../docs/SDLC.md#names) defines them.
+  the [SDLC](../sdlc/SKILL.md#names) defines them.
 - **Governing `AGENTS.md`**: the one [`tracker-sdlc`
   Map](../tracker-sdlc/SKILL.md#map) step 1 selects. **Repo skill**:
   `.agents/tracker/SKILL.md` in that file's directory.
@@ -35,15 +36,33 @@ Sets up a product repo for the [SDLC](../../docs/SDLC.md). No `scripts/`.
 | Spec entry gate | Every area's Check |
 | Build dispatch | Execution Check |
 
-A Check fails → run that area's Discover, Propose, and Write before the
-step continues. At a first tracker touch, get both areas' answers
-before the onboarding commit: `## Execution` goes in that commit. A new
-area adds a section with the same four parts and one row in this table;
-nothing else changes.
+A Check fails → for that area:
+
+1. Run its Discover and Propose.
+2. Tracker: run its Write only after the operator answers the proposal.
+   At end of chunk Brief that answer comes at touchpoint 1. Until it
+   comes, work that writes the tracker waits; other work goes on
+   ([While a question is open](../sdlc/SKILL.md#while-a-question-is-open)).
+3. Execution: it needs no answer; run its Write now. At a first tracker
+   touch, put it in the onboarding commit; otherwise use Write step 3.
+
+A new area adds a section with the same four parts and one row in this
+table; nothing else changes.
+
+Every "ask the operator" or "tell the operator" in this skill is an ask
+section in the work's asks file
+([Raising an ask](../sdlc/references/liaison.md#raising-an-ask)). The
+liaison sends it in its next batch; at end of chunk Brief that is
+touchpoint 1's batch. Send no message from this skill.
+
+A step says "stop" → stop that area only. Touchpoint 1 still goes out,
+with the ask in place of the proposal. A Discover step needs an answer
+before Propose can run → finish Discover and Propose after the answer;
+the proposal goes in the liaison's next batch.
 
 ## Branch
 
-1. Before any area's Discover, cut the branch if it is absent. Chunk:
+1. Before any area's Write, cut the branch if it is absent. Chunk:
    project-main (`integrate/<chunk-slug>`) from trunk. Item:
    `item/<ticket-id>-<slug>` from project-main if one exists, else trunk.
 2. Put the onboarding commit here:
@@ -103,15 +122,18 @@ upgrade diff, not a full onboarding; anything else → fail.
 
 ### Propose
 
-1. Send one message from template
-   [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md)
-   ([Asking the operator](../../docs/SDLC.md#asking-the-human)).
+1. Raise the proposal as one ask, as the When section says. At end of
+   chunk Brief it goes in touchpoint 1's message
+   ([Chunk brief](../sdlc/references/entry-brief-repo.md#chunk-brief)).
+   Put the tagged lines and gaps in the message's "For this message"
+   part, from template [`ask-human.md`](../sdlc-artifacts/templates/ask-human.md).
 2. Tag each line `[found]` (read live) or `[guess]` (your pick).
 3. Name each gap with its fallback, for example: no native blockers →
    `Blocked-by:` line + `blocked` label. Do not patch the tracker.
 4. Offer these choices: **1** use as listed · **2** use with changes ·
    **3** also make one test write. 3 combines with 1 or 2 (`1+3`,
-   `2+3`). Default: no test write.
+   `2+3`). Default: no test write. An answer `1+3` or `2+3` names two
+   listed numbers; act on both.
 5. Claim line: propose `Claimed by <agent-label> <UTC>`, the default
    claim comment ([`tracker-sdlc`
    Claim](../tracker-sdlc/SKILL.md#claim)). Offer a native agent field
@@ -122,8 +144,8 @@ upgrade diff, not a full onboarding; anything else → fail.
 6. `local` only: put the first `tickets` bootstrap on its own proposal
    line, because it creates a shared remote branch. Add the signing
    choice: the default follows the operator's git signing config; off
-   only if the operator chooses it (for example, pinentry would hang a
-   headless agent). Record the choice under Gaps. Signing off → flag it
+   only if the operator chooses it (for example, pinentry would hang an
+   agent with no terminal). Record the choice under Gaps. Signing off → flag it
    there as a security note: commits on `tickets` then carry no
    authorship proof.
 
@@ -144,11 +166,11 @@ Only after the operator confirms:
 3. Get the ticket id for the commit:
    - item: the item's ticket id;
    - chunk: the Epic id, got as end of chunk Brief says ([Chunk
-     brief](../../docs/sdlc/entry-brief-repo.md#chunk-brief)).
+     brief](../sdlc/references/entry-brief-repo.md#chunk-brief)).
 4. Commit both files as one commit on the [Branch](#branch) step 2 branch:
    `[<ticket-id>] Onboard tracker: <Tracker>`.
 5. **security** reads that change as
-   [INTAKE Workers](../../docs/INTAKE.md#workers) says for a repo skill.
+   [INTAKE Workers](../sdlc/references/intake.md#workers) says for a repo skill.
 6. Choice 3 only: the **manager** creates one ticket titled
    `tracker-sdlc test — delete me`, reads it back, transitions it to
    `canceled`, and reports its id.
@@ -169,22 +191,21 @@ valid → Propose.
 
 ### Propose
 
-1. Send one `ask-human.md` message
-   ([Asking the operator](../../docs/SDLC.md#asking-the-human)): how
-   many work items may be in Build at once? **1** `max`: as many as
-   filed ready tickets and worktrees allow · **2** `serial`: one at a
-   time · **3** `at most <N>`, `N` a positive integer.
-2. Accept no other answers.
-3. Recommend `max` unless a shared resource limits it.
-4. Until the operator answers, Build runs one item at a time.
+1. The value is `max`. Do not ask the operator.
+2. `## Execution` had a line that was not valid → log a ruling that
+   names the old line and the `max` that replaced it.
+3. The operator tells you another value → record it with Write step 3.
 
 ### Write
 
-1. Write two lines: `## Execution`, then `Parallelism: <value>`.
+1. `## Execution` absent → write two lines: `## Execution`, then
+   `Parallelism: <value>`. Present → replace its next non-empty line
+   with `Parallelism: <value>`.
 2. First tracker touch: put them in the onboarding commit.
 3. Repo onboarded earlier: commit
    `[<ticket-id>] Record execution: <value>` on an item branch through
-   Review ([Branch](#branch)).
+   Review ([Branch](#branch)). The ticket id is the item's own; at
+   a chunk, the Epic id.
 4. **security** reads any change to `## Execution`.
 
 The value caps concurrency only, under filed ready tickets and the
@@ -197,4 +218,4 @@ worktree limit. It never skips, reorders, or relaxes a gate, Review,
   Env var names and host names are allowed.
 - Install an MCP server, CLI, or skill from a marketplace or with
   `npx`. Missing tool → tell the operator what is missing.
-- Add a vendor skill. That is [INTAKE](../../docs/INTAKE.md).
+- Add a vendor skill. That is [INTAKE](../sdlc/references/intake.md).

@@ -1,6 +1,6 @@
 ---
 name: yagni
-description: use this when scoping a change, adding a helper, or expanding a skill or AGENTS.md — ship the smallest thing that satisfies the current ask; defer speculative generality.
+description: use this when scoping a change, adding a helper, or expanding a skill or AGENTS.md, as the builder, the item contrarian or the reviewer — ship the smallest thing that satisfies the current ask; defer speculative generality. do not use on a chunk brief.
 ---
 
 # YAGNI
@@ -17,20 +17,19 @@ description: use this when scoping a change, adding a helper, or expanding a ski
 - Delete or skip each dead code path you replace. Never leave dual routers; keep one path.
 - Reuse an existing skill id before you write a parallel procedure.
 - Keep `AGENTS.md` thin: ids and repo rules only. Put procedures in skills.
+- `yagni` for safety: add no guardrail that no rule and no operator asked for, unless it protects a one-way door; then log its `Guardrail:` line. A control that `security-hardening`, the LLD's trust boundaries or a **security** finding requires is a rule, not a guardrail; keep it ([Asking the operator](../sdlc/SKILL.md#asking-the-human)).
 
-## Ask first
+## Decide and log
 
-Before you do any of these, ask the operator per [Asking the operator](../../docs/SDLC.md#asking-the-human):
-
-- New abstraction “for later reuse” with no second caller yet.
-- New config flag or feature toggle with no current consumer.
-- Expanding a skill past ~250 lines or adding `scripts/` to a skill dir.
-- Second toolkit that overlaps an installed skill id: a dual-router risk.
+Each of these is a two-way door. Act as the line says, without asking, and log a ruling per [Asking the operator](../sdlc/SKILL.md#asking-the-human):
+- An abstraction “for later reuse” with no second caller, a config flag with no consumer, or a second toolkit overlapping an installed skill id → leave it out. For the toolkit, use the installed id.
+- A skill past its line cap → split it into a second file.
 
 ## Never
 
 - Never remint a MERGED skill body without a new **security** cut; get the cut first.
-- Never add marketplace installers or auto-update upstream into skills; take third-party content through [INTAKE.md](../../docs/INTAKE.md).
+- Never add `scripts/` to a first-party skill; a vendor helper comes in only through [intake](../sdlc/references/intake.md) step 2.
+- Never add marketplace installers or auto-update upstream into skills; take third-party content through [intake](../sdlc/references/intake.md).
 - Never add “just in case” helpers for personal finance, mail, password stores, or extra hosts; leave them out.
 
 **Red flags.** If your plan says one of these, stop. Shrink the change. Ship the ask.

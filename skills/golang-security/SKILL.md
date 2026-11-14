@@ -136,7 +136,7 @@ go test -fuzz=Fuzz
 | **tester** | `-race` / SAST hooks when they appear | Skipping **security** because CI is green |
 | **manager** | After-act | Blessing a ship that skipped the gate |
 
-Workers do not bypass **security**; see [Roles](../../docs/SDLC.md#roles). A green `gofmt` is not a **security** clear.
+Workers do not bypass **security**; see [Roles](../sdlc/SKILL.md#roles). A green `gofmt` is not a **security** clear.
 
 ## Red flags
 

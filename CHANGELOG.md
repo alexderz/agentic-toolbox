@@ -4,6 +4,10 @@ Newest first. Skip empty sections.
 
 ## Unreleased
 
+### Fixed
+
+- T1 and T4 grading: allow `## Execution` before the tracker reply, committed with onboarding; keep Tracker-area writes gated on the reply (DER-748).
+
 ### Removed
 
 - pr-lens and its catalog entries moved to [agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc/tree/main/skills/pr-lens); its CLI installs an ISC-licensed dependency (DER-590).
@@ -13,6 +17,8 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- Skill `modern-web-guidance`: a text-only builder reference for browser UI code, with a rewritten entry, a local index and 209 guides from GoogleChrome/modern-web-guidance at `4dd9683`. Guide `npx` retrieve references became local links; no CLI, scripts or telemetry. Mixed licence: Apache-2.0 entry and index, CC-BY-4.0 guides. Routed by one `AGENTS.md` row and the language-router load-with list (DER-755).
+- The liaison procedure (skills/sdlc/references/liaison.md), the asks-file template asks.md, and the batch and touchpoint shape of ask-human.md (DER-712).
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
 - Knowledge note `knowledge/ai/vendors/security-skill-packs-2026-10-18.md`: a pointer catalog of public red-team and blue-team agent skill packs with maintainer, side, verified GitHub signals, and a maintenance guess; no skill bodies vendored (`DER-557`)
 - Knowledge note `knowledge/ai/vendors/x-chatter-security-skill-packs-2026-10-18.md`: X-signal ranking of public red-team and blue-team agent skill packs (Both/Red/Blue), with per-pack distinct-post counts, top-post links, and star/license figures as posted on X; companion to the GitHub-verified catalog; no skill bodies vendored
@@ -20,6 +26,20 @@ Newest first. Skip empty sections.
 - Specify the typed SDLC stage result, validation, evidence ownership,
   conditional prose reading, and migration of in-flight sessions
   (`DER-529`; land `9bb4d96`).
+- Eval task T4: build a browser brick-breaker game through the SDLC (DER-712).
+
+### Changed
+
+- Writing standard: owners for the new asking rules; rewrites may grow to their caps; the SDLC index cap is 250 (DER-712).
+- The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
+- Asking the operator: the three-pile sort, what vs how, cost to undo, real vs disposable, standing permissions, rulings, guardrails, auto mode, the escalation ladder and four touchpoints (DER-712).
+- Evals: C6 "no unneeded ask" on every task; the T1 key drops the Execution ask; T3 triggers follow the escalation ladder (DER-712).
+- Brief: the refiner runs discover-the-idea Refine, not yagni; one confirmation per Gather and Refine loop at touchpoint 1 (DER-712).
+- yagni: off the brief refiner, on the reviewer; Ask first becomes Decide and log; yagni for safety (DER-712).
+- Build: an out-of-chunk blocker defers the item and escalates instead of asking; dispatch defaults to max (DER-712).
+- sdlc-onboarding: Parallelism defaults to max with no question; the tracker proposal joins touchpoint 1 (DER-712).
+- Plan and Spec: UX, mockup and LLD acceptance gathered at the design gate; an optional HLD review touchpoint (DER-712).
+- SOURCES.md: intent credits for the upstream asking ideas (DER-712).
 
 ## instruction-refinement — 2026-10-04
 

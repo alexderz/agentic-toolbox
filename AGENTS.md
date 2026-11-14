@@ -35,42 +35,43 @@ This is a public, open-source repo.
 
 Do not paste skill or SDLC bodies into this file. **Read** the named
 path, or **pack** its text into a subagent prompt per
-[Spawn prompts](docs/sdlc/subagents.md#spawn-prompts).
+[Spawn prompts](skills/sdlc/references/subagents.md#spawn-prompts).
 
 | What | When | How |
 | --- | --- | --- |
-| **SDLC** | Any project, ticket, chunk, or multi-agent run | **Read [docs/SDLC.md](docs/SDLC.md)** before implementing. |
-| **Roles** | You need a role's name or job | **Read [Roles](docs/SDLC.md#roles).** |
-| **Message the operator** | Any message to the operator: an ask (gate, waiver, blocker, or unclear choice), a status, or a report | **Read [Asking the operator](docs/SDLC.md#asking-the-human)** and follow it. |
+| **SDLC** | Any project, ticket, chunk, or multi-agent run | **Read [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)** before implementing. |
+| **Roles** | You need a role's name or job | **Read [Roles](skills/sdlc/SKILL.md#roles).** |
+| **Message the operator** | Any message to the operator: an ask (gate, waiver, blocker, or unclear choice), a status, or a report | **Read [Asking the operator](skills/sdlc/SKILL.md#asking-the-human)** and follow it. |
 | **Requirements** | Chunk Brief, Gather: a fuzzy idea or an interview | **Read `skills/discover-the-idea/SKILL.md`.** |
-| **Refine** | Chunk Brief, Refine: refining a brief, as the refiner agent | **Read `skills/yagni/SKILL.md`.** |
-| **Incoming item** | Bug report, red build, unit failure, mechanical ticket | **Read [Entry](docs/sdlc/entry-brief-repo.md#entry), then [Item brief](docs/sdlc/entry-brief-repo.md#item-brief).** Do not load `discover-the-idea`. |
-| **Research** | Purchase, product shortlist, or market research | **researcher** persona: **read `skills/buying-researcher/SKILL.md`**. Not an SDLC role or step: [Roles](docs/SDLC.md#roles). |
+| **Refine** | Chunk Brief, Refine: refining a brief, as the refiner agent | **Read [`discover-the-idea` Refine](skills/discover-the-idea/SKILL.md#refine).** Do not load `yagni`. |
+| **Incoming item** | Bug report, red build, unit failure, mechanical ticket | **Read [Entry](skills/sdlc/references/entry-brief-repo.md#entry), then [Item brief](skills/sdlc/references/entry-brief-repo.md#item-brief).** Do not load `discover-the-idea`. |
+| **Research** | Purchase, product shortlist, or market research | **researcher** persona: **read `skills/buying-researcher/SKILL.md`**. Not an SDLC role or step: [Roles](skills/sdlc/SKILL.md#roles). |
 | **UX** | User stories, high-level UX, or screen mockups | **designer:** **read `skills/ux-design/SKILL.md`**. |
 | **Artifacts** | Writing HLD, LLD, tickets, epics, track/roadmap, PoC, decision, changelog, PR, monthly, human how-to, AGENTS stub, or repo tracker skill (`tracker-skill.md`) | **Read `skills/sdlc-artifacts/SKILL.md`** and copy the matching `templates/` file. A chunk brief uses `discover-the-idea` instead. An incoming item uses `bug.md` or `task.md`. |
 | **Debug** | Failure while implementing a chosen fix, or unexpected behavior in Build | A **new** ticket that is not in Build → follow **Incoming item**. In Build, or after a chosen fix: **read `skills/debug/SKILL.md`** (default). Alternatives: `debug-pocock`, `debug-anthropic`. Load **one**. Then `tdd` + `verify-before-done`. At item Brief, the troubleshooter may load `debug` for root cause and must **not** implement. |
-| **Tracker** | Any tracker read or write: file, claim, move, block, comment, list ready work | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. Only the **manager** writes: [Tracker](docs/SDLC.md#tracker). |
+| **Tracker** | Any tracker read or write: file, claim, move, block, comment, list ready work | **Read `skills/tracker-sdlc/SKILL.md`**. Use the **product repo's own** `## Tracker`. The skill loads the product repo's `.agents/tracker/SKILL.md`, or `sdlc-onboarding` when the setup check fails. Only the **manager** writes: [Tracker](skills/sdlc/SKILL.md#tracker). |
 | **Docs** | Human how-to or agent-facing comments after Spec | **Read `skills/docs-google-style/SKILL.md`**. |
 | **A skill** | The id applies to this turn | **Read `skills/<id>/SKILL.md`** in this repo. |
-| **Skill ids** | Checking a skill id, its ownership, or its SHA pin | **Read [SOURCES.md](SOURCES.md)**. Agents at work never remint a skill: [Roles](docs/SDLC.md#roles). Changing a skill body is maintainer work: [Intake](docs/INTAKE.md) plus a new **security** cut. |
+| **Skill ids** | Checking a skill id, its ownership, or its SHA pin | **Read [SOURCES.md](SOURCES.md)**. Agents at work never remint a skill: [Roles](skills/sdlc/SKILL.md#roles). Changing a skill body is maintainer work: [Intake](skills/sdlc/references/intake.md) plus a new **security** cut. |
 | **Language** | Writing or reviewing code | Load at most one language skill per turn: [iron law](skills/language-router/SKILL.md#iron-law). **Read `skills/language-router/SKILL.md`**: its [map](skills/language-router/SKILL.md#map), [load-with list](skills/language-router/SKILL.md#load-with-list) and [no-language turns](skills/language-router/SKILL.md#no-language-turns). |
 | **Workers** | The operator picks Grok Build over ACP as a builder | **Read `skills/grok-acp/SKILL.md`**. Operator opt-in: load it only then. |
 | **Worker choice** | The operator offloads coding or heavy multi-step work to Cursor Cloud Agent or the grok CLI | **Read `skills/cursor-cloud-agents-when/SKILL.md`**. Operator opt-in: load it only then. |
 | **UI craft** | builder implementing or reviewing UI code | **Read `skills/ui-craft/SKILL.md`**, beside `ux-design`'s approved mockups, not in place of `ux-design`. Which version, or none: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo). |
-| **Branches and lands** | Branching an item, or landing one | **Read [branches-and-lands.md](docs/sdlc/branches-and-lands.md)**. |
-| **Subagents** | Minting, resuming, or prompting a subagent or worker | **Read [subagents.md](docs/sdlc/subagents.md)**. |
+| **Web platform** | builder implementing or reviewing browser UI code: HTML, CSS, or client-side JS/TS, including DOM and CSS inside a framework. Not for backend, tooling, config, tests-only, docs or copy-only turns, nor because a `package.json` or `.ts` file exists | **Read `skills/modern-web-guidance/SKILL.md`**, beside the one language skill and `ui-craft`, not in place of them. It loads with the language skill per the [load-with list](skills/language-router/SKILL.md#load-with-list). |
+| **Branches and lands** | Branching an item, or landing one | **Read [branches-and-lands.md](skills/sdlc/references/branches-and-lands.md)**. |
+| **Subagents** | Minting, resuming, or prompting a subagent or worker | **Read [subagents.md](skills/sdlc/references/subagents.md)**. |
 | **Knowledge** | Facts about a model, vendor, API, or platform that are not a skill | **Read [knowledge/README.md](knowledge/README.md)**, then `knowledge/<domain>/<kind>/<slug>.md`. |
 | **Minecraft** | Building or reviewing a Bedrock structure, maze, or block plan | Not in this repo. Read `skills/minecraft-builder/SKILL.md` in [alexderz/agentic-toolbox-misc](https://github.com/alexderz/agentic-toolbox-misc). Block names and states are in that skill. Do not rely on remembered ids. |
 
 ## Intake (security)
 
 Before any third-party content, complete **security** intake:
-[docs/INTAKE.md](docs/INTAKE.md).
+[skills/sdlc/references/intake.md](skills/sdlc/references/intake.md).
 
 ## Related
 
 - README and bundles: [README.md](README.md)
-- SDLC (load this): [docs/SDLC.md](docs/SDLC.md)
+- SDLC (load this): [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)
 - Knowledge: [knowledge/README.md](knowledge/README.md)
 - License: [LICENSE](LICENSE) (MIT), [NOTICE](NOTICE)
 - Claude Code entry: [CLAUDE.md](CLAUDE.md)
