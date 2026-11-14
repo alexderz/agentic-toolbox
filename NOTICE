@@ -8,7 +8,16 @@ which is a rewrite of Anthropic material and is Apache-2.0
   skills/ui-craft/
 
 which is a topic-only rewrite of Impeccable (pbakaus/impeccable) and is
-Apache-2.0 (see skills/ui-craft/LICENSE and SOURCES.md).
+Apache-2.0 (see skills/ui-craft/LICENSE and SOURCES.md), and:
+
+  skills/modern-web-guidance/
+
+which is mixed. Its SKILL.md and index.md rewrite GoogleChrome/
+modern-web-guidance and are Apache-2.0 (see
+skills/modern-web-guidance/LICENSE). Its guides/ are that project's
+guides, modified, under CC-BY-4.0 (see
+skills/modern-web-guidance/guides/NOTICE.md and SOURCES.md). The guides
+are not MIT and not Apache-2.0.
 
 Third-party MIT rewrites keep their upstream copyrights as pinned in
 SOURCES.md.
