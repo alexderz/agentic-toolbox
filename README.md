@@ -44,7 +44,7 @@ There is no plugin manifest yet. Natural install groups:
 | **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp`, `cursor-cloud-agents-when` | Operator opt-in. `grok-acp` offloads a build to the local Grok CLI over ACP and needs the `grok-acp` package on `PATH`. `cursor-cloud-agents-when` chooses Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work |
-| **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
+| **ui** | `ui-craft`, `astryx` | `ui-craft`: builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo). `astryx`: building and reviewing UI in a product that uses the Astryx React design system, with facts read from the project's own CLI, and the facts for choosing it at design time. Text only |
 | **web** | `modern-web-guidance` | Builder reference for browser UI code: HTML, CSS and client-side JS/TS. Loads beside the one language skill and `ui-craft`; not a language skill. Text only: a local index and 209 guides, read only as the task needs |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 
@@ -113,6 +113,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
+| `astryx` | First-party (MIT) body over facts from meta/astryx (MIT) at the pin. How to read Astryx facts from the project's CLI, the template-first build workflow, delivery checks, precedence, commands with effects outside the item, design-time facts. No CLI, plugin, scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
 
 ### web
 

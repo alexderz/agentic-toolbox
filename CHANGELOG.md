@@ -17,6 +17,7 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- Skill `astryx`: build and review UI in a product that uses the Astryx React design system (meta/astryx, MIT, pin `cb2558e`), with facts read from the project's own CLI, a template-first workflow, delivery checks, precedence beside `ux-design`, `ui-craft` and `modern-web-guidance`, the commands that change things outside the item, and design-time facts. First-party text; no CLI, plugin or scripts. Routed by one `AGENTS.md` row and the language-router load-with list (DER-775).
 - Skill `modern-web-guidance`: a text-only builder reference for browser UI code, with a rewritten entry, a local index and 209 guides from GoogleChrome/modern-web-guidance at `4dd9683`. Guide `npx` retrieve references became local links; no CLI, scripts or telemetry. Mixed licence: Apache-2.0 entry and index, CC-BY-4.0 guides. Routed by one `AGENTS.md` row and the language-router load-with list (DER-755).
 - The liaison procedure (skills/sdlc/references/liaison.md), the asks-file template asks.md, and the batch and touchpoint shape of ask-human.md (DER-712).
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
