@@ -17,6 +17,7 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- Skills `formal-verification` and `statechart`: text-only rewrites of cursor/plugins pstack at `3dbd22f`. `formal-verification` finds the implicit state machines, verifies the riskiest one, leaves a project-local verify skill per subsystem and keeps it in step with the code; `statechart` charts a TLC-checked model or a user flow as hand-written Mermaid, with each broken rule as its shortest path. The upstream CLI is not vendored. Routed by two `AGENTS.md` rows (DER-774).
 - Skill `modern-web-guidance`: a text-only builder reference for browser UI code, with a rewritten entry, a local index and 209 guides from GoogleChrome/modern-web-guidance at `4dd9683`. Guide `npx` retrieve references became local links; no CLI, scripts or telemetry. Mixed licence: Apache-2.0 entry and index, CC-BY-4.0 guides. Routed by one `AGENTS.md` row and the language-router load-with list (DER-755).
 - The liaison procedure (skills/sdlc/references/liaison.md), the asks-file template asks.md, and the batch and touchpoint shape of ask-human.md (DER-712).
 - Knowledge note `knowledge/ai/practices/elevenlabs-voice-clips.md`: rendering short voice clips with ElevenLabs Eleven v4: model choice, audio tags, voice settings, API calls, PCM to OGG, cost control, a batch recipe, and pitfalls
