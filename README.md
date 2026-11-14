@@ -46,6 +46,7 @@ There is no plugin manifest yet. Natural install groups:
 | **workers** | `grok-acp`, `cursor-cloud-agents-when` | Operator opt-in. `grok-acp` offloads a build to the local Grok CLI over ACP and needs the `grok-acp` package on `PATH`. `cursor-cloud-agents-when` chooses Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work |
 | **ui** | `ui-craft` | Builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo) |
 | **web** | `modern-web-guidance` | Builder reference for browser UI code: HTML, CSS and client-side JS/TS. Loads beside the one language skill and `ui-craft`; not a language skill. Text only: a local index and 209 guides, read only as the task needs |
+| **verification** | `formal-verification`, `statechart` | Find the implicit state machines, formally verify the riskiest one and leave a project-local verify skill per subsystem; chart a system or user flow in the reader's words. Text only; no scripts or install commands |
 | **languages** | `language-router`, `lang-*`, `golang-safety`, `golang-testing`, `golang-security`, `modern-python` | Writing or reviewing code. Load **at most one** language-family skill per turn |
 
 `lang-go`, `lang-python`, and `lang-shell` are **pointers**. They do not
@@ -119,6 +120,13 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `modern-web-guidance` | Rewritten entry and index (Apache-2.0) over the guides of GoogleChrome/modern-web-guidance (CC-BY-4.0, modified only to turn `npx` retrieve references into local links). No CLI, scripts, hooks, telemetry or network. Pin in [SOURCES.md](SOURCES.md) |
+
+### verification
+
+| Id | Ownership |
+| --- | --- |
+| `formal-verification` | Rewrite of cursor/plugins pstack `create-formal-verification-skill` and `maintain-formal-verification-skill` (MIT). Pin in [SOURCES.md](SOURCES.md) |
+| `statechart` | Method-only rewrite of cursor/plugins pstack `statechart` (MIT). No CLI, scripts or renderer. Pin in [SOURCES.md](SOURCES.md) |
 
 ### minecraft
 
