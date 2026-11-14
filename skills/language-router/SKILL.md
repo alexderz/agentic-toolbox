@@ -43,9 +43,10 @@ A turn in this table loads no language skill.
 1. These process skills may load with the one language skill: `tdd`,
    `verify-before-done`, `pr-review`, `security-hardening`, `yagni`,
    `sdlc-artifacts`, `debug`, `docs-google-style`, `tracker-sdlc`,
-   `ui-craft`, `modern-web-guidance`. `modern-web-guidance` is a
-   reference pack for browser UI code, not a language skill; it never
-   counts toward the one-language limit.
+   `ui-craft`, `modern-web-guidance`, `astryx`. `modern-web-guidance` is
+   a reference pack for browser UI code and `astryx` a reference for the
+   Astryx design system; neither is a language skill, and neither counts
+   toward the one-language limit.
 2. If the turn includes shell, `shell-safety` may also load with the
    one language skill.
 3. When a debug skill loads, load **one** of `debug`, `debug-pocock` or
