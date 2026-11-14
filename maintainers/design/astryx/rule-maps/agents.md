@@ -22,3 +22,9 @@ Protected rows touched: the Public-repo rule (L16–33) is **kept**.
 None open. The new row adds no role, router, gate or ask; it names when the builder, designer
 or architect reads one skill, as the UI craft and Web platform rows do. Its When column restates
 the owner's triggers in the table's usual form (same pattern as the Web platform row, DER-755).
+
+## r1 review change
+
+| Old L (232ac65) | Rule | Disposition | New location |
+| --- | --- | --- | --- |
+| 61 | Astryx row How column: read the skill beside the one language skill, `ui-craft`, `modern-web-guidance` | **changed** (r1 finding 9): the load-with clause names the builder, so designer and architect turns load no language skill | L61 |

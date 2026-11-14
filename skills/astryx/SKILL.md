@@ -39,11 +39,12 @@ memory. Read it from the CLI first.
    component library for a React web UI.
 3. Do not load it for backend, tooling, config, tests-only, docs-only or
    copy-only turns, or for a UI that is not React.
-4. This skill is not a language skill. It loads beside the one language
-   skill per the [load-with list](../language-router/SKILL.md#load-with-list),
-   beside [`ui-craft`](../ui-craft/SKILL.md) and
-   [`modern-web-guidance`](../modern-web-guidance/SKILL.md). It replaces
-   none of them.
+4. This skill is not a language skill and replaces none. **builder:** load
+   it beside the one language skill per the
+   [load-with list](../language-router/SKILL.md#load-with-list),
+   [`ui-craft`](../ui-craft/SKILL.md) and
+   [`modern-web-guidance`](../modern-web-guidance/SKILL.md). Designer and
+   architect turns load no language skill.
 
 ## How to read Astryx facts
 
@@ -97,8 +98,8 @@ bare groups; `--dense` gives compact text for `component` and `docs`;
    screen. They decide what to build.
 2. For each new page, run `build "<idea>"`. Note the template it names and
    the parts it lacks.
-3. Run `template <name> <path>`, with `<path>` inside the item's scope. It
-   writes the template into that file.
+3. Run `template <name> <dir>`, with `<dir>` inside the item's scope. It
+   writes the template's files into that folder. Its receipt names them.
 4. Keep the template's frame, gap and padding. Replace only its content.
 5. For each part the template lacks, run `template <Block>` for a block
    template, then `component <Name>` for each component you use.
@@ -113,39 +114,41 @@ bare groups; `--dense` gives compact text for `component` and `docs`;
 Run these before you hand off, in order:
 
 1. Re-read each file you changed.
-2. Replace each raw `<div>` or `<span>` that an Astryx component or layout
-   covers with that component. Read it with `component <Name>`.
+2. In lines the item adds or changes, replace each raw `<div>` or `<span>`
+   that an Astryx component or layout covers with that component. Read it
+   with `component <Name>`.
 3. Replace each stylesheet import and each `@apply` you added with a
    component prop or a token. The Astryx and theme CSS imports that the
    project's setup requires stay.
-4. Replace each hard-coded hex color or px value with a token from
-   `docs tokens`.
+4. In lines the item adds or changes, replace each hard-coded hex color or
+   px value with a token from `docs tokens`.
 5. Run the project's build script. Hand off that build and its output, not
    a description of the page. If the build fails, fix it or report the
    failure.
-6. Run the [`ui-craft`](../ui-craft/SKILL.md#one-verification-pass) pass
-   when the product uses `ui-craft`. Done evidence follows
+6. Run the [`ui-craft`](../ui-craft/SKILL.md#one-verification-pass) pass,
+   unless the product's [UI craft note](../ui-craft/SKILL.md#which-version-ask-once-per-product-repo)
+   records option 2 or 3. Done evidence follows
    [`verify-before-done`](../verify-before-done/SKILL.md).
 
 ## What wins on conflict
 
-The earlier item wins. Never rows of every loaded skill and
+Never rows of every loaded skill and
 [`security-hardening`](../security-hardening/SKILL.md#never) apply
-throughout; this list orders the rest.
+throughout; this list orders the rest. The earlier item wins; name each
+conflict in your handoff.
 
 1. **What is built:** the approved mockups and stories (`ux-design`), the
-   brief and the LLD. An Astryx template never adds scope.
+   brief and the LLD. An Astryx template never adds scope: drop template
+   parts that the mockups and stories do not ask for.
 2. **How it is built:** Astryx components, tokens and templates, read from
    the CLI.
 3. **Visual rules where Astryx is silent:** `ui-craft`. Where a `ui-craft`
    rule and an Astryx token or template disagree, the Astryx token or
-   template wins. If the product's UI craft note records option 3, skip
+   template wins. If the UI craft note records option 2 or 3, skip
    `ui-craft`.
-4. **Platform features:** `modern-web-guidance`.
-5. **Code:** the one language skill, such as `lang-js-ts`.
-
-If two items conflict, follow the earlier one and name the conflict in
-your handoff.
+4. **Platform features and code:** between `modern-web-guidance` and the
+   one language skill, such as `lang-js-ts`, follow
+   [modern-web-guidance's Precedence list](../modern-web-guidance/SKILL.md#precedence).
 
 ## Commands that change things outside the item
 
@@ -155,10 +158,10 @@ Each row states what the command changes, then what you may do.
 | --- | --- | --- |
 | `npm i -g @astryxdesign/cli` | Installs a CLI for the whole computer. It prints update notices and keeps computer-level agent skill files in home-folder agent folders current | Use the project-local CLI. The operator may choose it for their own computer |
 | `astryx init --user` | Writes `~/.agents/skills/astryx/SKILL.md` and links or copies it into other agents' skill folders, such as `~/.claude/skills` | Use the project-local CLI. The operator may choose it for their own computer |
-| `astryx init`, `astryx init --all`, or `--features` with `agents` | Writes a managed Astryx block into the repo's `AGENTS.md`, `CLAUDE.md` or `.claude/CLAUDE.md`, and an import line into `GEMINI.md`. In a repo governed by this SDLC, those files are agent text | Run `astryx init --features theme,template`. If the product wants the agent block, make it its own reviewed item |
-| `astryx gap-report ... --confirm-public` | Files a public GitHub issue with the user's `gh` login: a public post | Ask the operator first per [Asking the operator](../sdlc/SKILL.md#asking-the-human). Without `--confirm-public` nothing is sent; you may prepare the report and put it in the ask, with every destination the output lists |
-| `swizzle <Name>`, `upgrade --apply`, `template <name> <path>`, `theme` commands that add, switch or build a theme | Edit or add project files: ejected component source, codemods, scaffolded pages, theme files | Run them only on files inside the item's scope |
-| The hosted MCP server, `https://astryx.atmeta.com/mcp` (tools `search`, `get`) | Sends your query to a public remote service | Prefer the local CLI. Send only generic component questions; never private code, names or data |
+| `astryx init`, `astryx init --all`, `--features` with `agents`, or `astryx init --remove-agents` | Writes, or removes, a managed Astryx block in the repo's `AGENTS.md` and its Claude file (`CLAUDE.md`, else `.claude/CLAUDE.md`), and an import line in `GEMINI.md`; `--remove-agents` also edits other agent files. In a repo governed by this SDLC, those files are agent text | Run `astryx init --features theme,template`; its theme feature writes `theme.template.ts`, inside the item's scope. If the product wants the agent block, make it its own reviewed item |
+| `astryx gap-report ... --confirm-public` | Files a public GitHub issue with the user's `gh` login: a public post | Ask the operator first per [Asking the operator](../sdlc/SKILL.md#asking-the-human). Without `--confirm-public`, no public handler runs and no GitHub issue is filed; handlers that the project or its integrations configure as internal always run. You may prepare the report and put it in the ask, with every destination the output lists |
+| `swizzle <Name>`, `upgrade --apply`, `template <name> <dir>`, `theme` commands that add, switch or build a theme | Edit or add project files: ejected component source, codemods, scaffolded pages, theme files. `upgrade --apply` also runs the `hooks.postCodemod` commands in `astryx.config` | Run them only on files inside the item's scope |
+| The hosted MCP server, `https://astryx.atmeta.com/mcp` (tools `search`, `get`) | Sends your query to a public remote service. Connecting it adds an MCP server to the agent's configuration | Prefer the local CLI. Send only generic component questions; never private code, names or data. The operator may choose to connect it |
 | The upstream Claude Code or Codex plugin | A marketplace install of agent text this repo has not reviewed | Never marketplace-install it from this skill. Load this skill instead |
 
 ## Choosing Astryx at design time
@@ -169,8 +172,8 @@ component-library options; this skill does not recommend Astryx for every
 product.
 
 1. **Fit.** Astryx is a candidate when the product UI is React 19 or
-   later. `react` and `react-dom` 19 or later are peer dependencies of
-   `@astryxdesign/core`.
+   later. `react` and `react-dom` 19 or later, and `@stylexjs/stylex`, are
+   peer dependencies of `@astryxdesign/core`.
 2. **What it offers.** Over 150 accessible components, page and block
    templates (dashboards, settings, forms, detail pages), design tokens,
    dark mode and brand theming through CSS custom properties, and seven
@@ -187,7 +190,9 @@ product.
 5. **Record.** If the product chooses Astryx, the **architect** records
    the choice and the exact version in the product's LLD. That version is
    the one the builder's CLI reads at.
-6. **Reading before a project exists.** Use
-   `npx @astryxdesign/cli@<version> <read>`, with the version the LLD will
-   record. The hosted MCP row above applies to remote questions.
+6. **Reading before a project exists.** The **architect** reads the
+   current stable release with `npm view @astryxdesign/core version` (the
+   `latest` tag, never `@canary`) and records it in the LLD. Every read
+   uses `npx @astryxdesign/cli@<that version> <read>`. The hosted MCP row
+   above applies to remote questions.
 7. **License.** MIT.

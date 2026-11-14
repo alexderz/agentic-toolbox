@@ -113,7 +113,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 | Id | Ownership |
 | --- | --- |
 | `ui-craft` | Topic-only rewrite of pbakaus/impeccable (Apache-2.0). Anti-patterns, typography, color, layout, motion, every UI state, one verification pass. No scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
-| `astryx` | First-party (MIT) body over facts from meta/astryx (MIT) at the pin. How to read Astryx facts from the project's CLI, the template-first build workflow, delivery checks, precedence, commands with effects outside the item, design-time facts. No CLI, plugin, scripts, hooks or network. Pin in [SOURCES.md](SOURCES.md) |
+| `astryx` | First-party (MIT) body over facts from meta/astryx (MIT) at the pin. How to read Astryx facts from the project's CLI, the template-first build workflow, delivery checks, precedence, commands with effects outside the item, design-time facts. No CLI, plugin, scripts or hooks. The skill itself makes no network call. Pin in [SOURCES.md](SOURCES.md) |
 
 ### web
 
