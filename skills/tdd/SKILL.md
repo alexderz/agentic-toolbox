@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: use this when implementing a feature or bugfix, changing behavior, or refactoring — write a failing test first, watch it fail for the right reason, then write the smallest code that passes.
+description: use this when implementing a feature or bugfix, changing behavior, or refactoring — write a failing test first, watch it fail for the right reason, then write the smallest code that passes. also use it to prune tests in the item's scope that guard no behavior.
 ---
 
 # Test-driven development
@@ -60,6 +60,53 @@ YAGNI. Hard-code if that is enough for this test. Do not add options, retries, o
 | Real | Assert on the code's behavior | Assert that a mock was called |
 | Intent | Show the API you want | Hide the contract behind fixtures |
 
+## Prune tests that guard no behavior
+
+Adapted from `caldoai/skills` `skills/prune-tests` @ `bd73b2ea5eb854ab8f0553fb41f77c8786f28f82` (MIT). Rewrite, not a paste.
+
+A test **guards behavior** when it fails if something that users, callers, a ticket, the LLD or a **security** finding rely on regresses, and keeps passing when the code changes without that behavior changing. A **prune case** is a test that does not guard behavior.
+
+**Scope.** The builder prunes only tests inside the current item's scope: tests of the behavior the item's ticket changes, and tests the ticket names for pruning. A ticket that asks for pruning may name a whole suite. On any other item, a test is not in scope only because the item edits its file. Do not edit a prune case outside that scope.
+
+| The test | Action |
+| --- | --- |
+| Fails when a fixed bug comes back (a regression test) | Keep |
+| Asserts that removed code, a moved file or an old path is absent, and no ticket, LLD, **security** finding or caller requires the absence | Delete |
+| Asserts an absence that a ticket, LLD, **security** finding or caller requires, such as a removed endpoint staying gone | Keep |
+| Asserts only what the browser, framework, language, or the type checker the repo's CI runs already guarantees | Delete |
+| Mocks the unit under test, then asserts what the mock returns | Rewrite against the real unit; if nothing real is left to assert, delete |
+| Computes its expected value with the same logic as the code | Rewrite with a literal expected value worked out by hand |
+| Asserts private state, internal call order or which helper ran, and callers cannot observe it | Rewrite against what callers see; if callers see nothing, delete |
+| Asserts a call or an order that is the contract: a sent message, a write, a charge, a protocol step | Keep |
+| Guards the same behavior as another test through the same boundary (unit, integration or end-to-end), so every fault that fails one also fails the other | Delete the copy; keep the one closest to callers. A test through another boundary, or one that catches a fault the other misses, is not a copy, even on the same inputs |
+| Fits no row, or the code, ticket and LLD do not show whether anyone relies on it | Keep; list it in `findings` |
+
+Steps for the builder, for each prune case in scope:
+
+1. Apply the row's action.
+2. Delete production code that exists only for a deleted test, such as a `_resetCacheForTests` hook, after a repo-wide search finds no other caller.
+3. Verify with the checks the item already uses; pruning adds no test runs of its own.
+4. List each deleted or rewritten test, with its table row, in `findings`.
+
+Pruning changes tests, not behavior. New or fixed behavior in the same item still follows red → green → refactor.
+
+A failing test is not a prune case because it fails. Find the cause with `debug`, then compare the assertion with the accepted contract in the ticket or LLD:
+
+| The mismatch | Action |
+| --- | --- |
+| The code breaks the accepted contract | Fix the code; keep the test |
+| The accepted contract changed and the test still asserts the old one | Update the expected value to the new contract; cite the ticket or LLD line in `findings` |
+| The code, ticket and LLD do not show which side is wrong | Change neither; report the mismatch in `findings` |
+
+Never delete or weaken a test to hide a regression; fix the code, or report the mismatch.
+
+```diff
+-  expect(applyDiscount(100, 0.2)).toBe(100 - 100 * 0.2); // repeats the code's logic
++  expect(applyDiscount(100, 0.2)).toBe(80);
+-  expect(cart._items.length).toBe(1);                    // private state
++  expect(cart.total()).toBe(book.price);
+```
+
 ## Example: bug fix
 
 **Bug:** empty email accepted.
@@ -118,6 +165,7 @@ Before calling the work done:
 - [ ] Production code was the minimum to go green
 - [ ] Suite is green and output is clean
 - [ ] Mocks only when unavoidable
+- [ ] No test this item added is a prune case
 - [ ] Edges and error paths covered
 
 Missing a box? You skipped TDD. Restart.
