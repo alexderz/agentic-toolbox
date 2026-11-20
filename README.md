@@ -1,7 +1,11 @@
 # Agentic Toolbox
 
+**Workshop** is the overall practice for agent-assisted work. Agentic
+Toolbox is its shared skills repository. Shared workflows are
+**Playbooks**; the software-building SDLC is one playbook.
+
 Skills here are **tools**, not a marketplace dump. Agents pick the right
-tool for the job. The process applies to software, docs, process
+tool for the job. The SDLC playbook applies to software, docs, process
 changes, and other tickets using this home. SDLC work is keyed by
 **role** (`architect`, `designer`, `builder`, `tester`, `security`,
 `manager`, `operator`).
@@ -16,6 +20,17 @@ Apache-2.0 entry and index, CC-BY-4.0 guides ([NOTICE](NOTICE)). Pins: [SOURCES.
 How the work gets done, in plain language (including a calculator
 walkthrough):
 [docs/how-software-gets-built.md](docs/how-software-gets-built.md).
+
+## Playbooks
+
+The [software-building playbook (SDLC)](skills/sdlc/SKILL.md) defines the
+existing roles, steps, and gates. Its machine skill ID remains `sdlc`,
+its entry point remains `skills/sdlc/SKILL.md`, and its install bundle
+remains `sdlc-process`.
+
+**Workbench** (formerly SoloDLC) is a consuming application, separate
+from Agentic Toolbox and the playbooks it uses. These names do not
+change the SDLC process or executable behavior.
 
 ## Roles
 
@@ -37,7 +52,8 @@ PRs welcome. Maintainer: [alexderz](https://github.com/alexderz). See
 
 ## Bundles
 
-There is no plugin manifest yet. Natural install groups:
+Bundles are install groups, not playbook names. There is no plugin
+manifest yet. Natural install groups:
 
 | Bundle | Skills | When |
 | --- | --- | --- |
@@ -162,7 +178,7 @@ Path `knowledge/<domain>/<kind>/<slug>.md`. First note:
 
 ## Related
 
-- SDLC: [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)
+- Software-building playbook (SDLC): [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)
 - Architecture: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 - Intake: [skills/sdlc/references/intake.md](skills/sdlc/references/intake.md)
 - Vendor-neutral cybersecurity skill packs (survey, not vendored): [docs/security-skill-packs/README.md](docs/security-skill-packs/README.md)

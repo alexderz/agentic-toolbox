@@ -1,13 +1,18 @@
 ---
 name: sdlc
-description: use this for any project, ticket, chunk, or multi-agent run that follows this skills home's process — the SDLC index of names, roles, tracker rule, grain, asking the operator and steps; read the step file its Steps table names. do not use to invent a second process or to skip a gate.
+description: use this for any project, ticket, chunk, or multi-agent run that follows this skills home's software-building playbook (SDLC) — the index of names, roles, tracker rule, grain, asking the operator and steps; read the step file its Steps table names. do not use to invent a second process or to skip a gate.
 ---
-# SDLC
+<a id="sdlc"></a>
 
-Shared process for work that uses this skills home: software, docs,
+# Software-building playbook (SDLC)
+
+Shared SDLC playbook for work that uses this skills home: software, docs,
 process changes, and other tickets. Git holds durable artifacts. The
 issue tracker is the board. Branches and land commits cite a ticket ID
 when the project uses tickets.
+
+Workshop is the overall practice; playbooks are its shared workflows.
+This playbook keeps the machine skill ID `sdlc` and its existing paths.
 
 ## How to read
 

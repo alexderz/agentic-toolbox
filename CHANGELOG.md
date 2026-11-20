@@ -32,6 +32,7 @@ Newest first. Skip empty sections.
 
 ### Changed
 
+- Public terminology: Workshop names the overall practice, shared workflows are Playbooks, and Workbench (formerly SoloDLC) names the consuming application. Agentic Toolbox keeps its repository name; `sdlc`, `sdlc-process`, existing paths, roles, steps, and gates are unchanged.
 - Skill `tdd`: a section on pruning tests that guard no behavior, rewritten from caldoai/skills `prune-tests` (MIT, pin `bd73b2e`). The builder prunes only tests in the item's scope and does not edit others. Regression tests, absences that a rule requires, contract calls and coverage through a different boundary stay. A failing test is checked against the accepted contract; a test is never deleted or weakened to hide a regression. Text only (DER-800).
 - Writing standard: owners for the new asking rules; rewrites may grow to their caps; the SDLC index cap is 250 (DER-712).
 - The SDLC moved from docs/ to the skill skills/sdlc/ (index SKILL.md, step files and intake in references/); docs/SDLC.md is a pointer. Paths only (DER-712).
