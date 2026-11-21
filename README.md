@@ -57,7 +57,7 @@ manifest yet. Natural install groups:
 
 | Bundle | Skills | When |
 | --- | --- | --- |
-| **sdlc-process** | `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
+| **sdlc-process** | `migrate`, `discover-the-idea`, `ux-design`, `sdlc-artifacts`, `tracker-sdlc`, `sdlc-onboarding`, `tdd`, `debug`, `docs-google-style`, `verify-before-done`, `pr-review`, `yagni`, `security-hardening`, `shell-safety` | Any repo using this process. Chunk gather-only turns load `discover-the-idea` and no language skill. Incoming items skip that interview. Default debug is `debug`; `debug-pocock` / `debug-anthropic` are alternatives |
 | **research** | `buying-researcher` | **researcher** persona when the ask is a buy or market study. Not an SDLC step |
 | **workers** | `grok-acp`, `cursor-cloud-agents-when` | Operator opt-in. `grok-acp` offloads a build to the local Grok CLI over ACP and needs the `grok-acp` package on `PATH`. `cursor-cloud-agents-when` chooses Cursor Cloud Agent or the local grok CLI for coding or heavy multi-step work |
 | **ui** | `ui-craft`, `astryx` | `ui-craft`: builder visual-quality rules while implementing a UI, beside `ux-design`. Text only. Which version, or none, is asked once per product repo: [the skill's ask](skills/ui-craft/SKILL.md#which-version-ask-once-per-product-repo). `astryx`: building and reviewing UI in a product that uses the Astryx React design system, with facts read from the project's own CLI, and the facts for choosing it at design time. Text only |
@@ -98,6 +98,7 @@ See [SOURCES.md](SOURCES.md) for upstream, SHA, license, and notes.
 
 | Id | Ownership |
 | --- | --- |
+| `migrate` | First-party. Adapt older playbook instructions while preserving accepted work; no migration test campaign |
 | `discover-the-idea` | First-party gatherer (interview → brief). Chunk Brief Gather. Do not load on an incoming item |
 | `ux-design` | Designer. Stories + UX at Plan; mockups at Spec if there is a screen |
 | `sdlc-artifacts` | First-party templates (HLD, LLD, tickets, track, changelog, …) |

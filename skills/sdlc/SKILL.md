@@ -19,7 +19,7 @@ This playbook keeps the machine skill ID `sdlc` and its existing paths.
 1. Find your step in [Steps](#steps).
 2. Read the file in that row's Read column and the
    [stage-result contract](references/stage-result.md).
-   For an already active session, follow the
+   For stage-result contract adoption in an active session, follow the
    [stage-result migration](references/stage-result-migration.md).
 3. You are the **manager** → also read
    [branches-and-lands.md](references/branches-and-lands.md),
@@ -244,5 +244,6 @@ agents, not which steps exist. Headings and tickets use the step
 | Manager: liaison | Asks from agents, one batch to the operator, push and pull | [liaison.md](references/liaison.md) |
 | Conventions | Names, commits, layout, changelog, designs in git | [conventions.md](references/conventions.md) |
 | Stage result | Result contract for each run of a step | [stage-result.md](references/stage-result.md) |
-| In-flight session migration | Adopt stage results without restarting the SDLC | [stage-result-migration.md](references/stage-result-migration.md) |
+| In-flight session migration | Stage-result contract changes only | [stage-result-migration.md](references/stage-result-migration.md) |
+| Playbook migration | Adapt older verification and process instructions | [migrate](../migrate/SKILL.md) |
 | Old Stage numbers | A ticket or chat cites a Stage number | [In-flight map](references/conventions.md#in-flight-map) |

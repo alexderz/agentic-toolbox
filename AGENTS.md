@@ -40,6 +40,7 @@ path, or **pack** its text into a subagent prompt per
 | What | When | How |
 | --- | --- | --- |
 | **SDLC** | Any project, ticket, chunk, or multi-agent run | **Read [skills/sdlc/SKILL.md](skills/sdlc/SKILL.md)** before implementing. |
+| **Migrate** | An existing project or active session uses an older playbook | **Read `skills/migrate/SKILL.md`** to adapt pending work without restarting completed steps. |
 | **Roles** | You need a role's name or job | **Read [Roles](skills/sdlc/SKILL.md#roles).** |
 | **Message the operator** | Any message to the operator: an ask (gate, waiver, blocker, or unclear choice), a status, or a report | **Read [Asking the operator](skills/sdlc/SKILL.md#asking-the-human)** and follow it. |
 | **Requirements** | Chunk Brief, Gather: a fuzzy idea or an interview | **Read `skills/discover-the-idea/SKILL.md`.** |
