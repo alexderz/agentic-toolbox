@@ -17,7 +17,7 @@ from: project-main, or trunk. **Landed** means on the land target.
   [Conventions](conventions.md#name-formats).
 - When project-main exists, builders branch off the current tip.
 - After an item lands, in-flight builders rebase or merge project-main
-  and resume. The verifier re-runs.
+  and resume. Each re-runs its checks fresh before claiming done.
 - Cut an incoming item's branch at item Brief, per this table. Never
   create a project-main for an incoming item.
 
@@ -36,10 +36,13 @@ isolated item branches and integrate them once at the end.
 **Lands on project-main are serialized.** Builds may run in parallel.
 Only one item merges at a time. Never race two merges onto project-main.
 
-The landing builder de-conflicts against the current project-main tip:
+The landing builder de-conflicts against the current land target:
 
 1. Resume that builder.
-2. Then resume its verifier.
+2. It re-runs its checks fresh on the de-conflicted head:
+   [Builder checks](proofs.md#builder-checks).
+3. After the land, it runs the journeys its item touched on the
+   land target at the land SHA: [After integration](proofs.md#after-integration).
 
 ## Land path
 
@@ -50,7 +53,7 @@ No PRs. **manager** sets the land order; builders follow it.
 | Review | An explicit SDLC gate ([Review](build-review.md#review)), not a PR |
 | Durability | Push the item branch while it is built and reviewed. Push project-main after each land. Plan and Trial drafts are pushed as written: [Plan](plan-trial-spec.md#plan). |
 | Land | After Review, merge the item branch locally into its land target, one land at a time. Push. Delete the item branch. |
-| Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` and posts a `comment` citing the land SHA, the verifier result, and the reviewer verdict. |
+| Done | After land + verify, **manager** transitions the item to `done` with `tracker-sdlc` and posts a `comment` citing the land SHA, the public-safe journey result at that SHA on the land target ([After integration](proofs.md#after-integration)), and the reviewer verdict. |
 
 Every land commit carries the ticket ID and a `Reviewed-by:
 <reviewer-label> (<verdict>)` trailer, so the review stays auditable

@@ -65,7 +65,8 @@ highest wave among its blockers.
 1. **architect** writes `groom.md` from the template, on project-main.
 2. Mark it `DRAFT (pre-review)`.
 3. Write each work item `G<n>` as a ticket body in `task.md` / `bug.md`
-   shape: acceptance, LLD link, verify, blockers.
+   shape: acceptance, LLD link, verify, blockers. Verify names the
+   journeys and spans the item touches: [Journeys](proofs.md#journeys).
 4. Give each blocker a one-clause reason.
 5. End with the graph: numbered waves, each item with its blockers
    (`G5 ← G1, G3`).

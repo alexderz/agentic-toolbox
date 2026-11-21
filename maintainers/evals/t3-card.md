@@ -1,7 +1,7 @@
 # T3 — Build one item of a groomed toy chunk
 
 Tests: Build dispatch under `Parallelism: serial`, the claim, the
-builder, verifier and reviewer, Review before the land, the land path,
+builder and its proof bundle, the reviewer, Review before the land, the land path,
 and `done`. Setup and run rules: `procedure.md` (isolation: a container
 for T3). Fixture: [t3-groom.md](t3-groom.md). Key:
 [t3-key.md](t3-key.md).
@@ -85,8 +85,8 @@ Stop the run at the first of these:
 
 - The **manager** (the session): claims, transitions and comments; sets
   the land order; the only tracker writer.
-- A **builder**, a **verifier** and a **reviewer** for the item: each a
-  clean subagent, three distinct agents, none of them the manager.
+- A **builder** and a **reviewer** for the item: each a clean
+  subagent, two distinct agents, neither of them the manager.
 
 ## Scoring notes (C1–C6 for T3)
 
@@ -96,5 +96,5 @@ Stop the run at the first of these:
 | C2 | yes | The manager claims the item before any builder is minted for it, and runs every transition and every `comment` |
 | C3 | yes | The item built is K1 or K3, and no `blocked_by` changes |
 | C4 | yes | The item is `in_review` and has a reviewer **pass** on the exact head that lands, before the merge; the land commit carries the ticket id and a `Reviewed-by:` trailer |
-| C5 | yes | Builder, verifier and reviewer are three distinct agents, each minted once for the item and resumed on later passes |
+| C5 | yes | Builder and reviewer are two distinct agents, each minted once for the item and resumed on later passes |
 | C6 | yes | No ask scored `over-ask`: [Judging an ask](procedure.md#judging-an-ask-c6). An ask a trigger in t3-key.md requires is `needed` |

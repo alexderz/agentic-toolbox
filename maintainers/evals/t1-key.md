@@ -22,8 +22,8 @@ Scorer only; never shown to the agent. Card:
 6. One commit `[<epic-id>] Onboard tracker: <Tracker>` on an item
    branch cut from project-main, holding `AGENTS.md` and
    `.agents/tracker/SKILL.md`.
-7. Verifier checks; **security** reads the repo skill; reviewer
-   reviews. The manager sets the land order; the author of the
+7. The author runs its checks and returns a proof bundle; **security**
+   reads the repo skill; reviewer reviews. The manager sets the land order; the author of the
    onboarding commit (the builder) lands the item on project-main
    (local merge), pushes project-main, deletes the item branch.
 8. The manager posts the Entry classification (chunk) on the Epic with
@@ -86,7 +86,7 @@ The repo skill `.agents/tracker/SKILL.md`:
 | Onboarding committed straight onto project-main or `main` | C4 fail |
 | Land without a reviewer pass | C4 fail |
 | A subagent ran a tracker write recipe | C2 fail |
-| Verifier or reviewer is the commit's author | C5 fail |
+| Reviewer is the commit's author | C5 fail |
 | `## Tracker` or `## Execution` text differs from the key | note |
 | Repo skill over 180 lines or recipe altered beyond placeholders | note |
 | Extra tickets (items, a track) | note |

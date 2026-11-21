@@ -2,6 +2,10 @@
 
 ## Build
 
+Why the builder proves its own work, in layers (constraints and types,
+empirical checks, formal checks for the parts that need them, then human
+review of the artifacts): [Agents write and check proofs](../../../docs/agents-write-and-check-proofs.md).
+
 Open blocker: defined in [Tracker](../SKILL.md#tracker).
 
 **manager**: before minting or resuming a **builder** on an item, claim
@@ -45,19 +49,17 @@ items: see [Writable worktree](subagents.md#writable-worktree).
 
 ### Definition of done
 
-**DoD** (definition of done) includes: acceptance on the ticket; tests
-or verification evidence; the [land path](branches-and-lands.md#land-path)
+**DoD** (definition of done) includes: acceptance on the ticket; the
+builder's [proof bundle](proofs.md#proof-bundle); the [land path](branches-and-lands.md#land-path)
 cites a ticket ID when the project uses tickets; a changelog line under
 Unreleased; human and agent docs current for this item; no silent scope
 leftover.
 
-The verifier checks the tone and voice of deliverables against the
-project's style guide; if the project names none, `docs-google-style`.
-The verifier does not review agent context for tone.
-
 Do not exit Build after one pass. Loop implement → test → fix until the
-item meets DoD. Builder and verifier: one each per item, minted and
-resumed per [Item agents](subagents.md#item-agents).
+item meets DoD. One builder per item, minted and resumed per
+[Item agents](subagents.md#item-agents). The builder runs every check
+for its item and re-runs them fresh before claiming done:
+[Builder checks](proofs.md#builder-checks).
 
 An item is merge-ready when it meets DoD and passes [Review](#review).
 Land each merge-ready item, one land at a time, per
@@ -104,8 +106,20 @@ it. Review the item before it lands on project-main or trunk.
 2. Get a **reviewer** that is not the builder: mint or resume it per
    [Item agents](subagents.md#item-agents).
 3. Take the diff range versus project-main, or versus trunk if there is
-   no project-main.
-4. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
+   no project-main. **manager**: give the authorized reviewer that range and the
+   builder's proof bundle through the private review channel, never the transcript.
+4. **reviewer**: read the proof bundle before the diff. Read its raw
+   outputs; never re-run its checks. Fail the item when:
+   1. an acceptance criterion has no proof, or a proof does not show what
+      the ticket intends;
+   2. a new check has no raw output of it failing first;
+   3. the bundle leaves out something the ticket or the LLD requires;
+   4. the diff weakens a test, a property or a bound that the ticket or
+      the LLD does not call for changing;
+   5. a bundle field is missing, or a path it names does not exist.
+
+   Then read the diff for what no proof covers.
+5. **reviewer**: fail the item when its diff does any of these (GR16). Skip a commit titled
    `[<ticket-id>] Record asks` that changes only the asks file only when a **manager** `comment`
    on the item's ticket names its SHA. Check every other commit that touches the asks file.
    1. touches the chunk's `brief.md`;
@@ -118,7 +132,10 @@ it. Review the item before it lands on project-main or trunk.
 
    A needed `brief.md` or answer change → the **manager** or the **liaison** makes it on
    project-main, outside the item.
-5. **reviewer**, with `pr-review` and `yagni` loaded: approve only if step 4 failed nothing, the
+6. **reviewer**: check the tone and voice of deliverables against the project's style guide; if
+   the project names none, `docs-google-style`. Cite the style-guide rule in each tone finding.
+   Do not review agent context for tone.
+7. **reviewer**, with `pr-review` and `yagni` loaded: approve only if steps 4–6 failed nothing, the
    item meets the ticket and the LLD, it ships no speculative generality (the `yagni` Iron law and
    Decide and log), **and** it passes the **security** gate: intake, SHA pins, and trust-boundary
    deltas.

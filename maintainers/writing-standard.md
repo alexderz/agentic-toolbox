@@ -13,8 +13,7 @@ Write, rewrite and review agent text to these rules. Source: DER-288
   its new location. **MQ** — meaning question: an old rule with two
   readings, or a rewording that could change a rule's meaning.
 
-The SDLC index `#names` defines `manager`, `trunk`, `project-main`,
-roles and step names. Write the Use name, never the banned one:
+The SDLC index `#names` defines `manager`, `trunk`, `project-main`, roles and step names. Write the Use name, never the banned one:
 
 | Banned in agent text | Use |
 | --- | --- |
@@ -67,7 +66,8 @@ roles and step names. Write the Use name, never the banned one:
 | Branch source; incoming-item branch; project-main | `skills/sdlc/references/branches-and-lands.md#branches`, `#project-main` | `AGENTS.md`, Build, item Brief, Groom |
 | Serialized lands; land order; `done` after land and verify | `skills/sdlc/references/branches-and-lands.md#land-path` | `AGENTS.md`, Build, Groom, conventions |
 | Gatherer, refiner, designer, contrarian: ids, mint, resume | `skills/sdlc/references/subagents.md#step-agents` | Brief |
-| Builder, verifier, reviewer distinct; mint, resume | `skills/sdlc/references/subagents.md#item-agents` | Build, Review, `pr-review`, `verify-before-done` |
+| Builder, reviewer distinct; mint, resume | `skills/sdlc/references/subagents.md#item-agents` | Build, Review, `pr-review`, `verify-before-done` |
+| Builder checks; proof bundle; journeys and span tests; runs after integration | `skills/sdlc/references/proofs.md` | SDLC index, Spec, Groom, Build, Review, land path, Trunk |
 | Pack vs point; workers | `skills/sdlc/references/subagents.md#spawn-prompts`, `#workers` | `AGENTS.md` |
 | Groom reviewer id | `skills/sdlc/references/groom-step.md#names` | copy dropped |
 | Notify only when landed and verified | `skills/sdlc/references/build-review.md#definition-of-done` | none; the old L1088 copy moves into the owner |

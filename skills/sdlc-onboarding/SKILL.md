@@ -69,8 +69,9 @@ the proposal goes in the liaison's next batch.
    - item: the item's branch.
    - chunk: a new item branch cut from project-main. Land it on
      project-main as its own item through Review, before Plan. It gets
-     its own **verifier**, **reviewer**, and **security** read of the
-     repo skill. Never a bare commit.
+     its own **reviewer** and **security** read of the repo skill.
+     The onboarding author returns a [proof bundle](../sdlc/references/proofs.md#proof-bundle);
+     for fields that do not apply, write `n/a` and why. Never land a bare commit.
 3. Never put the onboarding commit on trunk; use the step 2 branch.
 
 If the item branch holding the onboarding commit is dropped:

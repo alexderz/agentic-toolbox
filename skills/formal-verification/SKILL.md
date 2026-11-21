@@ -30,9 +30,8 @@ back in line after the code changed. Each opens with when to use it.
   tool, and writes them into the LLD or the ticket.
 - **builder**: does the rest of Create when its ticket names a verify
   target; follows the product repo's verify skill when the change touches
-  its verify target; does Maintain when that verify skill is out of step.
-- **verifier**: runs the product repo's verify skill on a change that
-  touches its verify target, and reports its result as evidence.
+  its verify target; does Maintain when that verify skill is out of step;
+  reports each check's result in its proof bundle.
 
 ## Iron law
 

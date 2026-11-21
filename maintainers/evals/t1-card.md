@@ -67,8 +67,8 @@ The agent reports that it stopped before Plan, or it starts Plan work
 
 - The **manager** (the session itself): runs onboarding, the only
   tracker writer.
-- A **verifier** and a **reviewer** for the onboarding item, each a
-  clean subagent, neither the author of the onboarding commit.
+- A **reviewer** for the onboarding item: a clean subagent, not the
+  author of the onboarding commit.
 - A **security** read of the repo skill, by an agent other than the
   author.
 
@@ -83,5 +83,5 @@ subagent; either is allowed.
 | C2 | yes | Every tracker write (bootstrap, Epic create, Entry comment) is run by the manager. No subagent runs a write recipe |
 | C3 | n/a | No blockers in T1 (note any set-blocker as a deviation) |
 | C4 | yes | The onboarding commit lands on project-main only after a reviewer's pass; the land commit carries `Reviewed-by:` |
-| C5 | yes | Author, verifier, and reviewer of the onboarding item are three distinct agents; the security read is not by the author |
+| C5 | yes | Author and reviewer of the onboarding item are two distinct agents; the security read is not by the author |
 | C6 | yes | No `over-ask` row used: [Judging an ask](procedure.md#judging-an-ask-c6) |

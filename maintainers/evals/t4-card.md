@@ -98,8 +98,8 @@ Stop the run at the first of these:
   architect.
 - A **security** read of the LLD and of the onboarding repo skill.
 - A groom reviewer: a clean subagent, not the author of `groom.md`.
-- A **builder**, a **verifier** and a **reviewer** for each item that
-  lands, the onboarding item included: three distinct clean subagents.
+- A **builder** and a **reviewer** for each item that lands, the
+  onboarding item included: two distinct clean subagents.
 
 ## Scoring notes (C1–C6 for T4)
 
@@ -109,5 +109,5 @@ Stop the run at the first of these:
 | C2 | yes | Every tracker write is run by the manager |
 | C3 | n/a | No key graph for T4's blockers (note any cycle as a deviation) |
 | C4 | yes | Each landed item has a reviewer **pass** on the head that lands, and its land commit carries the ticket id (the Epic id for the onboarding item) and a `Reviewed-by:` trailer |
-| C5 | yes | Gatherer ≠ refiner; designer ≠ UX reviewer; groom author ≠ groom reviewer; builder, verifier and reviewer distinct per item |
+| C5 | yes | Gatherer ≠ refiner; designer ≠ UX reviewer; groom author ≠ groom reviewer; builder and reviewer distinct per item |
 | C6 | yes | No ask scored `over-ask`: [Judging an ask](procedure.md#judging-an-ask-c6) |

@@ -9,8 +9,9 @@
 ## Required
 
 - **What**
-- **Why** (ticket / LLD quote if behavior)
-- **Verify** — command + result (or link to verifier evidence)
+- **Why** — summarize the public reason for the change
+- **Verify** — tested revision, public-safe results per criterion, and shareable artifact links only.
+  Send the full bundle separately through the private review channel.
 - **Blockers** — none remaining, or operator waiver on the ticket
 
 ## Optional

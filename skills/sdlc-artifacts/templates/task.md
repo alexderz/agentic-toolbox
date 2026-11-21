@@ -9,7 +9,8 @@
 
 - **Outcome** — what is true when this is landed+verified
 - **Acceptance** — checkable bullets (not “it works”)
-- **Verify** — proving command or check
+- **Verify** — proving command or check; the journeys and spans this
+  item touches. If no user or system behavior changes, write `n/a` and why.
 - **Blocked by** — ids or `none`
 - **Blocks** — ids or `none`
 - **Out of scope**

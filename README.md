@@ -38,8 +38,8 @@ change the SDLC process or executable behavior.
 | --- | --- |
 | **architect** | Design, HLD/LLD, adversarial review of approach |
 | **designer** | User stories, high-level UX, Spec mockups when there is a screen |
-| **builder** | Implement and ship |
-| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **builder** | Implement, run every check for its item, and ship with a proof bundle |
+| **tester** | Mechanical CI, hooks, cleanup |
 | **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
 | **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
 | **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |

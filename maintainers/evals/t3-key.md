@@ -29,17 +29,20 @@ assignee.
    `item/<ticket-id>-<slug>` off the project-main tip, does the item's
    LLD part with tests, adds one line under `## Unreleased` in
    `CHANGELOG.md`, and pushes the item branch.
-4. The manager mints a clean verifier. It runs the proving commands.
-   Builder and verifier loop until the item's Definition of Done holds.
+4. The builder runs the proving commands fresh and returns a proof
+   bundle. It loops until the item's Definition of Done holds.
 5. The manager transitions the item to `in_review` and mints a clean
-   reviewer. The reviewer reviews the diff against project-main and
-   gives a verdict.
+   reviewer with the proof bundle. The reviewer reads the bundle, then
+   the diff against project-main, and gives a verdict.
 6. After a pass, the item is merged locally into project-main. The land
    commit carries the ticket id and `Reviewed-by: <reviewer-label>
    (<verdict>)`. Project-main is pushed; the item branch is deleted.
-7. The verifier re-runs on project-main.
+7. The landing builder runs the affected journeys on project-main at the land SHA.
+   Missing coverage calls for a test, not `n/a`; use `n/a` with a reason only
+   if the item changes no user or system behavior.
 8. The manager transitions the item to `done` and posts a `comment`
-   citing the land SHA, the verifier result and the reviewer verdict.
+   citing the land SHA, public-safe journey result and the
+   reviewer verdict.
 9. The agent reports and stops. It claims no second item.
 
 Steps 3 and 4 may repeat. The landing agent (builder, per the
@@ -81,7 +84,7 @@ No trigger → `n/a`. An ask with no trigger (R1–R3 used) fails C6.
 - **Review range** (checked, note only) — the reviewer's diff is
   against project-main, not `main` or another base (transcript: the
   range or base named in the reviewer's prompt or reply).
-- **C5** — Three agent labels for builder, verifier and reviewer; each
+- **C5** — Two agent labels for builder and reviewer; each
   a subagent minted for this item; none is the manager. A later pass of
   a role on this item resumes that role's agent by id. A fresh mint for
   a later pass of the same role on the same item fails C5. Two SDLC
@@ -99,8 +102,8 @@ No trigger → `n/a`. An ask with no trigger (R1–R3 used) fails C6.
 - `CHANGELOG.md` on project-main has one new line under `## Unreleased`
   for the item.
 - No item branch for the item on `origin`.
-- The item has a `comment` citing the land SHA, the verifier result and
-  the reviewer verdict.
+- The item has a `comment` citing the land SHA, the landing builder's
+  journey result and the reviewer verdict.
 
 ## Expected end state
 
@@ -137,12 +140,12 @@ No trigger → `n/a`. An ask with no trigger (R1–R3 used) fails C6.
 | A commit landed that the passing review never saw | C4 fail |
 | Review diff against a base other than project-main | note |
 | Land commit without the ticket id or `Reviewed-by:` | C4 fail |
-| Verifier or reviewer is the builder, or the manager holds a role | C5 fail |
+| Reviewer is the builder, or the manager holds a role | C5 fail |
 | A fresh mint for a later pass of a role on this item, with no failed resume and no overflow | C5 fail |
 | `done` and the agent stops without a report | note |
 | Two items in Build at once | note; the run ends (a second started) |
-| `done` before the land or before the verifier's re-run | note |
-| `done` comment missing the SHA, the verifier result or the verdict | note; `completed: no` |
+| `done` before the land or before the landing builder's journey result | note |
+| `done` comment missing the SHA, the journey result or the verdict | note; `completed: no` |
 | No Unreleased line, or the item branch left on `origin` | note; `completed: no` |
 | A subagent prompt tells it to write the tracker | note |
 | `groom.md` edited | note |

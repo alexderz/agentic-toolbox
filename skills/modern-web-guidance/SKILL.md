@@ -13,7 +13,7 @@ disagrees with another rule. It has no `scripts/`. It runs no commands,
 installs nothing and uses no network.
 
 **Actors.** The **builder** loads this pack while implementing web UI. A
-**verifier** or **reviewer** may read the same guides to check the work.
+**reviewer** may read the same guides to check the work.
 The **manager** receives the builder's rulings. **security** reads at its
 gates.
 
@@ -159,8 +159,7 @@ Before you hand off, check your change against each guide you applied:
 2. No feature the brief did not ask for was added.
 3. Every conflict and ruling is named in your result.
 
-This self-check does not replace the independent verifier, reviewer or
-**security** read.
+This self-check does not replace the reviewer or the **security** read.
 
 ## Never
 

@@ -31,8 +31,9 @@ SHA-pinned, intake-scanned, and loadable by id.
    **Build** loops until each item is merge-ready. Groom sets board
    blockers; do not start an item that is still blocked. Land each item
    on **project-main** (or trunk if there is none); land project-main on
-   trunk at **Trunk**. One clean builder and one clean verifier per work
-   item; later loops **resume** those subagents. On mint, pack or point
+   trunk at **Trunk**. One clean builder and one clean reviewer per work
+   item; the builder runs every check and returns a proof bundle; later
+   loops **resume** those subagents. On mint, pack or point
    the prompt for token cost; do not re-pack on resume.
 
 ## Non-goals
@@ -70,8 +71,8 @@ flowchart LR
 | --- | --- |
 | **architect** | Design, HLD/LLD, adversarial review of approach |
 | **designer** | User stories, high-level UX, Spec mockups when there is a screen |
-| **builder** | Implement and ship |
-| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **builder** | Implement, run every check for its item, and ship with a proof bundle |
+| **tester** | Mechanical CI, hooks, cleanup |
 | **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
 | **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
 | **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |

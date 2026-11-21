@@ -93,9 +93,8 @@ it and has it rotated; that removal is the one edit a frozen `poc/` allows.
 Entry gate: run the offline `tracker-sdlc` setup check. If it fails, run
 `sdlc-onboarding` first.
 
-1. **architect** writes the LLD with template `lld.md`. The
-   trust-boundary section is required. If there is no trust boundary,
-   write `n/a` and why.
+1. **architect** writes the LLD with template `lld.md`. The trust-boundary section is required. If there
+   is no trust boundary, write `n/a` and why. Its Verify names the chunk's journeys: [Journeys](proofs.md#journeys).
 2. **architect** commits the LLD to git.
 3. **manager** posts the LLD path on the Epic with `tracker-sdlc` `comment`.
 

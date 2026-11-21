@@ -93,13 +93,14 @@ directory and the run directories it creates are `0700`.
 
 ## SDLC fit
 
-- **Role.** Grok is a **builder** unless the operator says otherwise. The
-  verifier and the reviewer of that item are different agents and never
-  see Grok's transcript. Do not read `response.md` or `events.ndjson` into
-  their prompts. Give the verifier the ticket and the proving commands;
-  give the reviewer the inputs [pr-review](../pr-review/SKILL.md) names.
+- **Role.** Grok is a **builder** unless the operator says otherwise. It
+  runs every check for its item and returns a proof bundle:
+  [Proofs](../sdlc/references/proofs.md#builder-checks). The reviewer of
+  that item is a different agent and never sees Grok's transcript. Do not
+  read `response.md` or `events.ndjson` into its prompt. Give the reviewer
+  the inputs [pr-review](../pr-review/SKILL.md) names and Grok's proof bundle.
 - **One label per role per item.** `DER-12:builder` is never reused on
-  another item and never resumed to verify or review its own work.
+  another item and never resumed to review its own work.
 - **Mint = pack.** The first prompt is the whole handoff: ticket, LLD
   slice, acceptance, paths, standards, the proving commands, and the repo
   rules that bind it. Tell it to read the repo `AGENTS.md` first. Grok
@@ -113,6 +114,8 @@ directory and the run directories it creates are `0700`.
   the builder's job: when project-main moves, resume the label with a delta
   that tells it to merge or rebase project-main **into** the item branch.
   Lands stay serialized and stay with the manager ([Land path](../sdlc/references/branches-and-lands.md#land-path)).
+- After the land, resume the same label to run the touched journeys on the
+  land target at the land SHA: [After integration](../sdlc/references/proofs.md#after-integration) step 1.
 - **Blockers and gates.** Check the item's blockers before minting.
   Offloading the build skips no gate: Review and security still run.
 - **Fallback and overflow.** Exit 3, or a session too long to be useful:
@@ -128,26 +131,48 @@ Acceptance:  <from the ticket>
 Design:      <LLD slice or path>
 Scope:       <paths>. Do not touch <paths>.
 Standards:   <language / test rules, packed or by path>
-Prove it:    <exact commands that must pass>
+Prove it:    <exact commands that must pass>. Run each one yourself, fresh,
+             before you finish. Write and run the span tests and journeys the
+             ticket's Verify names. Add and run any missing end-to-end test for a
+             touched journey even if Verify omitted it. No behavior change: explain
+             why journeys are n/a. Save each run's full output under <scratch folder>.
 Git:         commit on <branch>. Never push. Never merge <branch> into another
              branch or switch branches. Merge <base> into <branch> only when asked.
 
-Finish with: files changed, commands run and their results, open risks.
+Finish with: files changed, open risks, and a proof bundle in the private review channel.
+For a public report, use only public-safe results, revision and shareable artifact links.
+The bundle has these fields. A field with nothing to record holds `n/a`
+and why.
+
+1. **Criteria**: per acceptance criterion, the proving command, its exit
+   code, its counts (passed, failed, skipped) and its raw output path.
+2. **Seen failing**: per new check, how it failed first (red before
+   green, or the broken variant) and that run's raw output path.
+3. **Visual**: per UI behavior, the screenshot or video path.
+4. **Scope**: what is verified, under which bounds and assumptions; what
+   is left out, and why.
+5. **Sync commit**: the commit the checks ran on.
+6. **Direct evidence**: the build workspace path on disk, and the CI run
+   link when the repo has CI.
+7. **Journeys**: per journey and span test run, the fields of field 1.
 ```
 
 ## After it returns
 
-Load `verify-before-done`. You are the manager, not the verifier.
+Load `verify-before-done`. You are the manager. Nobody re-runs Grok's
+checks; you read its evidence.
 
 1. Smoke-check the worktree yourself: `git status`, `git diff <base>...`,
    and that the branch and git rule were kept. `filesEdited` misses
    shell-made changes. This smoke check is not the gate.
-2. First pass: mint the item's verifier clean with the ticket and the
-   proving commands. Later passes: resume that `verifier_id` with the
-   delta. Never give it Grok's output.
-3. **verifier** runs the proving commands.
-4. Send verifier failures to the **same** Grok label as a delta.
-5. At every step, take "tests pass" from the verifier, never from `text`.
+2. Read the proof bundle in `text`. Confirm every field is there and
+   every output path it names exists on disk.
+3. A field or file is missing, or a check failed → send that to the
+   **same** Grok label as a delta.
+4. At every step, take "tests pass" from the bundle's saved outputs,
+   never from `text` alone.
+5. Then run [Review](../sdlc/references/build-review.md#review) with a
+   reviewer that is not Grok.
 
 ## Always
 
@@ -164,8 +189,8 @@ Load `verify-before-done`. You are the manager, not the verifier.
 ## Never
 
 - Treat `ok: true` as landed+verified. Run [After it returns](#after-it-returns).
-- Let one Grok session build and verify the same item. Mint a separate verifier.
-- Feed Grok's transcript to a verifier or reviewer. Give each its Role inputs.
+- Let one Grok session build and review the same item. Mint a separate reviewer.
+- Feed Grok's transcript to the reviewer. Give it its Role inputs and Grok's proof bundle.
 - Run two turns against the same session at once. Wait, then resume.
 - Tighten or loosen the permission posture here without a new operator
   order; it is recorded above with its date. Ask the operator for one.
@@ -173,6 +198,6 @@ Load `verify-before-done`. You are the manager, not the verifier.
 ## Red flags
 
 - "Grok said the tests pass"
-- "I'll resume the builder to double-check its own work"
+- "I'll resume the builder to review its own work"
 - "New session each loop, it is simpler"
 - "Let Grok merge it, it has the perms"

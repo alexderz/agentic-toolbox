@@ -13,7 +13,8 @@
   write what. If none: `n/a` and why (security still reads this)
 - **Mockups** — `docs/<path>` if people see a screen, else `n/a` + why.
   Operator accepted or waived. Spec step, not Plan.
-- **Verify** — proving commands / checks for DoD
+- **Verify** — proving commands / checks for DoD; the chunk's journeys
+  and each journey's midpoints. If no user or system behavior changes, write `n/a` and why.
 - **Land** — project-main name; ticket IDs on PR/changelog
 
 ## Optional

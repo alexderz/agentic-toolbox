@@ -30,16 +30,16 @@ This playbook keeps the machine skill ID `sdlc` and its existing paths.
 Skills are tools, keyed by role. If no listed skill fits the task, do
 the work without one. Never create a new skill id mid-task. Do not
 remint a skill that already has an id. Use only these roles. Step jobs
-(gatherer, refiner, troubleshooter, contrarian, verifier, reviewer, UX
-reviewer, groom reviewer) are agents acting in one of these roles, not
+(gatherer, refiner, troubleshooter, contrarian, reviewer, UX reviewer,
+groom reviewer) are agents acting in one of these roles, not
 new roles.
 
 | Role | Job |
 | --- | --- |
 | **architect** | Design, HLD/LLD, adversarial review of approach |
 | **designer** | User stories, high-level UX, Spec mockups when there is a screen |
-| **builder** | Implement and ship |
-| **tester** | Mechanical CI, hooks, cleanup, verification evidence |
+| **builder** | Implement, run every check for its item, and ship with a proof bundle |
+| **tester** | Mechanical CI, hooks, cleanup |
 | **security** | Gates at Spec (trust boundaries) and Review, plus skill intake — not only a monthly vuln pass |
 | **manager** | Process, board after-act, and land order (local, serialized merges; no PRs). The only tracker writer. Does not bless ships |
 | **operator** | The person in the loop: exceptions, vuln severity, extra hosts, personal accounts |
@@ -83,8 +83,8 @@ content: **security** intake first, per [INTAKE.md](references/intake.md).
    repo's `.agents/tracker/SKILL.md`.
 2. Only the **manager** writes to the tracker: create, claim, release,
    set-blocker, comment, and every transition.
-3. Builders, verifiers, and reviewers never write to the tracker. They
-   report to the manager; the manager writes.
+3. Builders and reviewers never write to the tracker. They report to
+   the manager; the manager writes.
 4. The manager after-acts the board in the operator's timezone.
 
 States (six): `backlog`, `ready`, `in_progress`, `in_review`, `done`
@@ -240,6 +240,7 @@ agents, not which steps exist. Headings and tickets use the step
 | [Monthly](references/trunk-changelog-monthly.md#monthly) | Cadence, not a ship gate | [trunk-changelog-monthly.md](references/trunk-changelog-monthly.md) |
 | Manager: branches and lands | Project-main, land path, Never | [branches-and-lands.md](references/branches-and-lands.md) |
 | Manager: subagents | Step and item agents, spawn prompts, workers | [subagents.md](references/subagents.md) |
+| Proofs | Builder checks, proof bundle, journeys and span tests, runs after integration | [proofs.md](references/proofs.md) |
 | Manager: liaison | Asks from agents, one batch to the operator, push and pull | [liaison.md](references/liaison.md) |
 | Conventions | Names, commits, layout, changelog, designs in git | [conventions.md](references/conventions.md) |
 | Stage result | Result contract for each run of a step | [stage-result.md](references/stage-result.md) |

@@ -10,8 +10,9 @@ Rewrite of obra/superpowers `verification-before-completion` @ `b36e0829`. Compr
 Notify only when the work is **landed+verified**: see SDLC
 [Definition of done](../sdlc/references/build-review.md#definition-of-done).
 
-The **proving command** is always re-run. Verifier mint, resume, and
-never the builder: see SDLC [Item agents](../sdlc/references/subagents.md#item-agents).
+The **proving command** is always re-run, by the builder: this is the
+builder's gate. Which checks, and the proof bundle it returns: SDLC
+[Proofs](../sdlc/references/proofs.md#builder-checks).
 
 ## Iron law
 
@@ -36,7 +37,7 @@ Skip a step = claiming, not verifying.
 | Always | Ask first | Never |
 | --- | --- | --- |
 | Fresh command for this claim | Softening verify for throwaway spikes you will delete | “Should pass” / “probably” / “seems” |
-| Full suite or scoped command that actually covers the claim | Partial checks when full suite is expensive — name what you skipped | Trusting agent “success” without VCS/diff or independent run |
+| Full suite or scoped command that actually covers the claim | Partial checks when full suite is expensive — name what you skipped | Trusting agent “success” without VCS/diff or direct evidence (raw output, workspace path, CI link) |
 | Red-green proof for new regression tests | Operator in the loop when evidence is ambiguous or flaky | Satisfaction (“Great!”, “Done!”) before evidence |
 | Line-by-line checklist for requirements DoD | Unsupervised push to protected / prod deploy / secret rotate | Extrapolating from linter to build, or build to product fix |
 
@@ -59,7 +60,7 @@ Skip a step = claiming, not verifying.
 | Role | Owns | Does not own |
 | --- | --- | --- |
 | **builder** | Running this gate before ship claims | Skipping **security** on changes to skill homes, reviewed at Review |
-| **tester** | CI that produces evidence; verifier subagent for the item | Claiming product DoD from fmt-only green |
+| **tester** | CI that produces evidence | Claiming product DoD from fmt-only green |
 | **security** | Intake / security clear at Review | Day-to-day verify coaching |
 | **manager** | After-act landed+verified | Blessing without evidence |
 

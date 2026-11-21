@@ -74,9 +74,10 @@ End of chunk Brief:
 4. Onboarding ran in step 2 → land it as its own item, before Plan:
    1. Cut an item branch from project-main.
    2. Commit the onboarding as `[<epic-id>] Onboard tracker: <Tracker>`.
-   3. Take it through Review as a short item with its own **verifier**,
-      **reviewer**, and **security** read of the repo skill. Never land
-      a bare commit.
+   3. The onboarding author returns a [proof bundle](proofs.md#proof-bundle);
+      for fields that do not apply, write `n/a` and why. Take this short item through
+      Review with its own **reviewer** and **security** read of the repo skill.
+      Never land a bare commit.
    4. Land it on project-main.
 5. **manager** posts the Entry classification and the path and commit
    of the confirmed brief, which holds the standing permissions, on the
@@ -98,7 +99,7 @@ Brief.
       `tracker-sdlc` `comment`.
 1. Problem and fix:
    1. The manager is already working that item, holds no other item's
-      work, and holds no builder, verifier or reviewer conversation →
+      work, and holds no builder or reviewer conversation →
       the manager may be the troubleshooter. Otherwise mint a clean
       troubleshooter.
    2. The **troubleshooter**, an agent in the architect role, writes the

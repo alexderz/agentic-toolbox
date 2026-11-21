@@ -146,7 +146,7 @@ Done when `just check <host>` prints `in sync`, and a real
 - `just check <host>` is zero; a real apply changes nothing.
 - Simulate drift (edit an installed file), confirm `check` fails and
   `apply` restores it.
-- Run a **clean verifier agent** (not you) over the folder: lockout
+- Run a **clean reviewer agent** (not you) over the folder: lockout
   safety, data safety, fresh-host behaviour, secret leakage, docs vs
   code. Fix what it finds.
 - Commit, push, and summarize for the operator what changed on the live

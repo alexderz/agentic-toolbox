@@ -9,7 +9,8 @@
 - **Symptom**
 - **Repro** — steps; expected vs actual
 - **Acceptance** — failing repro, then passing repro
-- **Verify** — command or manual steps
+- **Verify** — command or manual steps; the journeys and spans this
+  item touches. If no user or system behavior changes, write `n/a` and why.
 - **Out of scope**
 - **Blocked by** — ids or `none`
 - **Blocks** — ids or `none`

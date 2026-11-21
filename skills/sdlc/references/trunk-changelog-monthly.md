@@ -10,11 +10,14 @@ Otherwise, start after the chunk's items are on project-main:
 1. The confirmed brief's release permission is not given → the **liaison**
    sends touchpoint 4, the ask to merge ([Touchpoints](../SKILL.md#touchpoints)),
    and the merge waits for the answer. Given → go on; touchpoint 4 is the
-   report after step 4.
-2. Merge project-main into **trunk**: the repo's protected default
+   report after step 5.
+2. Run the chunk's full journey set on project-main first:
+   [After integration](proofs.md#after-integration) steps 3–4.
+3. Merge project-main into **trunk**: the repo's protected default
    branch, usually `main`. This merge is the **coherent integrate**.
-3. **manager** transitions the Epic to `done` with `tracker-sdlc`.
-4. Delete project-main.
+4. **manager** transitions the Epic to `done` with `tracker-sdlc`. In the `comment`,
+   report the revision and result from step 3; cite only shareable artifacts per [After integration](proofs.md#after-integration).
+5. Delete project-main.
 
 The `CHANGELOG.md` update may wait for the Changelog step. If
 **manager** cancels the chunk, delete project-main.

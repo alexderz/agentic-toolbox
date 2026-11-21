@@ -15,7 +15,7 @@ explicit gate: internal lands are local merges with no PR, and that
 does not skip it; PRs are only for outside or remote workers. See
 [Review](../sdlc/references/build-review.md#review) and
 [Project-main](../sdlc/references/branches-and-lands.md#project-main).
-Builder, verifier and reviewer are distinct; mint, then resume:
+Builder and reviewer are distinct; mint, then resume:
 [Item agents](../sdlc/references/subagents.md#item-agents).
 
 ## Iron law
@@ -30,12 +30,13 @@ Builder, verifier and reviewer are distinct; mint, then resume:
    versus trunk while project-main exists.
 2. **Craft context only (first launch).** Description, ticket/LLD/spec
    link, base/head SHAs, standards sources (`AGENTS.md`,
-   `CODING_STANDARDS.md`, CONTRIBUTING). Not the builder transcript.
+   `CODING_STANDARDS.md`, CONTRIBUTING), and the builder's proof bundle.
+   Not the builder transcript.
    **Later rounds:** resume the same reviewer and send the new range; see
    [Item agents](../sdlc/references/subagents.md#item-agents).
 3. **Two axes, separate:**
-   - **Standards** — repo conventions + judgement smells (see baseline). Documented repo rules override smells.
-   - **Spec** — ticket/LLD/acceptance: missing, wrong, or scope creep. Quote the requirement.
+   - **Standards** — repo conventions + judgement smells (see baseline). Documented repo rules override smells. Tone of deliverables sits here; cite the style-guide rule.
+   - **Spec** — read the proof bundle first, then the diff, per SDLC [Review](../sdlc/references/build-review.md#review). Ticket/LLD/acceptance: missing, wrong, or scope creep. Quote the requirement.
 4. **Report both axes** under `## Standards` and `## Spec`. Do not merge or rerank across axes.
 5. **Act:** Critical/Important before land; Minor can follow. Push back
    with reasoning if the reviewer is wrong.

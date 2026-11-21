@@ -30,7 +30,7 @@ model-checked" in its title and in the handoff.
 
 ## Actors
 
-- **architect** or **verifier**: charts a TLA+ model and reads TLC's results.
+- **architect** or **builder**: charts a TLA+ model and reads TLC's results.
 - **builder**: reads TLC results while following a verify skill.
 - **designer**: charts a user flow from approved stories.
 
@@ -53,7 +53,7 @@ model-checked" in its title and in the handoff.
 
 ## Chart a checked model
 
-The **architect**, **verifier** or **builder** uses this section.
+The **architect** or **builder** uses this section.
 
 ### Write the spec
 

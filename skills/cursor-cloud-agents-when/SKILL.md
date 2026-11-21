@@ -15,9 +15,10 @@ implement with a bot token; hand the build to one of those workers.**
 
 ## Hand-off
 
-1. Hand off the whole ticket.
+1. Hand off the ticket through a channel authorized for its contents.
 2. Let the worker own the implementation loop.
-3. **verifier** checks the final result.
+3. The worker returns the bundle through the private review channel, not its PR: [Proofs](../sdlc/references/proofs.md#proof-bundle).
+4. Review runs on the result: [Review](../sdlc/references/build-review.md#review).
 
 How remote agents and local CLIs fit the process:
 [Workers](../sdlc/references/subagents.md#workers). A worker's pull request

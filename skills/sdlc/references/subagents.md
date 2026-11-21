@@ -16,30 +16,31 @@
   prior logs it produced.
 
 The manager, a session or a workflow, keeps two ids per work item:
-`builder_id` and `verifier_id`. Review adds `reviewer_id`. The builder,
-verifier, and reviewer are three different agents.
+`builder_id`, and `reviewer_id` from Review. The builder and the
+reviewer are two different agents. The builder runs every check for its
+item: [Proofs](proofs.md#builder-checks).
 
 | Role | First pass on this item | Later passes on this item |
 | --- | --- | --- |
 | **builder** | Mint a **clean** subagent. Store `builder_id`. | **Resume** `builder_id`. Prompt only the delta. |
-| **verifier** | Mint a **clean** subagent. Never the builder. Store `verifier_id`. | **Resume** `verifier_id`. Prompt only the delta. Re-run proving commands. |
 | **reviewer** (Review) | Mint a **clean** subagent. Never the builder. Store `reviewer_id`. | **Resume** `reviewer_id` for re-review of the same item. |
 
 A manager that spawns in parallel still mints one pair per item, not
-one pair per loop. Give independent items independent pairs.
+one pair per loop. Give independent items independent pairs. The pair
+is the builder and the reviewer.
 
 Never:
 
-- Never let the builder verify or review its own work as the only gate;
-  the verifier and the reviewer are other agents.
-- Never give the verifier or reviewer the builder's transcript as
-  memory; mint them clean.
-- Never reuse an item's builder, verifier, or reviewer on a
-  **different** item; mint clean agents for that item.
-- Never mint a new builder or verifier on each Build loop while this
-  item's previous one is still resumable; resume it.
-- Never make the manager the contrarian, builder, or verifier of that
-  item; mint a clean subagent for the role.
+- Never let the builder review its own work; the reviewer is another
+  agent.
+- Never give the reviewer the builder's transcript as memory; mint it
+  clean and pass the builder's proof bundle.
+- Never reuse an item's builder or reviewer on a **different** item;
+  mint clean agents for that item.
+- Never mint a new builder on each Build loop while this item's previous
+  one is still resumable; resume it.
+- Never make the manager the contrarian or builder of that item; mint a
+  clean subagent for the role.
 
 ## Fallback
 
@@ -66,12 +67,12 @@ rotate roles to "save" context; replace the agent of the same role.
   contrarian if the fix-vs-removal choice gets another round. The
   troubleshooter, and when the manager may be it: [Item
   brief](entry-brief-repo.md#item-brief), step 1. The troubleshooter
-  and the contrarian are two different agents. Neither is the builder,
-  verifier, or reviewer of that item.
+  and the contrarian are two different agents. Neither is the builder or
+  reviewer of that item.
 
 Item grain, fewer agents: for a no-screen incoming item, do not mint a
 gatherer, designer, or UX reviewer. Mint the contrarian at Brief. Mint
-the builder, verifier, and reviewer as usual. Add **security** if a
+the builder and reviewer as usual. Add **security** if a
 trust boundary moves.
 
 Step agents and item agents raise asks as
@@ -80,8 +81,8 @@ Step agents and item agents raise asks as
 ## Tracker writes
 
 Only the **manager** writes to the tracker: [Tracker](../SKILL.md#tracker).
-Builder, verifier, and reviewer prompts carry no tracker-writing
-instructions; those roles report.
+Builder and reviewer prompts carry no tracker-writing instructions;
+those roles report.
 
 ## Writable worktree
 
@@ -108,10 +109,12 @@ first refiner with `discover-the-idea`, to run its Refine section, and the same 
 contrarian with `yagni`; designer with
 `ux-design` + `sdlc-artifacts`; UX reviewer, review loop only, with
 `ux-design`; architect Plan/Spec with `sdlc-artifacts`; first builder
-with one language skill + `tdd` / `yagni` / `debug` /
-`docs-google-style`, no `tracker-sdlc`, no tracker writes; verifier
-with `verify-before-done` plus the proving commands;
-reviewer with `pr-review` and `yagni` plus the range vs project-main.
+with one language skill + `tdd` / `yagni` / `debug` / `verify-before-done` /
+`docs-google-style`, the proving commands and a scratch folder for raw
+outputs, no `tracker-sdlc`, no tracker writes;
+reviewer with `pr-review` and `yagni` plus the range vs the item’s land target and
+the builder's proof bundle, and `docs-google-style` when the item ships
+human docs and the project names no style guide.
 
 **Resume** is always delta-only. Do not re-pack skills or MCP guides
 already in that child's transcript. A new skill or tool is required on
