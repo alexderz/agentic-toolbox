@@ -17,6 +17,8 @@ Newest first. Skip empty sections.
 
 ### Added
 
+- Knowledge note `knowledge/ai/vendors/opengame.md`: OpenGame (`nexu-io/opengame`, Apache-2.0, pin `cd98165`) local browser-game studio and stdio MCP overview, setup, and auto-update caution; no upstream skills or scripts vendored.
+- Knowledge note `knowledge/ai/practices/local-llm-game-engine-mcp.md`: driving Blender, Unity, Unreal Engine, Godot, Figma, and Roblox Studio over MCP from local models (Unsloth `mcp-engines` guide plus pinned community MCP servers); no MCP server code vendored.
 - Skill `migrate`: adapt older playbook consumers to builder-owned verification and recent process simplifications, preserving accepted work without a migration test campaign (DER-816).
 - Skills `formal-verification` and `statechart`: text-only rewrites of cursor/plugins pstack at `3dbd22f`. `formal-verification` finds the implicit state machines, verifies the riskiest one, leaves a project-local verify skill per subsystem and keeps it in step with the code; `statechart` charts a TLC-checked model or a user flow as hand-written Mermaid, with each broken rule as its shortest path. The upstream CLI is not vendored. Routed by two `AGENTS.md` rows (DER-774).
 - Skill `astryx`: build and review UI in a product that uses the Astryx React design system (meta/astryx, MIT, pin `cb2558e`), with facts read from the project's own CLI, a template-first workflow, delivery checks, precedence beside `ux-design`, `ui-craft` and `modern-web-guidance`, the commands that change things outside the item, and design-time facts. First-party text; no CLI, plugin or scripts. Routed by one `AGENTS.md` row and the language-router load-with list (DER-775).

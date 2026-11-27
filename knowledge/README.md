@@ -60,6 +60,8 @@ Every note:
 | Public red-team and blue-team agent skill packs (2026-10-18 snapshot) | [`ai/vendors/security-skill-packs-2026-10-18.md`](ai/vendors/security-skill-packs-2026-10-18.md) |
 | X chatter on red-team and blue-team agent skill packs (2026-10-18) | [`ai/vendors/x-chatter-security-skill-packs-2026-10-18.md`](ai/vendors/x-chatter-security-skill-packs-2026-10-18.md) |
 | Mechanical and electrical engineering with AI (2026-11-06 survey) | [`ai/practices/engineering-with-ai.md`](ai/practices/engineering-with-ai.md) |
+| OpenGame (`nexu-io/opengame`) (2026-11-27) | [`ai/vendors/opengame.md`](ai/vendors/opengame.md) |
+| Driving game and 3D engines over MCP with local models (2026-11-27) | [`ai/practices/local-llm-game-engine-mcp.md`](ai/practices/local-llm-game-engine-mcp.md) |
 
 ## Never
 
